@@ -1,0 +1,77 @@
+<?xml version="1.0" standalone="yes"?>
+<MainDataSet>
+  <VioDataTable>
+    <VioNumber>050207AA068</VioNumber>
+    <UnitID>AA</UnitID>
+    <CarNumber />
+    <CarNumber1 />
+    <CarNumber2 />
+    <CarNumber3 />
+    <CarNumber4 />
+    <ConfTime1>2005/02/07 16:29:22</ConfTime1>
+    <VioPlace>虎の門</VioPlace>
+    <VioState1>路側帯駐車違反</VioState1>
+    <VioState2>駐車禁止違反</VioState2>
+    <VioState3>Ｐチケット不掲示違反</VioState3>
+    <CarMaker>トヨタ</CarMaker>
+    <CarName>ランドクルーザー</CarName>
+    <CarColor>白</CarColor>
+    <CarPicture1>\Ipdir\DATA\050207AA068\050207AA068P1.jpg</CarPicture1>
+    <CarPicture2 />
+    <CarPicture3>\Ipdir\DATA\050207AA068\050207AA068P3.jpg</CarPicture3>
+    <CarPicture4 />
+    <ConfTime2>2005/02/07 17:26:34</ConfTime2>
+    <Wrecker>true</Wrecker>
+    <Unlock>false</Unlock>
+    <SuppleInfo>あああああ
+いいいいい
+うううううう
+えええええ
+尾</SuppleInfo>
+    <DelFlg>0</DelFlg>
+    <DelReason />
+    <DelExplain />
+    <NowStatus>2</NowStatus>
+    <NumberPhotoStatus>0</NumberPhotoStatus>
+    <VioEntryStatus>2</VioEntryStatus>
+    <PrintStatus>0</PrintStatus>
+    <LabelPhotoStatus>2</LabelPhotoStatus>
+    <SuppleEntryStatus>2</SuppleEntryStatus>
+    <MapMakeStatus>0</MapMakeStatus>
+  </VioDataTable>
+  <VioDataTable>
+    <VioNumber>050208AA069</VioNumber>
+    <UnitID>AA</UnitID>
+    <CarNumber> </CarNumber>
+    <CarNumber1> </CarNumber1>
+    <CarNumber2> </CarNumber2>
+    <CarNumber3> </CarNumber3>
+    <CarNumber4> </CarNumber4>
+    <ConfTime1>2005/02/08 10:36:59</ConfTime1>
+    <VioPlace> </VioPlace>
+    <VioState1> </VioState1>
+    <VioState2> </VioState2>
+    <VioState3> </VioState3>
+    <CarMaker> </CarMaker>
+    <CarName> </CarName>
+    <CarColor> </CarColor>
+    <CarPicture1>\Ipdir\DATA\050208AA069\050208AA069P1.jpg</CarPicture1>
+    <CarPicture2> </CarPicture2>
+    <CarPicture3> </CarPicture3>
+    <CarPicture4> </CarPicture4>
+    <ConfTime2> </ConfTime2>
+    <Wrecker>false</Wrecker>
+    <Unlock>false</Unlock>
+    <SuppleInfo> </SuppleInfo>
+    <DelFlg>0</DelFlg>
+    <DelReason> </DelReason>
+    <DelExplain> </DelExplain>
+    <NowStatus>0</NowStatus>
+    <NumberPhotoStatus>0</NumberPhotoStatus>
+    <VioEntryStatus>0</VioEntryStatus>
+    <PrintStatus>0</PrintStatus>
+    <LabelPhotoStatus>0</LabelPhotoStatus>
+    <SuppleEntryStatus>0</SuppleEntryStatus>
+    <MapMakeStatus>0</MapMakeStatus>
+  </VioDataTable>
+</MainDataSet>

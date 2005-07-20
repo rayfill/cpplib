@@ -1,0 +1,53 @@
+<?xml version="1.0" standalone="yes"?>
+<MainDataSet>
+  <VioDataTable>
+    <VioNumber>050413001008</VioNumber>
+    <UnitID>001</UnitID>
+    <CarNumber>品川 ３００ あ ２６９２</CarNumber>
+    <CarNumber1>品川</CarNumber1>
+    <CarNumber2>３００</CarNumber2>
+    <CarNumber3>あ</CarNumber3>
+    <CarNumber4>２６９２</CarNumber4>
+    <ConfTime1>2005/04/13 14:12:57</ConfTime1>
+    <ConfTime2 />
+    <RobberyStatus>注意車両</RobberyStatus>
+    <VioCarType />
+    <VioCarDivision />
+    <CarMaker />
+    <CarName />
+    <CarColor />
+    <SuppleMentation />
+    <VioPlace />
+    <Longitude />
+    <Latitude />
+    <VioCode />
+    <VioTime1></VioTime1>
+    <VioTime2 />
+    <VioTime3 />
+    <VioRegTime1 />
+    <VioRegTime2 />
+    <VioSimpleTime />
+    <VioValue1 />
+    <VioValue2 />
+    <VioCombo1 />
+    <VioCombo2 />
+    <Disposal />
+    <Remarks />
+    <RentACar />
+    <CarPicture1>\Ipdir\DATA\050413001008\050413001008P1.jpg</CarPicture1>
+    <CarPicture1Hash>ae1efe1010f7cbd7c07d34d7b80608067e805b8b</CarPicture1Hash>
+    <CarPicture2>\Ipdir\DATA\050413001008\050413001008P2.jpg</CarPicture2>
+    <CarPicture2Hash>616c33796c320cdaf14223e0f790aa92e87d0259</CarPicture2Hash>
+    <CarPicture3 />
+    <CarPicture3Hash />
+    <CarPicture4 />
+    <NowStatus>1</NowStatus>
+    <NumberPhotoStatus>2</NumberPhotoStatus>
+    <VioCarEntryStatus>0</VioCarEntryStatus>
+    <VioPlaceEntryStatus>0</VioPlaceEntryStatus>
+    <VioStateEntryStatus>0</VioStateEntryStatus>
+    <LabelPrintStatus>0</LabelPrintStatus>
+    <LabelPhotoStatus>0</LabelPhotoStatus>
+    <MapMakeStatus>0</MapMakeStatus>
+  </VioDataTable>
+</MainDataSet>
