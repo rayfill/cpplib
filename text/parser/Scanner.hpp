@@ -4,23 +4,42 @@
 #include <string>
 #include <text/parser/ScannerTraits.hpp>
 
+class Token
+{
+private:
+	std::string literal;
+	ScannerSymbols type;
+
+public:
+	Token(ScannerSymbols type_ = undefine, const char* literal_ = ""):
+		type(type_), literal(literal_)
+	{}
+	
+	std::string getLiteral() const
+	{
+		return literal;
+	}
+
+	const ScannerSymbols getSymbol() const
+	{
+		return type;
+	}
+};
+
 tempalte <typename Traits = ScannerTrait>
 class Scanner
 {
-	friend class ScannerTest
-;
+	friend class ScannerTest;
+
 private:
-	/**
-	 * property of eary read token.
-	 */
-	class ProcessState
-	{
-	private:
-		
-	public:
-	} currentState;
+	Iterator current;
+	Iterator last;
 
 public:
+	tempalte <typename Iterator>
+	Scanner(Iterator first_, Iterator last_):
+		current(first_), last(last_)
+	{}
 };
 
 #endif /* SCANNER_HPP_ */

@@ -1041,45 +1041,57 @@ public:
 	static MultiPrecisionInteger
 	getProbablePrime(const size_t bitToLength, Random& random)
 	{
+		typedef std::vector<BaseUnit> BaseUnitArray;
+
+		const unsigned int nonPrimeListLength = bitToLength * 4;
 		const size_t numberOfBytes =
 			(bitToLength / 8) +
 			((bitToLength % 8) == 0 ? 0 : 1);
 
 		bool isPrime = false;
-		MultiPrecisionInteger resultPrime;
+		std::vector<bool> nonPrimeList(nonPrimeListLength);
+
+		MultiPrecisionInteger baseNumber;
 		
-		std::vector<BaseUnit> numberSource =
+		BaseUnitArray numberSource =
 			random.getRandomWordVector(numberOfBytes / 2);
-		resultPrime =
+		baseNumber =
 			MultiPrecisionInteger::makeNumberOfBitSafe(numberSource);
-		std::vector<BaseUnit> primeList = MultiPrecisionInteger::getPrimes();
-	
-		while (isPrime == false)
+		BaseUnitArray primeList = MultiPrecisionInteger::getPrimes();
+
+		MultiPrecisionInteger workingNumber = baseNumber;
+
+		// create nonPrimeList
+		unsigned int index;
+		for (index = 0;
+			 index < nonPrimeListLength;
+			 ++index, ++workingNumber)
 		{
-			std::vector<MultiPrecisionInteger<>::BaseUnit>::iterator itor;
-
-			for (itor = primeList.begin();
-				 itor != primeList.end();
-				 ++itor)
+			if (!nonPrimeList[index])
 			{
-				// specialized gcd(mpinteger, baseunit);
-				BaseUnit mod = resultPrime.modulus(*itor);
-				if (mod == 0)
-					break;
-				
-				if (gcd(*itor, mod) != 1)
-					break;
-			}
-
-			if (itor == primeList.end())
-			{
-				/**
-				 * gcd test
-				 * gcd(probable-1, proabable) == 1.
-				 * if gcd() is not 1 prabable is not prime.
-				 **/
-				if (gcd(resultPrime - 1, resultPrime) == 1U)
+				// not list in nonPrimeList.
+				for (typename BaseUnitArray::iterator 
+						 itor = primeList.begin();
+					 itor != primeList.end();
+					 ++itor)
 				{
+					BaseUnit mod = workingNumber.modulus(*itor);
+					if (mod == 0)
+					{
+						// add listing non primes.
+						for (unsigned int offset = index;
+							 offset < nonPrimeList.size();
+							 offset += *itor)
+							nonPrimeList[offset] = true;
+
+						break;
+					}
+				}
+
+				if (!nonPrimeList[index])
+				{
+					// current workingNumber is 
+					// pass of small prime's divide test.
 					isPrime = true;
 					int primeCheckDepth;
 					for (primeCheckDepth = 0;
@@ -1089,7 +1101,7 @@ public:
 						if (primeCheckDepth == 0)
 						{
 							if (RabinPrimeTest(
-								resultPrime,
+								workingNumber,
 								MultiPrecisionInteger(2U)) == false)
 							{
 								isPrime = false;
@@ -1100,12 +1112,12 @@ public:
 						{
 							std::vector<unsigned short> val =
 								random.getRandomWordVector(
-									resultPrime.getMaxColumn());
+									workingNumber.getMaxColumn());
 							MultiPrecisionInteger a =
 								MultiPrecisionInteger(
 									&val[0], &val[val.size()]);
 							if (RabinPrimeTest(
-									resultPrime,
+									workingNumber,
 									a) == false)
 							{
 								isPrime = false;
@@ -1113,14 +1125,19 @@ public:
 							}
 						}
 					}
+
+					if (isPrime == true)
+						return workingNumber;
 				}
 			}
-			
-			if (isPrime == false)
-				resultPrime += 2;
 		}
 
-		return resultPrime;
+		/**
+		 * TODO
+		 * overflow sieve range, continious search prime.
+		 */
+		assert(false);
+		return MultiPrecisionInteger<>(2);
 	}
 };
 

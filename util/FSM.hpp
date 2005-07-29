@@ -3,6 +3,7 @@
 
 #include <util/StateMachine.hpp>
 #include <vector>
+#include <algorithm>
 
 template <typename AcceptType>
 class FiniteStateMachine
@@ -33,7 +34,9 @@ public:
 	}
 
 	template <typename Iterator>
-	void add(const Iterator first, const Iterator last, const std::string&stateName)
+	void add(const Iterator first,
+			 const Iterator last,
+			 const std::string& stateName)
 	{
 		state_t* current = &topState;
 		Iterator itor = first;
@@ -51,6 +54,18 @@ public:
 
 		if (itor != first)
 			current->setName(stateName);
+	}
+
+	state_t* findNamedState(const std::string& stateName)
+	{
+		for (typename state_vector_t::iterator itor = states.begin();
+			 itor != states.end(); ++itor)
+		{
+			if ((*itor)->toString() == stateName)
+				return *itor;
+		}
+
+		return NULL;
 	}
 };
 

@@ -8,8 +8,8 @@ TARGET= UnitTest
 OBJS= TestMain.o \
 	StateMachineTest.o \
 	FSMTest.o \
-# 	RSATest.o \
-# 	MPITest.o \
+	MPITest.o \
+	RSATest.o \
 # 	AlgebraTheoryTest.o \
 # 	NumberTheoryTest.o \
 # 	AsymmetricKeyTest.o \

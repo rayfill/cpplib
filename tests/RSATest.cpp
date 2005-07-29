@@ -10,7 +10,7 @@ class RSATest : public CppUnit::TestFixture
 {
 private:
 	CPPUNIT_TEST_SUITE(RSATest);
-//  	CPPUNIT_TEST(keyCreateTest);
+  	CPPUNIT_TEST(keyCreateTest);
 //   	CPPUNIT_TEST(endecryptTest);
   	CPPUNIT_TEST(endecryptFor1024bitKeyTest);
   	CPPUNIT_TEST(stringConversionTest);

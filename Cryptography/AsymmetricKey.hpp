@@ -148,14 +148,16 @@ public:
 			for (int checkCount = 0; checkCount < 4; ++checkCount)
 			{
 				if (RabinPrimeTest(p, MPInteger(2U)) == false)
-					throw std::invalid_argument("p is not prime.");
+					throw std::invalid_argument("p is not prime. " +
+												p.toString());
 			}
 
 			// q's prime check.
 			for (int checkCount = 0; checkCount < 4; ++checkCount)
 			{
 				if (RabinPrimeTest(q, MPInteger(2U)) == false)
-					throw std::invalid_argument("q is not prime.");
+					throw std::invalid_argument("q is not prime. " +
+						q.toString());
 			}
 		}
 
