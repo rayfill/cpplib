@@ -264,6 +264,34 @@ private:
 		this->swap(result);
 		return this->adjust();
 	}
+
+	static std::vector<bool>
+	getNonPrimeSieve(const MultiPrecisionInteger<>& baseNumber, const int sieveSize = 2048000)
+	{
+		std::vector<BaseUnit> primeList = MultiPrecisionInteger::getPrimes();
+		std::vector<bool> nonPrimeSieve(sieveSize);
+	
+		std::vector<MultiPrecisionInteger<>::BaseUnit>::iterator itor;
+		
+		for (itor = primeList.begin();
+			 itor != primeList.end();
+			 ++itor)
+		{
+			if (*itor >= sieveSize)
+				break;
+
+			BaseUnit modulus = baseNumber.modulus(*itor);
+
+			// minimum dividable number, for base number offset.
+			for (int offset = (modulus == 0 ? *itor : *itor - modulus);
+				 offset < sieveSize;
+				 offset += *itor)
+			{
+				nonPrimeSieve[offset] = true;
+			}
+		}
+		return nonPrimeSieve;
+	}
 		
 public:
 		
@@ -1039,7 +1067,7 @@ public:
 	}
 
 	static MultiPrecisionInteger
-	getProbablePrime(const size_t bitToLength, Random& random)
+	getProbablePrime(const size_t bitToLength, Random& random, const unsigned int checkDepth = 4)
 	{
 		typedef std::vector<BaseUnit> BaseUnitArray;
 
@@ -1049,95 +1077,65 @@ public:
 			((bitToLength % 8) == 0 ? 0 : 1);
 
 		bool isPrime = false;
-		std::vector<bool> nonPrimeList(nonPrimeListLength);
-
-		MultiPrecisionInteger baseNumber;
 		
 		BaseUnitArray numberSource =
 			random.getRandomWordVector(numberOfBytes / 2);
-		baseNumber =
+		MultiPrecisionInteger baseNumber =
 			MultiPrecisionInteger::makeNumberOfBitSafe(numberSource);
-		BaseUnitArray primeList = MultiPrecisionInteger::getPrimes();
 
-		MultiPrecisionInteger workingNumber = baseNumber;
 
-		// create nonPrimeList
-		unsigned int index;
-		for (index = 0;
-			 index < nonPrimeListLength;
-			 ++index, ++workingNumber)
+		for (;;)
 		{
-			if (!nonPrimeList[index])
+			// create sieve
+			std::vector<bool> sieve = getNonPrimeSieve(baseNumber);
+
+			for (unsigned int sieveOffset = 0;
+				 sieveOffset < sieve.size();
+				 ++sieveOffset)
 			{
-				// not list in nonPrimeList.
-				for (typename BaseUnitArray::iterator 
-						 itor = primeList.begin();
-					 itor != primeList.end();
-					 ++itor)
-				{
-					BaseUnit mod = workingNumber.modulus(*itor);
-					if (mod == 0)
-					{
-						// add listing non primes.
-						for (unsigned int offset = index;
-							 offset < nonPrimeList.size();
-							 offset += *itor)
-							nonPrimeList[offset] = true;
+				// not prime.
+				if (sieve[sieveOffset] != false)
+					continue;
 
-						break;
-					}
-				}
+				// probable prime test.
+				const MultiPrecisionInteger workingNumber =
+					baseNumber + sieveOffset;
 
-				if (!nonPrimeList[index])
+				for (unsigned int primeCheckDepth = 0;
+					 primeCheckDepth < checkDepth;
+					 ++primeCheckDepth)
 				{
-					// current workingNumber is 
-					// pass of small prime's divide test.
-					isPrime = true;
-					int primeCheckDepth;
-					for (primeCheckDepth = 0;
-						 primeCheckDepth < 4;
-						 ++primeCheckDepth)
+					if (primeCheckDepth == 0)
 					{
-						if (primeCheckDepth == 0)
-						{
-							if (RabinPrimeTest(
+						if (RabinPrimeTest(
 								workingNumber,
 								MultiPrecisionInteger(2U)) == false)
-							{
-								isPrime = false;
-								break;
-							}
-						}
-						else
-						{
-							std::vector<unsigned short> val =
-								random.getRandomWordVector(
-									workingNumber.getMaxColumn());
-							MultiPrecisionInteger a =
-								MultiPrecisionInteger(
-									&val[0], &val[val.size()]);
-							if (RabinPrimeTest(
-									workingNumber,
-									a) == false)
-							{
-								isPrime = false;
-								break;
-							}
-						}
+							break;
 					}
+					else
+					{
+						// generate evidence number.
+						std::vector<unsigned short> val =
+							random.getRandomWordVector(
+								workingNumber.getMaxColumn());
+						MultiPrecisionInteger a =
+							MultiPrecisionInteger(
+								&val[0], &val[val.size()]);
 
-					if (isPrime == true)
-						return workingNumber;
+						if (RabinPrimeTest(
+								workingNumber,
+								a) == false)
+							break;
+						else
+							if (primeCheckDepth == (checkDepth - 1))
+								return workingNumber;
+					}
 				}
 			}
-		}
 
-		/**
-		 * TODO
-		 * overflow sieve range, continious search prime.
-		 */
-		assert(false);
-		return MultiPrecisionInteger<>(2);
+			// out of range for sieves. slide offset base number retry.
+			baseNumber += sieve.size();
+		}
 	}
 };
 
