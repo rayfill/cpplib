@@ -140,7 +140,7 @@ public:
 		if (isPrimeCheck)
 		{
 			// e's prime check.
-			if (gcd(e, (p-1) * (q-1)) != 1)
+			if (gcd(e, (p-1U) * (q-1U)) != 1U)
 				throw std::invalid_argument(
 					"gcd((e, euler(p-1, q-1)) != 1.");
 
@@ -179,8 +179,8 @@ public:
 	PrivateKey getPrivateKey() const
 	{
 		return PrivateKey(decryptExponent, modulus, primeP, primeQ,
-						  modulusExponential(primeP, primeQ-1, modulus),
-						  modulusExponential(primeQ, primeP-1, modulus));
+						  modulusExponential(primeP, primeQ-1U, modulus),
+						  modulusExponential(primeQ, primeP-1U, modulus));
 	}
 };
 

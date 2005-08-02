@@ -7,48 +7,88 @@ class MPITest : public CppUnit::TestFixture
 {
 private:
 	CPPUNIT_TEST_SUITE(MPITest);
-	CPPUNIT_TEST(notEqualOpTest);
- 	CPPUNIT_TEST(multiplyOpTest);
- 	CPPUNIT_TEST(plusOpTest);
- 	CPPUNIT_TEST(minusOpTest);
- 	CPPUNIT_TEST(divideOpTest);
- 	CPPUNIT_TEST(lessThanOpTest);
- 	CPPUNIT_TEST(lessOrEqualOpTest);
- 	CPPUNIT_TEST(equalOpTest);
- 	CPPUNIT_TEST(equivalenceOpTest);
- 	CPPUNIT_TEST(graterThanOpTest);
- 	CPPUNIT_TEST(graterEqualOpTest);
- 	CPPUNIT_TEST(constructerTest);
- 	CPPUNIT_TEST(adjustTest);
- 	CPPUNIT_TEST(divideTest);
- 	CPPUNIT_TEST(bitLengthTest);
- 	CPPUNIT_TEST(MaxColumnTest);
- 	CPPUNIT_TEST(toStringTest);
-	CPPUNIT_TEST(makeNumberTest);
-	CPPUNIT_TEST(shiftTest);
-	CPPUNIT_TEST(fromConverterTest);
-	CPPUNIT_TEST(toConverterTest);
-	CPPUNIT_TEST(montgomeryTest);
-	CPPUNIT_TEST(unitBaseModulusTest);
-	CPPUNIT_TEST(nonPrimeSieveTest);
+ 	CPPUNIT_TEST(notEqualOpTest);
+  	CPPUNIT_TEST(multiplyOpTest);
+  	CPPUNIT_TEST(plusOpTest);
+  	CPPUNIT_TEST(minusOpTest);
+  	CPPUNIT_TEST(divideOpTest);
+  	CPPUNIT_TEST(lessThanOpTest);
+  	CPPUNIT_TEST(lessOrEqualOpTest);
+  	CPPUNIT_TEST(equalOpTest);
+  	CPPUNIT_TEST(equivalenceOpTest);
+  	CPPUNIT_TEST(graterThanOpTest);
+  	CPPUNIT_TEST(graterEqualOpTest);
+  	CPPUNIT_TEST(constructerTest);
+  	CPPUNIT_TEST(adjustTest);
+  	CPPUNIT_TEST(divideTest);
+  	CPPUNIT_TEST(bitLengthTest);
+  	CPPUNIT_TEST(MaxColumnTest);
+  	CPPUNIT_TEST(toStringTest);
+ 	CPPUNIT_TEST(makeNumberTest);
+ 	CPPUNIT_TEST(shiftTest);
+ 	CPPUNIT_TEST(fromConverterTest);
+ 	CPPUNIT_TEST(toConverterTest);
+ 	CPPUNIT_TEST(montgomeryTest);
+ 	CPPUNIT_TEST(unitBaseModulusTest);
+ 	CPPUNIT_TEST(nonPrimeSieveTest);
+ 	CPPUNIT_TEST(eratosthenesSieveTest);
+ 	CPPUNIT_TEST(primeListTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void primeListTest()
+	{
+		std::vector<bool> eratosthenesSieve = MPInteger::getEratosthenesSieve(17930);
+		std::vector<unsigned int> primeList = MPInteger::getPrimeList(17930);
+
+		for (unsigned int index = 0;
+			 index < 17930;
+			 ++index)
+		{
+			if (eratosthenesSieve[index] == false)
+			{
+				CPPUNIT_ASSERT(std::find(primeList.begin(), primeList.end(), index) != primeList.end());
+			}
+			else
+			{
+				CPPUNIT_ASSERT(std::find(primeList.begin(), primeList.end(), index) == primeList.end());
+			}
+		}
+	}
+
+	void eratosthenesSieveTest()
+	{
+		std::vector<bool> eratosthenesSieve = MPInteger::getEratosthenesSieve(17929);
+		std::vector<MPInteger::BaseUnit> primeLists = MPInteger::getPrimes();
+
+		for (unsigned int index = 0; index < 17929; ++index)
+		{
+			std::vector<MPInteger::BaseUnit>::iterator finder =
+				std::find(primeLists.begin(), primeLists.end(), index);
+			if (finder != primeLists.end())
+			{
+				// find prime.
+				CPPUNIT_ASSERT(eratosthenesSieve[index] == false);
+			}
+			else
+			{
+				// not find prime.
+				CPPUNIT_ASSERT(eratosthenesSieve[index] == true);
+			}
+		}
+	}
+
 	void nonPrimeSieveTest()
 	{
-		std::vector<bool> nonPrimeSieveByBaseZero = MPInteger::getNonPrimeSieve(MPInteger("0000"), 30000);
-		std::vector<bool> nonPrimeSieveByBaseOne = MPInteger::getNonPrimeSieve(MPInteger("0001"), 30000);
-
-		CPPUNIT_ASSERT(nonPrimeSieveByBaseZero[0] == false);
-		CPPUNIT_ASSERT(nonPrimeSieveByBaseZero[1] == false);
-
-		for (unsigned int offset = 2; offset <= 17929; ++offset)
-			CPPUNIT_ASSERT(nonPrimeSieveByBaseZero[offset] == true);
-
-		CPPUNIT_ASSERT(nonPrimeSieveByBaseZero[17939] == false);
+		std::vector<unsigned int> primeList = MPInteger::getPrimeList(150*64);
+		std::vector<bool> nonPrimeSieveByBaseZero = MPInteger::getNonPrimeSieve(MPInteger("0"), primeList, 30000);
+		std::vector<bool> nonPrimeSieveByBaseOne = MPInteger::getNonPrimeSieve(MPInteger("1"), primeList, 30000);
 
 		for (unsigned int offset = 1; offset < nonPrimeSieveByBaseZero.size() - 1; ++offset)
 		{
+			if (nonPrimeSieveByBaseZero[offset] != nonPrimeSieveByBaseOne[offset-1])
+				std::cout << std::endl << "offset =" << offset << std::endl;
+				
 			CPPUNIT_ASSERT(nonPrimeSieveByBaseZero[offset] == nonPrimeSieveByBaseOne[offset-1]);
 		}
 	}
@@ -69,7 +109,7 @@ public:
 		MPInteger n(13U);
 
 		a.montgomeryModulusExponential(e, n);
-		CPPUNIT_ASSERT_MESSAGE(a.toString(), a.toString() == "0004");
+		CPPUNIT_ASSERT_MESSAGE(a.toString(), a.toString() == "4");
 	}
 
 	void fromConverterTest()
@@ -92,7 +132,7 @@ public:
 	void toConverterTest()
 	{
 		MPInteger a("80000001");
-		CPPUNIT_ASSERT(a.getMaxColumn() == 2);
+		CPPUNIT_ASSERT(a.getMaxColumn() == 1);
 		std::vector<unsigned char> result = a.toBigEndianMemory();
 		CPPUNIT_ASSERT(result.size() == 4);
 		CPPUNIT_ASSERT(result[0] == 0x80);
@@ -101,7 +141,7 @@ public:
 		CPPUNIT_ASSERT(result[3] == 0x01);
 
 		MPInteger b("100080000001");
-		CPPUNIT_ASSERT(b.getMaxColumn() == 3);
+		CPPUNIT_ASSERT(b.getMaxColumn() == 2);
 		result = b.toBigEndianMemory();
 		CPPUNIT_ASSERT(result.size() == 8);
 		CPPUNIT_ASSERT(result[0] == 0);
@@ -156,20 +196,20 @@ public:
 
  	void multiplyOpTest()
 	{
-		MPInteger a(0xffff);
-		MPInteger b(0xffffffff);
+		MPInteger a(0xffffU);
+		MPInteger b(0xffffffffU);
 		MPInteger result(a);
 		result *= b;
 
 		result.adjust();
-		CPPUNIT_ASSERT(result.toString() == "fffeffff0001");
+		CPPUNIT_ASSERT_MESSAGE(result.toString(), result.toString() == "fffeffff0001");
 
 		result = a * MPInteger(0U);
 		result.adjust();
-		CPPUNIT_ASSERT(result.toString() == "0000");
+		CPPUNIT_ASSERT(result.toString() == "0");
 
 		a = MPInteger("e69b42ac4aeaffa8904c554f5d7d3bd9b8181cd42eea336cad912faf1ac6d253cda309447c8cca6e10757dac6486a725f7e08fc18042320b01033fb9594415fd51de3d24e65104e4b79575f41bce66b5e7dd8e810d55d0fd23c5d34dac9c50423616e89f8d43b3f2d10bdd84930d40ceda2a1ebb4db651a1031af52e18b9deb0640bf47a000a1c2858a3680fd02d84e13fead399ff8deef3779ead793191f6269039f9a282a7bb53507681129ee6653ae8501ef2700a8586374161fa58553278249dfb9efedf3535f56b3050b4480a17cc987d535703c94e1a1218e208475b3e0e63c32b3c235e01f6152727a72e8aceefb72e59cf1a853fe3c70ed7cf81acf1faec1c21911db5da8a1b1f45a66374b8948dc654a4eb22fd1dbc6f913f30e356122a7ab8b253e502f24d11bbf3f08bdec720760cd881c0e202d912d422a76b395c36d7b7040220ee23d559797ef37f05a5c8635b02cff5a2797448ebcc663d3e84f33ba2e2fd32d82528d40e88daa1598f3dfaf0eb797200c92b82a52d0f9930ee875aff3624d93f63d4afca6c3d8e1446bf684c6eaff4663c61392c127414aa5e27bdf46896087637bf84d43bb3625028f54f36e5da4f8659e047da5f2c8607d9c250959963c4e7b4cdd72964abda2c6ca4a0e08aeb9598dce98914dfeb0a1f405e89b2500dfcff08ed88cf1112aeb42407a57582d111e1e917d5898dbf6130");
-		b = MPInteger("00000000009672f2e5cb4a522b4cb0edaf7d35667cd357fd23603f1f64d24fa4c1a1a5ec0bdc57fbfca6963d63f150493503e92b64e4b49e4e53ab24c63838ab0a94343c99a5d40f226099dea546604772accc74b054d63d5c13f1d456ba4548fbf0301e486092f4572ca1d876c3ef72400f13c9e1b7003995477e75f147b66659bcab6ae2edfb0079d344ade7d3f03406f210e2204a0f898027bd9739e0c59814afb69e0aaa9843ee08b48156c8946514150255689368e64879197a6c366b1747e5fc860923b5ea2578b174c255dab05ca7e54e0a8be367e72119bebf102196473f0b32dea9a611d06072480163a81db4e7f95462ff369647b9f701626c3f17f2e6e90c83bc4454dd408e605dea3fd7cbeeaf947c2bfd3b316f7b282a8c97afcec55ceeda70c0c2f0453bf16ab7ebd1208c52bc390353e201ba8f2ec63bf68f8a9256f92fa4404049402dd1362aafda20de2a13252c8cd0bd493c312140946fcb612bb00708eeea04807d038151a74a7aaabc507a96a4dfb61ea50fc948cc6105dc0fb9e0a338a27445f65c6b0b67c78864ae0a4156c688d9fd3aff32e5a8f3701e24cb2c32b2455c23065243f84da63ca869020a5fd7e6947104ce310f875ea01e7dc1ecd91af6916e6ca5991f8d57ad08e6e12a5128c0a82cbadd4bf643d9f86d31e95a89f73d115f909dd92f5c18fb64346b7a9a74383b20b9c7d34373c77e48d620");
+		b = MPInteger("9672f2e5cb4a522b4cb0edaf7d35667cd357fd23603f1f64d24fa4c1a1a5ec0bdc57fbfca6963d63f150493503e92b64e4b49e4e53ab24c63838ab0a94343c99a5d40f226099dea546604772accc74b054d63d5c13f1d456ba4548fbf0301e486092f4572ca1d876c3ef72400f13c9e1b7003995477e75f147b66659bcab6ae2edfb0079d344ade7d3f03406f210e2204a0f898027bd9739e0c59814afb69e0aaa9843ee08b48156c8946514150255689368e64879197a6c366b1747e5fc860923b5ea2578b174c255dab05ca7e54e0a8be367e72119bebf102196473f0b32dea9a611d06072480163a81db4e7f95462ff369647b9f701626c3f17f2e6e90c83bc4454dd408e605dea3fd7cbeeaf947c2bfd3b316f7b282a8c97afcec55ceeda70c0c2f0453bf16ab7ebd1208c52bc390353e201ba8f2ec63bf68f8a9256f92fa4404049402dd1362aafda20de2a13252c8cd0bd493c312140946fcb612bb00708eeea04807d038151a74a7aaabc507a96a4dfb61ea50fc948cc6105dc0fb9e0a338a27445f65c6b0b67c78864ae0a4156c688d9fd3aff32e5a8f3701e24cb2c32b2455c23065243f84da63ca869020a5fd7e6947104ce310f875ea01e7dc1ecd91af6916e6ca5991f8d57ad08e6e12a5128c0a82cbadd4bf643d9f86d31e95a89f73d115f909dd92f5c18fb64346b7a9a74383b20b9c7d34373c77e48d620");
 
 		CPPUNIT_ASSERT(a * b > a);
 	}
@@ -177,19 +217,21 @@ public:
  	void plusOpTest()
 	{
 		MPInteger a("ffffffffffffffffffffffffffffffff");
-		MPInteger b("0001");
+		MPInteger b("1");
 
 		MPInteger result = a + b;
 		result.adjust();
-		CPPUNIT_ASSERT(result.toString() ==
-					   "000100000000000000000000000000000000");
+		CPPUNIT_ASSERT_MESSAGE(result.toString(), 
+							   result.toString() ==
+							   "100000000000000000000000000000000");
+		
 		
 		result = b + a;
 		result.adjust();
 		CPPUNIT_ASSERT_MESSAGE(
 			result.toString().c_str(),
 			result.toString() ==
-					   "000100000000000000000000000000000000");
+					   "100000000000000000000000000000000");
 
 		result = a + MPInteger(0U);
 		result.adjust();
@@ -206,7 +248,7 @@ public:
 		result = MPInteger(0U) + MPInteger(0U);
 		result.adjust();
 		CPPUNIT_ASSERT(result.toString() ==
-					   "0000");
+					   "0");
 
 		MPInteger c = a.getNegateValue();
 		result = a + c;
@@ -220,7 +262,7 @@ public:
 		result = c + b.negate();
 		CPPUNIT_ASSERT_MESSAGE(result.toString(),
 							   result.toString() ==
-							   "-000100000000000000000000000000000000");
+							   "-100000000000000000000000000000000");
 
 		result = b + c.negate();
 		CPPUNIT_ASSERT_MESSAGE(result.toString(),
@@ -230,13 +272,13 @@ public:
 		result = a + b.getNegateValue();
 		CPPUNIT_ASSERT_MESSAGE(result.toString(),
 							   result.toString() ==
-							   "000100000000000000000000000000000000");
+							   "100000000000000000000000000000000");
 	}
 
  	void minusOpTest()
 	{
-		MPInteger a("000100000000000000000000");
-		MPInteger b("0001");
+		MPInteger a("100000000000000000000");
+		MPInteger b("1");
 
 		MPInteger result = a - b;
 		result.adjust();
@@ -255,11 +297,11 @@ public:
 		result = result - result;
 		result.adjust();
 		CPPUNIT_ASSERT(result.toString() ==
-					   "0000");
+					   "0");
 
 		result = result - result;
 		result.adjust();
-		CPPUNIT_ASSERT(result.toString() == "0000");
+		CPPUNIT_ASSERT(result.toString() == "0");
 
 		a = MPInteger(1U);
 		b = MPInteger("ffffffff");
@@ -267,25 +309,25 @@ public:
 		CPPUNIT_ASSERT((a-b).toString() == "-fffffffe");
 		CPPUNIT_ASSERT((b-a).toString() == "fffffffe");
 
-		CPPUNIT_ASSERT((a-c).toString() == "000100000000");
+		CPPUNIT_ASSERT((a-c).toString() == "100000000");
 		CPPUNIT_ASSERT((a.getNegateValue() - b).adjust().toString() ==
-					   "-000100000000");
+					   "-100000000");
 		CPPUNIT_ASSERT((a.getNegateValue() - c).toString() == "fffffffe");
 
 
 		a = MPInteger(1U);
-		CPPUNIT_ASSERT((--a).toString() == "0000");
+		CPPUNIT_ASSERT((--a).toString() == "0");
 	}
 
  	void divideOpTest()
 	{
 		PRNGen random;
 		random.initialize(1234);
-		std::vector<unsigned short> val;
+		std::vector<MPInteger::BaseUnit> val;
 
 		const int length = 128;
 		for (int count = 0; count < length * 3; ++count)
-			val.push_back(static_cast<unsigned short>(random.getNumber()));
+			val.push_back(static_cast<MPInteger::BaseUnit>(random.getNumber()));
 
  		MPInteger a(&val[0], &val[length*1]);
 		MPInteger b(&val[length*1], &val[length*2]);
@@ -391,8 +433,8 @@ public:
 		MPInteger a;
 		CPPUNIT_ASSERT(a.value.size() == 0);
 		
-		MPInteger b(12345);
-		CPPUNIT_ASSERT(b.value.size() == 2 &&
+		MPInteger b(12345U);
+		CPPUNIT_ASSERT(b.value.size() == 1 &&
 					   b.value[0] == 12345);
 		b.adjust();
 		CPPUNIT_ASSERT(b.value.size() == 1);
@@ -401,7 +443,7 @@ public:
 		for (int index = 0; index < 15; ++index)
 			CPPUNIT_ASSERT(c.value[index] == 1);
 
-		unsigned short temp[] = {1, 2, 3, 4, 5, 6, 7, 7};
+		MPInteger::BaseUnit temp[] = {1, 2, 3, 4, 5, 6, 7, 7};
 		MPInteger d(temp, temp + 7);
 		for (unsigned int index = 0;
 			 index < 7;
@@ -409,25 +451,25 @@ public:
 			CPPUNIT_ASSERT(d.value[index] == index + 1);
 
 		MPInteger e("1b3f22fe00b1");
-		CPPUNIT_ASSERT(e.value[2] == 0x1b3f);
-		CPPUNIT_ASSERT(e.value[1] == 0x22fe);
-		CPPUNIT_ASSERT(e.value[0] == 0xb1);
+		CPPUNIT_ASSERT(e.value[1] == 0x1b3f);
+		CPPUNIT_ASSERT(e.value[0] == 0x22fe00b1);
 		CPPUNIT_ASSERT(e.isMinusSign == false);
 
 		MPInteger f(e);
-		CPPUNIT_ASSERT(f.value[2] == 0x1b3f);
-		CPPUNIT_ASSERT(f.value[1] == 0x22fe);
-		CPPUNIT_ASSERT(f.value[0] == 0xb1);
+		CPPUNIT_ASSERT(f.value[1] == 0x1b3f);
+		CPPUNIT_ASSERT(f.value[0] == 0x22fe00b1);
 		CPPUNIT_ASSERT(f.isMinusSign == false);
 
 		MPInteger g("-1b3f22fe00b1");
-		CPPUNIT_ASSERT(g.value[2] == 0x1b3f);
-		CPPUNIT_ASSERT(g.value[1] == 0x22fe);
-		CPPUNIT_ASSERT(g.value[0] == 0xb1);
+		CPPUNIT_ASSERT(g.value[1] == 0x1b3f);
+		CPPUNIT_ASSERT(g.value[0] == 0x22fe00b1);
 		CPPUNIT_ASSERT(g.isMinusSign == true);
 
+		MPInteger h("-1b3");
+		CPPUNIT_ASSERT(h.value[0] == 0x1b3);
+		CPPUNIT_ASSERT(h.isMinusSign == true);
+
 		CPPUNIT_ASSERT_THROW(MPInteger(""), TokenParseException);
-		CPPUNIT_ASSERT_THROW(MPInteger("-1b3"), TokenParseException);
 	}
 
  	void adjustTest()
@@ -452,7 +494,7 @@ public:
 							 ZeroDivideException);
 		MPInteger result = a.divide(modulas, modulo);
 		CPPUNIT_ASSERT_MESSAGE(result.toString().c_str(),
-							   result == MPInteger("00010000"));
+							   result == MPInteger("10000"));
 		CPPUNIT_ASSERT_MESSAGE(modulo.toString().c_str(),
 							   modulo == MPInteger("ffff"));
 	}
@@ -462,7 +504,7 @@ public:
 		MPInteger a(0, 20);
 		a.value[1] = 2;
 		
-		CPPUNIT_ASSERT(a.getBitLength() == 16 + 2);
+		CPPUNIT_ASSERT(a.getBitLength() == sizeof(MPInteger::BaseUnit) * 8 + 2);
 	}
 
  	void MaxColumnTest()
@@ -477,41 +519,49 @@ public:
 	{
 		MPInteger a(11, 20);
 		CPPUNIT_ASSERT(a.toString() == std::string(
-					   "000b" // 1
-					   "000b" // 2
-					   "000b" // 3
-					   "000b" // 4
-					   "000b" // 5
-					   "000b" // 6
-					   "000b" // 7
-					   "000b" // 8
-					   "000b" // 9
-					   "000b" //10
-					   "000b" //11
-					   "000b" //12
-					   "000b" //13
-					   "000b" //14
-					   "000b" //15
-					   "000b" //16
-					   "000b" //17
-					   "000b" //18
-					   "000b" //19
-					   "000b" //20
+					   "b" // 1
+					   "0000000b" // 2
+					   "0000000b" // 3
+					   "0000000b" // 4
+					   "0000000b" // 5
+					   "0000000b" // 6
+					   "0000000b" // 7
+					   "0000000b" // 8
+					   "0000000b" // 9
+					   "0000000b" //10
+					   "0000000b" //11
+					   "0000000b" //12
+					   "0000000b" //13
+					   "0000000b" //14
+					   "0000000b" //15
+					   "0000000b" //16
+					   "0000000b" //17
+					   "0000000b" //18
+					   "0000000b" //19
+					   "0000000b" //20
 			));
-		CPPUNIT_ASSERT(a.getBitLength() == 19 * 16 + 4);
+		CPPUNIT_ASSERT(a.getBitLength() == 19 * sizeof(MPInteger::BaseUnit)*8 + 4);
 	}
 
 	void makeNumberTest()
 	{
-		unsigned short sample[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		MPInteger::BaseUnit
+			sample[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		MPInteger a =
-			MPInteger::makeNumberOfBitSafe(sample,
-										   sample + (sizeof(sample) / sizeof(unsigned short)));
+			MPInteger::makeNumberOfBitSafe(
+				sample,
+				sample + (sizeof(sample) / sizeof(MPInteger::BaseUnit)));
 
 		CPPUNIT_ASSERT_MESSAGE(a.toString().c_str(),
 							   a.toString() ==
-							   "8000000000000000000000000000"
-							   "0000000000000000000000000001");
+							   "80000000000000"
+							   "00000000000000"
+							   "00000000000000"
+							   "00000000000000"
+							   "00000000000000"
+							   "00000000000000"
+							   "00000000000000"
+							   "00000000000001");
 	}
 
 	void shiftTest()
@@ -524,15 +574,15 @@ public:
 		CPPUNIT_ASSERT_MESSAGE(b.toString(),
 							   b.toString() == "2aaaaaaaaaaa");
 		b >>= 9;
-		CPPUNIT_ASSERT(b.toString() == "001555555555");
+		CPPUNIT_ASSERT(b.toString() == "1555555555");
 		
 
 		MPInteger c(a);
 		c <<= 1;
 
-		CPPUNIT_ASSERT_MESSAGE(c.toString(), c.toString() == "0001555555555554");
+		CPPUNIT_ASSERT_MESSAGE(c.toString(), c.toString() == "1555555555554");
 		c <<= 8;
-		CPPUNIT_ASSERT(c.toString() == "0155555555555400");
+		CPPUNIT_ASSERT(c.toString() == "155555555555400");
 	}
 };
 

@@ -206,7 +206,7 @@ static bool RabinPrimeTest(const MPInteger& value,
 	}
 
 	MPInteger a = base;
-	while (a < 2)
+	while (a < 2U)
 	{
 		while (a >= value)
 			a >>= 1;
@@ -222,7 +222,7 @@ static bool RabinPrimeTest(const MPInteger& value,
 	MPInteger i(1U);
 	while (i < s)
 	{
-		y = modulusExponential(y, MPInteger(2), value);
+		y = modulusExponential(y, MPInteger(2U), value);
 
 		if (y == n1)
 			return true;

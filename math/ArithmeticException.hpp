@@ -34,8 +34,8 @@ public:
 class TokenParseException : public std::runtime_error
 {
 public:
-	TokenParseException()
-		: std::runtime_error("Token parsing process in invalid token found.")
+	TokenParseException(const std::string& message = "Token parsing process in invalid token found.")
+		: std::runtime_error(message)
 	{}
 };
 

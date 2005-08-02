@@ -1,7 +1,7 @@
+#include <iostream>
 #include <math/theory/NumberTheory.hpp>
 #include <math/MPI.hpp>
 #include <Cryptography/SecureRandom.hpp>
-#include <iostream>
 #include <cstdlib>
 
 int main(int argc, char** argv)

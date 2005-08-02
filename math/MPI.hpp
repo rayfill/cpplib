@@ -18,8 +18,8 @@
 #include <limits>
 
 template <
-	typename BaseUnit_ = unsigned short,
-	typename CalcBase_ = unsigned int>
+	typename BaseUnit_ = unsigned int,
+	typename CalcBase_ = unsigned long long>
 class MultiPrecisionInteger
 {
 public:
@@ -69,7 +69,9 @@ private:
 
 	void parseString(std::string str)
 	{
-		if (str.length() < 4)
+		const unsigned int tokenLength = sizeof(BaseUnit) * 2;
+
+		if (str.length() == 0)
 			throw TokenParseException();
 
 		if (str[0] == '+' ||
@@ -79,41 +81,41 @@ private:
 			str = std::string(str, 1);
 		}
 
-		if ((str.length() % 4) != 0)
-			throw TokenParseException();
-
-		std::string::reverse_iterator current = str.rbegin();
-		while(current != str.rend() &&
-				(current + 1) != str.rend() &&
-				(current + 2) != str.rend() &&
-				(current + 3) != str.rend())
+		BaseUnit val = 0;
+		unsigned int count = 0;
+		for (std::string::reverse_iterator current = str.rbegin();
+			 current != str.rend();
+			 ++current)
 		{
-			BaseUnit val = 0;
-			for (int count = 0; count < 4; ++count)
+			if (*current >= '0' && *current <= '9')
+				val = val +
+					static_cast<BaseUnit>
+					((*current - '0') << (4 * count));
+
+			else if (*current >= 'A' && *current <= 'F')
+				val = val +
+					static_cast<BaseUnit>
+					((*current - 'A' + 10) << (4 * count));
+
+			else if (*current >= 'a' && *current <= 'f')
+				val = val +
+					static_cast<BaseUnit>
+					((*current - 'a' + 10) << (4 * count));
+
+			else
+				throw TokenParseException(&*current);
+
+			if (count == tokenLength - 1)
 			{
-				if (*current >= '0' && *current <= '9')
-					val = val +
-						static_cast<BaseUnit>
-						((*current - '0') << (4 * count));
-
-				else if (*current >= 'A' && *current <= 'F')
-					val = val +
-						static_cast<BaseUnit>
-						((*current - 'A' + 10) << (4 * count));
-
-				else if (*current >= 'a' && *current <= 'f')
-					val = val +
-						static_cast<BaseUnit>
-						((*current - 'a' + 10) << (4 * count));
-
-				else
-					throw TokenParseException();
-
-				++current;
+				value.push_back(val);
+				val = 0;
 			}
 
-			value.push_back(val);
+			count = (count + 1) % tokenLength;
 		}
+
+		if (val != 0)
+			value.push_back(val);
 	}
 
 	MultiPrecisionInteger& swap(MultiPrecisionInteger target)
@@ -218,8 +220,8 @@ private:
 					assert(temp.value.size() - rhs.value.size() < 2);
 					
 					CalcBase val =
-						(temp.value[temp.value.size()-1] <<
-						 (sizeof(BaseUnit) * 8)) +
+						(temp.value[temp.value.size()-1] * 
+						 ((CalcBase)(std::numeric_limits<BaseUnit>::max()) + 1)) +
 						temp.value[temp.value.size()-2];
 
 					count =
@@ -227,7 +229,7 @@ private:
 				}
 				else
 				{
-					// non defference column length.
+					// non difference column length.
 					count = 
 						temp.value[temp.value.size()-1] /
 						rhs.value[rhs.value.size()-1];
@@ -266,30 +268,70 @@ private:
 	}
 
 	static std::vector<bool>
-	getNonPrimeSieve(const MultiPrecisionInteger<>& baseNumber, const int sieveSize = 2048000)
+	getEratosthenesSieve(const unsigned int sieveSize)
 	{
-		std::vector<BaseUnit> primeList = MultiPrecisionInteger::getPrimes();
+		std::vector<bool> eratosthenesSieve(sieveSize);
+		eratosthenesSieve[0] = true;
+		eratosthenesSieve[1] = true;
+
+		for (unsigned int sieveIndex = 2;
+			 sieveIndex < sieveSize;
+			 ++sieveIndex)
+		{
+			if (eratosthenesSieve[sieveIndex] == true)
+				continue;
+
+			for (unsigned int offset = sieveIndex << 1;
+				 offset < sieveSize;
+				 offset += sieveIndex)
+				eratosthenesSieve[offset] = true;
+		}
+
+		return eratosthenesSieve;
+	}
+
+	static std::vector<unsigned int> getPrimeList(const unsigned int size)
+	{
+		std::vector<bool> eratosthenesSieve = getEratosthenesSieve(size);
+		std::vector<unsigned int> results;
+
+		results.push_back(2);
+		for (unsigned int index = 1;
+			 index < eratosthenesSieve.size();
+			 index += 2)
+		{
+			if (eratosthenesSieve[index] == false)
+				results.push_back(index);
+		}
+		
+		return results;
+	}
+
+	static std::vector<bool>
+	getNonPrimeSieve(const MultiPrecisionInteger<>& baseNumber,
+					 std::vector<unsigned int>& primeList,
+					 const unsigned int sieveSize = 16000*64)
+	{
 		std::vector<bool> nonPrimeSieve(sieveSize);
 	
-		std::vector<MultiPrecisionInteger<>::BaseUnit>::iterator itor;
-		
-		for (itor = primeList.begin();
+		for (std::vector<unsigned int>::iterator itor =
+				 primeList.begin();
 			 itor != primeList.end();
 			 ++itor)
 		{
-			if (*itor >= sieveSize)
-				break;
-
 			BaseUnit modulus = baseNumber.modulus(*itor);
+			if (nonPrimeSieve[*itor-modulus] == true)
+				continue;
 
 			// minimum dividable number, for base number offset.
-			for (int offset = (modulus == 0 ? *itor : *itor - modulus);
+			for (unsigned int offset = *itor - modulus;
 				 offset < sieveSize;
 				 offset += *itor)
 			{
 				nonPrimeSieve[offset] = true;
 			}
 		}
+
 		return nonPrimeSieve;
 	}
 		
@@ -312,31 +354,27 @@ public:
 	{}
 
 	MultiPrecisionInteger(
-		const unsigned int value_)
+		const BaseUnit value_)
 		: value(), isMinusSign(false)
 	{
-		unsigned char val[4] = {
-			static_cast<unsigned char>(value_ & 0xff),
-			static_cast<unsigned char>((value_ >> 8) & 0xff),
-			static_cast<unsigned char>((value_ >> 16) & 0xff),
-			static_cast<unsigned char>((value_ >> 24) & 0xff)
-		};
+		value.push_back(value_);
+	}
 
-		unsigned int index = 0;
-		while (index < sizeof(unsigned int))
+	MultiPrecisionInteger(
+		CalcBase value_)
+		: value(), isMinusSign(false)
+	{
+		const unsigned int ArraySize =
+			sizeof(CalcBase) / sizeof(BaseUnit);
+
+		for (unsigned int index = 0;
+			 index < ArraySize;
+			 ++index)
 		{
-			BaseUnit temp = 0;
-			unsigned int offset = 0;
-			do
-			{
-				temp = temp + static_cast<BaseUnit>(val[index] <<
-													(offset * 8));
-				++index;
-				++offset;
-			}
-			while (offset < sizeof(BaseUnit));
-
-			value.push_back(temp);
+			value.push_back(
+				value_ &
+				std::numeric_limits<BaseUnit>::max());
+			value_ >>= sizeof(BaseUnit) * 8;
 		}
 	}
 
@@ -391,7 +429,7 @@ public:
 	{
 		*head |= 0x01; // must odd prime.
 		// max bit safety.
-		*(last-1) |= ((std::numeric_limits<BaseUnit>::max() + 1) >> 1);
+		*(last-1) |= (((CalcBase)std::numeric_limits<BaseUnit>::max() + 1) >> 1);
 
 		return MultiPrecisionInteger(head, last);
 	}
@@ -463,14 +501,13 @@ public:
 	std::string toString() const
 	{
 		if (this->isZero())
-			return "0000";
+			return "0";
 		
 		std::stringstream result;
 		if (this->isMinusSign == true)
 			result << "-";
 
 		bool isHeadProcessing = true;
-		result.fill('0');
 		for (typename 
 				 MPVector::const_reverse_iterator itor =
 				 this->value.rbegin();
@@ -479,11 +516,22 @@ public:
 		{
 			if (isHeadProcessing == true && *itor == 0)
 				continue;
-			isHeadProcessing = false;
-			result 
-				<< std::setw(sizeof(BaseUnit)*2)
-				<< std::hex 
-				<< *itor;
+
+			if (isHeadProcessing == true)
+			{
+				isHeadProcessing = false;
+				result 
+					<< std::hex 
+					<< *itor;
+				result.fill('0');
+			}
+			else
+			{
+				result 
+					<< std::hex 
+					<< std::setw(sizeof(BaseUnit)*2)
+					<< *itor;
+			}
 		}
 
 		return result.str();
@@ -549,7 +597,7 @@ public:
 		MultiPrecisionInteger& a = this->operator*=(r).operator%=(n);
 		MultiPrecisionInteger x = r % n;
 		MultiPrecisionInteger invertR = modulusInvert(r, n);
-		MultiPrecisionInteger n_dash = ((r * invertR) - 1) / n;
+		MultiPrecisionInteger n_dash = ((r * invertR) - 1U) / n;
 
 		for (size_t index = e.getBitLength();
 			 index > 0;
@@ -692,7 +740,7 @@ public:
 		{
 			CalcBase temp;
 			temp =
-				this->value[offset] + 
+				(CalcBase)this->value[offset] + 
 				(offset < rhs.value.size() ? rhs.value[offset] : 0) + carry;
 
 			if (temp > getMaxBaseUnit())
@@ -809,7 +857,7 @@ public:
 			for (offset = 0; offset < lhsMaxColumn; ++offset)
 			{
 				CalcBase tempResult = 
-					rhs.value[subOffset] *
+					(CalcBase)rhs.value[subOffset] *
 					this->value[offset] +
 					carry +
 					result.value[offset+subOffset];
@@ -823,7 +871,7 @@ public:
 			while (carry)
 			{
 				CalcBase tempResult =
-					carry + result.value[offset+subOffset];
+					(CalcBase)carry + result.value[offset+subOffset];
 				carry = static_cast<BaseUnit>(
 					(tempResult >> (sizeof(BaseUnit) * 8)) & 
 					getMaxBaseUnit());
@@ -863,7 +911,7 @@ public:
 		if (this->value[0] != getMaxBaseUnit())
 			this->value[0] += 1;
 		else
-			*this += 1;
+			*this += 1U;
 
 		return *this;
 	}
@@ -890,7 +938,7 @@ public:
 		if (!this->value[0] != 0)
 			--this->value[0];
 		else
-			*this -= 1;
+			*this -= 1U;
 
 		return *this;
 	}
@@ -1067,31 +1115,35 @@ public:
 	}
 
 	static MultiPrecisionInteger
-	getProbablePrime(const size_t bitToLength, Random& random, const unsigned int checkDepth = 4)
+	getProbablePrime(const size_t bitToLength,
+					 Random& random,
+					 const unsigned int checkDepth = 2)
 	{
 		typedef std::vector<BaseUnit> BaseUnitArray;
 
-		const unsigned int nonPrimeListLength = bitToLength * 4;
 		const size_t numberOfBytes =
 			(bitToLength / 8) +
 			((bitToLength % 8) == 0 ? 0 : 1);
 
-		bool isPrime = false;
-		
 		BaseUnitArray numberSource =
-			random.getRandomWordVector(numberOfBytes / 2);
+			random.getRandomDoubleWordVector(numberOfBytes / 4);
 		MultiPrecisionInteger baseNumber =
 			MultiPrecisionInteger::makeNumberOfBitSafe(numberSource);
 
+		static std::vector<unsigned int> primeList =
+			getPrimeList(150 * 64 * 2);
 
 		for (;;)
 		{
 			// create sieve
-			std::vector<bool> sieve = getNonPrimeSieve(baseNumber);
+			std::vector<bool> sieve =
+				getNonPrimeSieve(baseNumber,
+								 primeList,
+								 bitToLength);
 
 			for (unsigned int sieveOffset = 0;
 				 sieveOffset < sieve.size();
-				 ++sieveOffset)
+				 sieveOffset += 2)
 			{
 				// not prime.
 				if (sieve[sieveOffset] != false)
@@ -1101,6 +1153,7 @@ public:
 				const MultiPrecisionInteger workingNumber =
 					baseNumber + sieveOffset;
 
+//				std::cout << "offset :" << sieveOffset << std::endl;
 				for (unsigned int primeCheckDepth = 0;
 					 primeCheckDepth < checkDepth;
 					 ++primeCheckDepth)
@@ -1115,8 +1168,8 @@ public:
 					else
 					{
 						// generate evidence number.
-						std::vector<unsigned short> val =
-							random.getRandomWordVector(
+						std::vector<BaseUnit> val =
+							random.getRandomDoubleWordVector(
 								workingNumber.getMaxColumn());
 						MultiPrecisionInteger a =
 							MultiPrecisionInteger(

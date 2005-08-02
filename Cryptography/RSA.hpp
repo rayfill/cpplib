@@ -193,14 +193,14 @@ public:
 		do
 		{
 			p = MPInteger::getProbablePrime(numberOfKeyBits / 2, random);
-		} while (gcd(p - 1, encryptExponent) != MPInteger(1U));
+		} while (gcd(p - 1U, encryptExponent) != MPInteger(1U));
 
 		MPInteger q;
 		do
 		{
 			q =	MPInteger::getProbablePrime(
 				numberOfKeyBits-(numberOfKeyBits / 2), random);
-		} while (gcd(q - 1, encryptExponent) != MPInteger(1U));
+		} while (gcd(q - 1U, encryptExponent) != MPInteger(1U));
 
 		return KeyPair(p, q, encryptExponent);
 	}
