@@ -1,6 +1,7 @@
 #ifndef MPI_HPP_
 #define MPI_HPP_
 
+
 #include <math/ArithmeticException.hpp>
 #include <math/theory/AlgebraTheory.hpp>
 #include <math/PrimeList.hpp>
@@ -8,6 +9,7 @@
 #include <IO/Endian.hpp>
 #include <support/HeapChunkAllocator.hpp>
 #include <vector>
+#include <list>
 #include <string>
 #include <algorithm>
 #include <iterator>
@@ -19,14 +21,14 @@
 
 template <
 	typename BaseUnit_ = unsigned int,
-	typename CalcBase_ = unsigned long long>
+	typename CalcBase_ = unsigned long long,
+	typename Allocator = /*std::allocator<BaseUnit_>/*/HeapChunkAllocator<BaseUnit_, 8192*16, 64>/**/ >
 class MultiPrecisionInteger
 {
 public:
 	typedef BaseUnit_ BaseUnit;
 	typedef CalcBase_ CalcBase;
-	typedef std::vector<BaseUnit,
-		HeapChunkAllocator<BaseUnit, 8192, 512> > MPVector;
+	typedef std::vector<BaseUnit, Allocator> MPVector;
 
 private:
 	friend class MPITest;
@@ -177,7 +179,6 @@ private:
 	MultiPrecisionInteger&
 	divide(const MultiPrecisionInteger& src,
 		   MultiPrecisionInteger& modulo)
-		throw(OperationSourceException, ZeroDivideException)
 	{
 		if (this->isMinusSign != false ||
 			src.isMinusSign != false)
@@ -267,74 +268,6 @@ private:
 		return this->adjust();
 	}
 
-	static std::vector<bool>
-	getEratosthenesSieve(const unsigned int sieveSize)
-	{
-		std::vector<bool> eratosthenesSieve(sieveSize);
-		eratosthenesSieve[0] = true;
-		eratosthenesSieve[1] = true;
-
-		for (unsigned int sieveIndex = 2;
-			 sieveIndex < sieveSize;
-			 ++sieveIndex)
-		{
-			if (eratosthenesSieve[sieveIndex] == true)
-				continue;
-
-			for (unsigned int offset = sieveIndex << 1;
-				 offset < sieveSize;
-				 offset += sieveIndex)
-				eratosthenesSieve[offset] = true;
-		}
-
-		return eratosthenesSieve;
-	}
-
-	static std::vector<unsigned int> getPrimeList(const unsigned int size)
-	{
-		std::vector<bool> eratosthenesSieve = getEratosthenesSieve(size);
-		std::vector<unsigned int> results;
-
-		results.push_back(2);
-		for (unsigned int index = 1;
-			 index < eratosthenesSieve.size();
-			 index += 2)
-		{
-			if (eratosthenesSieve[index] == false)
-				results.push_back(index);
-		}
-		
-		return results;
-	}
-
-	static std::vector<bool>
-	getNonPrimeSieve(const MultiPrecisionInteger<>& baseNumber,
-					 std::vector<unsigned int>& primeList,
-					 const unsigned int sieveSize = 16000*64)
-	{
-		std::vector<bool> nonPrimeSieve(sieveSize);
-	
-		for (std::vector<unsigned int>::iterator itor =
-				 primeList.begin();
-			 itor != primeList.end();
-			 ++itor)
-		{
-			BaseUnit modulus = baseNumber.modulus(*itor);
-			if (nonPrimeSieve[*itor-modulus] == true)
-				continue;
-
-			// minimum dividable number, for base number offset.
-			for (unsigned int offset = *itor - modulus;
-				 offset < sieveSize;
-				 offset += *itor)
-			{
-				nonPrimeSieve[offset] = true;
-			}
-		}
-
-		return nonPrimeSieve;
-	}
-		
 public:
 		
 	MultiPrecisionInteger& negate()
@@ -372,8 +305,8 @@ public:
 			 ++index)
 		{
 			value.push_back(
-				value_ &
-				std::numeric_limits<BaseUnit>::max());
+				static_cast<BaseUnit>(value_ &
+				std::numeric_limits<BaseUnit>::max()));
 			value_ >>= sizeof(BaseUnit) * 8;
 		}
 	}
@@ -835,7 +768,6 @@ public:
 		assert(carry == 0);
 
 		return this->adjust();
-		return *this;
 	}
 	
 	MultiPrecisionInteger&
@@ -1125,35 +1057,67 @@ public:
 			(bitToLength / 8) +
 			((bitToLength % 8) == 0 ? 0 : 1);
 
+
 		BaseUnitArray numberSource =
 			random.getRandomDoubleWordVector(numberOfBytes / 4);
 		MultiPrecisionInteger baseNumber =
 			MultiPrecisionInteger::makeNumberOfBitSafe(numberSource);
 
-		static std::vector<unsigned int> primeList =
-			getPrimeList(150 * 64 * 2);
+		std::vector<unsigned int> primeList =
+//			getPrimeList(150 * 64 * 2);
+			getPrimes();
+		
+		const unsigned int sieve_size =
+			(unsigned int)((bitToLength / 10) * 64 * 2);
 
 		for (;;)
 		{
-			// create sieve
-			std::vector<bool> sieve =
-				getNonPrimeSieve(baseNumber,
-								 primeList,
-								 bitToLength);
 
-			for (unsigned int sieveOffset = 0;
-				 sieveOffset < sieve.size();
-				 sieveOffset += 2)
+			// create sieve.
+			// offset = 0, 2, 4, ...; index = 0, 1, 2, ...
+			// index = offset / 2;
+
+			std::vector<bool> sieve(sieve_size);
+
+			for (unsigned int offset = 0;
+				 offset < sieve_size * 2 + 1;
+				 offset += 2)
 			{
-				// not prime.
-				if (sieve[sieveOffset] != false)
+				if (sieve[offset / 2] == true)
 					continue;
 
-				// probable prime test.
-				const MultiPrecisionInteger workingNumber =
-					baseNumber + sieveOffset;
+				bool divided = false;
+				for (std::vector<unsigned int>::iterator primeItor = 
+						 primeList.begin();
+					 primeItor != primeList.end();
+					 ++primeItor)
+				{
+					BaseUnit modulo =
+						baseNumber.modulus(*primeItor);
 
-//				std::cout << "offset :" << sieveOffset << std::endl;
+					if ((modulo + offset) % *primeItor == 0)
+					{
+						for (unsigned int sieveOffset = offset;
+							 sieveOffset < sieve_size * 2 + 1;
+							 sieveOffset += *primeItor)
+						{
+							sieve[sieveOffset / 2] = true;
+						}
+						primeList.erase(primeItor);
+						divided = true;
+						break;
+					}
+				}
+				if (divided)
+					continue;
+
+
+				// ‘f”•\‚ª‚È‚­‚È‚Á‚½or‚·‚×‚Ä‚Ì‘f”‚ðö‚è”²‚¯‚½
+
+				// probable prime test.
+				MultiPrecisionInteger workingNumber =
+					baseNumber + offset;
+
 				for (unsigned int primeCheckDepth = 0;
 					 primeCheckDepth < checkDepth;
 					 ++primeCheckDepth)
@@ -1168,26 +1132,28 @@ public:
 					else
 					{
 						// generate evidence number.
-						std::vector<BaseUnit> val =
+/*						std::vector<BaseUnit> val =
 							random.getRandomDoubleWordVector(
 								workingNumber.getMaxColumn());
 						MultiPrecisionInteger a =
 							MultiPrecisionInteger(
-								&val[0], &val[val.size()]);
+								&*val.begin(), &*val.end());*/
 
 						if (RabinPrimeTest(
 								workingNumber,
-								a) == false)
+								MultiPrecisionInteger(primeCheckDepth + 2)) == false)
 							break;
 						else
 							if (primeCheckDepth == (checkDepth - 1))
+							{
 								return workingNumber;
+							}
 					}
 				}
 			}
 
 			// out of range for sieves. slide offset base number retry.
-			baseNumber += sieve.size();
+			baseNumber += (BaseUnit)sieve.size();
 		}
 	}
 };

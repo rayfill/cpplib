@@ -3,15 +3,6 @@
 #include <util/Notification.hpp>
 
 
-class eventHandler : public Observer
-{
-public:
-	void notify(Observable* notifier)
-	{
-		std::cout << ".";
-		std::cout.flush();
-	}
-};
 
 int usage()
 {
@@ -34,12 +25,13 @@ int main(int argc, char** argv)
 	{
 		KeyPair pair = RSA::makeKeyPair(bits);
 
-		std::cout << pair.getPublicKey() << std::endl;
-		std::cout << pair.getPrivateKey() << std::endl;
+		std::cerr << pair.getPublicKey() << std::endl;
+		std::cerr << pair.getPrivateKey() << std::endl;
 	}
 	catch (std::exception& e)
 	{
-		std::cout << e.what() << std::endl;
+		std::cerr << e.what() << std::endl;
 	}
+
 	return 0;
 }

@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <util/Singleton.hpp>
 
+#include <cassert>
+
 template <size_t AllocHeapSize,
 	size_t DefaultAllocCount>
 class HeapManager
@@ -17,7 +19,7 @@ private:
 	std::vector<void*> osHeap;
 	const size_t HeapUnit;
 
-	void alloc()
+	void alloc_()
 	{
 		osHeap.push_back(new char[HeapUnit]());
 		void* head = osHeap.back();
@@ -26,7 +28,7 @@ private:
 				reinterpret_cast<char*>(head) +
 				AllocHeapSize * count);
 	}
-	void free()
+	void free_()
 	{
 		for (std::vector<void*>::iterator itor = osHeap.begin();
 			 itor != osHeap.end();
@@ -41,12 +43,12 @@ public:
 		heaps(), osHeap(),
 		HeapUnit(AllocHeapSize * DefaultAllocCount)
 	{
-		alloc();
+		alloc_();
 	}
 
 	~HeapManager()
 	{
-		free();
+		free_();
 	}
 	
 	void* checkout(size_t count)
@@ -57,7 +59,7 @@ public:
 
 		char* p = NULL;
 		if (heaps.size() < count)
-			alloc();
+			alloc_();
 
 		if (count == 1)
 		{
@@ -161,6 +163,9 @@ public:
 
 	void deallocate(pointer p, size_type n)
 	{
+		if (p == 0)
+			assert(false);
+
 		if (n == 0)
 			return;
 
