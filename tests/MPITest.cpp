@@ -30,85 +30,9 @@ private:
  	CPPUNIT_TEST(toConverterTest);
  	CPPUNIT_TEST(montgomeryTest);
  	CPPUNIT_TEST(unitBaseModulusTest);
- 	CPPUNIT_TEST(nonPrimeSieveTest);
- 	CPPUNIT_TEST(eratosthenesSieveTest);
- 	CPPUNIT_TEST(primeListTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void primeListTest()
-	{
-		std::vector<bool> eratosthenesSieve = MPInteger::getEratosthenesSieve(17930);
-		std::vector<unsigned int> primeList = MPInteger::getPrimeList(17930);
-
-		for (unsigned int index = 0;
-			 index < 17930;
-			 ++index)
-		{
-			if (index == 2)
-			{
-				;
-			}
-			else if (eratosthenesSieve[index] == false)
-			{
-				CPPUNIT_ASSERT(std::find(primeList.begin(), primeList.end(), index) != primeList.end());
-			}
-			else
-			{
-				CPPUNIT_ASSERT(std::find(primeList.begin(), primeList.end(), index) == primeList.end());
-			}
-		}
-	}
-
-	void eratosthenesSieveTest()
-	{
-		std::vector<bool> eratosthenesSieve = MPInteger::getEratosthenesSieve(17929);
-		std::vector<MPInteger::BaseUnit> primeLists = MPInteger::getPrimes();
-
-		for (unsigned int index = 0; index < 17929; ++index)
-		{
-			std::vector<MPInteger::BaseUnit>::iterator finder =
-				std::find(primeLists.begin(), primeLists.end(), index);
-			if (finder != primeLists.end())
-			{
-				// find prime.
-				CPPUNIT_ASSERT(eratosthenesSieve[index] == false);
-			}
-			else
-			{
-				// not find prime.
-				CPPUNIT_ASSERT(eratosthenesSieve[index] == true);
-			}
-		}
-	}
-
-	void nonPrimeSieveTest()
-	{
-		std::vector<unsigned int> primeList =
-			MPInteger::getPrimeList(150*64*2);
-		std::vector<unsigned int> primeList2 =
-			MPInteger::getPrimeList(150*64*2);
-		std::vector<unsigned int> primeList3 =
-			MPInteger::getPrimeList(150*64*2);
-		std::vector<bool> nonPrimeSieveByBaseZero =
-			MPInteger::getNonPrimeSieve(MPInteger("0"), primeList, 30000);
-		std::vector<bool> nonPrimeSieveByBaseOne =
-			MPInteger::getNonPrimeSieve(MPInteger("1"), primeList, 30000);
-
-		for (unsigned int offset = 1;
-			 offset < nonPrimeSieveByBaseZero.size() - 1;
-			 ++offset)
-		{
-			if (nonPrimeSieveByBaseZero[offset] !=
-				nonPrimeSieveByBaseOne[offset-1])
-
-				std::cout << std::endl << "offset =" << offset << std::endl;
-				
-			CPPUNIT_ASSERT(nonPrimeSieveByBaseZero[offset] ==
-						   nonPrimeSieveByBaseOne[offset-1]);
-		}
-	}
-
 	void unitBaseModulusTest()
 	{
 		MPInteger a(

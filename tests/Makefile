@@ -6,10 +6,11 @@ CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 LIBS= -lwsock32 -lcppunit -lgdi32
 TARGET= UnitTest
 OBJS= TestMain.o \
+	SieveTest.o \
 	MPITest.o \
 	StateMachineTest.o \
 	FSMTest.o \
-	RSATest.o \
+#	RSATest.o \
 # 	AlgebraTheoryTest.o \
 # 	NumberTheoryTest.o \
 # 	AsymmetricKeyTest.o \

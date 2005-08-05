@@ -22,7 +22,7 @@
 template <
 	typename BaseUnit_ = unsigned int,
 	typename CalcBase_ = unsigned long long,
-	typename Allocator = /*std::allocator<BaseUnit_>/*/HeapChunkAllocator<BaseUnit_, 8192*16, 64>/**/ >
+	typename Allocator = /**/std::allocator<BaseUnit_>/*/HeapChunkAllocator<BaseUnit_, 8192*16, 64>/**/ >
 class MultiPrecisionInteger
 {
 public:
@@ -32,6 +32,7 @@ public:
 
 private:
 	friend class MPITest;
+	friend class Sieve;
 
 	MPVector value;
 	bool isMinusSign;
@@ -362,7 +363,8 @@ public:
 	{
 		*head |= 0x01; // must odd prime.
 		// max bit safety.
-		*(last-1) |= (((CalcBase)std::numeric_limits<BaseUnit>::max() + 1) >> 1);
+		*(last-1) |= 
+			(((CalcBase)std::numeric_limits<BaseUnit>::max() + 1) >> 1);
 
 		return MultiPrecisionInteger(head, last);
 	}
