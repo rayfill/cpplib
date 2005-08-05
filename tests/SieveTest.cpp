@@ -9,7 +9,7 @@ class SieveTest : public CppUnit::TestFixture
 {
 private:
 	CPPUNIT_TEST_SUITE(SieveTest);
-//	CPPUNIT_TEST(getPrimesTest);
+	CPPUNIT_TEST(getPrimesTest);
 	CPPUNIT_TEST(smallSieveTest);
  	CPPUNIT_TEST(numberSieveTest);
 	CPPUNIT_TEST_SUITE_END();
