@@ -31,8 +31,8 @@ crtModulusExponential(NumberType target,
 
 template <typename NumberType>
 static NumberType modulusExponential(NumberType target,
-						  NumberType exponent,
-						  const NumberType& divisor)
+									 NumberType exponent,
+									 const NumberType& divisor)
 {
 	if (target == NumberType(0U))
 		return NumberType(0U);

@@ -24,8 +24,8 @@ public:
 
 		MPInteger M =
 		crtModulusExponential(C, D, p, q,
-							  modulusExponential(p, q-1, n),
-							  modulusExponential(q, p-1, n),
+							  modulusExponential(p, q-1U, n),
+							  modulusExponential(q, p-1U, n),
 							  n);
 
 		CPPUNIT_ASSERT(M == MPInteger(21U));
@@ -40,11 +40,11 @@ public:
 		CPPUNIT_ASSERT(modulusExponential(a, b, b) == a);
 	}
 
-	bool checkToCount(const MPInteger& target, int count)
+	bool checkToCount(const MPInteger& target, unsigned int count)
 	{
-		for (int i = 0; i < count; ++i)
+		for (unsigned int i = 0; i < count; ++i)
 		{
-			if (target > MPInteger(i+1))
+			if (target > MPInteger(i+1U))
 				if (RabinPrimeTest(target,
 								   i == 0 ? MPInteger(2U) : MPInteger(i + 1U))
 					== false)
@@ -54,8 +54,8 @@ public:
 	}
 	void SpecializedRabinPrimeTestTest()
 	{
-		MPInteger a(2), b(3), c(4), d(5), e(7), f(9),
-			g(11), h(12), i(13), j(15), k(17);
+		MPInteger a(2U), b(3U), c(4U), d(5U), e(7U), f(9U),
+			g(11U), h(12U), i(13U), j(15U), k(17U);
 
 		CPPUNIT_ASSERT(checkToCount(a, 3) == true);
 		CPPUNIT_ASSERT(checkToCount(b, 3) == true);

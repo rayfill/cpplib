@@ -2,10 +2,9 @@
 #define SIEVE_HPP_
 
 #include <vector>
-#include <math/MPI.hpp>
-
 #include <cassert>
 
+template<typename BaseNumberType>
 class Sieve
 {
 	friend class SieveTest;
@@ -13,7 +12,7 @@ class Sieve
 private:
 	std::vector<bool> bitSieve;
 
-	typedef MPInteger::BaseUnit BaseUnit;
+	typedef typename BaseNumberType::BaseUnit BaseUnit;
 	static std::vector<BaseUnit> getSmallPrimes()
 	{
 		static Sieve smallPrimes;
@@ -79,7 +78,7 @@ private:
 
 public:
 
-	Sieve(const MPInteger& baseNumber,
+	Sieve(const BaseNumberType& baseNumber,
 		  const unsigned int sieveSize = 0):
 		bitSieve(sieveSize)
 	{
@@ -93,19 +92,13 @@ public:
 			throw std::invalid_argument(
 				"baseNumber is minimum. over than small primes.");
 
-		for (std::vector<BaseUnit>::iterator itor = primes.begin();
+		for (typename std::vector<BaseUnit>::iterator itor = primes.begin();
 			 itor != primes.end();
 			 ++itor)
 		{
-			BaseUnit modulo = baseNumber.modulus(*itor);
+			BaseUnit modulo = baseNumber % (*itor);
 
 			mark(((modulo == 0) ? 0 : *itor - modulo), *itor);
-// 			for (unsigned int offset = ((modulo == 0) ? 0 : *itor - modulo);
-// 				 offset < bitSieve.size();
-// 				 offset += *itor)
-// 			{
-// 				set(offset, true);
-// 			}
 		}
 	}
 

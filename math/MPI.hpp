@@ -4,10 +4,11 @@
 
 #include <math/ArithmeticException.hpp>
 #include <math/theory/AlgebraTheory.hpp>
-#include <math/PrimeList.hpp>
+#include <math/Sieve.hpp>
+//#include <math/PrimeList.hpp>
 #include <Cryptography/Random.hpp>
 #include <IO/Endian.hpp>
-#include <support/HeapChunkAllocator.hpp>
+//#include <support/HeapChunkAllocator.hpp>
 #include <vector>
 #include <list>
 #include <string>
@@ -22,7 +23,8 @@
 template <
 	typename BaseUnit_ = unsigned int,
 	typename CalcBase_ = unsigned long long,
-	typename Allocator = /**/std::allocator<BaseUnit_>/*/HeapChunkAllocator<BaseUnit_, 8192*16, 64>/**/ >
+	typename Allocator = std::allocator<BaseUnit_> >
+//typename Allocator = HeapChunkAllocator<BaseUnit_, 8192*16, 64> >
 class MultiPrecisionInteger
 {
 public:
@@ -32,7 +34,6 @@ public:
 
 private:
 	friend class MPITest;
-	friend class Sieve;
 
 	MPVector value;
 	bool isMinusSign;
@@ -53,12 +54,12 @@ private:
 		}
 	};
 
-	static const std::vector<BaseUnit> getPrimes()
-	{
-		return std::vector<BaseUnit>(
-			&primes[0],
-			&primes[sizeof(primes) / sizeof(unsigned int)]);
-	}
+// 	static const std::vector<BaseUnit> getPrimes()
+// 	{
+// 		return std::vector<BaseUnit>(
+// 			&primes[0],
+// 			&primes[sizeof(primes) / sizeof(unsigned int)]);
+// 	}
 
 	const static CalcBase getCarryValue()
 	{
@@ -646,6 +647,11 @@ public:
 		return modulo;
 	}
 
+	BaseUnit operator%(const BaseUnit& rhs) const
+	{
+		return this->modulus(rhs);
+	}
+
 	MultiPrecisionInteger&
 	operator+=(const MultiPrecisionInteger& rhs)
 	{
@@ -1065,60 +1071,23 @@ public:
 		MultiPrecisionInteger baseNumber =
 			MultiPrecisionInteger::makeNumberOfBitSafe(numberSource);
 
-		std::vector<unsigned int> primeList =
-//			getPrimeList(150 * 64 * 2);
-			getPrimes();
+// 		std::vector<unsigned int> primeList =
+// //			getPrimeList(150 * 64 * 2);
+// 			getPrimes();
 		
 		const unsigned int sieve_size =
 			(unsigned int)((bitToLength / 10) * 64 * 2);
 
 		for (;;)
 		{
+			Sieve<MultiPrecisionInteger> sieve(baseNumber);
 
-			// create sieve.
-			// offset = 0, 2, 4, ...; index = 0, 1, 2, ...
-			// index = offset / 2;
-
-			std::vector<bool> sieve(sieve_size);
-
-			for (unsigned int offset = 0;
-				 offset < sieve_size * 2 + 1;
-				 offset += 2)
+			for (unsigned int offset = 0; offset < sieve.size(); ++offset)
 			{
-				if (sieve[offset / 2] == true)
+				if (sieve.isCompositeNumber(offset))
 					continue;
-
-				bool divided = false;
-				for (std::vector<unsigned int>::iterator primeItor = 
-						 primeList.begin();
-					 primeItor != primeList.end();
-					 ++primeItor)
-				{
-					BaseUnit modulo =
-						baseNumber.modulus(*primeItor);
-
-					if ((modulo + offset) % *primeItor == 0)
-					{
-						for (unsigned int sieveOffset = offset;
-							 sieveOffset < sieve_size * 2 + 1;
-							 sieveOffset += *primeItor)
-						{
-							sieve[sieveOffset / 2] = true;
-						}
-						primeList.erase(primeItor);
-						divided = true;
-						break;
-					}
-				}
-				if (divided)
-					continue;
-
 
 				// ‘f”•\‚ª‚È‚­‚È‚Á‚½or‚·‚×‚Ä‚Ì‘f”‚ðö‚è”²‚¯‚½
-
-				// probable prime test.
-				MultiPrecisionInteger workingNumber =
-					baseNumber + offset;
 
 				for (unsigned int primeCheckDepth = 0;
 					 primeCheckDepth < checkDepth;
@@ -1127,33 +1096,26 @@ public:
 					if (primeCheckDepth == 0)
 					{
 						if (RabinPrimeTest(
-								workingNumber,
+								baseNumber + offset,
 								MultiPrecisionInteger(2U)) == false)
 							break;
 					}
 					else
 					{
 						// generate evidence number.
-/*						std::vector<BaseUnit> val =
-							random.getRandomDoubleWordVector(
-								workingNumber.getMaxColumn());
-						MultiPrecisionInteger a =
-							MultiPrecisionInteger(
-								&*val.begin(), &*val.end());*/
-
 						if (RabinPrimeTest(
-								workingNumber,
-								MultiPrecisionInteger(primeCheckDepth + 2)) == false)
+								baseNumber + offset,
+								MultiPrecisionInteger(primeCheckDepth + 2U))
+							== false)
 							break;
 						else
 							if (primeCheckDepth == (checkDepth - 1))
 							{
-								return workingNumber;
+								return baseNumber + offset;
 							}
 					}
 				}
 			}
-
 			// out of range for sieves. slide offset base number retry.
 			baseNumber += (BaseUnit)sieve.size();
 		}

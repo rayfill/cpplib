@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cppunit/extensions/helpermacros.h>
+#include <math/MPI.hpp>
 #include <math/Sieve.hpp>
 
 #define OVER_2K_PRIMES
@@ -18,7 +19,7 @@ public:
  	void numberSieveTest()
  	{
  		MPInteger baseNumber("4B07");
- 		Sieve sieve(baseNumber, 100);
+ 		Sieve<MPInteger> sieve(baseNumber, 100);
 
 		// primes
 		// 19207, offset 0
@@ -50,7 +51,7 @@ public:
 
 	void smallSieveTest()
 	{
-		Sieve smallSieve;
+		Sieve<MPInteger> smallSieve;
 
 		
 		CPPUNIT_ASSERT(smallSieve.get(1) == true);
@@ -70,7 +71,9 @@ public:
 
 	void getPrimesTest()
 	{
-		std::vector<unsigned int> primeVector = Sieve::getSmallPrimes();
+		std::vector<unsigned int> primeVector =
+			Sieve<MPInteger>::getSmallPrimes();
+		CPPUNIT_ASSERT(primeVector.size() > 0);
 
 		for (unsigned int offset = 1;
 			 offset < primeVector.size();

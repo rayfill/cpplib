@@ -14,8 +14,8 @@ public:
 		try
 		{
 			KeyPair pair(5U, 7U);
-			CPPUNIT_ASSERT(pair.modulus.toString() == "0023");
-			CPPUNIT_ASSERT(pair.encryptExponent.toString() == "00010001");
+			CPPUNIT_ASSERT(pair.modulus.toString() == "23");
+			CPPUNIT_ASSERT(pair.encryptExponent.toString() == "10001");
 
 			MPInteger m(8U);
 			MPInteger c = modulusExponential(m, pair.encryptExponent, pair.modulus);

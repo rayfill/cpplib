@@ -29,7 +29,7 @@ public:
 		
 		MPInteger a(7U);
 		MPInteger b(5U);
-		CPPUNIT_ASSERT(gcd(a, b) == 1);
+		CPPUNIT_ASSERT(gcd(a, b) == 1U);
 
 		a = MPInteger(30000000U);
 		b = MPInteger(150000U);
