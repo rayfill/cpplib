@@ -18,15 +18,15 @@ public:
 		std::string test1 = "abcdefg";
 		std::string test2 = "abccdef";
 
-		fsm.add(test1.begin(), test1.end(), test1);
-		fsm.add(test2.begin(), test2.end(), test2);
+		fsm.add(test1.begin(), test1.end(), 1);
+		fsm.add(test2.begin(), test2.end(), 2);
 
-		FSM::state_t* abcdefg = fsm.findNamedState("abcdefg");
-		FSM::state_t* abccdef = fsm.findNamedState("abccdef");
-		FSM::state_t* null = fsm.findNamedState("hogehoge");
+		FSM::state_t* abcdefg = fsm.findStateForId(1);
+		FSM::state_t* abccdef = fsm.findStateForId(2);
+		FSM::state_t* null = fsm.findStateForId(3);
 
-		CPPUNIT_ASSERT(abcdefg->toString() == test1);
-		CPPUNIT_ASSERT(abccdef->toString() == test2);
+		CPPUNIT_ASSERT(abcdefg->toString() == "1");
+		CPPUNIT_ASSERT(abccdef->toString() == "2");
 		CPPUNIT_ASSERT(null == NULL);
 	}
 
@@ -36,8 +36,8 @@ public:
 		std::string test1 = "abcdefg";
 		std::string test2 = "abccdef";
 
-		fsm.add(test1.begin(), test1.end(), test1);
-		fsm.add(test2.begin(), test2.end(), test2);
+		fsm.add(test1.begin(), test1.end(), 1);
+		fsm.add(test2.begin(), test2.end(), 2);
 
 		CPPUNIT_ASSERT(11 == fsm.states.size());
 
@@ -52,7 +52,7 @@ public:
 		state = state->getTransit('e');
 		state = state->getTransit('f');
 		state = state->getTransit('g');
-		CPPUNIT_ASSERT(state->toString() == test1);
+		CPPUNIT_ASSERT(state->toString() == "1");
 	}
 };
 

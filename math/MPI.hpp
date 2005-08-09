@@ -5,10 +5,9 @@
 #include <math/ArithmeticException.hpp>
 #include <math/theory/AlgebraTheory.hpp>
 #include <math/Sieve.hpp>
-//#include <math/PrimeList.hpp>
 #include <Cryptography/Random.hpp>
 #include <IO/Endian.hpp>
-//#include <support/HeapChunkAllocator.hpp>
+#include <support/HeapChunkAllocator.hpp>
 #include <vector>
 #include <list>
 #include <string>
@@ -23,8 +22,8 @@
 template <
 	typename BaseUnit_ = unsigned int,
 	typename CalcBase_ = unsigned long long,
-	typename Allocator = std::allocator<BaseUnit_> >
-//typename Allocator = HeapChunkAllocator<BaseUnit_, 8192*16, 64> >
+//	typename Allocator = std::allocator<BaseUnit_> >
+	typename Allocator = HeapChunkAllocator<BaseUnit_, 8192*16, 64> >
 class MultiPrecisionInteger
 {
 public:
@@ -1070,13 +1069,6 @@ public:
 			random.getRandomDoubleWordVector(numberOfBytes / 4);
 		MultiPrecisionInteger baseNumber =
 			MultiPrecisionInteger::makeNumberOfBitSafe(numberSource);
-
-// 		std::vector<unsigned int> primeList =
-// //			getPrimeList(150 * 64 * 2);
-// 			getPrimes();
-		
-		const unsigned int sieve_size =
-			(unsigned int)((bitToLength / 10) * 64 * 2);
 
 		for (;;)
 		{

@@ -10,10 +10,10 @@ OBJS= TestMain.o \
 	MPITest.o \
 	StateMachineTest.o \
 	FSMTest.o \
-	RSATest.o \
 	AlgebraTheoryTest.o \
 	NumberTheoryTest.o \
 	AsymmetricKeyTest.o \
+#	RSATest.o \
 # 	SmartPointerTest.o \
 # 	RationalTest.o \
 # 	FontGrapherTest.o \

@@ -3,45 +3,53 @@
 
 #include <map>
 #include <string>
+#include <sstream>
 
-template <typename AcceptType>
+template <typename AcceptType, typename IdentifierType>
 class StateMachine
 {
 	friend class StateMachineTest;
 
 public:
 	typedef AcceptType accept_t;
+	typedef IdentifierType ident_t;
 
 private:
 	std::map<accept_t, StateMachine*> transitMap;
-	std::string stateName;
+	ident_t stateId;
 
 public:
-	StateMachine(const std::string& stateName_ = "")
-		: transitMap(), stateName(stateName_)
+	StateMachine()
+		: transitMap(), stateId()
+	{}
+
+	StateMachine(const ident_t& stateId_)
+		: transitMap(), stateId(stateId_)
 	{}
 
 	virtual ~StateMachine() throw()
 	{}
 
-	void setName(const std::string& newName)
+	void setId(const ident_t& newId)
 	{
-		stateName = newName;
+		stateId = newId;
 	}
 
-	std::string getName()
+	ident_t getId()
 	{
-		return stateName;
+		return stateId;
 	}
 
-	const std::string getName() const
+	const ident_t getId() const
 	{
-		return stateName;
+		return stateId;
 	}
 
 	virtual std::string toString() const throw()
 	{
-		return stateName;
+		std::stringstream ss;
+		ss << stateId;
+		return ss.str();
 	}
 
 	StateMachine* setTransit(const accept_t& transitKey,

@@ -12,7 +12,7 @@ private:
 public:
 	void stateRegistTest()
 	{
-		typedef StateMachine<char> State;
+		typedef StateMachine<char,std::string> State;
 		State a("a"), b("b"), c("c");
 		a.setTransit('a', &a);
 		a.setTransit('b', &b);
@@ -36,7 +36,7 @@ public:
 
 	void nameTest()
 	{
-		StateMachine<char> stateMachine("testName");
+		StateMachine<char,std::string> stateMachine("testName");
 
 		CPPUNIT_ASSERT(stateMachine.toString() == "testName");
 	}

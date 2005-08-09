@@ -52,7 +52,7 @@ private:
 				return offset;
 		}
 
-		return bitSieve.size();
+		return static_cast<unsigned int>(bitSieve.size());
 	}
 	
 	void mark(unsigned int offset, unsigned int step)

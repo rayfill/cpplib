@@ -11,12 +11,12 @@ class FiniteStateMachine
 	friend class FSMTest;
 
 private:
-	typedef StateMachine<AcceptType> state_t;
-	typedef typename StateMachine<AcceptType>::accept_t accept_t;
+	typedef StateMachine<AcceptType,int> state_t;
+	typedef typename StateMachine<AcceptType,int>::accept_t accept_t;
 	typedef std::vector<state_t*> state_vector_t;
 
 	state_vector_t states;
-	StateMachine<AcceptType> topState;
+	StateMachine<AcceptType,int> topState;
 
 	// non copyable.
 	FiniteStateMachine(const FiniteStateMachine&);
@@ -36,7 +36,7 @@ public:
 	template <typename Iterator>
 	void add(const Iterator first,
 			 const Iterator last,
-			 const std::string& stateName)
+			 const int stateId)
 	{
 		state_t* current = &topState;
 		Iterator itor = first;
@@ -53,15 +53,15 @@ public:
 		}
 
 		if (itor != first)
-			current->setName(stateName);
+			current->setId(stateId);
 	}
 
-	state_t* findNamedState(const std::string& stateName)
+	state_t* findStateForId(const int stateId)
 	{
 		for (typename state_vector_t::iterator itor = states.begin();
 			 itor != states.end(); ++itor)
 		{
-			if ((*itor)->toString() == stateName)
+			if ((*itor)->getId() == stateId)
 				return *itor;
 		}
 
