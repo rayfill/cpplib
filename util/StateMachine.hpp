@@ -13,22 +13,43 @@ class StateMachine
 public:
 	typedef AcceptType accept_t;
 	typedef IdentifierType ident_t;
+	typedef std::map<accept_t, StateMachine*> transit_map_t;
 
 private:
-	std::map<accept_t, StateMachine*> transitMap;
+	transit_map_t transitMap;
+	StateMachine* defaultTransit;
 	ident_t stateId;
 
 public:
 	StateMachine()
-		: transitMap(), stateId()
+		: transitMap(), defaultTransit(NULL), stateId()
+	{}
+
+	StateMachine(const StateMachine& rhs)
+		: transitMap(rhs.transitMap),
+		  defaultTransit(rhs.defaultTransit),
+		  stateId(rhs.stateId)
 	{}
 
 	StateMachine(const ident_t& stateId_)
-		: transitMap(), stateId(stateId_)
+		: transitMap(), defaultTransit(NULL), stateId(stateId_)
 	{}
 
 	virtual ~StateMachine() throw()
 	{}
+
+	StateMachine* setDefaultTransit(StateMachine* const newDefault)
+	{
+		StateMachine* oldDefault = defaultTransit;
+		defaultTransit = newDefault;
+
+		return oldDefault;
+	}
+
+	const StateMachine* getDefaultTransit() const
+	{
+		return defaultTransit;
+	}
 
 	void setId(const ident_t& newId)
 	{
@@ -62,7 +83,7 @@ public:
 
 	bool isTransitionable(const accept_t& transitKey)
 	{
-		return transitMap[transitKey] != NULL;
+		return (transitMap[transitKey] != NULL || defaultTransit != NULL);
 	}
 
 	const StateMachine* getTransit(const accept_t& transitKey) const
@@ -72,8 +93,48 @@ public:
 
 	StateMachine* getTransit(const accept_t& transitKey)
 	{
-		return transitMap[transitKey];
+		if (transitMap[transitKey] != NULL)
+			return transitMap[transitKey];
+
+		return defaultTransit;
 	}
+
+	StateMachine& operator=(const StateMachine& rhs)
+	{
+		if (this != &rhs)
+		{
+			this->transitMap = transit_map_t(rhs.transitMap);
+			this->defaultTransit = rhs.defaultTransit;
+			this->stateId = rhs.stateId;
+		}
+		return *this;
+	}
+
+	std::string toStringFromInner() const
+	{
+		std::stringstream result;
+		result << "(";
+
+		if (this->getDefaultTransit() != NULL)
+			result << "(default . " << 
+				this->getDefaultTransit()->toStringFromInner() << ")";
+
+		for (typename transit_map_t::const_iterator itor =
+				 this->transitMap.begin();
+			itor != this->transitMap.end();
+			++itor)
+		{
+			result <<
+				" (" << ((int)itor->first) <<
+				" . " <<
+				itor->second->toStringFromInner() <<
+				")";
+		}
+		result << ")";
+		
+		return result.str();
+	}
+
 };
 
 #endif /* STATEMACHINE_HPP_ */ 

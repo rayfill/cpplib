@@ -1,4 +1,5 @@
 #include <cppunit/extensions/helpermacros.h>
+#include <iostream>
 #include <util/FSM.hpp>
 
 typedef FiniteStateMachine<const char> FSM;
@@ -39,7 +40,7 @@ public:
 		fsm.add(test1.begin(), test1.end(), 1);
 		fsm.add(test2.begin(), test2.end(), 2);
 
-		CPPUNIT_ASSERT(11 == fsm.states.size());
+		std::cout << "state: " << std::endl << fsm.toString() << std::endl;
 
 		FSM::state_t* state = &fsm.topState;
 		state = state->getTransit('a');

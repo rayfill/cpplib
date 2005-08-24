@@ -4,10 +4,10 @@
 #include <sstream>
 #include <string>
 
-template <typename CastType, typename CharType>
-CastType lexicalCast(const std::basic_string<CharType>& source)
+template <typename CastType>
+CastType lexicalCast(const std::basic_string<char>& source)
 {
-	std::stringstream<CharType> stringValue;
+	std::stringstream stringValue;
 	stringValue << source;
 
 	CastType result;
@@ -17,11 +17,12 @@ CastType lexicalCast(const std::basic_string<CharType>& source)
 	return result;
 }
 
-template <typename CharType, typename CastType>
-std::basic_string<CharType> stringCast(const CastType& value)
+template <typename CastType>
+std::basic_string<char> stringCast(const CastType& value)
 {
-	std::stringstream<CharType> stringValue;
-	stringValue << 
+	std::stringstream stringValue;
+	stringValue << value;
+	return stringValue.str();
 }
 
 #endif /* LEXICALCAST_HPP_ */

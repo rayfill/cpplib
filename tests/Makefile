@@ -6,6 +6,7 @@ CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 LIBS= -lwsock32 -lcppunit -lgdi32
 TARGET= UnitTest
 OBJS= TestMain.o \
+	ScannerTest.o \
 	SieveTest.o \
 	MPITest.o \
 	StateMachineTest.o \
