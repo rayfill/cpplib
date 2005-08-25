@@ -3,6 +3,7 @@
 
 #include <util/StateMachine.hpp>
 #include <vector>
+#include <set>
 #include <algorithm>
 
 template <typename AcceptType>
@@ -18,12 +19,63 @@ public:
 private:
 
 	state_vector_t states;
-	StateMachine<AcceptType,int> topState;
+	state_t topState;
 
 	// non copyable.
 	FiniteStateMachine(const FiniteStateMachine&);
 	FiniteStateMachine& operator=(const FiniteStateMachine&);
+
+	void traverse(std::set<const state_t*>& nonOrphanedList,
+				  const state_t* target)
+	{
+		if (std::find(nonOrphanedList.begin(), nonOrphanedList.end(),
+					  target) != nonOrphanedList.end())
+			return;
+
+		nonOrphanedList.insert(target);
+
+		for (typename state_t::const_iterator itor = target->begin();
+			 itor != target->end();
+			 ++itor)
+			traverse(nonOrphanedList, itor->second);
+	}
+
+	void removeOrphanedStates()
+	{
+		std::set<const state_t*> nonOrphanedList;
+
+		state_t* headState = getHeadState();
+		for (typename state_t::iterator itor = headState->begin();
+			 itor != headState->end();
+			 ++itor)
+			traverse(nonOrphanedList, itor->second);
+
+		if (headState->getDefaultTransit() != NULL)
+			traverse(nonOrphanedList, headState->getDefaultTransit());
+
+		// orphaned list builded.
+		for (typename state_vector_t::iterator itor = states.begin();
+			 itor != states.end();
+			 ++itor)
+		{
+			if (nonOrphanedList.find(*itor) == nonOrphanedList.end())
+			{
+				// not found. equal to orphaned pointer.
+				delete *itor;
+				*itor = NULL;
+			}
+		}
+
+		// remove null pointer.
+		states.erase(
+			std::remove(states.begin(),
+						states.end(),
+						static_cast<state_t*>(NULL)),
+			states.end());
+	}
+
 public:
+
 
 	FiniteStateMachine(): states(), topState()
 	{}

@@ -15,12 +15,35 @@ public:
 	typedef IdentifierType ident_t;
 	typedef std::map<accept_t, StateMachine*> transit_map_t;
 
+	typedef typename transit_map_t::iterator iterator;
+	typedef typename transit_map_t::const_iterator const_iterator;
+
 private:
 	transit_map_t transitMap;
 	StateMachine* defaultTransit;
 	ident_t stateId;
 
 public:
+	iterator begin()
+	{
+		return transitMap.begin();
+	}
+
+	const_iterator begin() const
+	{
+		return transitMap.begin();
+	}
+
+	iterator end()
+	{
+		return transitMap.end();
+	}
+
+	const_iterator end() const
+	{
+		return transitMap.end();
+	}
+
 	StateMachine()
 		: transitMap(), defaultTransit(NULL), stateId()
 	{}
