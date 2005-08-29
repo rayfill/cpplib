@@ -40,6 +40,7 @@ private:
 			traverse(nonOrphanedList, itor->second);
 	}
 
+public:
 	void removeOrphanedStates()
 	{
 		std::set<const state_t*> nonOrphanedList;
@@ -73,9 +74,6 @@ private:
 						static_cast<state_t*>(NULL)),
 			states.end());
 	}
-
-public:
-
 
 	FiniteStateMachine(): states(), topState()
 	{}

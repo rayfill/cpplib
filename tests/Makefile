@@ -1,5 +1,5 @@
 CXX=g++
-NOCLEANSCXXFLAGS= -pg -g3 -Wall -Wunused \
+NOCLEANSCXXFLAGS= -g -Wall -Wunused \
 	-fno-default-inline -fmessage-length=78
 CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
@@ -14,7 +14,7 @@ OBJS= TestMain.o \
 	AlgebraTheoryTest.o \
 	NumberTheoryTest.o \
 	AsymmetricKeyTest.o \
-#	RSATest.o \
+# 	RSATest.o \
 # 	SmartPointerTest.o \
 # 	RationalTest.o \
 # 	FontGrapherTest.o \
@@ -24,7 +24,7 @@ OBJS= TestMain.o \
 # 	GraphicsTest.o \
 # 	BitmapTest.o \
 # 	EndianTest.o CBCTest.o \
-#	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
+# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
 # 	ImageTest.o SamplingScannerTest.o \
 # 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
 # 	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \

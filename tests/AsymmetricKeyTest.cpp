@@ -18,8 +18,10 @@ public:
 			CPPUNIT_ASSERT(pair.encryptExponent.toString() == "10001");
 
 			MPInteger m(8U);
-			MPInteger c = modulusExponential(m, pair.encryptExponent, pair.modulus);
-			MPInteger p = modulusExponential(c, pair.decryptExponent, pair.modulus);
+			MPInteger c =
+				modulusExponential(m, pair.encryptExponent, pair.modulus);
+			MPInteger p =
+				modulusExponential(c, pair.decryptExponent, pair.modulus);
 			p.adjust();
 			CPPUNIT_ASSERT_MESSAGE(p.toString(), p == m);
 		}

@@ -135,6 +135,10 @@ public:
 
 	std::string toStringFromInner() const
 	{
+		if (this->GetDefaultTransit() == NULL &&
+			this->transitMap.size() == 0)
+			return "";
+
 		std::stringstream result;
 		result << "(";
 

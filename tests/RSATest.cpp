@@ -33,8 +33,8 @@ public:
 
 		for (size_t index = 0; index < data.size(); ++index)
 		{
-			if (data[index] != result[index])
-				CPPUNIT_ASSERT_MESSAGE("unmatch converted.", false);
+			CPPUNIT_ASSERT_MESSAGE("unmatch converted.",
+								   data[index] == result[index]);
 		}
 
 	}
@@ -66,7 +66,7 @@ public:
 
 	void keyCreateTest()
 	{
-		const unsigned int bitLength = 1024;
+		const unsigned int bitLength = 256;
 		KeyPair pair = RSA::makeKeyPair(bitLength);
 		
 		CPPUNIT_ASSERT(
