@@ -8,6 +8,7 @@ private:
 	CPPUNIT_TEST_SUITE(ScannerTest);
 	CPPUNIT_TEST(tokenInjectionTest);
 	CPPUNIT_TEST(parseErrorPosTest);
+	CPPUNIT_TEST(wideCharacterTokenInjectionTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -82,6 +83,55 @@ public:
 		CPPUNIT_ASSERT(tokens[10].getId() == token_type::CHARACTER);
 		CPPUNIT_ASSERT(tokens[11].getId() == token_type::ELSE);
 		CPPUNIT_ASSERT(tokens[12].getToken() == "'\\xFf'");
+		CPPUNIT_ASSERT(tokens[12].getId() == token_type::CHARACTER);
+	}
+
+	void wideCharacterTokenInjectionTest()
+	{
+		typedef Scanner<wchar_t>::token_t token_type;
+
+		std::wstring inputSource(
+			L"hello ff12344 if then else world \"str ing.\"\n"
+			L"\"stri\\\"ng2\"\n"
+			L"\"hoge\nhoge\thoge hoge\\xff\" if '1' else '\\xFf'");
+
+		Scanner<wchar_t> scanner(inputSource.begin(), inputSource.end());
+
+		std::vector<token_type> tokens;
+		for (Scanner<wchar_t>::token_t token = scanner.scan();
+			 token != token_type::END_OF_STREAM;
+			 token = scanner.scan())
+		{
+			if (token == token_type::IGNORE_SPACES)
+				continue;
+
+			tokens.push_back(token);
+		}
+
+		CPPUNIT_ASSERT(tokens.size() == 13);
+		CPPUNIT_ASSERT_MESSAGE(WideToNarrow(tokens[0].getToken()),
+							   tokens[0].getToken() == L"hello");
+		CPPUNIT_ASSERT(tokens[0].getId() == token_type::LITERAL);
+		CPPUNIT_ASSERT(tokens[1].getToken() == L"ff12344");
+		CPPUNIT_ASSERT(tokens[1].getId() == token_type::LITERAL);
+		CPPUNIT_ASSERT(tokens[2].getId() == token_type::IF);
+		CPPUNIT_ASSERT(tokens[3].getId() == token_type::LITERAL);
+		CPPUNIT_ASSERT(tokens[3].getToken() == L"then");
+		CPPUNIT_ASSERT(tokens[4].getId() == token_type::ELSE);
+		CPPUNIT_ASSERT(tokens[5].getToken() == L"world");
+		CPPUNIT_ASSERT(tokens[5].getId() == token_type::LITERAL);
+		CPPUNIT_ASSERT(tokens[6].getToken() == L"\"str ing.\"");
+		CPPUNIT_ASSERT(tokens[6].getId() == token_type::STRING);
+		CPPUNIT_ASSERT(tokens[7].getToken() == L"\"stri\\\"ng2\"");
+		CPPUNIT_ASSERT(tokens[7].getId() == token_type::STRING);
+		CPPUNIT_ASSERT(tokens[8].getToken() ==
+					   L"\"hoge\nhoge\thoge hoge\\xff\"");
+		CPPUNIT_ASSERT(tokens[8].getId() == token_type::STRING);
+		CPPUNIT_ASSERT(tokens[9].getId() == token_type::IF);
+		CPPUNIT_ASSERT(tokens[10].getToken() == L"'1'");
+		CPPUNIT_ASSERT(tokens[10].getId() == token_type::CHARACTER);
+		CPPUNIT_ASSERT(tokens[11].getId() == token_type::ELSE);
+		CPPUNIT_ASSERT(tokens[12].getToken() == L"'\\xFf'");
 		CPPUNIT_ASSERT(tokens[12].getId() == token_type::CHARACTER);
 	}
 };

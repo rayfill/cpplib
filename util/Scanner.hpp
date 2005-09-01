@@ -400,7 +400,7 @@ public:
 
 		if ((fsmState == fsm.getHeadState()) &&
 			(current == last))
-		return token_t(token_t::END_OF_STREAM, "");
+		return token_t(token_t::END_OF_STREAM, StringTraits<char_t>(""));
 		
 			
 		throw ParseException(line, column);
