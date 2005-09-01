@@ -3,6 +3,7 @@
 
 #include <util/FSM.hpp>
 #include <text/LexicalCast.hpp>
+#include <text/StringTraits.hpp>
 #include <string>
 #include <stdexcept>
 
@@ -87,6 +88,14 @@ public:
 		OPEN_BLACE,
 		CLOSE_BLACE,
 		
+		// end of stream.
+		END_OF_STREAM,
+
+		// ignore spaces.
+		IGNORE_SPACES,
+		// COMMENTS
+		COMMENTS,
+
 	} TokenType;
 private:
 	std::basic_string<CharType> token;
@@ -108,11 +117,22 @@ public:
 	{
 		return typeId;
 	}
+
+	bool operator==(const TokenType type)
+	{
+		return this->getId() == type;
+	}
+
+	bool operator!=(const TokenType type)
+	{
+		return this->getId() != type;
+	}
 };
 
 template <
 	typename CharType,
-	typename CharTrait = std::char_traits<CharType> >
+	typename CharTrait = std::char_traits<CharType>,
+	typename Iterator = typename std::basic_string<CharType>::iterator>
 class Scanner
 {
 	friend class ScannerTest;
@@ -120,14 +140,28 @@ class Scanner
 public:
 	typedef typename std::basic_string<CharType> ScannerString;
 	typedef typename ScannerString::iterator iterator;
+	typedef CharType char_t;
 
 	typedef Token<CharType> token_t;
+	typedef Iterator iterator_t;
 
 private:
 	typedef FiniteStateMachine<CharType> fsm_t;
 	typedef CharTrait char_trait_t;
 
 	fsm_t fsm;
+
+	iterator_t current;
+	iterator_t last;
+	unsigned int line;
+	unsigned int column;
+
+	static void addState(fsm_t& fsm,
+						 const std::basic_string<char_t>& str,
+						 typename token_t::TokenType type)
+	{
+		fsm.add(str.begin(), str.end(), type);
+	}
 
 	static void literalFsmInit(fsm_t& fsm)
 	{
@@ -168,23 +202,12 @@ private:
 
 	static void keywordFsmInit(fsm_t& fsm)
 	{
-		const std::string If("if");
-		fsm.add(If.begin(), If.end(), token_t::IF);
-
-		const std::string Else("else");
-		fsm.add(Else.begin(), Else.end(), token_t::ELSE);
-
-		const std::string While("while");
-		fsm.add(While.begin(), While.end(), token_t::WHILE);
-
-		const std::string For("for");
-		fsm.add(For.begin(), For.end(), token_t::FOR);
-
-		const std::string Continue("continue");
-		fsm.add(Continue.begin(), Continue.end(), token_t::CONTINUE);
-
-		const std::string Break("break");
-		fsm.add(Break.begin(), Break.end(), token_t::BREAK);
+		addState(fsm, StringTraits<char_t>("if"), token_t::IF);
+		addState(fsm, StringTraits<char_t>("else"), token_t::ELSE);
+		addState(fsm, StringTraits<char_t>("while"), token_t::WHILE);
+		addState(fsm, StringTraits<char_t>("for"), token_t::FOR);
+		addState(fsm, StringTraits<char_t>("continue"), token_t::CONTINUE);
+		addState(fsm, StringTraits<char_t>("break"), token_t::BREAK);
 	}
 
 	static void stringsFsmInit(fsm_t& fsm)
@@ -272,65 +295,40 @@ private:
 
 	static void symbolFsmInit(fsm_t& fsm)
 	{
-		const std::string plus = "+";
-		fsm.add(plus.begin(), plus.end(), token_t::PLUS);
-		const std::string minus = "-";
-		fsm.add(minus.begin(), minus.end(), token_t::MINUS);
-		const std::string star = "*";
-		fsm.add(star.begin(), star.end(), token_t::STAR);
-		const std::string slash = "/";
-		fsm.add(slash.begin(), slash.end(), token_t::SLASH);
-		const std::string equal = "=";
-		fsm.add(equal.begin(), equal.end(), token_t::EQUAL);
-		const std::string percent = "%";
-		fsm.add(percent.begin(), percent.end(), token_t::PERCENT);
-		const std::string ampersand = "&";
-		fsm.add(ampersand.begin(), ampersand.end(), token_t::AMPERSAND);
-		const std::string less_than = "<";
-		fsm.add(less_than.begin(), less_than.end(), token_t::LESS_THAN);
-		const std::string grater_than = ">";
-		fsm.add(grater_than.begin(), grater_than.end(), token_t::GRATER_THAN);
-		const std::string less_equal = "<=";
-		fsm.add(less_equal.begin(), less_equal.end(), token_t::LESS_EQUAL);
-		const std::string grater_equal = ">=";
-		fsm.add(grater_equal.begin(), grater_equal.end(), token_t::GRATER_EQUAL);
-		const std::string not_equal = "!=";
-		fsm.add(not_equal.begin(), not_equal.end(), token_t::NOT_EQUAL);
-		const std::string plus_equal = "+=";
-		fsm.add(plus_equal.begin(), plus_equal.end(), token_t::PLUS_EQUAL);
-		const std::string minus_equal = "-=";
-		fsm.add(minus_equal.begin(), minus_equal.end(), token_t::MINUS_EQUAL);
-		const std::string star_equal = "*=";
-		fsm.add(star_equal.begin(), star_equal.end(), token_t::STAR_EQUAL);
-		const std::string slash_equal = "/=";
-		fsm.add(slash_equal.begin(), slash_equal.end(), token_t::SLASH_EQAUL);
-		const std::string percent_equal = "&=";
-		fsm.add(percent_equal.begin(), percent_equal.end(), token_t::PERCENT_EQUAL);
+		addState(fsm, StringTraits<char_t>("+"), token_t::PLUS);
+		addState(fsm, StringTraits<char_t>("-"), token_t::MINUS);
+		addState(fsm, StringTraits<char_t>("*"), token_t::STAR);
+		addState(fsm, StringTraits<char_t>("/"), token_t::SLASH);
+		addState(fsm, StringTraits<char_t>("="), token_t::EQUAL);
+		addState(fsm, StringTraits<char_t>("%"), token_t::PERCENT);
+		addState(fsm, StringTraits<char_t>("&"), token_t::AMPERSAND);
+		addState(fsm, StringTraits<char_t>("<"), token_t::LESS_THAN);
+		addState(fsm, StringTraits<char_t>(">"), token_t::GRATER_THAN);
+		addState(fsm, StringTraits<char_t>("<="), token_t::LESS_EQUAL);
+		addState(fsm, StringTraits<char_t>(">="), token_t::GRATER_EQUAL);
+		addState(fsm, StringTraits<char_t>("!="), token_t::NOT_EQUAL);
+		addState(fsm, StringTraits<char_t>("+="), token_t::PLUS_EQUAL);
+		addState(fsm, StringTraits<char_t>("-="), token_t::MINUS_EQUAL);
+		addState(fsm, StringTraits<char_t>("*="), token_t::STAR_EQUAL);
+		addState(fsm, StringTraits<char_t>("/="), token_t::SLASH_EQAUL);
+		addState(fsm, StringTraits<char_t>("&="), token_t::PERCENT_EQUAL);
 
-		const std::string tilde = "~";
-		fsm.add(tilde.begin(), tilde.end(), token_t::TILDE);
-		const std::string hat = "^";
-		fsm.add(hat.begin(), hat.end(), token_t::HAT);
-		const std::string exclamation = "!";
-		fsm.add(exclamation.begin(), exclamation.end(), token_t::EXCLAMATION);
-		const std::string question = "?";
-		fsm.add(question.begin(), question.end(), token_t::QUESTION);
+		addState(fsm, StringTraits<char_t>("~"), token_t::TILDE);
+		addState(fsm, StringTraits<char_t>("^"), token_t::HAT);
+		addState(fsm, StringTraits<char_t>("!"), token_t::EXCLAMATION);
+		addState(fsm, StringTraits<char_t>("?"), token_t::QUESTION);
 
-		const std::string open_paren = "(";
-		fsm.add(open_paren.begin(), open_paren.end(), token_t::OPEN_PAREN);
-		const std::string close_paren = ")";
-		fsm.add(close_paren.begin(), close_paren.end(), token_t::CLOSE_PAREN);
-		const std::string open_blacket = "[";
-		fsm.add(open_blacket.begin(), open_blacket.end(), token_t::OPEN_BLACKET);
-		const std::string close_blacket = "]";
-		fsm.add(close_blacket.begin(), close_blacket.end(), token_t::CLOSE_BLACKET);
-		const std::string open_blace = "{";
-		fsm.add(open_blace.begin(), open_blace.end(), token_t::OPEN_BLACE);
-		const std::string close_blace = "}";
-		fsm.add(close_blace.begin(), close_blace.end(), token_t::CLOSE_BLACE);
+		addState(fsm, StringTraits<char_t>("("), token_t::OPEN_PAREN);
+		addState(fsm, StringTraits<char_t>(")"), token_t::CLOSE_PAREN);
+		addState(fsm, StringTraits<char_t>("["), token_t::OPEN_BLACKET);
+		addState(fsm, StringTraits<char_t>("]"), token_t::CLOSE_BLACKET);
+		addState(fsm, StringTraits<char_t>("{"), token_t::OPEN_BLACE);
+		addState(fsm, StringTraits<char_t>("}"), token_t::CLOSE_BLACE);
 
-		fsm.removeOrphanedStates();
 	}
+
+	static void ignoreFsmInit(fsm_t& fsm)
+	{}
 
 	static void init(fsm_t& fsm)
 	{
@@ -338,30 +336,28 @@ private:
 		keywordFsmInit(fsm);
 		symbolFsmInit(fsm);
 		stringsFsmInit(fsm);
+		ignoreFsmInit(fsm);
 
 		fsm.removeOrphanedStates();
 	}
 
 public:
-	Scanner():
-		fsm()
+	Scanner(iterator_t head_, iterator_t last_):
+		fsm(),
+		current(head_), last(last_),
+		line(0), column(0)
 	{
 		init(fsm);
 	}
 
-	template <typename Iterator>
-	std::vector<token_t> scan(Iterator first, Iterator last)
+	token_t scan()
 	{
-		std::vector<token_t> result;
-
 		typename fsm_t::state_t* fsmState = fsm.getHeadState();
 		std::basic_string<CharType> findLiteral;
-		unsigned int line = 0;
-		unsigned int column = 0;
 
-		for (; first != last; ++first)
+		for (; current != last; ++current)
 		{
-			if (*first == '\n')
+			if (*current == '\n')
 			{
 				++line;
 				column = 0;
@@ -370,33 +366,31 @@ public:
 				++column;
 			
 			// skip speces.
-			if (*first == ' ' ||
-				*first == '\t' ||
-				*first == '\n')
+			if (*current == ' ' ||
+				*current == '\t' ||
+				*current == '\n')
 			{
 				if (findLiteral.length() != 0)
-					findLiteral += *first;
+					findLiteral += *current;
 
 				continue;
 			}
 
-			findLiteral += *first;
+			findLiteral += *current;
 
 			// literal processing.
 			if (fsmState != NULL)
 			{
-				fsmState = fsmState->getTransit(*first);
+				fsmState = fsmState->getTransit(*current);
 				if (fsmState != NULL &&
-					!fsmState->isTransitionable(*(first+1)) &&
-					fsmState->getId() != token_t::NONE)
+					fsmState->getId() != token_t::NONE &&
+					(current+1 == last ||
+					 !fsmState->isTransitionable(*(current+1))))
 				{
-					result.push_back(
-						token_t(
-							static_cast<typename token_t::TokenType>(
-								fsmState->getId()),	findLiteral));
-					fsmState = fsm.getHeadState();
-					findLiteral = "";
-					continue;
+					++current;
+					return token_t(
+						static_cast<typename token_t::TokenType>(
+							fsmState->getId()),	findLiteral);
 				}
 			}
 
@@ -404,7 +398,12 @@ public:
 				throw ParseException(line, column);
 		}
 
-		return result;
+		if ((fsmState == fsm.getHeadState()) &&
+			(current == last))
+		return token_t(token_t::END_OF_STREAM, "");
+		
+			
+		throw ParseException(line, column);
 	}
 };
 

@@ -15,13 +15,13 @@ public:
 	{
 		try
 		{
-			Scanner<char> scanner;
 			std::string inputSource =
 				"hello ff12344\n"
 				"if else then! 123456\n"
 				"hoge fuga";
 
-			scanner.scan(inputSource.begin(), inputSource.end());
+			Scanner<char> scanner(inputSource.begin(), inputSource.end());
+			while (scanner.scan() != Scanner<char>::token_t::END_OF_STREAM);
 
 			CPPUNIT_FAIL("don't raised exception.");
 		}
@@ -38,7 +38,6 @@ public:
 
 	void tokenInjectionTest()
 	{
-		Scanner<char> scanner;
 		typedef Scanner<char>::token_t token_type;
 
 		std::string inputSource(
@@ -46,8 +45,18 @@ public:
 			"\"stri\\\"ng2\"\n"
 			"\"hoge\nhoge\thoge hoge\\xff\" if '1' else '\\xFf'");
 
-		std::vector<token_type> tokens =
-			scanner.scan(inputSource.begin(), inputSource.end());
+		Scanner<char> scanner(inputSource.begin(), inputSource.end());
+
+		std::vector<token_type> tokens;
+		for (Scanner<char>::token_t token = scanner.scan();
+			 token != token_type::END_OF_STREAM;
+			 token = scanner.scan())
+		{
+			if (token == token_type::IGNORE_SPACES)
+				continue;
+
+			tokens.push_back(token);
+		}
 
 		CPPUNIT_ASSERT(tokens.size() == 13);
 		CPPUNIT_ASSERT_MESSAGE(tokens[0].getToken(),
