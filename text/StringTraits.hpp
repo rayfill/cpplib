@@ -1,50 +1,88 @@
+#ifndef STRINGTRAITS_HPP_
+#define STRINGTRAITS_HPP_
+
 #include <string>
 #include <cstdlib>
 #include <algorithm>
 
-std::wstring NarrowToWide(const std::string& str)
+template <typename DestType, typename SourceType>
+class CodeConvert
 {
-	const size_t translatedLength =
-		std::mbstowcs(NULL ,str.c_str(),str.length()+1);
+public:
+	DestType codeConvert(const SourceType&)
+	{
+		return DestType();
+	}
+};
 
-	wchar_t* translated = NULL;
-
-	translated = new wchar_t[translatedLength];
-	std::mbstowcs(translated, str.c_str(), translatedLength);
-	std::wstring result(translated, translatedLength);
-	delete[] translated;
-
-	return result;
-}
-
-std::string WideToNarrow(const std::wstring& str)
+template <>
+class CodeConvert<std::wstring, std::string>
 {
-	const size_t translatedLength =
-		wcstombs(NULL, str.c_str(), str.length() + 1);
+public:
+	std::wstring codeConvert(const std::string& str)
+	{
+		const size_t translatedLength =
+			std::mbstowcs(NULL ,str.c_str(),str.length()+1);
 
-	char* translated = NULL;
+		wchar_t* translated = NULL;
 
-	translated = new char[translatedLength];
-	wcstombs(translated, str.c_str(), translatedLength);
-	std::string result(translated, translatedLength);
-	delete[] translated;
+		translated = new wchar_t[translatedLength];
+		std::mbstowcs(translated, str.c_str(), translatedLength);
+		std::wstring result(translated, translatedLength);
+		delete[] translated;
 
-	return result;
-}
+		return result;
+	}
+};
+
+template <>
+class CodeConvert<std::string, std::wstring>
+{
+public:
+	std::string codeConvert(const std::wstring& str)
+	{
+		const size_t translatedLength =
+			wcstombs(NULL, str.c_str(), str.length() + 1);
+
+		char* translated = NULL;
+
+		translated = new char[translatedLength];
+		wcstombs(translated, str.c_str(), translatedLength);
+		std::string result(translated, translatedLength);
+		delete[] translated;
+
+		return result;
+	}
+};
 
 template <typename CharType>
-std::basic_string<CharType> StringTraits(const std::string& str)
+class StringTraits
 {
+public:
+	std::basic_string<CharType> stringTraits(const std::string& str)
+	{
 	return std::basic_string<CharType>();
-}
+	}
+};
 
-
-template <> std::basic_string<char> StringTraits(const std::string& str)
+template <>
+class StringTraits<char>
 {
-	return str;
-}
+public:
+	std::basic_string<char> stringTraits(const std::string& str)
+	{
+		return str;
+	}
+};
 
-template <> std::basic_string<wchar_t> StringTraits(const std::string& str)
+template <>
+class StringTraits<wchar_t>
 {
-	return NarrowToWide(str);
-}
+public:
+	std::basic_string<wchar_t> stringTraits(const std::string& str)
+	{
+		return CodeConvert<std::wstring, std::string>().codeConvert(str);
+	}
+};
+
+#endif /* STRINGTRAITS_HPP_ */

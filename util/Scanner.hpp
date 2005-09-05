@@ -51,6 +51,8 @@ public:
 		LITERAL,
 		STRING,
 		CHARACTER,
+		INTEGER,
+		REAL,
 		IF,
 		ELSE,
 		WHILE,
@@ -58,6 +60,9 @@ public:
 		CONTINUE,
 		BREAK,
 		// symbols
+		SEMI_COLON,
+		COLON,
+
 		PLUS,
 		MINUS,
 		STAR,
@@ -76,6 +81,9 @@ public:
 		STAR_EQUAL,
 		SLASH_EQAUL,
 		PERCENT_EQUAL,
+		
+		INCREMENT,
+		DECREMENT,
 
 		TILDE,
 		HAT,
@@ -202,12 +210,18 @@ private:
 
 	static void keywordFsmInit(fsm_t& fsm)
 	{
-		addState(fsm, StringTraits<char_t>("if"), token_t::IF);
-		addState(fsm, StringTraits<char_t>("else"), token_t::ELSE);
-		addState(fsm, StringTraits<char_t>("while"), token_t::WHILE);
-		addState(fsm, StringTraits<char_t>("for"), token_t::FOR);
-		addState(fsm, StringTraits<char_t>("continue"), token_t::CONTINUE);
-		addState(fsm, StringTraits<char_t>("break"), token_t::BREAK);
+		addState(fsm, StringTraits<char_t>().stringTraits("if"),
+				 token_t::IF);
+		addState(fsm, StringTraits<char_t>().stringTraits("else"),
+				 token_t::ELSE);
+		addState(fsm, StringTraits<char_t>().stringTraits("while"),
+				 token_t::WHILE);
+		addState(fsm, StringTraits<char_t>().stringTraits("for"),
+				 token_t::FOR);
+		addState(fsm, StringTraits<char_t>().stringTraits("continue"),
+				 token_t::CONTINUE);
+		addState(fsm, StringTraits<char_t>().stringTraits("break"),
+				 token_t::BREAK);
 	}
 
 	static void stringsFsmInit(fsm_t& fsm)
@@ -295,48 +309,175 @@ private:
 
 	static void symbolFsmInit(fsm_t& fsm)
 	{
-		addState(fsm, StringTraits<char_t>("+"), token_t::PLUS);
-		addState(fsm, StringTraits<char_t>("-"), token_t::MINUS);
-		addState(fsm, StringTraits<char_t>("*"), token_t::STAR);
-		addState(fsm, StringTraits<char_t>("/"), token_t::SLASH);
-		addState(fsm, StringTraits<char_t>("="), token_t::EQUAL);
-		addState(fsm, StringTraits<char_t>("%"), token_t::PERCENT);
-		addState(fsm, StringTraits<char_t>("&"), token_t::AMPERSAND);
-		addState(fsm, StringTraits<char_t>("<"), token_t::LESS_THAN);
-		addState(fsm, StringTraits<char_t>(">"), token_t::GRATER_THAN);
-		addState(fsm, StringTraits<char_t>("<="), token_t::LESS_EQUAL);
-		addState(fsm, StringTraits<char_t>(">="), token_t::GRATER_EQUAL);
-		addState(fsm, StringTraits<char_t>("!="), token_t::NOT_EQUAL);
-		addState(fsm, StringTraits<char_t>("+="), token_t::PLUS_EQUAL);
-		addState(fsm, StringTraits<char_t>("-="), token_t::MINUS_EQUAL);
-		addState(fsm, StringTraits<char_t>("*="), token_t::STAR_EQUAL);
-		addState(fsm, StringTraits<char_t>("/="), token_t::SLASH_EQAUL);
-		addState(fsm, StringTraits<char_t>("&="), token_t::PERCENT_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits(";"),
+				 token_t::SEMI_COLON);
+		addState(fsm, StringTraits<char_t>().stringTraits(":"),
+				 token_t::COLON);
+		
+		addState(fsm, StringTraits<char_t>().stringTraits("+"),
+				 token_t::PLUS);
+		addState(fsm, StringTraits<char_t>().stringTraits("-"),
+				 token_t::MINUS);
+		addState(fsm, StringTraits<char_t>().stringTraits("*"),
+				 token_t::STAR);
+		addState(fsm, StringTraits<char_t>().stringTraits("/"),
+				 token_t::SLASH);
+		addState(fsm, StringTraits<char_t>().stringTraits("="),
+				 token_t::EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits("%"),
+				 token_t::PERCENT);
+		addState(fsm, StringTraits<char_t>().stringTraits("&"),
+				 token_t::AMPERSAND);
+		addState(fsm, StringTraits<char_t>().stringTraits("<"),
+				 token_t::LESS_THAN);
+		addState(fsm, StringTraits<char_t>().stringTraits(">"),
+				 token_t::GRATER_THAN);
+		addState(fsm, StringTraits<char_t>().stringTraits("<="),
+				 token_t::LESS_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits(">="),
+				 token_t::GRATER_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits("!="),
+				 token_t::NOT_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits("+="), 
+				 token_t::PLUS_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits("-="),
+				 token_t::MINUS_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits("*="),
+				 token_t::STAR_EQUAL);
+		addState(fsm, StringTraits<char_t>().stringTraits("/="),
+				 token_t::SLASH_EQAUL);
+		addState(fsm, StringTraits<char_t>().stringTraits("&="),
+				 token_t::PERCENT_EQUAL);
 
-		addState(fsm, StringTraits<char_t>("~"), token_t::TILDE);
-		addState(fsm, StringTraits<char_t>("^"), token_t::HAT);
-		addState(fsm, StringTraits<char_t>("!"), token_t::EXCLAMATION);
-		addState(fsm, StringTraits<char_t>("?"), token_t::QUESTION);
+		addState(fsm, StringTraits<char_t>().stringTraits("++"),
+				 token_t::INCREMENT);
+		addState(fsm, StringTraits<char_t>().stringTraits("--"),
+				 token_t::DECREMENT);
 
-		addState(fsm, StringTraits<char_t>("("), token_t::OPEN_PAREN);
-		addState(fsm, StringTraits<char_t>(")"), token_t::CLOSE_PAREN);
-		addState(fsm, StringTraits<char_t>("["), token_t::OPEN_BLACKET);
-		addState(fsm, StringTraits<char_t>("]"), token_t::CLOSE_BLACKET);
-		addState(fsm, StringTraits<char_t>("{"), token_t::OPEN_BLACE);
-		addState(fsm, StringTraits<char_t>("}"), token_t::CLOSE_BLACE);
+		addState(fsm, StringTraits<char_t>().stringTraits("~"),
+				 token_t::TILDE);
+		addState(fsm, StringTraits<char_t>().stringTraits("^"),
+				 token_t::HAT);
+		addState(fsm, StringTraits<char_t>().stringTraits("!"),
+				 token_t::EXCLAMATION);
+		addState(fsm, StringTraits<char_t>().stringTraits("?"),
+				 token_t::QUESTION);
+
+		addState(fsm, StringTraits<char_t>().stringTraits("("),
+				 token_t::OPEN_PAREN);
+		addState(fsm, StringTraits<char_t>().stringTraits(")"),
+				 token_t::CLOSE_PAREN);
+		addState(fsm, StringTraits<char_t>().stringTraits("["),
+				 token_t::OPEN_BLACKET);
+		addState(fsm, StringTraits<char_t>().stringTraits("]"),
+				 token_t::CLOSE_BLACKET);
+		addState(fsm, StringTraits<char_t>().stringTraits("{"),
+				 token_t::OPEN_BLACE);
+		addState(fsm, StringTraits<char_t>().stringTraits("}"),
+				 token_t::CLOSE_BLACE);
 
 	}
 
+	static void numberFsmInit(fsm_t& fsm)
+	{
+		typedef typename fsm_t::state_t state_t;
+		
+		state_t* state = fsm.getHeadState();
+
+		state_t* integerBody = new state_t();
+		state_t* integerZero = new state_t();
+		state_t* decimalPoint = new state_t();
+		state_t* decimalFraction = new state_t();
+
+		CharType period = char_trait_t::to_char_type('.');
+		integerZero->setTransit(period, decimalPoint);
+		integerBody->setTransit(period, decimalPoint);
+
+		CharType zero = char_trait_t::to_char_type('0');
+
+		state->setTransit(zero, integerZero);
+
+		integerBody->setTransit(zero, integerBody);
+		decimalPoint->setTransit(zero, decimalFraction);
+		decimalFraction->setTransit(zero, decimalFraction);
+
+		for (CharType c = char_trait_t::to_char_type('1');
+			 c <= char_trait_t::to_char_type('9');
+			 ++c)
+		{
+			state->setTransit(c, integerBody);
+			integerBody->setTransit(c, integerBody);
+			decimalPoint->setTransit(c, decimalFraction);
+			decimalFraction->setTransit(c, decimalFraction);
+		}
+
+		// goal
+		integerZero->setId(token_t::INTEGER);
+		integerBody->setId(token_t::INTEGER);
+		decimalPoint->setId(token_t::REAL);
+		decimalFraction->setId(token_t::REAL);
+	}
+
 	static void ignoreFsmInit(fsm_t& fsm)
-	{}
+	{
+		typedef typename fsm_t::state_t state_t;
+
+		state_t* head = fsm.getHeadState();
+
+		state_t* comment_start = new state_t();
+
+		state_t* open_star = new state_t();
+		state_t* close_star = new state_t();
+		state_t* close_slash = new state_t();
+
+		state_t* open_slash = new state_t();
+		state_t* close_return = new state_t();
+
+		CharType slash = char_trait_t::to_char_type('/');
+		CharType star = char_trait_t::to_char_type('*');
+		CharType return_character = char_trait_t::to_char_type('\n');
+
+
+		head->setTransit(slash, comment_start);
+		comment_start->setTransit(slash, open_slash);
+
+		// single line comment.
+		open_slash->setDefaultTransit(open_slash);
+		open_slash->setTransit(return_character, close_return);
+		close_return->setId(token_t::COMMENTS);
+
+		// multi line comment.
+		comment_start->setTransit(star, open_star);
+		open_star->setDefaultTransit(open_star);
+		open_star->setTransit(star, close_star);
+		close_star->setDefaultTransit(open_star);
+		close_star->setTransit(star, close_star);
+		close_star->setTransit(slash, close_slash);
+		close_slash->setId(token_t::COMMENTS);
+
+
+		// spaces.
+		state_t* skippers = new state_t();
+		CharType space = char_trait_t::to_char_type(' ');
+		CharType tab = char_trait_t::to_char_type('\t');
+		head->setTransit(space, skippers);
+		head->setTransit(tab, skippers);
+		head->setTransit(return_character, skippers);
+		skippers->setTransit(space, skippers);
+		skippers->setTransit(tab, skippers);
+		skippers->setTransit(return_character, skippers);
+		skippers->setId(token_t::IGNORE_SPACES);
+	}
 
 	static void init(fsm_t& fsm)
 	{
 		literalFsmInit(fsm);
+		stringsFsmInit(fsm);
+		numberFsmInit(fsm);
+		ignoreFsmInit(fsm);
+
 		keywordFsmInit(fsm);
 		symbolFsmInit(fsm);
-		stringsFsmInit(fsm);
-		ignoreFsmInit(fsm);
 
 		fsm.removeOrphanedStates();
 	}
@@ -365,17 +506,6 @@ public:
 			else
 				++column;
 			
-			// skip speces.
-			if (*current == ' ' ||
-				*current == '\t' ||
-				*current == '\n')
-			{
-				if (findLiteral.length() != 0)
-					findLiteral += *current;
-
-				continue;
-			}
-
 			findLiteral += *current;
 
 			// literal processing.
@@ -400,7 +530,8 @@ public:
 
 		if ((fsmState == fsm.getHeadState()) &&
 			(current == last))
-		return token_t(token_t::END_OF_STREAM, StringTraits<char_t>(""));
+		return token_t(token_t::END_OF_STREAM,
+					   StringTraits<char_t>().stringTraits(""));
 		
 			
 		throw ParseException(line, column);

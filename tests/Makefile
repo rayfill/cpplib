@@ -14,6 +14,7 @@ OBJS= TestMain.o \
 	AlgebraTheoryTest.o \
 	NumberTheoryTest.o \
 	AsymmetricKeyTest.o \
+	StackableScannerTest.o \
 # 	RSATest.o \
 # 	SmartPointerTest.o \
 # 	RationalTest.o \
