@@ -61,7 +61,7 @@ protected:
 	 * @excpetion ThreadExcpetion その他
 	 */ 
 	virtual void createNewWorker(SocketHandle handle,
-							 TargetInformation /*info*/)
+								 IP /*info*/)
 		throw(std::bad_alloc, ThreadException)
 	{
   		WorkerThread* childThread = new WorkerThread(handle);
@@ -103,7 +103,7 @@ public:
 	 * @arg ti サーバソケットバインドのための情報
 	 * @return 正常時: true, 異常時: false
 	 */
-	bool prepare(const TargetInformation& ti)
+	bool prepare(const IP& ti)
 	{
 		sockaddr_in info = ti.getInetInfo();
 		if(::bind(this->socket,
@@ -144,7 +144,7 @@ public:
 	{
 		for(;;)
 		{
-			if (this->isReadable(this->socket))
+			if (this->isReadable(this->socket, this->defaultTimeout))
 			{
 				sockaddr_in addrInfo;
 				int infoSize;
@@ -154,7 +154,7 @@ public:
 							 &infoSize);
 
 				this->createNewWorker(client,
-									  TargetInformation(addrInfo));
+									  IP(addrInfo));
 			}
 			else
 			{

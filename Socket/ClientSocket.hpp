@@ -35,9 +35,9 @@ public:
 	 * @exception SocketException ‘Šèæ‚ÉÚ‘±‚Å‚«‚È‚©‚Á‚½ê‡
 	 * @exception NotAddressResolvException Ú‘±æ‚Ìî•ñ‚ª‰ğŒˆ‚Å‚«‚È‚©‚Á
 	 * ‚½ê‡
-	 * @see TargetInformation
+	 * @see IP
 	 */
-	void connect(const TargetInformation& ip)
+	void connect(const IP& ip)
 		throw(SocketException, NotAddressResolvException)
 	{
 		sockaddr_in info = ip.getInetInfo();

@@ -361,6 +361,7 @@ public:
 	}
 	void setWidth(size_t width)
 	{
+		assert((width % 4) == 0);
 		bitmapInfo.biWidth = static_cast<LONG>(width);
 	}
 

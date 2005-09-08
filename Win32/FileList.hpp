@@ -98,6 +98,11 @@ public:
 		{
 			return &data;
 		}
+
+		bool isDirectory() const
+		{
+			return data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+		}
 	};
 
 	FileList(const std::basic_string<TCHAR>& findKey,

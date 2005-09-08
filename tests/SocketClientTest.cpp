@@ -7,7 +7,7 @@ int main()
 	char hello_class[] = "hello socket class world.\n";
 	ClientSocket so;
 	try {
-		so.connect(TargetInformation("localhost", 5432));
+		so.connect(IP("localhost", 5432));
 		if(so.writeAsync(hello_class, strlen(hello_class)))
 			std::cout << "non block send success.";
 		else

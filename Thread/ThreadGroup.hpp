@@ -2,6 +2,7 @@
 #define THREADGROUP_HPP_
 
 #include <Thread/Thread.hpp>
+#include <map>
 
 /**
  * スレッドマネージャ

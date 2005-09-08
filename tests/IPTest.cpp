@@ -12,7 +12,7 @@ private:
 	CPPUNIT_TEST(unresolvNameToIp);
 	CPPUNIT_TEST_SUITE_END();
 
-	TargetInformation ip;
+	IP ip;
 
 	SocketModule Module;
 public:
@@ -20,14 +20,15 @@ public:
 	void resolvIPAddress()
 	{
 		ip.setIp("bpokazakijr");
-		CPPUNIT_ASSERT(TargetInformation::getIpString(ip.getIp())
+		CPPUNIT_ASSERT(IP::getIpString(ip.getIp())
 					   == "172.16.10.24");
 	}
 	void resolvMachineName()
-	{
-		ip.setIp("whale");
-		CPPUNIT_ASSERT(
-			ip.getHostname() == "whale.ei.ecb.pbb.nttdata.co.jp");
+	{	
+		ip.setIp("10.23.192.12");
+		CPPUNIT_ASSERT_MESSAGE(ip.getHostname(),
+							   ip.getHostname() == 
+							   "whale.ei.ecb.pbb.nttdata.co.jp");
 	}
 	void PortCheck()
 	{

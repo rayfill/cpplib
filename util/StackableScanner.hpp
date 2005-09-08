@@ -4,29 +4,38 @@
 #include <stack>
 #include <util/Scanner.hpp>
 
-template <typename CharType>
-class StackableScanner : public Scanner<CharType>
+template <
+	typename CharType,
+	typename CharTrait = std::char_traits<CharType>
+>
+class StackableScanner : public Scanner<CharType, CharTrait>
 {
 public:
 	typedef Scanner<CharType> BaseType;
+	typedef typename BaseType::token_t token_t;
+	typedef typename BaseType::iterator_t iterator_t;
+	typedef typename BaseType::char_t char_t;
+
+protected:
+	typedef typename BaseType::char_trait_t char_trait_t;
 
 private:
-	std::stack<typename BaseType::token_t> tokenStack;
+	std::stack<token_t> tokenStack;
 
 public:
-	StackableScanner(typename BaseType::iterator_t head_,
-					 typename BaseType::iterator_t last_):
+	StackableScanner(iterator_t head_,
+					 iterator_t last_):
 		Scanner<CharType>(head_, last_), tokenStack()
 	{}
 
 	~StackableScanner()
 	{}
 
-	typename BaseType::token_t scan()
+	token_t scan()
 	{
 		if (tokenStack.size() != 0)
 		{
-			typename BaseType::token_t result = tokenStack.top();
+			token_t result = tokenStack.top();
 			tokenStack.pop();
 
 			return result;
@@ -34,9 +43,9 @@ public:
 
 		while (true)
 		{
-			typename BaseType::token_t result = BaseType::scan();
-			if (result == BaseType::token_t::COMMENTS ||
-				result == BaseType::token_t::IGNORE_SPACES)
+			token_t result = BaseType::scan();
+			if (result == token_t::COMMENTS ||
+				result == token_t::IGNORE_SPACES)
 				continue;
 				
 			return result;
@@ -45,7 +54,7 @@ public:
 		assert(false);
 	}
 
-	void backFail(typename BaseType::token_t token)
+	void backFail(token_t token)
 	{
 		tokenStack.push(token);
 	}

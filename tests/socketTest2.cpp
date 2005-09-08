@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <Socket/Socket.hpp>
+#include <Socket/ServerSocket.hpp>
 #include <windows.h>
 
 /**
@@ -14,7 +15,7 @@ class MyServerWorker : public ServerWorker
 {
 private:
 	ServerClass* parent;
-	TargetInformation info;
+	IP info;
 
 protected:
 	MyServerWorker() {}
@@ -28,7 +29,7 @@ public:
 		this->parent = parent_;
 	}
 
-	void setConnectTarget(const TargetInformation& info_)
+	void setConnectTarget(const IP& info_)
 	{
 		this->info = info_;
 	}
@@ -66,7 +67,7 @@ protected:
 	typedef MyServerWorker<MyServerSocket> WorkerClass;
 
 	virtual void createNewWorker(SocketHandle handle,
-								 TargetInformation info)
+								 IP info)
 		throw(std::bad_alloc, ThreadException)
 	{
 		WorkerClass* childThread = new WorkerClass(handle);
@@ -84,7 +85,7 @@ int main()
 	SocketModule theSocket;
 
 	MyServerSocket server;
-	server.prepare(TargetInformation("localhost", 5432));
+	server.prepare(IP("localhost", 5432));
 
 	server.accept();
 

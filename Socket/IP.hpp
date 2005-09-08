@@ -16,7 +16,7 @@ class  NotAddressResolvException: public std::exception
 /**
  * 接続対象情報又はサーバのソケット束縛
  */
-class TargetInformation
+class IP
 {
 private:
 
@@ -37,7 +37,9 @@ private:
 	{
 		HostEnt* hostEntry = gethostbyname(ipAddress);
 		if (hostEntry == NULL)
+		{
 			throw NotAddressResolvException();
+		}
 
 		assert(hostEntry->h_length == 4);
 
@@ -66,7 +68,7 @@ public:
 	/**
 	 * デフォルトコンストラクタ
 	 */
-	TargetInformation() throw() :
+	IP() throw() :
 		internalRepresentIP(), internalRepresentPort()
 	{
 	}
@@ -77,7 +79,7 @@ public:
 	 * @arg port ポート番号
 	 * @exception NotAddressResolvException マシン名が解決できなかった場合
 	 */
-	TargetInformation(const char* ipAddress, const short port)
+	IP(const char* ipAddress, const short port)
 		throw(NotAddressResolvException):
 		internalRepresentIP(), internalRepresentPort()
 	{
@@ -91,7 +93,7 @@ public:
 	 * @arg port ポート番号(ホストバイトオーダ)
 	 * @exception NotAddressResolvException マシン名が解決できなかった場合
 	 */
-	TargetInformation(unsigned long ipAddress, const short port)
+	IP(unsigned long ipAddress, const short port)
 		throw(NotAddressResolvException):
 		internalRepresentIP(), internalRepresentPort() 
 	{
@@ -103,7 +105,7 @@ public:
 	 * 初期情報セット付コンストラクタ
 	 * @arg addrInfo sockaddr_in構造体
 	 */
-	TargetInformation(const sockaddr_in& addrInfo) throw()
+	IP(const sockaddr_in& addrInfo) throw()
 	{
 		internalRepresentIP = addrInfo.sin_addr.s_addr;
 		internalRepresentPort = addrInfo.sin_port;
@@ -112,7 +114,7 @@ public:
 	/**
 	 * デストラクタ
 	 */
-	virtual ~TargetInformation() throw()
+	virtual ~IP() throw()
 	{
 	}
 

@@ -9,7 +9,7 @@
 /**
  * 終了Threadの回収可能なThreadGroupクラス
  */
-class RecollectableThreadGroup :
+class CollectableThreadGroup :
 	public ThreadGroup, public Observer
 {
 private:
@@ -36,14 +36,14 @@ public:
 	/**
 	 * デフォルトコンストラクタ
 	 */
-	RecollectableThreadGroup() throw()
+	CollectableThreadGroup() throw()
 		: ThreadGroup(), Observer(), collectable()
 	{}
 
 	/**
 	 * デストラクタ
 	 */
-	virtual ~RecollectableThreadGroup() throw()
+	virtual ~CollectableThreadGroup() throw()
 	{}
 
 	/**
@@ -109,7 +109,7 @@ public:
  * ライドしたクラスを引数にして実体化し、利用する。
  */
 template <typename BaseThreadClass>
-class RecollectableThread
+class CollectableThread
 	: public BaseThreadClass
 {
 protected:
@@ -125,10 +125,10 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * リコレクタ(RecollectableThreadGroup)に登録しないまま終了する可
+	 * コレクタ(CollectableThreadGroup)に登録しないまま終了する可
 	 * 能性があるため、作成と同時に実行はできない
 	 */
-	RecollectableThread() throw():
+	CollectableThread() throw():
 		BaseThreadClass(false)
 	{
 	}
@@ -136,7 +136,7 @@ public:
 	/**
 	 * デストラクタ
 	 */
-	virtual ~RecollectableThread() throw()
+	virtual ~CollectableThread() throw()
 	{
 	}
 };

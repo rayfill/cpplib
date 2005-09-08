@@ -153,7 +153,7 @@ public:
 	typedef Token<CharType> token_t;
 	typedef Iterator iterator_t;
 
-private:
+protected:
 	typedef FiniteStateMachine<CharType> fsm_t;
 	typedef CharTrait char_trait_t;
 

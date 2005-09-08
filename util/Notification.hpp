@@ -133,7 +133,7 @@ public:
 	}
 
 	/**
-	 * 接続されているクライアントの数の取得
+	 * 接続されているサーバの数の取得
 	 */
 	const size_t serverCount() throw()
 	{

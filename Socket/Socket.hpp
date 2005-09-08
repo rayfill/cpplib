@@ -4,6 +4,7 @@
 #include <util/Notification.hpp>
 #include <Socket/IP.hpp>
 #include <Socket/SocketException.hpp>
+#include <Thread/ThreadException.hpp>
 
 /**
  * さまざまなSocketの基底クラス
@@ -22,7 +23,7 @@ protected:
 	 * @return 検査結果. true: 読み込み可能, false: 読み込み不可能
 	 */
 	bool isReadable(const SocketHandle sock,
-					timeval timeout = defaultTimeout) const throw()
+					timeval timeout) const throw()
 	{
 		fd_set fd;
 		FD_ZERO(&fd);
@@ -40,7 +41,7 @@ protected:
 	 * @return 検査結果. true: 書き込み可能, false: 書き込み不可能
 	 */
 	bool isWritable(const SocketHandle sock,
-					timeval timeout = defaultTimeout) const throw()
+					timeval timeout) const throw()
 	{
 		fd_set fd;
 		FD_ZERO(&fd);
@@ -81,7 +82,7 @@ protected:
 		if (socket != 0) 
 		{
 			SocketModule::SocketClose(socket);
-			socket = static_cast<ScoketHandle>(0);
+			socket = static_cast<SocketHandle>(0);
 		}
 	}
 
@@ -130,7 +131,7 @@ public:
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 1;
 		
-		return this->isWrtable(this->socket, timeout);
+		return this->isWritable(this->socket, timeout);
 	}
 
 	/**
@@ -156,7 +157,7 @@ public:
 	size_t readAsync(void* buffer, const size_t readSize)
 		throw(TimeoutException)
 	{
-		if (!this->isReadable(this->socket))
+		if (!this->isReadable(this->socket, this->defaultTimeout))
 			throw TimeoutException();
     
 		return read(buffer, readSize);
@@ -185,7 +186,7 @@ public:
 	size_t writeAsync(void* buffer, const size_t writeSize) 
 		throw(TimeoutException)
 	{
-		if (!this->isWritable(this->socket))
+		if (!this->isWritable(this->socket, this->defaultTimeout))
 			throw TimeoutException();
    
 		return write(buffer, writeSize);

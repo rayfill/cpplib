@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 		 itor != list.end();
 		 ++itor)
 	{
-		std::cout << itor->cFileName << std::endl;
+		std::cout << itor->cFileName << (itor.isDirectory() ? "\\" : "") << std::endl;
 	}
 
 	std::cout << std::endl;
@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 	{
 		std::cout << itor->cFileName;
 		if (itor->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+//		if (itor.isDirectory())
 			std::cout << "\\";
 
 		std::cout << std::endl;
