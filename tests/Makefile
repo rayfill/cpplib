@@ -16,7 +16,6 @@ OBJS= TestMain.o \
 	AsymmetricKeyTest.o \
 	StackableScannerTest.o \
 	RegexTest.o \
-	IPTest.o \
 # 	RSATest.o \
 # 	SmartPointerTest.o \
 # 	RationalTest.o \

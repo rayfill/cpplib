@@ -2,7 +2,7 @@
 #define SERVERSOCKET_HPP_
 
 #include <Thread/ThreadException.hpp>
-#include <Thread/RecollectableThreadGroup.hpp>
+#include <Thread/CollectableThreadGroup.hpp>
 
 /**
  * サーバサイドソケット用ワーカースレッドクラス
@@ -11,7 +11,7 @@
  * @see Socket
  */
 class ServerWorker :
-	public RecollectableThread<Thread>,
+	public CollectableThread<Thread>,
 	public Socket,
 	public Observable
 {
@@ -19,7 +19,7 @@ protected:
 	ServerWorker() {}
 public:
 	ServerWorker(const SocketHandle& handle) throw() :
-		RecollectableThread<Thread>(),
+		CollectableThread<Thread>(),
 		Socket(handle),
 		Observable()
 	{
@@ -43,7 +43,7 @@ protected:
 	/**
 	 * 回収可能なスレッドマネージャ
 	 */
-	RecollectableThreadGroup threadManager;
+	CollectableThreadGroup threadManager;
 
 	/**
 	 * サーバソケットクラス自身の終了可能フラグ
