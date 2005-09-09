@@ -98,9 +98,9 @@ public:
 	}
 
 private:
-//	pointer_t before;
 	pointer_t next;
 
+protected:
 	std::list<pointer_t> epsilons;
 
 public:
@@ -131,22 +131,12 @@ public:
 		return epsilons;
 	}
 
-/*	void setBefore(pointer_t newBefore)
-	{
-		before = newBefore;
-	}
-
-	pointer_t getBefore() const
-	{
-		return before;
-	}
-*/
-	void setNext(pointer_t newNext)
+	virtual void setNext(pointer_t newNext)
 	{
 		next = newNext;
 	}
 
-	pointer_t getNext() const
+	virtual pointer_t getNext() const
 	{
 		return next;
 	}
@@ -154,6 +144,60 @@ public:
 	void addEpsilon(pointer_t newEpsilon)
 	{
 		epsilons.push_back(newEpsilon);
+	}
+
+	void removeEpsilon(pointer_t removeValue)
+	{
+		epsilons.remove(removeValue);
+	}
+};
+
+template <typename CharType, typename PointerT>
+class EpsilonToken : public RegexToken<CharType, PointerT>
+{
+public:
+	typedef RegexToken<CharType, PointerT> base_t;
+	typedef PointerT pointer_t;
+	typedef CharType char_t;
+
+public:
+	EpsilonToken():
+		base_t()
+	{}
+
+	EpsilonToken(const EpsilonToken& token):
+		base_t(token)
+	{}
+
+	EpsilonToken(pointer_t next):
+		base_t(next)
+	{}
+
+	virtual ~EpsilonToken()
+	{}
+
+	virtual void setNext(pointer_t newNext)
+	{
+		assert(newNext != pointer_t());
+
+		if (base_t::getNext() != pointer_t())
+			base_t::removeEpsilon(base_t::getNext());
+
+		base_t::setNext(newNext);
+		base_t::addEpsilon(newNext);
+	}
+
+	virtual pointer_t getNext() const
+	{
+		if (base_t::getNext() == pointer_t())
+			throw std::out_of_range("Yet not set for next pointer.");
+
+		return base_t::getNext();
+	}
+
+	virtual pointer_t transit(char_t) const
+	{
+		return base_t::getInvalidPointer();
 	}
 };
 
@@ -291,6 +335,7 @@ public:
 	typedef RegexToken<char_t, pointer_t> token_t;
 
 private:
+	typedef EpsilonToken<char_t, pointer_t> epsilon_token_t;
 	typedef CharacterToken<char_t, pointer_t> char_token_t;
 	typedef RangeToken<char_t, pointer_t> range_token_t;
 	typedef SetToken<char_t, pointer_t> set_token_t;
@@ -298,11 +343,11 @@ private:
 
 	std::vector<token_t*> automatonList;
 
-	pointer_t lookupPointer(token_t* token)
+	pointer_t lookupPointer(token_t* token) const
 	{
 		assert(token != NULL);
 		
-		typename std::vector<token_t*>::iterator findPos =
+		typename std::vector<token_t*>::const_iterator findPos =
 			std::find(automatonList.begin(),
 					  automatonList.end(),
 					  token);
@@ -311,6 +356,13 @@ private:
 
 		return static_cast<pointer_t>(
 			std::distance(automatonList.begin(), findPos));
+	}
+
+	token_t* lookupRealPointer(pointer_t pointer) const
+	{
+		assert(pointer != pointer_t());
+
+		return automatonList[pointer];
 	}
 
 	void release()
@@ -340,8 +392,8 @@ private:
 		assert(first->getNext() == token_t::getInvalidPointer());
 		assert(second->getNext() == token_t::getInvalidPointer());
 
-		token_t* selecter = new token_t();
-		token_t* terminater = new token_t();
+		token_t* selecter = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
 		automatonList.push_back(selecter);
 		automatonList.push_back(terminater);
 
@@ -357,29 +409,44 @@ private:
 
 	token_pair_t group(token_t* token)
 	{
-		token_t* grouper = new token_t();
-		token_t* terminater = new token_t();
+		/*
+		 * g -> T -> t -> T::next
+		 *
+		 * g: grouper, T: token, t: terminater
+		 */
+		token_t* grouper = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
 		automatonList.push_back(grouper);
 		automatonList.push_back(terminater);
 
-		grouper->addEpsilon(token);
-		const pointer_t nextPointer = token->getNext();
-		token->setNext(terminater);
-		terminater->setNext(nextPointer);
+		grouper->setNext(lookupPointer(token));
+		terminater->setNext(token->getNext());
+		token->setNext(lookupPointer(terminater));
 
 		return std::make_pair(lookupPointer(grouper),
 							  lookupPointer(terminater));
 	}
 
-	token_t* kleene(token_t* token)
+	token_pair_t kleene(token_t* token)
 	{
-		token_t* kleeneClosure = new token_t();
-		token_t* terminater = new token_t();
+		token_t* kleeneClosure = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
 		automatonList.push_back(kleeneClosure);
 		automatonList.push_back(terminater);
 
-		kleeneClosure->setNext(lookupPointer(kleeneClosure));
-		kleeneClosure->addEpsilon(token->getNext());
+		/*     -b-
+		 *   /     \
+		 * k -> T -> t -> T::next
+		 *
+		 * k: kleene, T: token, t: terminater, b: back loop
+		 */
+		kleeneClosure->setNext(lookupPointer(token));
+
+		// set default by loop back.
+		terminater->addEpsilon(lookupPointer(kleeneClosure));
+		terminater->setNext(token->getNext());
+
+		token->setNext(lookupPointer(terminater));
 
 		return std::make_pair(lookupPointer(kleeneClosure),
 							  lookupPointer(terminater));
