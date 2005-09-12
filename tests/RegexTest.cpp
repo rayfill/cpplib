@@ -1,6 +1,7 @@
 #include <cppunit/extensions/helpermacros.h>
 #include <text/regex/RegexCompile.hpp>
 #include <typeinfo>
+#include <set>
 
 class RegexScannerTest : public CppUnit::TestFixture
 {
@@ -79,10 +80,10 @@ private:
 public:
 	void regexTokenTest()
 	{
-		typedef RegexToken<char, int> regex_t;
-		regex_t r_token(2);
+		typedef RegexToken<char> regex_t;
+		regex_t r_token((regex_t*)2);
 
-		std::list<int> lists = r_token.epsilonTransit();
+		std::list<regex_t*> lists = r_token.epsilonTransit();
 		CPPUNIT_ASSERT(lists.size() == 0);
 
 		for (int character = std::numeric_limits<char>::min();
@@ -94,19 +95,20 @@ public:
 					std::char_traits<char>::to_char_type(character)) == 0);
 		}
 
-		r_token.addEpsilon(3);
-		r_token.addEpsilon(4);
+		r_token.addEpsilon((regex_t*)3);
+		r_token.addEpsilon((regex_t*)4);
 		lists = r_token.epsilonTransit();
 
 		CPPUNIT_ASSERT(lists.size() == 2);
-		CPPUNIT_ASSERT(*lists.begin() == 3);
-		CPPUNIT_ASSERT(*++lists.begin() == 4);
+		CPPUNIT_ASSERT(*lists.begin() == (regex_t*)3);
+		CPPUNIT_ASSERT(*++lists.begin() == (regex_t*)4);
 	}
 
 	void characterTokenTest()
 	{
-		typedef CharacterToken<char, int> character_t;
-		character_t c_token('a', 2);
+		typedef RegexToken<char> token_t;
+		typedef CharacterToken<char> character_t;
+		character_t c_token('a', (token_t*)2);
 
 		for (int character = std::numeric_limits<char>::min();
 			 character <= std::numeric_limits<char>::max();
@@ -116,25 +118,26 @@ public:
 			{
 				CPPUNIT_ASSERT(
 					c_token.transit(
-						std::char_traits<char>::to_char_type(character)) == 2);
+						std::char_traits<char>::to_char_type(character)) == (token_t*)2);
 			}
 			else
 			{
 				CPPUNIT_ASSERT(
 					c_token.transit(
-						std::char_traits<char>::to_char_type(character)) == 0);
+						std::char_traits<char>::to_char_type(character)) == NULL);
 			}
 		}
 
-		std::list<int> lists = c_token.epsilonTransit();
+		std::list<token_t*> lists = c_token.epsilonTransit();
 		
 		CPPUNIT_ASSERT(lists.size() == 0);
 	}
 
 	void rangeTokenTest()
 	{
-		typedef RangeToken<char, int> range_t;
-		range_t r_token('a', 'z', 10);
+		typedef RegexToken<char> token_t;
+		typedef RangeToken<char> range_t;
+		range_t r_token('a', 'z', (token_t*)10);
 
 		for (int character = std::numeric_limits<char>::min();
 			 character <= std::numeric_limits<char>::max();
@@ -145,26 +148,27 @@ public:
 			{
 				CPPUNIT_ASSERT(
 					r_token.transit(
-						std::char_traits<char>::to_char_type(character)) == 10);
+						std::char_traits<char>::to_char_type(character)) == (token_t*)10);
 			}
 			else
 			{
 				CPPUNIT_ASSERT(
 					r_token.transit(
-						std::char_traits<char>::to_char_type(character)) == 0);
+						std::char_traits<char>::to_char_type(character)) == NULL);
 			}
 		}
 	}
 
 	void setTokenTest()
 	{
-		typedef SetToken<char, int> set_t;
+		typedef RegexToken<char> token_t;
+		typedef SetToken<char> set_t;
 		set_t s_token;
 		s_token.addAccept('a');
 		s_token.addAccept('c');
 		s_token.addAccept('d');
 		s_token.addAccept('z');
-		s_token.setNext(10);
+		s_token.setNext((token_t*)10);
 
 		for (int character = std::numeric_limits<char>::min();
 			 character <= std::numeric_limits<char>::max();
@@ -177,13 +181,13 @@ public:
 			{
 				CPPUNIT_ASSERT(
 					s_token.transit(
-						std::char_traits<char>::to_char_type(character)) == 10);
+						std::char_traits<char>::to_char_type(character)) == (token_t*)10);
 			}
 			else
 			{
 				CPPUNIT_ASSERT(
 					s_token.transit(
-						std::char_traits<char>::to_char_type(character)) == 0);
+						std::char_traits<char>::to_char_type(character)) == NULL);
 			}
 		}
 	}
@@ -200,12 +204,13 @@ private:
 	CPPUNIT_TEST(selectTest);
 	CPPUNIT_TEST_SUITE_END();
 
-	typedef RegexAutomatonManager<char, int> manager_t;
-	typedef RegexToken<char, int> regex_token_t;
-	typedef EpsilonToken<char, int> epsilon_token_t;
-	typedef CharacterToken<char, int> char_token_t;
-	typedef RangeToken<char, int> range_token_t;
-	typedef SetToken<char, int> set_token_t;
+	typedef RegexAutomatonManager<char> manager_t;
+	typedef RegexToken<char> regex_token_t;
+	typedef RegexToken<char> token_t;
+	typedef EpsilonToken<char> epsilon_token_t;
+	typedef CharacterToken<char> char_token_t;
+	typedef RangeToken<char> range_token_t;
+	typedef SetToken<char> set_token_t;
 
 	typedef std::char_traits<char> char_traits_t;
 
@@ -214,8 +219,8 @@ public:
 	{
 		manager_t manager;
 		
-		CPPUNIT_ASSERT(manager.lookupPointer(manager.head) == 0);
-		CPPUNIT_ASSERT(manager.lookupPointer(manager.last) == 1);
+		CPPUNIT_ASSERT(manager.head != NULL);
+		CPPUNIT_ASSERT(manager.last != NULL);
 	}
 
 	void concatinateTest()
@@ -227,14 +232,13 @@ public:
 		manager.automatonList.push_back(token_a);
 		manager.automatonList.push_back(token_b);
 
-		CPPUNIT_ASSERT(manager.lookupPointer(token_a) == 2);
-		CPPUNIT_ASSERT(manager.lookupPointer(token_b) == 3);
-
 		manager_t::token_pair_t pair =
 			manager.concatinate(token_a, token_b);
 
-		CPPUNIT_ASSERT(pair.first == 2);
-		CPPUNIT_ASSERT(pair.second == 3);
+		CPPUNIT_ASSERT(pair.first == token_a);
+		CPPUNIT_ASSERT(pair.second == token_b);
+
+		CPPUNIT_ASSERT(token_a->transit('a') == token_b);
 	}
 
 	void groupTest()
@@ -242,44 +246,17 @@ public:
 		manager_t manager;
 
 		char_token_t* token = new char_token_t('A');
-		token->setNext(1);
-		manager.automatonList.push_back(token);
 
-		CPPUNIT_ASSERT(manager.lookupPointer(token) == 2);
-		CPPUNIT_ASSERT(token->getNext() == 1);
+		manager_t::token_pair_t pair = manager.group(token, token);
 
-		manager_t::token_pair_t pair = 
-			manager.group(token);
+		regex_token_t* head = pair.first;
+		regex_token_t* last = pair.second;
 
-		regex_token_t* head = manager.lookupRealPointer(pair.first);
-		regex_token_t* last = manager.lookupRealPointer(pair.second);
-
-		CPPUNIT_ASSERT(last->getNext() == 1);
-
-		CPPUNIT_ASSERT_MESSAGE(typeid(*head).name(),
-							   std::string(typeid(*head).name()) ==
-							   typeid(epsilon_token_t).name());
-
-		std::list<int> epsilons = head->epsilonTransit();
-
+		std::list<token_t*> epsilons = head->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons.size() == 1);
+		CPPUNIT_ASSERT(epsilons.front() == token);
 
-		//next reference is token.
-		CPPUNIT_ASSERT(*epsilons.begin() == 2);
-		CPPUNIT_ASSERT(manager.lookupRealPointer(*epsilons.begin()) ==
-					   token);
-		CPPUNIT_ASSERT(token == manager.lookupRealPointer(*epsilons.begin()));
-
-		int acceptNext = token->transit('A');
-		CPPUNIT_ASSERT(acceptNext == pair.second);
-
-		epsilons = manager.lookupRealPointer(pair.second)->epsilonTransit();
-		CPPUNIT_ASSERT(epsilons.size() == 1);
-		CPPUNIT_ASSERT(epsilons.front() == 1);
-
-		CPPUNIT_ASSERT(
-			manager.lookupRealPointer(
-				epsilons.front())->epsilonTransit().size() == 0);
+		CPPUNIT_ASSERT(token->transit('A') == last);
 	}
 
 	void kleeneTest()
@@ -287,54 +264,29 @@ public:
 		manager_t manager;
 
 		char_token_t* token = new char_token_t('A');
-		token->setNext(1);
-		manager.automatonList.push_back(token);
-
-		CPPUNIT_ASSERT(manager.lookupPointer(token) == 2);
-		CPPUNIT_ASSERT(token->getNext() == 1);
 
 		manager_t::token_pair_t pair = 
-			manager.kleene(token);
+			manager.kleene(token, token);
 
-		CPPUNIT_ASSERT(pair.first == 3);
-		CPPUNIT_ASSERT(pair.second == 4);
-		
-		regex_token_t* head = manager.lookupRealPointer(pair.first);
-		regex_token_t* last = manager.lookupRealPointer(pair.second);
+		regex_token_t* head = pair.first;
+		regex_token_t* last = pair.second;
 
-		CPPUNIT_ASSERT(std::string(typeid(*head).name()) == 
-					   typeid(epsilon_token_t).name());
-
-		CPPUNIT_ASSERT(last->getNext() == 1);
-
-		CPPUNIT_ASSERT_MESSAGE(typeid(*head).name(),
-							   std::string(typeid(*head).name()) ==
-							   typeid(epsilon_token_t).name());
-
-		std::list<int> epsilons = head->epsilonTransit();
-
+		std::list<token_t*> epsilons = head->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons.size() == 1);
+		CPPUNIT_ASSERT(epsilons.front() == token);
 
-		// second automaton token(predefined character token).
-		CPPUNIT_ASSERT(epsilons.front() == 2);
-		CPPUNIT_ASSERT(manager.lookupRealPointer(epsilons.front()) ==
-					   token);
-		CPPUNIT_ASSERT(token == manager.lookupRealPointer(epsilons.front()));
-
-		int acceptNext = token->transit('A');
-		CPPUNIT_ASSERT(acceptNext == pair.second);
-
-		// third automaton token.
-		epsilons = manager.lookupRealPointer(pair.second)->epsilonTransit();
-		CPPUNIT_ASSERT(epsilons.size() == 2);
-		CPPUNIT_ASSERT(manager.lookupRealPointer(epsilons.front()) == 
-					   manager.lookupRealPointer(pair.first));
-		CPPUNIT_ASSERT(*++epsilons.begin() == 1);
+		CPPUNIT_ASSERT(token->transit('A') == last);
+		
+		epsilons = last->epsilonTransit();
+		CPPUNIT_ASSERT(epsilons.size() == 1);
+		CPPUNIT_ASSERT(epsilons.front() == head);
+		
 	}
 
 	void selectTest()
 	{
 		typedef char char_type;
+		typedef RegexToken<char> token_t;
 		manager_t manager;
 
 		char_token_t* token_a = new char_token_t('A');
@@ -345,44 +297,27 @@ public:
 		manager_t::token_pair_t pair =
 			manager.select(token_a, token_b);
 
-		regex_token_t* head = manager.lookupRealPointer(pair.first);
-		regex_token_t* tail = manager.lookupRealPointer(pair.second);
+		regex_token_t* head = pair.first;
+		regex_token_t* tail = pair.second;
 
 		CPPUNIT_ASSERT(std::string(typeid(*head).name()) ==
 					   typeid(epsilon_token_t).name());
 		CPPUNIT_ASSERT(std::string(typeid(*tail).name()) ==
 					   typeid(epsilon_token_t).name());
 
-		std::list<int> epsilons = head->epsilonTransit();
+		std::list<token_t*> epsilons = head->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons.size() == 2);
 
 		// upside test. root as 'A'.
-		regex_token_t* up = manager.lookupRealPointer(epsilons.front());
-		CPPUNIT_ASSERT(std::string(typeid(*up).name()) ==
-					   typeid(char_token_t).name());
-		for (int c = std::numeric_limits<char_type>::min();
-			 c <= std::numeric_limits<char_type>::max();
-			 ++c)
-		{
-			if (c == 'A')
-				CPPUNIT_ASSERT(up->transit(c) == pair.second);
-			else
-				CPPUNIT_ASSERT(up->transit(c) == int());
-		}
+		regex_token_t* up = epsilons.front();
+		CPPUNIT_ASSERT(up == token_a);
 
 		// downside test. root as 'B'.
-		regex_token_t* down = manager.lookupRealPointer(*++epsilons.begin());
-		CPPUNIT_ASSERT(std::string(typeid(*down).name()) ==
-					   typeid(char_token_t).name());
-		for (int c = std::numeric_limits<char_type>::min();
-			 c <= std::numeric_limits<char_type>::max();
-			 ++c)
-		{
-			if (c == 'B')
-				CPPUNIT_ASSERT(down->transit(c) == pair.second);
-			else
-				CPPUNIT_ASSERT(down->transit(c) == int());
-		}
+		regex_token_t* down = *++epsilons.begin();
+		CPPUNIT_ASSERT(down == token_b);
+
+		CPPUNIT_ASSERT(up->transit('A') == tail);
+		CPPUNIT_ASSERT(down->transit('B') == tail);
 		
 		// terminater test.
 		epsilons = tail->epsilonTransit();
@@ -391,6 +326,98 @@ public:
 
 };
 
+
+// class RegexCompilerTest : public CppUnit::TestFixture
+// {
+// private:
+// 	CPPUNIT_TEST_SUITE(RegexCompilerTest);
+// 	CPPUNIT_TEST(compileTest);
+// 	CPPUNIT_TEST_SUITE_END();
+
+// public:
+// 	void compileTest()
+// 	{
+// 		typedef RegexCompiler<char, int> regex_compiler_t;
+// 		typedef RegexScanner<char> scanner_t;
+// //		typedef regex_compiler_t::token_pair_t token_pair_t;
+// 		typedef regex_compiler_t::token_t token_t;
+// 		typedef regex_compiler_t::epsilon_token_t epsilon_token_t;
+// 		typedef regex_compiler_t::char_token_t char_token_t;
+
+// 		const std::string input = "a*";
+// //		scanner_t scanner(input.begin(), input.end());
+
+// 		regex_compiler_t compiler;
+// 		regex_compiler_t::token_pair_t pair = compiler.compile(input);
+
+// 		token_t* current = pair.first;
+// 		token_t* last = pair.second;
+
+// 		std::set<token_t*> alreadies;
+// 		while (current != last)
+// 		{
+// 			alreadies.insert(current);
+// 			std::string currentClassName = typeid(*current).name();
+// 			if (currentClassName == typeid(epsilon_token_t).name())
+// 			{
+// 				std::list<int> epsilons = current->epsilonTransit();
+// 				CPPUNIT_ASSERT(epsilons.size() == 1);
+// 				current = compiler.lookupRealPointer(epsilons.front());
+// 			}
+// 			else if (currentClassName == typeid(char_token_t).name())
+// 			{
+// 				CPPUNIT_ASSERT(current->epsilonTransit().size() == 0);
+// 				int next = current->transit('a');
+// 				current = compiler.lookupRealPointer(next);
+// 				CPPUNIT_ASSERT(current != NULL);
+
+// 				break;
+// 			}
+// 		}
+			 
+// 		while (current != last)
+// 		{
+// 			std::string currentClassName = typeid(*current).name();
+// 			CPPUNIT_ASSERT(currentClassName == typeid(epsilon_token_t).name());
+
+// 			std::list<int> epsilons = current->epsilonTransit();
+// 			if (epsilons.size() == 1)
+// 			{
+// 				current = compiler.lookupRealPointer(epsilons.front());
+// 			}
+// 			else if (epsilons.size() == 2)
+// 			{
+// 				int next;
+// 				bool first = true;
+// 				bool second = true;
+
+				
+// 				next = epsilons.front();
+// 				current = compiler.lookupRealPointer(next);
+// 				if (alreadies.find(current) != alreadies.end())
+// 					first = false;
+
+// 				next = *++epsilons.begin();
+// 				current = compiler.lookupRealPointer(next);
+// 				if (alreadies.find(current) != alreadies.end())
+// 					second = false;
+
+// 				CPPUNIT_ASSERT(first || second);
+
+// 				if (first == false)
+// 					current = compiler.lookupRealPointer(*++epsilons.begin());
+// 				else
+// 					current = compiler.lookupRealPointer(epsilons.front());
+
+// 				CPPUNIT_ASSERT(current != NULL);
+// 			}
+// 			else
+// 				CPPUNIT_FAIL("out side epsilons transition state size.");
+// 		}
+// 	}
+// };
+
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexScannerTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexTokenTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexAutomatonManagerTest );
+// CPPUNIT_TEST_SUITE_REGISTRATION( RegexCompilerTest );

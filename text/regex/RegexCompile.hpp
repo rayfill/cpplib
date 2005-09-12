@@ -71,6 +71,22 @@ public:
 		return static_cast<typename char_trait_t::int_type>(-1);
 	}
 
+	typename char_trait_t::int_type read()
+	{
+		if (current != last)
+			return char_trait_t::to_int_type(*current);
+
+		return static_cast<typename char_trait_t::int_type>(-1);
+	}
+
+	typename char_trait_t::int_type readAhead()
+	{
+		if (current + 1 != last)
+			return char_trait_t::to_int_type(*(current + 1));
+
+		return static_cast<typename char_trait_t::int_type>(-1);
+	}
+
 	void backTrack()
 	{
 		if (current != head)
@@ -85,17 +101,20 @@ public:
 	}
 };
 
-template <typename CharType, typename PointerT>
+template <typename CharType>
 class RegexToken
 {
 public:
 	typedef CharType char_t;
-	typedef PointerT pointer_t;
+	typedef RegexToken* pointer_t;
+	typedef RegexToken<char_t> token_t;
 
 	static pointer_t getInvalidPointer()
 	{
 		return pointer_t();
 	}
+
+	typedef std::pair<token_t*, token_t*> token_pair_t;
 
 private:
 	pointer_t next;
@@ -105,17 +124,14 @@ protected:
 
 public:
 	RegexToken():
-//		before(),
 		next(),	epsilons()
 	{}
 
 	RegexToken(const RegexToken& token):
-//		before(token.before),
 		next(token.next), epsilons(token.epsilons)
 	{}
 
-	RegexToken(/*pointer_t before_,*/ pointer_t next_):
-//		before(before_),
+	RegexToken(pointer_t next_):
 		next(next_), epsilons()
 	{}
 
@@ -150,14 +166,31 @@ public:
 	{
 		epsilons.remove(removeValue);
 	}
+
+	virtual void traverse(std::set<token_t*>& alreadyList)
+	{
+		if (alreadyList.find(this) != alreadyList.end())
+			return;
+		alreadyList.insert(this);
+
+		token_t* next_ = getNext();
+		if (next_ != getInvalidPointer())
+			next_->traverse(alreadyList);
+
+		std::list<pointer_t> epsilons = epsilonTransit();
+		for (typename std::list<pointer_t>::iterator itor = epsilons.begin();
+			 itor != epsilons.end();
+			 ++itor)
+			(*itor)->traverse(alreadyList);
+	}
 };
 
-template <typename CharType, typename PointerT>
-class EpsilonToken : public RegexToken<CharType, PointerT>
+template <typename CharType>
+class EpsilonToken : public RegexToken<CharType>
 {
 public:
-	typedef RegexToken<CharType, PointerT> base_t;
-	typedef PointerT pointer_t;
+	typedef RegexToken<CharType> base_t;
+	typedef base_t* pointer_t;
 	typedef CharType char_t;
 
 public:
@@ -178,21 +211,12 @@ public:
 
 	virtual void setNext(pointer_t newNext)
 	{
-		assert(newNext != pointer_t());
-
-		if (base_t::getNext() != pointer_t())
+		if (base_t::getNext() != base_t::getInvalidPointer())
 			base_t::removeEpsilon(base_t::getNext());
 
 		base_t::setNext(newNext);
-		base_t::addEpsilon(newNext);
-	}
-
-	virtual pointer_t getNext() const
-	{
-		if (base_t::getNext() == pointer_t())
-			throw std::out_of_range("Yet not set for next pointer.");
-
-		return base_t::getNext();
+		if (newNext != base_t::getInvalidPointer())
+			base_t::addEpsilon(newNext);
 	}
 
 	virtual pointer_t transit(char_t) const
@@ -201,12 +225,12 @@ public:
 	}
 };
 
-template <typename CharType, typename PointerT>
-class CharacterToken : public RegexToken<CharType, PointerT>
+template <typename CharType>
+class CharacterToken : public RegexToken<CharType>
 {
 public:
-	typedef RegexToken<CharType, PointerT> base_t;
-	typedef PointerT pointer_t;
+	typedef RegexToken<CharType> base_t;
+	typedef base_t* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -221,8 +245,8 @@ public:
 		base_t(token), acceptCharacter(token.acceptCharacter)
 	{}
 
-	CharacterToken(char_t character,/* pointer_t before,*/ pointer_t next):
-		base_t(/*before,*/ next), acceptCharacter(character)
+	CharacterToken(char_t character, pointer_t next):
+		base_t(next), acceptCharacter(character)
 	{}
 
 	virtual ~CharacterToken()
@@ -237,12 +261,12 @@ public:
 	}
 };
 
-template <typename CharType, typename PointerT>
-class RangeToken : public RegexToken<CharType, PointerT>
+template <typename CharType>
+class RangeToken : public RegexToken<CharType>
 {
 public:
-	typedef RegexToken<CharType, PointerT> base_t;
-	typedef PointerT pointer_t;
+	typedef RegexToken<CharType> base_t;
+	typedef base_t* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -260,8 +284,8 @@ public:
 		acceptMax(token.acceptMax)
 	{}
 
-	RangeToken(char_t min_, char_t max_,/* pointer_t before,*/ pointer_t next):
-		base_t(/*before,*/ next), acceptMin(min_), acceptMax(max_)
+	RangeToken(char_t min_, char_t max_, pointer_t next):
+		base_t(next), acceptMin(min_), acceptMax(max_)
 	{}
 
 	virtual ~RangeToken()
@@ -277,12 +301,12 @@ public:
 	}
 };
 
-template <typename CharType, typename PointerT>
-class SetToken : public RegexToken<CharType, PointerT>
+template <typename CharType>
+class SetToken : public RegexToken<CharType>
 {
 public:
-	typedef RegexToken<CharType, PointerT> base_t;
-	typedef PointerT pointer_t;
+	typedef RegexToken<CharType> base_t;
+	typedef base_t* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -297,12 +321,12 @@ public:
 		base_t(), acceptSet(sets)
 	{}
 
-	SetToken(/*pointer_t before,*/ pointer_t next):
-		base_t(/*before,*/ next), acceptSet()
+	SetToken(pointer_t next):
+		base_t(next), acceptSet()
 	{}
 
-	SetToken(const std::set<char_t>& sets,/* pointer_t before,*/ pointer_t next):
-		base_t(/*before,*/ next), acceptSet(sets)
+	SetToken(const std::set<char_t>& sets, pointer_t next):
+		base_t(next), acceptSet(sets)
 	{}
 
 	virtual ~SetToken()
@@ -321,135 +345,35 @@ public:
 
 		return base_t::getInvalidPointer();
 	}
+
 };
 
-template <typename CharType, typename PointerT>
+template <typename CharType>
 class RegexAutomatonManager
 {
 	friend class RegexAutomatonManagerTest;
 
 public:
 	typedef CharType char_t;
-	typedef PointerT pointer_t;
 
-	typedef RegexToken<char_t, pointer_t> token_t;
+	typedef RegexToken<char_t> token_t;
+	typedef token_t* pointer_t;
 
-private:
-	typedef EpsilonToken<char_t, pointer_t> epsilon_token_t;
-	typedef CharacterToken<char_t, pointer_t> char_token_t;
-	typedef RangeToken<char_t, pointer_t> range_token_t;
-	typedef SetToken<char_t, pointer_t> set_token_t;
-	typedef std::pair<pointer_t, pointer_t> token_pair_t;
+protected:
+	typedef EpsilonToken<char_t> epsilon_token_t;
+	typedef CharacterToken<char_t> char_token_t;
+	typedef RangeToken<char_t> range_token_t;
+	typedef SetToken<char_t> set_token_t;
+	typedef std::pair<token_t*, token_t*> token_pair_t;
 
 	std::vector<token_t*> automatonList;
 
-	pointer_t lookupPointer(token_t* token) const
+	token_pair_t createLiteral(const char_t character)
 	{
-		assert(token != NULL);
-		
-		typename std::vector<token_t*>::const_iterator findPos =
-			std::find(automatonList.begin(),
-					  automatonList.end(),
-					  token);
+		token_t* result = new char_token_t(character);
+		automatonList.push_back(result);
 
-		assert(findPos != automatonList.end());
-
-		return static_cast<pointer_t>(
-			std::distance(automatonList.begin(), findPos));
-	}
-
-	token_t* lookupRealPointer(pointer_t pointer) const
-	{
-		assert(pointer != pointer_t());
-
-		return automatonList[pointer];
-	}
-
-	void release()
-	{
-		for (typename std::vector<token_t*>::iterator itor =
-				 automatonList.begin();
-			 itor != automatonList.end();
-			 ++itor)
-		{
-			delete *itor;
-		}
-	}
-
-	token_pair_t concatinate(token_t* first, token_t* second)
-	{
-		assert(first != NULL);
-		assert(second != NULL);
-
-		first->setNext(lookupPointer(second));
-
-		return std::make_pair(lookupPointer(first),
-							  lookupPointer(second));
-	}
-
-	token_pair_t select(token_t* first, token_t* second)
-	{
-		assert(first->getNext() == token_t::getInvalidPointer());
-		assert(second->getNext() == token_t::getInvalidPointer());
-
-		token_t* selecter = new epsilon_token_t();
-		token_t* terminater = new epsilon_token_t();
-		automatonList.push_back(selecter);
-		automatonList.push_back(terminater);
-
-		selecter->addEpsilon(lookupPointer(first));
-		selecter->addEpsilon(lookupPointer(second));
-
-		first->setNext(lookupPointer(terminater));
-		second->setNext(lookupPointer(terminater));
-
-		return std::make_pair(lookupPointer(selecter),
-							  lookupPointer(terminater));
-	}
-
-	token_pair_t group(token_t* token)
-	{
-		/*
-		 * g -> T -> t -> T::next
-		 *
-		 * g: grouper, T: token, t: terminater
-		 */
-		token_t* grouper = new epsilon_token_t();
-		token_t* terminater = new epsilon_token_t();
-		automatonList.push_back(grouper);
-		automatonList.push_back(terminater);
-
-		grouper->setNext(lookupPointer(token));
-		terminater->setNext(token->getNext());
-		token->setNext(lookupPointer(terminater));
-
-		return std::make_pair(lookupPointer(grouper),
-							  lookupPointer(terminater));
-	}
-
-	token_pair_t kleene(token_t* token)
-	{
-		token_t* kleeneClosure = new epsilon_token_t();
-		token_t* terminater = new epsilon_token_t();
-		automatonList.push_back(kleeneClosure);
-		automatonList.push_back(terminater);
-
-		/*     -b-
-		 *   /     \
-		 * k -> T -> t -> T::next
-		 *
-		 * k: kleene, T: token, t: terminater, b: back loop
-		 */
-		kleeneClosure->setNext(lookupPointer(token));
-
-		// set default by loop back.
-		terminater->addEpsilon(lookupPointer(kleeneClosure));
-		terminater->setNext(token->getNext());
-
-		token->setNext(lookupPointer(terminater));
-
-		return std::make_pair(lookupPointer(kleeneClosure),
-							  lookupPointer(terminater));
+		return std::make_pair(result, result);
 	}
 
 	token_t* const head;
@@ -465,6 +389,70 @@ private:
 		return last == token;
 	}
 
+
+	static token_pair_t concatinate(token_t* first, token_t* second)
+	{
+		assert(first != NULL);
+		assert(second != NULL);
+
+		first->setNext(second);
+
+		return std::make_pair(first, second);
+	}
+
+	static token_pair_t select(token_t* first, token_t* second)
+	{
+		assert(first->getNext() == token_t::getInvalidPointer());
+		assert(second->getNext() == token_t::getInvalidPointer());
+
+		token_t* selecter = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
+
+		selecter->addEpsilon(first);
+		selecter->addEpsilon(second);
+
+		first->setNext(terminater);
+		second->setNext(terminater);
+
+		return std::make_pair(selecter, terminater);
+	}
+
+	static token_pair_t group(token_t* left, token_t* right)
+	{
+		/*
+		 * g -> T -> t -> T::next
+		 *
+		 * g: grouper, T: token, t: terminater
+		 */
+		token_t* grouper = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
+
+		grouper->setNext(left);
+		right->setNext(terminater);
+
+		return std::make_pair(grouper, terminater);
+	}
+
+	static token_pair_t kleene(token_t* left, token_t* right)
+	{
+		token_t* kleeneClosure = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
+
+		/*     -b-
+		 *   /     \
+		 * k -> T -> t -> T::next
+		 *
+		 * k: kleene, T: token, t: terminater, b: back loop
+		 */
+		kleeneClosure->setNext(left);
+
+		// set default by loop back.
+		terminater->addEpsilon(kleeneClosure);
+		right->setNext(terminater);
+
+		return std::make_pair(kleeneClosure, terminater);
+	}
+
 public:
 	RegexAutomatonManager():
 		automatonList(),
@@ -476,9 +464,133 @@ public:
 
 	~RegexAutomatonManager()
 	{
-		release();
+		delete head;
+		delete last;
 	}
 };
 
+template <typename CharType>
+class RegexCompiler : public RegexAutomatonManager<CharType>
+{
+	friend class RegexCompilerTest;
+
+private:
+	typedef CharType char_t;
+	typedef RegexAutomatonManager<CharType> base_t;
+	typedef base_t* pointer_t;
+	typedef RegexToken<char_t> token_t;
+	typedef EpsilonToken<char_t> epsilon_token_t;
+	typedef CharacterToken<char_t> char_token_t;
+	typedef RangeToken<char_t> range_token_t;
+	typedef SetToken<char_t> set_token_t;
+	typedef std::pair<token_t*, token_t*> token_pair_t;
+
+	bool isKleeneCharacter(const char_t character) const
+	{
+		switch (character)
+		{
+		case '*':
+			return true;
+		case '+':
+		case '?':
+			assert(false); // not support yet.
+		}
+
+		return false;
+	}
+
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef std::char_traits<char_t> char_trait_t;
+
+	token_pair_t compileLiteral(typename char_trait_t::int_type currentRead,
+								scanner_t& scanner,
+								token_t* previous = NULL)
+	{
+		token_pair_t literal = base_t::createLiteral(currentRead);
+		
+		if (isKleeneCharacter(char_trait_t::to_char_type(scanner.read())))
+		{
+			literal = compileStar(literal);
+			scanner.scan();
+		}
+
+		if (previous != NULL)
+		{
+			base_t::concatinate(previous, literal.first);
+			return std::make_pair(previous, literal.second);
+		}
+
+		return literal;
+	}
+
+	token_pair_t compileStar(token_pair_t tokenPair)
+	{
+		return base_t::kleene(tokenPair.first,
+							  tokenPair.second);
+	}
+
+	token_pair_t subCompile(scanner_t& scanner)
+	{
+		token_pair_t lastToken =
+			std::make_pair(static_cast<token_t*>(NULL),
+						   static_cast<token_t*>(NULL));
+
+		typename char_trait_t::int_type currentRead;
+		while((currentRead = scanner.scan()) != -1)
+		{
+
+			switch (currentRead)
+			{
+			case '*':
+				lastToken =
+					compileStar(lastToken);
+				break;
+
+//			case '+':
+
+// 			case '|':
+// 				selectCompile(scanner);
+// 				break;
+
+// 			case '(':
+// 				groupCompile(scanner);
+// 				break;
+
+// 			case '[':
+// 				setCompile(scanner);
+// 				break;
+
+// 			case ')':
+// 				break;
+
+			default:
+				lastToken = compileLiteral(currentRead,
+										   scanner,
+										   lastToken.second);
+			
+			}
+		}
+
+		return lastToken;
+	}
+
+	token_pair_t compile(std::string pattern)
+	{
+		scanner_t scanner(pattern.begin(), pattern.end());
+
+		return subCompile(scanner);
+	}
+
+public:
+	RegexCompiler():
+		base_t()
+	{}
+
+	RegexCompiler(const std::string& pattern):
+		base_t()
+	{}
+	
+};
 
 #endif /* REGEXCOMPILE_HPP_ */
