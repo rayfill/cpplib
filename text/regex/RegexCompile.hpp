@@ -8,6 +8,7 @@
 #include <vector>
 #include <list>
 #include <utility>
+#include <set>
 
 #include <cassert>
 
@@ -355,40 +356,22 @@ class RegexAutomatonManager
 
 public:
 	typedef CharType char_t;
-
 	typedef RegexToken<char_t> token_t;
 	typedef token_t* pointer_t;
+	typedef std::pair<pointer_t, pointer_t> token_pair_t;
 
 protected:
 	typedef EpsilonToken<char_t> epsilon_token_t;
 	typedef CharacterToken<char_t> char_token_t;
 	typedef RangeToken<char_t> range_token_t;
 	typedef SetToken<char_t> set_token_t;
-	typedef std::pair<token_t*, token_t*> token_pair_t;
 
-	std::vector<token_t*> automatonList;
-
-	token_pair_t createLiteral(const char_t character)
+	static token_pair_t createLiteral(const char_t character)
 	{
 		token_t* result = new char_token_t(character);
-		automatonList.push_back(result);
 
 		return std::make_pair(result, result);
 	}
-
-	token_t* const head;
-	token_t* const last;
-
-	bool isStart(token_t* token) const
-	{
-		return head == token;
-	}
-
-	bool isEnd(token_t* token) const
-	{
-		return last == token;
-	}
-
 
 	static token_pair_t concatinate(token_t* first, token_t* second)
 	{
@@ -400,19 +383,33 @@ protected:
 		return std::make_pair(first, second);
 	}
 
+	static token_pair_t concatinate(token_pair_t first, token_pair_t second)
+	{
+		concatinate(first.second, second.first);
+
+		return std::make_pair(first.first, second.second);
+	}
+
 	static token_pair_t select(token_t* first, token_t* second)
 	{
-		assert(first->getNext() == token_t::getInvalidPointer());
-		assert(second->getNext() == token_t::getInvalidPointer());
+		return select(
+			std::make_pair(first, first),
+			std::make_pair(second, second));
+	}
+
+	static token_pair_t select(token_pair_t first, token_pair_t second)
+	{
+		assert(first.second->getNext() == token_t::getInvalidPointer());
+		assert(second.second->getNext() == token_t::getInvalidPointer());
 
 		token_t* selecter = new epsilon_token_t();
 		token_t* terminater = new epsilon_token_t();
 
-		selecter->addEpsilon(first);
-		selecter->addEpsilon(second);
+		selecter->addEpsilon(first.first);
+		selecter->addEpsilon(second.first);
 
-		first->setNext(terminater);
-		second->setNext(terminater);
+		first.second->setNext(terminater);
+		second.second->setNext(terminater);
 
 		return std::make_pair(selecter, terminater);
 	}
@@ -433,40 +430,96 @@ protected:
 		return std::make_pair(grouper, terminater);
 	}
 
+	static token_pair_t group(token_pair_t token)
+	{
+		return group(token.first, token.second);
+	}
+
 	static token_pair_t kleene(token_t* left, token_t* right)
 	{
+		/*     -b-
+		 *   /     \
+		 * k -> T -> l -> t -> T::next
+		 *   \           /
+		 *      -   -  -
+		 * k: kleene, T: token, l: loopPoint, b: back loop, t: terminater
+		 */
 		token_t* kleeneClosure = new epsilon_token_t();
+		token_t* loopPoint = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
+
+		kleeneClosure->setNext(left);
+		kleeneClosure->addEpsilon(terminater);
+
+		right->setNext(loopPoint);
+
+		// set default by loop back.
+		loopPoint->addEpsilon(kleeneClosure);
+		loopPoint->setNext(terminater);
+
+		return std::make_pair(kleeneClosure, terminater);
+	}
+
+	static token_pair_t kleene(token_pair_t token)
+	{
+		return kleene(token.first, token.second);
+	}
+
+	static token_pair_t kleenePlus(token_t* left, token_t* right)
+	{
+		token_t* kleenePlusClosure = new epsilon_token_t();
 		token_t* terminater = new epsilon_token_t();
 
 		/*     -b-
 		 *   /     \
 		 * k -> T -> t -> T::next
 		 *
-		 * k: kleene, T: token, t: terminater, b: back loop
+		 * k: kleenePlus, T: token, t: terminater, b: back loop
 		 */
-		kleeneClosure->setNext(left);
+		kleenePlusClosure->setNext(left);
 
 		// set default by loop back.
-		terminater->addEpsilon(kleeneClosure);
+		terminater->addEpsilon(kleenePlusClosure);
 		right->setNext(terminater);
 
-		return std::make_pair(kleeneClosure, terminater);
+		return std::make_pair(kleenePlusClosure, terminater);
+	}
+
+	static token_pair_t kleenePlus(token_pair_t token)
+	{
+		return kleenePlus(token.first, token.second);
+	}
+
+	static token_pair_t kleeneQuestion(token_t* left, token_t* right)
+	{
+		/*     -f-
+		 *   /     \
+		 * k -> T -> t -> T::next
+		 *
+		 * k: kleeneQuestion, T: token, t: terminater, f: forward shortcut
+		 */
+		token_t* kleeneQuestionClosure = new epsilon_token_t();
+		token_t* terminater = new epsilon_token_t();
+
+		kleeneQuestionClosure->setNext(left);
+		kleeneQuestionClosure->addEpsilon(terminater);
+
+		right->setNext(terminater);
+
+		return std::make_pair(kleeneQuestionClosure, terminater);
+	}
+
+	static token_pair_t kleeneQuestion(token_pair_t token)
+	{
+		return kleeneQuestion(token.first, token.second);
 	}
 
 public:
-	RegexAutomatonManager():
-		automatonList(),
-		head(new token_t()), last(new token_t())
-	{
-		automatonList.push_back(head);
-		automatonList.push_back(last);
-	}
+	RegexAutomatonManager()
+	{}
 
 	~RegexAutomatonManager()
-	{
-		delete head;
-		delete last;
-	}
+	{}
 };
 
 template <typename CharType>
@@ -478,6 +531,7 @@ private:
 	typedef CharType char_t;
 	typedef RegexAutomatonManager<CharType> base_t;
 	typedef base_t* pointer_t;
+
 	typedef RegexToken<char_t> token_t;
 	typedef EpsilonToken<char_t> epsilon_token_t;
 	typedef CharacterToken<char_t> char_token_t;
@@ -491,6 +545,7 @@ private:
 		{
 		case '*':
 			return true;
+
 		case '+':
 		case '?':
 			assert(false); // not support yet.
@@ -504,8 +559,7 @@ private:
 	typedef std::char_traits<char_t> char_trait_t;
 
 	token_pair_t compileLiteral(typename char_trait_t::int_type currentRead,
-								scanner_t& scanner,
-								token_t* previous = NULL)
+								scanner_t& scanner)
 	{
 		token_pair_t literal = base_t::createLiteral(currentRead);
 		
@@ -515,26 +569,62 @@ private:
 			scanner.scan();
 		}
 
-		if (previous != NULL)
-		{
-			base_t::concatinate(previous, literal.first);
-			return std::make_pair(previous, literal.second);
-		}
-
 		return literal;
 	}
 
 	token_pair_t compileStar(token_pair_t tokenPair)
 	{
-		return base_t::kleene(tokenPair.first,
-							  tokenPair.second);
+		return base_t::kleene(tokenPair);
+	}
+
+	token_pair_t compilePlus(token_pair_t tokenPair)
+	{
+		return base_t::kleenePlus(tokenPair);
+	}
+
+	token_pair_t compileQuestion(token_pair_t tokenPair)
+	{
+		return base_t::kleeneQuestion(tokenPair);
+	}
+
+	token_pair_t selectCompile(scanner_t& scanner, token_pair_t leftToken)
+	{
+		return base_t::select(leftToken, subCompile(scanner));
+	}
+
+	token_pair_t groupCompile(scanner_t& scanner)
+	{
+		return base_t::group(subCompile(scanner));
+	}
+
+	token_pair_t concatinateTokens(std::vector<token_pair_t>& parseStack) const
+	{
+		assert(parseStack.size() != 0);
+
+		if (parseStack.size() == 1)
+		{
+			token_pair_t token = parseStack.back();
+			parseStack.pop_back();
+			return token;
+		}
+
+		token_pair_t right = parseStack.back();
+		parseStack.pop_back();
+
+		do
+		{
+			token_pair_t left = parseStack.back();
+			parseStack.pop_back();
+			right = concatinate(left, right);
+		}
+		while (parseStack.size() != 0);
+
+		return right;
 	}
 
 	token_pair_t subCompile(scanner_t& scanner)
 	{
-		token_pair_t lastToken =
-			std::make_pair(static_cast<token_t*>(NULL),
-						   static_cast<token_t*>(NULL));
+		std::vector<token_pair_t> parseStack;
 
 		typename char_trait_t::int_type currentRead;
 		while((currentRead = scanner.scan()) != -1)
@@ -542,37 +632,54 @@ private:
 
 			switch (currentRead)
 			{
-			case '*':
-				lastToken =
-					compileStar(lastToken);
-				break;
+				case '*':
+				{
+					token_pair_t target = parseStack.back();
+					parseStack.pop_back();
+					parseStack.push_back(compileStar(target));
+					break;
+				}
 
-//			case '+':
+				case '+':
+				{
+					token_pair_t target = parseStack.back();
+					parseStack.pop_back();
+					parseStack.push_back(compilePlus(target));
+					break;
+				}
 
-// 			case '|':
-// 				selectCompile(scanner);
-// 				break;
+				case '?':
+				{
+					token_pair_t target = parseStack.back();
+					parseStack.pop_back();
+					parseStack.push_back(compileQuestion(target));
+					break;
+				}
 
-// 			case '(':
-// 				groupCompile(scanner);
-// 				break;
+				case '|':
+					return selectCompile(
+						scanner, concatinateTokens(parseStack));
+
+				case '(':
+					parseStack.push_back(groupCompile(scanner));
+					break;
+
+				case ')':
+					return concatinateTokens(parseStack);
 
 // 			case '[':
 // 				setCompile(scanner);
 // 				break;
 
-// 			case ')':
-// 				break;
 
-			default:
-				lastToken = compileLiteral(currentRead,
-										   scanner,
-										   lastToken.second);
-			
+				default:
+					parseStack.push_back(
+						compileLiteral(currentRead, scanner));
+					break;
 			}
 		}
 
-		return lastToken;
+		return concatinateTokens(parseStack);
 	}
 
 	token_pair_t compile(std::string pattern)
