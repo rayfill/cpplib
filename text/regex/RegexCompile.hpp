@@ -227,6 +227,88 @@ public:
 };
 
 template <typename CharType>
+class GroupHeadToken : public EpsilonToken<CharType>
+{
+public:
+	typedef EpsilonToken<CharType> base_t;
+	typedef base_t* pointer_t;
+	typedef CharType char_t;
+
+private:
+	int groupNumber;
+
+public:
+	GroupHeadToken(const int number):
+		base_t(), groupNumber(number)
+	{}
+
+	virtual ~GroupHeadToken()
+	{}
+
+	int getGroupNumber() const
+	{
+		return groupNumber;
+	}
+};
+
+template <typename CharType>
+class GroupTailToken : public EpsilonToken<CharType>
+{
+public:
+	typedef EpsilonToken<CharType> base_t;
+	typedef base_t* pointer_t;
+	typedef CharType char_t;
+
+private:
+	int groupNumber;
+
+public:
+	GroupTailToken(const int number):
+		base_t(), groupNumber(number)
+	{}
+
+	virtual ~GroupTailToken()
+	{}
+
+	int getGroupNumber() const
+	{
+		return groupNumber;
+	}
+};
+
+template <typename CharType>
+class RegexHead : public GroupHeadToken<CharType>
+{
+public:
+	typedef GroupHeadToken<CharType> base_t;
+	typedef base_t* pointer_t;
+	typedef CharType char_t;
+	
+	RegexHead():
+		base_t(0)
+	{}
+
+	virtual ~RegexHead()
+	{}
+};
+
+template <typename CharType>
+class RegexTail : public GroupTailToken<CharType>
+{
+public:
+	typedef GroupTailToken<CharType> base_t;
+	typedef base_t* pointer_t;
+	typedef CharType char_t;
+
+	RegexTail():
+		base_t(0)
+	{}
+
+	virtual ~RegexTail()
+	{}
+};
+
+template <typename CharType>
 class CharacterToken : public RegexToken<CharType>
 {
 public:
@@ -661,16 +743,17 @@ private:
 						scanner, concatinateTokens(parseStack));
 
 				case '(':
+					++parenCount;
 					parseStack.push_back(groupCompile(scanner));
 					break;
 
 				case ')':
+					--parenCount;
 					return concatinateTokens(parseStack);
 
-// 			case '[':
-// 				setCompile(scanner);
-// 				break;
-
+// 				case '[':
+// 					setCompile(scanner);
+// 					break;
 
 				default:
 					parseStack.push_back(
@@ -686,16 +769,25 @@ private:
 	{
 		scanner_t scanner(pattern.begin(), pattern.end());
 
-		return subCompile(scanner);
+		parenCount = 0;
+
+		token_pair_t pair = subCompile(scanner);
+
+		if (parenCount != 0)
+			throw CompileError("not match paren pairs.");
+
+		return pair;
 	}
+
+	int parenCount;
 
 public:
 	RegexCompiler():
-		base_t()
+		base_t(), parenCount(0)
 	{}
 
 	RegexCompiler(const std::string& pattern):
-		base_t()
+		base_t(), parenCount(0)
 	{}
 	
 };

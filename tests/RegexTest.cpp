@@ -348,6 +348,7 @@ private:
 	CPPUNIT_TEST(selectTest);
 	CPPUNIT_TEST(groupTest);
 	CPPUNIT_TEST(traverseTest);
+	CPPUNIT_TEST(parenTest);
 	CPPUNIT_TEST_SUITE_END();
 
 	typedef RegexCompiler<char> compiler_t;
@@ -356,6 +357,19 @@ private:
 	typedef std::pair<token_t*, token_t*> token_pair_t;
 
 public:
+	void parenTest()
+	{
+		std::string input = "(aaa)";
+		compiler_t compiler;
+		compiler.compile(input);
+
+		std::string error_input = "(aaa";
+		CPPUNIT_ASSERT_THROW(compiler.compile(error_input), CompileError);
+
+		std::string error_input2 = "aaa)";
+		CPPUNIT_ASSERT_THROW(compiler.compile(error_input2), CompileError);
+	}
+	
 	void groupTest()
 	{
 		std::string input = "(aaa)";
