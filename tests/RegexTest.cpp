@@ -338,6 +338,50 @@ public:
 
 };
 
+class RegexResultTest : public CppUnit::TestFixture
+{
+private:
+	CPPUNIT_TEST_SUITE(RegexResultTest);
+	CPPUNIT_TEST(OffsetPairTest);
+	CPPUNIT_TEST(CaptureTest);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void CaptureTest()
+	{
+		typedef RegexResult<char> result_t;
+
+		result_t result;
+
+		result.setCaptureHead(0, 4);
+
+		CPPUNIT_ASSERT(result.captures[0].getHead() == 4);
+		CPPUNIT_ASSERT(result.captures[0].getLast() == std::string::npos);
+
+		result.setCaptureLast(0, 5);
+		CPPUNIT_ASSERT(result.captures[0].getLast() == 5);
+
+		std::string base = "abcdefg";
+
+		CPPUNIT_ASSERT(result.getString(0, base) == "e");
+
+	}
+
+	void OffsetPairTest()
+	{
+		typedef RegexResult<char>::OffsetPair offset_pair_t;
+		offset_pair_t pair(1, 2);
+
+		std::string str = "abcdefg";
+		CPPUNIT_ASSERT_MESSAGE(pair.getString(str), pair.getString(str) == "b");
+
+		offset_pair_t null_pair(1, 1);
+		CPPUNIT_ASSERT(null_pair.getString(str) == "");
+
+		CPPUNIT_ASSERT_THROW(pair.getString("a"), std::out_of_range);
+		CPPUNIT_ASSERT_THROW(offset_pair_t(1, 0), std::invalid_argument);
+	}
+};
 
 class RegexCompilerTest : public CppUnit::TestFixture
 {
@@ -562,4 +606,5 @@ public:
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexScannerTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexTokenTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexAutomatonManagerTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( RegexResultTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( RegexCompilerTest );

@@ -103,6 +103,120 @@ public:
 };
 
 template <typename CharType>
+class RegexResult
+{
+	friend class RegexResultTest;
+
+public:
+	typedef typename std::basic_string<CharType>::size_type offset_t;
+	typedef CharType char_t;
+
+	struct OffsetPair
+	{
+	private:
+		offset_t head;
+		offset_t last;
+
+		typedef std::basic_string<CharType> string_t;
+
+	public:
+		OffsetPair(offset_t head_ = 0, offset_t last_ = string_t::npos)
+			: head(head_), last(last_)
+		{
+			if (this->getHead() > this->getLast())
+				throw std::invalid_argument("head after than last offset.");
+		}
+
+		OffsetPair(const OffsetPair& source)
+			: head(source.head), last(source.last)
+		{}
+
+		OffsetPair& operator=(const OffsetPair& source)
+		{
+			if (this != &source)
+			{
+				this->head = source.head;
+				this->last = source.last;
+			}
+			return *this;
+		}
+
+		void setHead(const offset_t newHead)
+		{
+			head = newHead;
+		}
+
+		void setLast(const offset_t newLast)
+		{
+			last - newLast;
+		}
+
+		offset_t getHead() const
+		{
+			return head;
+		}
+
+		offset_t getLast() const
+		{
+			return last;
+		}
+
+		string_t getString(const string_t& str) const
+		{
+			if (this->getLast() > str.size())
+				throw std::out_of_range("index is out of str.");
+
+			const offset_t distance = this->getLast() - this->getHead();
+			return str.substr(this->getHead(), distance);
+		}
+	};
+
+private:
+	std::vector<OffsetPair> captures;
+
+	typedef int group_offset_t;
+public:
+	void setCapture(group_offset_t captureGroupNumber, const OffsetPair offsets)
+	{
+		assert(captures.size() >= static_cast<offset_t>(captureGroupNumber));
+
+		if (captureGroupNumber >= captures.size())
+			captures.resize(captureGroupNumber + 1);
+
+		captures[captureGroupNumber] = offsets;
+	}
+
+	void setCaptureHead(group_offset_t captureGroupNumber, const offset_t head)
+	{
+		assert(captures.size() >= static_cast<offset_t>(captureGroupNumber));
+
+		if (static_cast<offset_t>(captureGroupNumber) >= captures.size())
+			captures.resize(captureGroupNumber + 1);
+
+		captures[captureGroupNumber] = OffsetPair(head);
+	}
+
+	void setCaptureLast(group_offset_t captureGroupNumber, const offset_t last)
+	{
+		assert (static_cast<offset_t>(captureGroupNumber) < captures.size());
+
+		captures[captureGroupNumber] =
+			OffsetPair(captures[captureGroupNumber].getHead(), last);
+	}
+
+	std::basic_string<char_t> getString(
+		group_offset_t captureGroupNumber,
+		const std::basic_string<char_t>& sourceStr) const
+	{
+		if (static_cast<offset_t>(captureGroupNumber) >= captures.size())
+			throw std::out_of_range("not found capture group.");
+
+		return captures[captureGroupNumber].getString(sourceStr);
+	}
+
+};
+
+template <typename CharType>
 class RegexToken
 {
 public:
@@ -147,6 +261,10 @@ public:
 	{
 		return epsilons;
 	}
+
+	virtual void eval(RegexScanner<CharType>& scanner,
+					  RegexResult<CharType>& result)
+	{}
 
 	virtual void setNext(pointer_t newNext)
 	{
