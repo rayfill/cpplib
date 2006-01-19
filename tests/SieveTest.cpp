@@ -4,7 +4,7 @@
 #include <math/Sieve.hpp>
 
 #define OVER_2K_PRIMES
-#include <math/PrimeList.hpp>
+//#include <math/PrimeList.hpp>
 
 class SieveTest : public CppUnit::TestFixture
 {

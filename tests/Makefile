@@ -1,6 +1,6 @@
-CXX=g++
-NOCLEANSCXXFLAGS= -g -Wall -Wunused \
-	-fno-default-inline -fmessage-length=78
+CXX=g++ 
+NOCLEANSCXXFLAGS= -g  -Wall -Wunused \
+	-fno-default-inline -fmessage-length=78 -I..
 CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
 LIBS= -lwsock32 -lcppunit -lgdi32
@@ -44,14 +44,23 @@ EndianTest.o: EndianTest.cpp ../IO/Endian.hpp
 RSATest.o: RSATest.cpp ../Cryptography/RSA.hpp ../math/Theory/NumberTheory.hpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-MPITest.o: MPITest.cpp ../math/MPI.hpp
-	$(CXX) $(CXXFLAGS) -c $<
+SieveTest.o: SieveTest.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
 
-NumberTheoryTest.o: NumberTheoryTest.cpp ../math/MPI.hpp ../math/theory/NumberTheory.hpp
-	$(CXX) $(CXXFLAGS) -c $<
+MPITest.o: MPITest.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
+
+AlgebraTheoryTest.o: AlgebraTheoryTest.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
+
+NumberTheoryTest.o: NumberTheoryTest.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
+
+AsymmetricKeyTest.o: AsymmetricKeyTest.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
 
 $(TARGET): $(OBJS) Makefile
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS) 
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<

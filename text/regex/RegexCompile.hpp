@@ -148,7 +148,7 @@ public:
 
 		void setLast(const offset_t newLast)
 		{
-			last - newLast;
+			last = newLast;
 		}
 
 		offset_t getHead() const
@@ -302,6 +302,14 @@ public:
 			 ++itor)
 			(*itor)->traverse(alreadyList);
 	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		assert(!"not implement.");
+	}
 };
 
 template <typename CharType>
@@ -342,6 +350,20 @@ public:
 	{
 		return base_t::getInvalidPointer();
 	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		std::list<pointer_t> epsilons = this->epsilonTransit();
+		for (typename std::list<pointer_t>::iterator itor = epsilons.begin();
+			 itor != epsilons.end();
+			 ++itor)
+			if ((*itor)->isAccept(scanner, result))
+				return true;
+
+		return false;
+	}
 };
 
 template <typename CharType>
@@ -367,6 +389,20 @@ public:
 	{
 		return groupNumber;
 	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		result.setCaptureHead(this->getGroupNumber(),
+							  scanner.getPosition());
+
+		std::list<pointer_t> epsilons = this->epsilonTransit();
+		assert(epsilons.size() == 1);
+
+		return epsilons.front()->isAccept(scanner, result);
+	}
+
 };
 
 template <typename CharType>
@@ -392,6 +428,14 @@ public:
 	{
 		return groupNumber;
 	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		// set result tail position.
+		assert(false);
+	}
 };
 
 template <typename CharType>
@@ -408,6 +452,17 @@ public:
 
 	virtual ~RegexHead()
 	{}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		// set result head position. already result number of zero.
+		// sub token is accept failed then repeat scanner read token,
+		// repeat call sub token::isAccept().
+		assert(false);
+	}
+
 };
 
 template <typename CharType>
@@ -424,6 +479,15 @@ public:
 
 	virtual ~RegexTail()
 	{}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		// set result tail position. already result number of zero.
+		assert(false);
+	}
+
 };
 
 template <typename CharType>
@@ -460,6 +524,16 @@ public:
 
 		return base_t::getInvalidPointer();
 	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	{
+		// if accept then scanner step ahead.
+		// but not accept scanner rewind and return false.
+		assert(false);
+	}
+
 };
 
 template <typename CharType>
@@ -737,8 +811,11 @@ private:
 	typedef CharacterToken<char_t> char_token_t;
 	typedef RangeToken<char_t> range_token_t;
 	typedef SetToken<char_t> set_token_t;
+
+public:
 	typedef std::pair<token_t*, token_t*> token_pair_t;
 
+private:
 	bool isKleeneCharacter(const char_t character) const
 	{
 		switch (character)
@@ -883,6 +960,7 @@ private:
 		return concatinateTokens(parseStack);
 	}
 
+public:
 	token_pair_t compile(std::string pattern)
 	{
 		scanner_t scanner(pattern.begin(), pattern.end());
@@ -899,7 +977,6 @@ private:
 
 	int parenCount;
 
-public:
 	RegexCompiler():
 		base_t(), parenCount(0)
 	{}

@@ -90,7 +90,8 @@ private:
 	{
 		if (refCount->release() == 0)
 		{
-			RemovePolicy::remove(pointer);
+			RemovePolicy remover;
+			remover.remove(pointer);
 			delete refCount;
 		}
 	}

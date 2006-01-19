@@ -102,7 +102,7 @@ public:
 		// ignore spaces.
 		IGNORE_SPACES,
 		// COMMENTS
-		COMMENTS,
+		COMMENTS
 
 	} TokenType;
 private:

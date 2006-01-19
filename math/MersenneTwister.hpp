@@ -6,8 +6,8 @@
 
 #ifdef UNDER_CE
 	static const unsigned int MatrixA = 0x998b0dfUL;
-	static const int dimmension = 624;
-	static const int threshold = 397;
+	static const unsigned int dimmension = 624;
+	static const unsigned int threshold = 397;
 	static const unsigned int UpperMask = 0x80000000UL;
 	static const unsigned int LowerMask = 0x7fffffffUL;
 #endif
@@ -17,13 +17,13 @@ class MersenneTwister
 private:
 #ifndef UNDER_CE
 	static const unsigned int MatrixA = 0x998b0dfUL;
-	static const int dimmension = 624;
-	static const int threshold = 397;
+	static const unsigned int dimmension = 624;
+	static const unsigned int threshold = 397;
 	static const unsigned int UpperMask = 0x80000000UL;
 	static const unsigned int LowerMask = 0x7fffffffUL;
 #endif
 
-	int index;
+	unsigned int index;
 	unsigned int mtArray[dimmension];
 public:
 	MersenneTwister():
@@ -145,7 +145,7 @@ public:
 			if (index == dimmension + 1)
 				initialize(5489);
 
-			int offset;
+			unsigned int offset;
 			for (offset = 0; offset < dimmension - threshold; ++offset)
 			{
 				result =
