@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <text/transcode/Unicode.hpp>
 #include <string>
 #include <iostream>

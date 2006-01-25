@@ -4,6 +4,10 @@
 #include <limits>
 #include <stdexcept>
 
+/**
+ * ラインダール暗号
+ * @TODO まだ実装が完全ではありません
+ */
 template <size_t cipherBitsSize = 128, size_t keyBitsSize = 128>
 class Rijndael
 {
@@ -14,12 +18,8 @@ private:
 	const int numberOfBlock;
 
 	/**
-	 * rijndael数は・・・
-	 * ガロア体 GF(2^8) で構成される。
-	 * 加算、積算はアーベル群である。
-	 * 加算はビットレベルの排他的論理和。
-	 * 積算は交換法則が適用される。分配法則も適用可能。
-	 * 内部加算は通常と同じ。つまりビットレベル排他的論理和。
+	 * ラインダール代数
+	 * ラインダール暗号のベースになります
 	 */
 	class RijndaelNumber
 	{
@@ -69,7 +69,7 @@ private:
 					return RijndaelNumber(static_cast<unsigned char>(i));
 			}
 
-			throw std::logic_error("not found invert value, logic error.");
+			throw std::logic_error("逆元が見つかりません。ロジックエラー");
 		}
 
 		RijndaelNumber& operator+=(const RijndaelNumber& rhs)
@@ -171,6 +171,9 @@ private:
 
 	};
 
+	/**
+	 * 暗号処理のラウンド数取得
+	 */
 	const int getNumberOfRounds() const
 	{
 		if (numberOfBlock > numberOfKey)
@@ -178,6 +181,12 @@ private:
 		else
 			return numberOfKey + 6;
 	}
+
+	/**
+	 * SBox処理を施したラインダール数の取得
+	 * @args value 処理するラインダール数
+	 * @return 処理されたラインダール数
+	 */
 	const RijndaelNumber
 	getSBoxValue(const RijndaelNumber& value) const
 	{
@@ -198,23 +207,38 @@ private:
 		return result;
 	}
 
+	/**
+	 * SBox処理されたラインダール数から元のラインダール数を求める
+	 * @TODO 未実装
+	 */
 	const RijndaelNumber
 	getInvertSBoxValue(const RijndaelNumber& value) const
 	{
 	}
 
-
 public:
+	/**
+	 * コンストラクタ
+	 */
 	Rijndael() throw()
 		: numberOfKey(keyBitsSize / 8),
 		  numberOfBlock(cipherBitsSize / 8)
 	{
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~Rijndael()
 	{
 	}
 
+	/**
+	 * 暗号化処理
+	 * @args plaintext 平文バイト列
+	 * @args key 暗号鍵
+	 * @return 暗号処理が施されたバイト列
+	 */
 	std::vector<unsigned char>
 	encrypt(const std::vector<unsigned char>& plaintext,
 			const std::vector<unsigned char>& key)
@@ -247,8 +271,8 @@ private:
 #include <Cryptography/AESConstant.hpp>
 
 /**
- * Advanced Encrypt Standard implementation.
- * this class running for little endian CPU only.
+ * Advanced Encrypt Standard (AES)実装
+ * リトルエンディアンCPU上しか考慮してません
  */
 template
 <size_t keyLength = 128,
@@ -262,7 +286,10 @@ public:
 	typedef unsigned int word;
 
 private:
+
 	const int numberOfKey;
+
+	/// 鍵スケジューリング処理後の鍵
 	std::vector<word> scheduledKey;
 
 	byte modulus(const word source) const
@@ -317,18 +344,18 @@ private:
 	void invertShiftRow(std::vector<byte>& state)
 	{
 		byte exchangeTemp;
-		// 0, 4, 8, c no change.
+		// 0, 4, 8, c 無変換
 
-		// 1, 5, 9, d shift 1.
-		// d, 1, 5, 9 result
+		// 1, 5, 9, d 1シフト
+		// d, 1, 5, 9 結果
 		exchangeTemp = state[1];
 		state[1] = state[13];
 		state[13] = state[9];
 		state[9] = state[5];
 		state[5] = exchangeTemp;
 		
-		// 2, 6, a, e shift 2.
-		// a, e, 2, 6 result
+		// 2, 6, a, e 2シフト
+		// a, e, 2, 6 結果
 		exchangeTemp = state[2];
 		state[2] = state[10];
 		state[10] = exchangeTemp;
@@ -336,8 +363,8 @@ private:
 		state[14] = state[6];
 		state[6] = exchangeTemp;
 
-		// 3, 7, b, f shift 3.
-		// 7, b, f, 3 result
+		// 3, 7, b, f 3シフト
+		// 7, b, f, 3 結果
 		exchangeTemp = state[3];
 		state[3] = state[7];
 		state[7] = state[11];
@@ -348,18 +375,18 @@ private:
 	void shiftRow(std::vector<byte>& state)
 	{
 		byte exchangeTemp;
-		// 0, 4, 8, c no change.
+		// 0, 4, 8, c 無変換
 
-		// 1, 5, 9, d shift 1.
-		// 5, 9, d, 1 result
+		// 1, 5, 9, d 1シフト
+		// 5, 9, d, 1 結果
 		exchangeTemp = state[1];
 		state[1] = state[5];
 		state[5] = state[9];
 		state[9] = state[13];
 		state[13] = exchangeTemp;
 		
-		// 2, 6, a, e shift 2.
-		// a, e, 2, 6 result
+		// 2, 6, a, e 2シフト
+		// a, e, 2, 6 結果
 		exchangeTemp = state[2];
 		state[2] = state[10];
 		state[10] = exchangeTemp;
@@ -367,8 +394,8 @@ private:
 		state[14] = state[6];
 		state[6] = exchangeTemp;
 
-		// 3, 7, b, f shift 3.
-		// f, 3, 7, b result
+		// 3, 7, b, f 3シフト
+		// f, 3, 7, b 結果
 		exchangeTemp = state[3];
 		state[3] = state[15];
 		state[15] = state[11];
@@ -528,11 +555,20 @@ public:
 	~AES()
 	{}
 
+	/**
+	 * 暗号処理ブロックサイズの取得
+	 * @return 処理ブロックサイズ
+	 */
 	size_t getBlockSize() const
 	{
 		return numberOfBlock * 4;
 	}
 
+	/**
+	 * 復号処理
+	 * @args data 暗号文
+	 * @return 復号された文
+	 */
 	std::vector<byte>
 	decrypt(std::vector<byte>& data)
 	{
@@ -565,32 +601,41 @@ public:
 		return state;
 	}
 
+	/**
+	 * 暗復号に使用する鍵の登録
+	 * @args key 暗復号に使用する鍵
+	 */
 	void setKey(const std::vector<byte>& key)
 	{
 		if (static_cast<const int>(key.size() / 4) !=
 			numberOfKey)
 			throw std::runtime_error(
-				"too not match length key data.");
+				"鍵データ長が正しくありません");
 
-		// key scheduling.
+		// 鍵スケジュール処理
 		scheduledKey = getScheduledKey(key);
 	}
 
+	/**
+	 * 暗号化処理
+	 * @args data 平文
+	 * @return 暗号文
+	 */
 	std::vector<byte>
 	encrypt(std::vector<byte>& data)
 	{
 		if (data.size() != 16)
 			throw std::runtime_error(
-				"too not match length encrypt data.\n"
-				"AES's data length is 4 word(single word is 4 octet).\n");
+				"引数 dataの長さが正しくありません\n"
+				"AES の平文データ長は4ワード(1ワードは4オクテット)です.\n");
 
-		// data to state.
+		// データから状態に変換
 		std::vector<byte> state(data);
 
-		// first round.
+		// 第一ラウンド処理
 		addRoundKey(state, scheduledKey, 0);
 		
-		// second to last - 1 round.
+		// 第2から最終ひとつ手前までのラウンド処理
 		for (int i = 1; i < getNumberOfRounds(); ++i)
 		{
 			byteSub(state);
@@ -599,12 +644,11 @@ public:
 			addRoundKey(state, scheduledKey, i);
 		}
 
-		// last round.
+		// 最終ラウンド
 		byteSub(state);
 		shiftRow(state);
 		addRoundKey(state, scheduledKey, getNumberOfRounds());
 
-		// return encrypted data.
 		return state;
 	}
 };

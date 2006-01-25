@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <util/format/Exif.hpp>
 #include <IO/Endian.hpp>
 #include <iostream>

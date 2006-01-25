@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <ostream>
 
+/**
+ * 公開鍵暗号のプライベート鍵
+ */
 class PrivateKey
 {
 private:
@@ -14,15 +17,28 @@ private:
 	MPInteger modulus;
 	MPInteger primeP;
 	MPInteger primeQ;
-	MPInteger crtP; // as p^(q-1) mod n
-	MPInteger crtQ; // as q^(p-1) mod n
+	MPInteger crtP; // p^(q-1) mod n (中国人剰余定理用)
+	MPInteger crtQ; // q^(p-1) mod n (中国人剰余定理用)
 
 public:
+	/**
+	 * 中国人剰余定理を使った高速化をサポートしているかの判定
+	 * @return true: サポートしている false:未サポート
+	 */
 	bool isCRTSupport() const
 	{
 		return primeP != primeQ && !crtP.isZero() && !crtQ.isZero();
 	}
 
+	/**
+	 * コンストラクタ
+	 * @args decryptExponent_ 復号用べき乗数
+	 * @args modulus_ 除数
+	 * @args primeP_ 鍵の元になる素数その1
+	 * @args primeQ_ 鍵の元になる素数その2
+	 * @args crtP_ 中国人剰余定理に使用するパラメータ1
+	 * @args crtQ_ 中国人剰余定理に使用するパラメータ2
+	 */
 	PrivateKey(const MPInteger& decryptExponent_ = 0U,
 			   const MPInteger& modulus_ = 0U,
 			   const MPInteger& primeP_ = 0U,
@@ -64,6 +80,9 @@ public:
 		return crtQ;
 	}
 
+	/**
+	 * ストリーム出力用
+	 */
 	friend std::ostream& operator<<(std::ostream& out, const PrivateKey& key)
 	{
 		out << "private key" << std::endl;
@@ -84,6 +103,9 @@ public:
 	}
 };
 
+/**
+ * 公開鍵暗号の公開鍵
+ */
 class PublicKey
 {
 private:
@@ -91,6 +113,11 @@ private:
 	MPInteger modulus;
 
 public:
+	/**
+	 * コンストラクタ
+	 * encryptExponent_ 暗号用べき乗数
+	 * modulus_ 除数
+	 */
 	PublicKey(const MPInteger& encryptExponent_ = 0U,
 			  const MPInteger& modulus_ = 0U) throw()
 		: encryptExponent(encryptExponent_),
@@ -119,6 +146,9 @@ public:
 	}
 };
 
+/**
+ * 公開鍵、プライベート鍵のペア
+ */
 class KeyPair
 {
 	friend class AsymmetricKeyTest;
@@ -130,6 +160,14 @@ private:
 	MPInteger primeP;
 	MPInteger primeQ;
 public:
+
+	/**
+	 * コンストラクタ
+	 * @args p 鍵の元となる素数1
+	 * @args q 鍵の元となる素数2
+	 * @args e 暗号化処理時のべき乗数
+	 * @args isPrimeCheck 与えられた引数p, q の素数性チェックをするかどうか
+	 */
 	KeyPair(const MPInteger& p,
 			const MPInteger& q,
 			const MPInteger& e = MPInteger(65537U),
@@ -148,7 +186,7 @@ public:
 			for (int checkCount = 0; checkCount < 4; ++checkCount)
 			{
 				if (RabinPrimeTest(p, MPInteger(2U)) == false)
-					throw std::invalid_argument("p is not prime. " +
+					throw std::invalid_argument("p は素数ではありません. " +
 												p.toString());
 			}
 
@@ -156,7 +194,7 @@ public:
 			for (int checkCount = 0; checkCount < 4; ++checkCount)
 			{
 				if (RabinPrimeTest(q, MPInteger(2U)) == false)
-					throw std::invalid_argument("q is not prime. " +
+					throw std::invalid_argument("q は素数ではありません. " +
 						q.toString());
 			}
 		}
@@ -164,7 +202,7 @@ public:
 		modulus = p * q;
 		decryptExponent = modulusInvert(e, lcm(p-1U, q-1U));
 		if (decryptExponent.isZero())
-			throw std::invalid_argument("can not calc decrypt number.");
+			throw std::invalid_argument("逆元が計算できません.");
 		
 		encryptExponent.adjust();
 		decryptExponent.adjust();

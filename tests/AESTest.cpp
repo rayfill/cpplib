@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <Cryptography/AES.hpp>
 
 class RijndaelTest : public CppUnit::TestFixture

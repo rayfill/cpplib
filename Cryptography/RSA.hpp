@@ -9,6 +9,9 @@
 #include <IO/Endian.hpp>
 #include <iterator>
 
+/**
+ * RSA暗号
+ */
 class RSA
 {
 	friend class RSATest;
@@ -29,23 +32,25 @@ private:
 
 		if (vectorLength % sizeof(MPInteger::BaseUnit) != 0)
 			throw std::invalid_argument(
-				"integerLength is not multiple for BaseUnit size.");
+				"integerLength が 多倍長整数クラスのパラメータ、"
+				"BaseUnitの倍数ではありません.");
 
 		std::vector<unsigned char> buffer(vectorLength);
 
-		// convert machine endian to big endian.
+		// マシンのエンディアンからビッグエンディアンへ変換
 		EndianConverter converter;
-		const size_t contentLength = converter.toBig(static_cast<unsigned int>(length));
+		const size_t contentLength =
+			converter.toBig(static_cast<unsigned int>(length));
 		for (size_t count = 0; count < intSize; ++count)
 			buffer[count] =
 				reinterpret_cast<const unsigned char*>(&contentLength)[count];
 
-		// fill to padding bits(0xff).
+		// 0xffでパディング埋め
 		const size_t paddingSize = vectorLength - length - intSize;
 		for (size_t offset = 0; offset < paddingSize; ++offset)
 			buffer[intSize+offset] = 0xff;
 
-		// copy content to vector.
+		// データのコピー
 		for (size_t offset = 0; offset < length; ++offset)
 			buffer[intSize+paddingSize+offset] =
 				reinterpret_cast<const unsigned char*>(pointer)[offset];
@@ -79,7 +84,7 @@ public:
 	{
 		if(plaintext >= publicKey.getModulus())
 			throw std::invalid_argument(
-				"plaintext is larger than encrypt size.");
+				"平文の長さがブロックサイズを超えています.");
 
 		return modulusExponential(
 			plaintext,
@@ -91,7 +96,7 @@ public:
 	{
 		if(ciphertext >= privateKey.getModulus())
 			throw std::invalid_argument(
-				"ciphertext is larger than decrypt size.");
+				"暗号文の長さがブロックサイズを超えています.");
 
 		if (privateKey.isCRTSupport())
 			return crtModulusExponential(ciphertext,

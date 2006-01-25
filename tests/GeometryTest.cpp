@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <math/Geometry.hpp>
 #include <iostream>
 

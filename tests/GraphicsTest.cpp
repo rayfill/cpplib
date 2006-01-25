@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <Graphics/Graphics.hpp>
 
 class GraphicsTest : public CppUnit::TestFixture

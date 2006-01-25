@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <math/MPI.hpp>
 #include <math/Sieve.hpp>
 

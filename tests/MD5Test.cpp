@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <util/hash/MD5.hpp>
 
 class MessageDigest5Test : public CppUnit::TestFixture

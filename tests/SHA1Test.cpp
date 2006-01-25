@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <util/hash/SHA1.hpp>
 
 class SHA1Test : public CppUnit::TestFixture
