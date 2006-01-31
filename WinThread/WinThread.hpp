@@ -31,8 +31,8 @@ public:
 		stop
 	};
 
-	static const unsigned abort_by_exception = -1;
-	static const unsigned abort_by_parent = -2;
+	static const unsigned abort_by_exception = 0xffffffff;
+	static const unsigned abort_by_parent = 0xfffffffe;
 
 	/**
 	 * スレッド識別子型

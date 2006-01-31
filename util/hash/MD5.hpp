@@ -29,7 +29,7 @@ public:
 
 	void setSource(const unsigned char* pointer, const size_t length)
 	{
-		unsigned int index = ((count[0] >> 3) & 0x3f);
+//		unsigned int index = ((count[0] >> 3) & 0x3f);
 
 		
 	}

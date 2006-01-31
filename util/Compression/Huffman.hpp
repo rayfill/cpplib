@@ -153,7 +153,6 @@ public:
 			assert(getLeft() != NULL);
 			assert(getRight() != NULL);
 
-			size_t count = 0;
 			return
 				getLeft()->getChildrenCount() +
 				getRight()->getChildrenCount();
@@ -549,7 +548,7 @@ public:
 		bitsMapper[offset].bitLength = result.size();
 	}
 
-	void adjust(const int bitsToDepth)
+	void adjust(const unsigned int bitsToDepth)
 	{
 		size_t informationEntropy = (1 << bitsToDepth);
 		size_t treeEntropy = countTreeEntropy(bitsToDepth);
@@ -621,31 +620,31 @@ public:
 
 //		std::cout << std::endl;
 
-		for (int index = 0;
-			 index <= 256;
-			 ++index)
-		{
-			if (bitsMapper[index].bitLength > 0)
-//				std::cout << bitsMapper[index].toString() << std::endl;
-				;
-		}
+// 		for (int index = 0;
+// 			 index <= 256;
+// 			 ++index)
+// 		{
+// 			if (bitsMapper[index].bitLength > 0)
+// //				std::cout << bitsMapper[index].toString() << std::endl;
+// 				;
+// 		}
 
-		for (std::vector<std::set<HuffmanBits> >::iterator
-				 itor = huffmanCodeCollection.begin();
-			 itor != huffmanCodeCollection.end();
-			 ++itor)
-		{
-//			std::cout << "next level" << std::endl;
-			for (std::set<HuffmanBits>::iterator subItor = itor->begin();
-				 subItor != itor->end();
-				 ++subItor)
-			{
-//				std::cout << subItor->toString() << std::endl;
-			}
-		}
+// 		for (std::vector<std::set<HuffmanBits> >::iterator
+// 				 itor = huffmanCodeCollection.begin();
+// 			 itor != huffmanCodeCollection.end();
+// 			 ++itor)
+// 		{
+// //			std::cout << "next level" << std::endl;
+// 			for (std::set<HuffmanBits>::iterator subItor = itor->begin();
+// 				 subItor != itor->end();
+// 				 ++subItor)
+// 			{
+// //				std::cout << subItor->toString() << std::endl;
+// 			}
+// 		}
 	}
 
-	size_t countTreeEntropy(const int bitsToDepth)
+	size_t countTreeEntropy(const unsigned int bitsToDepth)
 	{
 		size_t entropy = 0;
 		for (int index = 0; index <= 256; ++index)

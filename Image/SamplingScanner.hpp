@@ -12,7 +12,7 @@ private:
 	enum
 	{
 		xShiftFactor = scaleFactor == 4 ? 0 : 1,
-		yShiftFactor = scaleFactor == 1 ? 1 : 0,
+		yShiftFactor = scaleFactor == 1 ? 1 : 0
 	};
 	
 	const BitmapClass& image;

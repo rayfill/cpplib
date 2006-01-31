@@ -1,5 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestAssert.h>
 #include <Socket/IP.hpp>
+#include <exception>
 
 class IPTest : public CppUnit::TestFixture
 {
@@ -19,16 +21,23 @@ public:
 
 	void resolvIPAddress()
 	{
-		ip.setIp("bpokazakijr");
+		ip.setIp("www.l.google.com");
 		CPPUNIT_ASSERT(IP::getIpString(ip.getIp())
-					   == "172.16.10.24");
+					   == "66.249.89.99");
 	}
 	void resolvMachineName()
 	{	
-		ip.setIp("10.23.192.12");
-		CPPUNIT_ASSERT_MESSAGE(ip.getHostname(),
-							   ip.getHostname() == 
-							   "whale.ei.ecb.pbb.nttdata.co.jp");
+		try
+		{
+			ip.setIp("210.150.25.37");
+			CPPUNIT_ASSERT_MESSAGE(ip.getHostname(),
+								   ip.getHostname() == 
+								   "www.goo.ne.jp");
+		}
+		catch (std::exception& e)
+		{
+			CPPUNIT_FAIL(e.what());
+		}
 	}
 	void PortCheck()
 	{

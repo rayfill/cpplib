@@ -16,22 +16,22 @@ OBJS= TestMain.o \
 	AsymmetricKeyTest.o \
 	StackableScannerTest.o \
 	RegexTest.o \
-# 	RSATest.o \
-# 	SmartPointerTest.o \
-# 	RationalTest.o \
-# 	FontGrapherTest.o \
-# 	TranscodeTest.o \
-# 	XMLParserTest.o \
-# 	GeometryTest.o \
-# 	GraphicsTest.o \
-# 	BitmapTest.o \
-# 	EndianTest.o CBCTest.o \
-# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-# 	ImageTest.o SamplingScannerTest.o \
-# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-# 	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \
-# 	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o EventTest.o \
-# 	JulianDateTest.o 
+	RSATest.o \
+	SmartPointerTest.o \
+	RationalTest.o \
+	FontGrapherTest.o \
+	TranscodeTest.o \
+	XMLParserTest.o \
+	GeometryTest.o \
+	GraphicsTest.o \
+	BitmapTest.o \
+	EndianTest.o CBCTest.o \
+	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
+	ImageTest.o SamplingScannerTest.o \
+	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \
+	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o EventTest.o \
+	JulianDateTest.o 
 
 all: $(TARGET)
 
@@ -42,7 +42,16 @@ EndianTest.o: EndianTest.cpp ../IO/Endian.hpp
 	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
 
 RSATest.o: RSATest.cpp ../Cryptography/RSA.hpp ../math/Theory/NumberTheory.hpp
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
+
+SHA1Test.o: SHA1Test.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
+
+MD5Test.o: MD5Test.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
+
+ExifTest.o: ExifTest.cpp
+	$(CXX) $(NOCLEANSCXXFLAGS) -c $<
 
 SieveTest.o: SieveTest.cpp
 	$(CXX) $(NOCLEANSCXXFLAGS) -c $<

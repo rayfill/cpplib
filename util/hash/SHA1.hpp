@@ -224,7 +224,7 @@ public:
 		this->setSource(&source[0], source.size());
 	}
 
-	template <typename Iterator> setSource(Iterator current, Iterator tail)
+	template <typename Iterator> void setSource(Iterator current, Iterator tail)
 	{
 		for (; current != tail; ++current)
 			setSource(*current);

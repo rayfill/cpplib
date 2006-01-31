@@ -575,7 +575,7 @@ namespace Exif
 				out << "Pixel y dimension: " << info.pixelYDimension << std::endl;
 
 				out << "Components configuration: ";
-				for (int i = 0; i < sizeof(info.componentsConfiguration); ++i)
+				for (unsigned int i = 0; i < sizeof(info.componentsConfiguration); ++i)
 				{
 					switch (info.componentsConfiguration[i])
 					{

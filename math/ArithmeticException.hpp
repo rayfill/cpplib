@@ -19,7 +19,7 @@ class OverflowException : public ArithmeticException
 {
 public:
 	OverflowException()
-		: ArithmeticException("overflow in caliculate operation.")
+		: ArithmeticException("overflow in calculate operation.")
 	{}
 };
 

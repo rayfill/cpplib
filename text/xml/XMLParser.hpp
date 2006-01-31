@@ -733,7 +733,7 @@ private:
 		SingleTag,
 		CommentTag,
 		Strings,
-		MetaTag,
+		MetaTag
 	};
 
 	TokenType getTokenType(const std::wstring& token)
