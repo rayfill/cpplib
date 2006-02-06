@@ -10,8 +10,8 @@ class Endian
 protected:
 	/**
 	 * 変換ヘルパ関数
-	 * @arg convertValue 変換する変数のポインタ
-	 * @arg valueSize 変換する変数の占めるバイト数
+	 * @param convertValue 変換する変数のポインタ
+	 * @param valueSize 変換する変数の占めるバイト数
 	 **/
 	void convert(void* convertValue, const size_t valueSize) const
 	{
@@ -28,29 +28,29 @@ public:
 
 	/**
 	 * 自分のエンディアン型からBigEndianへの変換
-	 * @arg value 変換する変数へのポインタ
-	 * @arg size 変換する変数の占めるバイト数
+	 * @param value 変換する変数へのポインタ
+	 * @param size 変換する変数の占めるバイト数
 	 **/
 	virtual void toBig(void* value, const size_t size) const = 0;
 
 	/**
 	 * 自分のエンディアン型からLittleEndianへの変換
-	 * @arg value 変換する変数へのポインタ
-	 * @arg size 変換する変数の占めるバイト数
+	 * @param value 変換する変数へのポインタ
+	 * @param size 変換する変数の占めるバイト数
 	 **/
 	virtual void toLittle(void* value, const size_t size) const = 0;
 
 	/**
 	 * BigEndianから自分のエンディアン型への変換
-	 * @arg value 変換する変数へのポインタ
-	 * @arg size 変換する変数の占めるバイト数
+	 * @param value 変換する変数へのポインタ
+	 * @param size 変換する変数の占めるバイト数
 	 **/
 	virtual void fromBig(void* value, const size_t size) const = 0;
 
 	/**
 	 * BigEndianから自分のエンディアン型への変換
-	 * @arg value 変換する変数へのポインタ
-	 * @arg size 変換する変数の占めるバイト数
+	 * @param value 変換する変数へのポインタ
+	 * @param size 変換する変数の占めるバイト数
 	 **/
 	virtual void fromLittle(void* value, const size_t size) const = 0;
 };

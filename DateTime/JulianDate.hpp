@@ -56,9 +56,9 @@ private:
 	/**
 	 * 世界協定時日付からユリウス日(紀元1年1月1日を通日の1日として返す)
 	 * を取得
-	 * @arg year 年、紀元前は説明を参照
-	 * @arg month 月、0オフセットで始まる
-	 * @arg day 日
+	 * @param year 年、紀元前は説明を参照
+	 * @param month 月、0オフセットで始まる
+	 * @param day 日
 	 * @note 紀元前は1年を0、2年を-1として以下、3年=-2...とする
 	 */
 	static unsigned int toJulian(int year,

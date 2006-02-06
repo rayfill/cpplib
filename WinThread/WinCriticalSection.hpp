@@ -42,7 +42,7 @@ private:
 public:
 	/**
 	 * コンストラクタ
-	 * @arg createOnLock 作成時にロックを行うかどうか
+	 * @param createOnLock 作成時にロックを行うかどうか
 	 */
 	WinCriticalSection(bool createOnLock = true) throw()
 		: isLocked(false)

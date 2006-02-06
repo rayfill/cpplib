@@ -17,7 +17,7 @@ protected:
 public:
 	/**
 	 * 通知受け取りのためのインタフェース
-	 * @arg notifier 通知元 Observable クラスのポインタ
+	 * @param notifier 通知元 Observable クラスのポインタ
 	 */
 	virtual void notify(Observable* notifier) = 0;
 
@@ -67,7 +67,7 @@ protected:
 	public:
 		/**
 		 * ファクトリメソッド
-		 * @arg 検索対象となる Observer クラスのポインタ
+		 * @param 検索対象となる Observer クラスのポインタ
 		 */
 		static Finder create(Observer* server_) throw()
 		{
@@ -77,7 +77,7 @@ protected:
 
 		/**
 		 * ファンクタメソッド
-		 * @arg target 比較対象となる Observer クラスのポインタ
+		 * @param target 比較対象となる Observer クラスのポインタ
 		 * @return 比較結果. 等しい場合:true, それ以外:false
 		 */
 		bool operator()(Observer* target) throw()
@@ -115,7 +115,7 @@ public:
 
 	/**
 	 * Observer のアタッチ
-	 * @arg server 接続する Observer クラスのポインタ
+	 * @param server 接続する Observer クラスのポインタ
 	 * @exception std::bad_alloc() メモリが足りなかった場合
 	 */
 	void attachObserver(Observer* server) throw(std::bad_alloc)
@@ -125,7 +125,7 @@ public:
 
 	/**
 	 * オブザーバの切断
-	 * @arg detachServer 切断する Observer クラスのポインタ
+	 * @param detachServer 切断する Observer クラスのポインタ
 	 */
 	void detachObserver(Observer* detachServer) throw()
 	{

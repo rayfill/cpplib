@@ -184,7 +184,7 @@ private:
 
 	/**
 	 * SBox処理を施したラインダール数の取得
-	 * @args value 処理するラインダール数
+	 * @params value 処理するラインダール数
 	 * @return 処理されたラインダール数
 	 */
 	const RijndaelNumber
@@ -235,8 +235,8 @@ public:
 
 	/**
 	 * 暗号化処理
-	 * @args plaintext 平文バイト列
-	 * @args key 暗号鍵
+	 * @params plaintext 平文バイト列
+	 * @params key 暗号鍵
 	 * @return 暗号処理が施されたバイト列
 	 */
 	std::vector<unsigned char>
@@ -271,7 +271,7 @@ private:
 #include <Cryptography/AESConstant.hpp>
 
 /**
- * Advanced Encrypt Standard (AES)実装
+ * AES(Advanced Encrypt Standard)実装
  * リトルエンディアンCPU上しか考慮してません
  */
 template
@@ -566,7 +566,7 @@ public:
 
 	/**
 	 * 復号処理
-	 * @args data 暗号文
+	 * @params data 暗号文
 	 * @return 復号された文
 	 */
 	std::vector<byte>
@@ -603,7 +603,7 @@ public:
 
 	/**
 	 * 暗復号に使用する鍵の登録
-	 * @args key 暗復号に使用する鍵
+	 * @params key 暗復号に使用する鍵
 	 */
 	void setKey(const std::vector<byte>& key)
 	{
@@ -618,7 +618,7 @@ public:
 
 	/**
 	 * 暗号化処理
-	 * @args data 平文
+	 * @params data 平文
 	 * @return 暗号文
 	 */
 	std::vector<byte>

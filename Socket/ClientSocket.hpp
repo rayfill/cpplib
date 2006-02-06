@@ -31,7 +31,7 @@ public:
 
 	/**
 	 * ソケットの接続
-	 * @arg ip 接続先のInternet Protocol情報
+	 * @param ip 接続先のInternet Protocol情報
 	 * @exception SocketException 相手先に接続できなかった場合
 	 * @exception NotAddressResolvException 接続先の情報が解決できなかっ
 	 * た場合

@@ -33,7 +33,7 @@ private:
 public:
 	/**
 	 * コンストラクタ
-	 * @arg createOnLock 作成とロックを同時に行うかのフラグ
+	 * @param createOnLock 作成とロックを同時に行うかのフラグ
 	 */
 	WinMutex(bool createOnLock = true) throw()
 		: MutexName("WinMutex"), hMutex()
@@ -52,8 +52,8 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * @arg MutexName_ 排他オブジェクト名
-	 * @arg createOnLock 作成とロックを同時に行うかのフラグ
+	 * @param MutexName_ 排他オブジェクト名
+	 * @param createOnLock 作成とロックを同時に行うかのフラグ
 	 */
 	WinMutex(const char* MutexName_, bool createOnLock = true) throw()
 		: MutexName(MutexName_), hMutex()
@@ -82,7 +82,7 @@ public:
 
 	/**
 	 * タイムアウト付き排他オブジェクトによるロック操作
-	 * @arg WaitTime タイムアウト時間(Millisecond単位)
+	 * @param WaitTime タイムアウト時間(Millisecond単位)
 	 */
 	bool lock(unsigned long WaitTime) throw()
 	{

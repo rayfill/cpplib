@@ -28,7 +28,7 @@ private:
 	/**
 	 *  ホスト名又はIPアドレス(文字列ベース)からネットワークバイトオー
 	 * ダIPアドレスへの変換
-	 * @arg ipAddress 変換元のIPアドレス又はホスト名
+	 * @param ipAddress 変換元のIPアドレス又はホスト名
 	 * @exception NotAddressResolvException IPアドレスに変換できなかった場合
 	 * @return 変換されたネットワークバイトオーダIPアドレス
 	 */

@@ -13,7 +13,7 @@ class DefaultRemover
 public:
 	/**
 	 * 削除ハンドラ
-	 * @arg pointer 削除オブジェクトのポインタ
+	 * @param pointer 削除オブジェクトのポインタ
 	 */
 	static void remove(Container* pointer)
 	{
@@ -73,8 +73,8 @@ public:
 
 /**
  * スマートポインタクラス
- * @arg Container コンテナ化するクラス
- * @arg RemovePolicy 削除時のハンドリングポリシー
+ * @param Container コンテナ化するクラス
+ * @param RemovePolicy 削除時のハンドリングポリシー
  */
 template <typename Container,
 	class RemovePolicy = DefaultRemover<Container> >

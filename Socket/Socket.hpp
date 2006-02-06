@@ -18,8 +18,8 @@ protected:
 
 	/**
 	 * ソケットの読み込み可能検査
-	 * @arg sock 検査対象となる生のソケットハンドル
-	 * @arg timeout タイムアウト時間(デフォルトでdefaultTimeout)
+	 * @param sock 検査対象となる生のソケットハンドル
+	 * @param timeout タイムアウト時間(デフォルトでdefaultTimeout)
 	 * @return 検査結果. true: 読み込み可能, false: 読み込み不可能
 	 */
 	bool isReadable(const SocketHandle sock,
@@ -36,8 +36,8 @@ protected:
 
 	/**
 	 * ソケットの書き込み可能検査
-	 * @arg sock 検査対象となる生のソケットハンドル
-	 * @arg timeout タイムアウト時間(デフォルトでdefaultTimeout)
+	 * @param sock 検査対象となる生のソケットハンドル
+	 * @param timeout タイムアウト時間(デフォルトでdefaultTimeout)
 	 * @return 検査結果. true: 書き込み可能, false: 書き込み不可能
 	 */
 	bool isWritable(const SocketHandle sock,
@@ -54,7 +54,7 @@ protected:
 
 	/**
 	 * コンストラクタ
-	 * @arg timedout 新しいデフォルトタイムアウト時間
+	 * @param timedout 新しいデフォルトタイムアウト時間
 	 */
 	Socket(const timeval& timedout):
 		socket(), defaultTimeout(timedout) 
@@ -136,8 +136,8 @@ public:
 
 	/**
 	 * ソケットからのデータの取得
-	 * @arg buffer 読み込んだデータへのポインタ
-	 * @arg readSize 読み込み可能な最大サイズ
+	 * @param buffer 読み込んだデータへのポインタ
+	 * @param readSize 読み込み可能な最大サイズ
 	 * @return 実際に読み込まれたデータサイズ
 	 */
 	size_t read(void* buffer, const size_t readSize) 
@@ -147,8 +147,8 @@ public:
 
 	/**
 	 * ソケットからのデータの取得(タイムアウトあり)
-	 * @arg buffer 読み込んだデータへのポインタ
-	 * @arg readSize 読み込み可能な最大サイズ
+	 * @param buffer 読み込んだデータへのポインタ
+	 * @param readSize 読み込み可能な最大サイズ
 	 * @return 実際に読み込まれたデータサイズ。0が返った場合、相手先ソ
 	 * ケットがクローズされた。
 	 * @exception TimeoutException 待機時間内にソケットに読み取り可能
@@ -165,8 +165,8 @@ public:
 
 	/**
 	 * ソケットへのデータ書き込み
-	 * @arg buffer 書き込むデータへのポインタ
-	 * @arg writeSize 書き込むデータのサイズ
+	 * @param buffer 書き込むデータへのポインタ
+	 * @param writeSize 書き込むデータのサイズ
 	 * @return 実際に書き込まれたデータのサイズ
 	 */
 	size_t write(const void* buffer, const size_t writeSize) 
@@ -176,8 +176,8 @@ public:
 
 	/**
 	 * ソケットへのデータ書き込み(タイムアウトあり)
-	 * @arg buffer 書き込むデータへのポインタ
-	 * @arg writeSize 書き込むデータのサイズ
+	 * @param buffer 書き込むデータへのポインタ
+	 * @param writeSize 書き込むデータのサイズ
 	 * @return 実際に書き込まれたデータのサイズ。0が返った場合、相手先
 	 * ソケットがクローズされた
 	 * @exception TimeoutException 待機時間中にソケットが書き込み可能

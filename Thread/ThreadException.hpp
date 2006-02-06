@@ -25,7 +25,7 @@ public:
 	
 	/**
 	 * コピーコンストラクタ
-	 * @arg te コピー元オブジェクト
+	 * @param te コピー元オブジェクト
 	 */
 	ThreadException(const ThreadException& te) throw()
 		: std::runtime_error(te.what())
@@ -33,7 +33,7 @@ public:
 	
 	/**
 	 * コンストラクタ
-	 * @arg reason 例外発生理由を示す文字列
+	 * @param reason 例外発生理由を示す文字列
 	 */
 	ThreadException(const char* reason) throw()
 		: std::runtime_error(reason)
@@ -65,7 +65,7 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * @arg reason 例外発生理由を示す文字列
+	 * @param reason 例外発生理由を示す文字列
 	 */
 	TimeoutException(const char* reason) throw()
 		: std::runtime_error(reason)

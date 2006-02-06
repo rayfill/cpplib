@@ -147,7 +147,7 @@ protected:
 public:
 	/**
 	 * デフォルトコンストラクタ
-	 * @arg createOnRun 作成と同時に実行開始するかのフラグ
+	 * @param createOnRun 作成と同時に実行開始するかのフラグ
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
 		: threadStatus(), ThreadHandle(),

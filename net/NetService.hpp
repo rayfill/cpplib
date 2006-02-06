@@ -49,7 +49,7 @@ private:
 protected:
 	/**
 	 * コンストラクタ
-	 * @arg servicePort サービスの提供されているデフォルトのポート番号
+	 * @param servicePort サービスの提供されているデフォルトのポート番号
 	 */
 	NetService(const unsigned short servicePort) throw():
 		defaultServicePort(servicePort)
@@ -67,8 +67,8 @@ protected:
 public:
 	/**
 	 * サービスへの接続
-	 * @arg serverName_ 接続サーバの名前
-	 * @arg servicePort_ サービスの提供されているポート
+	 * @param serverName_ 接続サーバの名前
+	 * @param servicePort_ サービスの提供されているポート
 	 * @return ServiceResult 接続の結果を示すオブジェクト
 	 */
 	virtual ServiceResult* connectService(

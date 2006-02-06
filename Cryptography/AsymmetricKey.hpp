@@ -32,12 +32,12 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * @args decryptExponent_ 復号用べき乗数
-	 * @args modulus_ 除数
-	 * @args primeP_ 鍵の元になる素数その1
-	 * @args primeQ_ 鍵の元になる素数その2
-	 * @args crtP_ 中国人剰余定理に使用するパラメータ1
-	 * @args crtQ_ 中国人剰余定理に使用するパラメータ2
+	 * @param decryptExponent_ 復号用べき乗数
+	 * @param modulus_ 除数
+	 * @param primeP_ 鍵の元になる素数その1
+	 * @param primeQ_ 鍵の元になる素数その2
+	 * @param crtP_ 中国人剰余定理に使用するパラメータ1
+	 * @param crtQ_ 中国人剰余定理に使用するパラメータ2
 	 */
 	PrivateKey(const MPInteger& decryptExponent_ = 0U,
 			   const MPInteger& modulus_ = 0U,
@@ -163,10 +163,10 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * @args p 鍵の元となる素数1
-	 * @args q 鍵の元となる素数2
-	 * @args e 暗号化処理時のべき乗数
-	 * @args isPrimeCheck 与えられた引数p, q の素数性チェックをするかどうか
+	 * @param p 鍵の元となる素数1
+	 * @param q 鍵の元となる素数2
+	 * @param e 暗号化処理時のべき乗数
+	 * @param isPrimeCheck 与えられた引数p, q の素数性チェックをするかどうか
 	 */
 	KeyPair(const MPInteger& p,
 			const MPInteger& q,

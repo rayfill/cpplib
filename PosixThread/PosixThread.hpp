@@ -91,7 +91,7 @@ protected:
 public:
 	/**
 	 * デフォルトコンストラクタ
-	 * @arg createOnRun 作成と同時に実行開始するかのフラグ
+	 * @param createOnRun 作成と同時に実行開始するかのフラグ
 	 */
 	PosixThread(bool createOnRun = false) throw (ThreadException)
 		: ThreadId(), transporter(NULL), isRun(false)

@@ -52,7 +52,7 @@ public:
 
 	/**
 	 * 新しいスレッドの登録
-	 * @arg thread 登録する Thread クラスのポインタ
+	 * @param thread 登録する Thread クラスのポインタ
 	 * @exception ThreadException 引数のthreadが不完全なスレッドの場合
 	 * 発行される
 	 */
@@ -68,7 +68,7 @@ public:
 
 	/**
 	 * スレッドの登録解除
-	 * @arg id 登録解除するスレッドのThreadID
+	 * @param id 登録解除するスレッドのThreadID
 	 * @return 登録解除された Thread オブジェクトのポインタ
 	 */
 	virtual Thread* detach(const Thread::ThreadId_t id) throw()
@@ -84,7 +84,7 @@ public:
 
 	/**
 	 * スレッドの実行終了待機
-	 * @arg id 待機するスレッド識別子
+	 * @param id 待機するスレッド識別子
 	 * @exception ThreadException 待機するスレッドが例外を投げて終了し
 	 * た場合
 	 */
@@ -122,7 +122,7 @@ public:
 
 	/**
 	 * 管理しているスレッドの取得
-	 * @arg index スレッドグループのインデックス番号
+	 * @param index スレッドグループのインデックス番号
 	 * @exception std::range_error 引数が範囲外だった場合
 	 */
 	Thread* operator[](size_t index) throw(std::range_error)
