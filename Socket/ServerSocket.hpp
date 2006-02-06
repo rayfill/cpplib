@@ -54,9 +54,9 @@ protected:
 
 	/**
 	 * 新たなワーカースレッド作成のためのファクトリメソッド
-	 * @arg handle サーバから受け取る、クライアントとつながったソケッ
+	 * @param handle サーバから受け取る、クライアントとつながったソケッ
 	 * トハンドル
-	 * @arg info クライアントへの接続情報
+	 * @param info クライアントへの接続情報
 	 * @exception std::bad_alloc ファクトリがクラスの生成に失敗した
 	 * @excpetion ThreadExcpetion その他
 	 */ 
@@ -100,7 +100,7 @@ public:
 
 	/**
 	 * サーバの接続のための前準備
-	 * @arg ti サーバソケットバインドのための情報
+	 * @param ti サーバソケットバインドのための情報
 	 * @return 正常時: true, 異常時: false
 	 */
 	bool prepare(const IP& ti)

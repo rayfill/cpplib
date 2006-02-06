@@ -48,7 +48,7 @@ private:
 
 	/**
 	 * ネットワークバイトオーダIPアドレスからFQDN名への変換
-	 * @arg ipAddress ネットワークバイトオーダIPアドレス
+	 * @param ipAddress ネットワークバイトオーダIPアドレス
 	 * @return FQDN名
 	 * @exception NotAddressResolvException ホスト名に変換できなかった場合
 	 */
@@ -75,8 +75,8 @@ public:
 
 	/**
 	 * 初期情報セット付コンストラクタ
-	 * @arg ipAddress マシン名
-	 * @arg port ポート番号
+	 * @param ipAddress マシン名
+	 * @param port ポート番号
 	 * @exception NotAddressResolvException マシン名が解決できなかった場合
 	 */
 	IP(const char* ipAddress, const short port)
@@ -89,8 +89,8 @@ public:
 
 	/**
 	 * 初期情報セット付コンストラクタ
-	 * @arg ipAddress IPアドレス(ネットワークバイトオーダ)
-	 * @arg port ポート番号(ホストバイトオーダ)
+	 * @param ipAddress IPアドレス(ネットワークバイトオーダ)
+	 * @param port ポート番号(ホストバイトオーダ)
 	 * @exception NotAddressResolvException マシン名が解決できなかった場合
 	 */
 	IP(unsigned long ipAddress, const short port)
@@ -103,7 +103,7 @@ public:
 
 	/**
 	 * 初期情報セット付コンストラクタ
-	 * @arg addrInfo sockaddr_in構造体
+	 * @param addrInfo sockaddr_in構造体
 	 */
 	IP(const sockaddr_in& addrInfo) throw()
 	{
@@ -146,7 +146,7 @@ public:
 
 	/**
 	 * IPアドレスから文字列への変換
-	 * @arg ホストバイトオーダIPアドレス値 @see getIp()
+	 * @param ホストバイトオーダIPアドレス値 @see getIp()
 	 * @return 変換された文字列オブジェクト
 	 */
 	static std::string getIpString(unsigned long hostSideIpReps) throw()
@@ -174,7 +174,7 @@ public:
 
 	/**
 	 * 内部IPアドレスの設定
-	 * @arg IPアドレス又はマシン名
+	 * @param IPアドレス又はマシン名
 	 * @exception NotAddressResolvException ホスト名が解決できなかった場合
 	 */
 	void setIp(const char* address) throw (NotAddressResolvException)
@@ -193,7 +193,7 @@ public:
 
 	/**
 	 * 内部ポート番号の設定
-	 * @arg Port番号(ホストバイトオーダ)
+	 * @param Port番号(ホストバイトオーダ)
 	 */
 	void setPort(const unsigned short port) throw()
 	{
