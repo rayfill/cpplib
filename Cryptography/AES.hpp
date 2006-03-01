@@ -570,7 +570,7 @@ public:
 	 * @return •œ†‚³‚ê‚½•¶
 	 */
 	std::vector<byte>
-	decrypt(std::vector<byte>& data)
+	decrypt(const std::vector<byte>& data)
 	{
 		if (data.size() != 16)
 			throw std::runtime_error(
@@ -622,7 +622,7 @@ public:
 	 * @return ˆÃ†•¶
 	 */
 	std::vector<byte>
-	encrypt(std::vector<byte>& data)
+	encrypt(const std::vector<byte>& data)
 	{
 		if (data.size() != 16)
 			throw std::runtime_error(

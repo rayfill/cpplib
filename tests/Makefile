@@ -1,9 +1,9 @@
-CXX=g++ 
-NOCLEANSCXXFLAGS= -g -I/usr/local/include -mno-cygwin -Wall -Wunused \
+CXX=/usr/bin/g++ 
+NOCLEANSCXXFLAGS= -g -mno-cygwin -Wall -Wunused \
 	-fno-default-inline -fmessage-length=78 -I..
 CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
-LIBS= -lwsock32 -lcppunit -L/usr/local/lib -lgdi32
+LIBS= -lwsock32 -lcppunit -lgdi32
 TARGET= UnitTest
 OBJS= TestMain.o \
 	ScannerTest.o \
