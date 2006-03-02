@@ -9,21 +9,38 @@
 #include <text/xml/XMLException.hpp>
 #include <text/transcode/Unicode.hpp>
 
+/**
+ * XMLノードクラス
+ */
 class XMLNode
 {
 	friend class XMLNodeTest;
 	typedef std::vector<XMLNode*> NodeType;
 
 protected:
+	/**
+	 * 親ノードへのポインタ
+	 */
 	XMLNode* parent;
+
+	/**
+	 * 子ノードのコレクション
+	 */
 	NodeType childs;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param parent 親コンストクラタへのポインタ
+	 */
 	XMLNode(XMLNode* parent = NULL):
 		parent(NULL),
 		childs()
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~XMLNode() throw()
 	{
 		for (NodeType::iterator itor = childs.begin();
@@ -32,6 +49,10 @@ public:
 			delete *itor;
 	}
 
+	/**
+	 * 次の兄弟レベルのノードの探索
+	 * @return 見つかった次の兄弟ノードのポインタ。次が無い場合はNULLがかえる
+	 */
 	XMLNode* getNextSibling() const throw(std::logic_error)
 	{
 		if (parent == NULL)
@@ -51,6 +72,10 @@ public:
 		return *++itor;
 	}
 
+	/**
+	 * 前の兄弟レベルのノードの探索
+	 * @return 前の兄弟レベルノード
+	 */
 	XMLNode* getPrevSibling() const throw(std::logic_error)
 	{
 		if (parent == NULL)

@@ -6,7 +6,7 @@
 #include <string>
 
 /**
- * 排他操作オブジェクト
+ * Win32 排他操作オブジェクト
  */
 class WinMutex {
 private:
@@ -52,7 +52,8 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * @param MutexName_ 排他オブジェクト名
+	 * @param MutexName_ 排他オブジェクト識別名。
+	 * 同じ名前のMutex同士で排他制御される
 	 * @param createOnLock 作成とロックを同時に行うかのフラグ
 	 */
 	WinMutex(const char* MutexName_, bool createOnLock = true) throw()
@@ -63,7 +64,7 @@ public:
 		hMutex = CreateMutex(NULL, TRUE, MutexName.c_str());
 		if (hMutex == NULL) 
 		{
-			// TODO: エラーハンドリングの実装
+			/// @todo エラーハンドリングの実装
 			if (GetLastError() == ERROR_ALREADY_EXISTS)
 				OutputDebugString("Mutex already exists.");
 
@@ -83,6 +84,7 @@ public:
 	/**
 	 * タイムアウト付き排他オブジェクトによるロック操作
 	 * @param WaitTime タイムアウト時間(Millisecond単位)
+	 * @return ロックが取得できた場合、true
 	 */
 	bool lock(unsigned long WaitTime) throw()
 	{

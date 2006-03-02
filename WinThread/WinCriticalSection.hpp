@@ -7,25 +7,47 @@
 
 #include <iostream>
 
+/**
+ * Win32用CriticalSectionクラス
+ * @todo グローバルで単一のクリティカルセクションとなってしまうので
+ * コンストラクタから文字列でも食ってセクションの識別を行う実装に変更したい･･･
+ */
 class WinCriticalSection
 {
 private:
+	/**
+	 * クリティカルセクションハンドルマネージャ
+	 */
 	class InnerCriticalSectionObject
 	{
 	private:
+		/**
+		 * クリティカルセクションハンドル
+		 */
 		CRITICAL_SECTION sectionHandle;
+
 	public:
+		/**
+		 * コンストラクタ
+		 */
 		InnerCriticalSectionObject() throw()
 			: sectionHandle()
 		{
 			InitializeCriticalSection(&sectionHandle);
 		}
 
+		/**
+		 * デストラクタ
+		 */
 		~InnerCriticalSectionObject() throw()
 		{
 			DeleteCriticalSection(&sectionHandle);
 		}
 		
+		/**
+		 * セクションハンドルの取得
+		 * @return セクションハンドルの取得
+		 */
 		LPCRITICAL_SECTION get() throw()
 		{
 			return &sectionHandle;
@@ -34,11 +56,16 @@ private:
 	
 	typedef Singleton<InnerCriticalSectionObject> CriticalSectionObject;
 
+	/**
+	 * セクションロック判別
+	 */
 	bool isLocked;
+
 	/**
 	 * non copyable
 	 */
 	WinCriticalSection(const WinCriticalSection&) throw() {}
+
 public:
 	/**
 	 * コンストラクタ
@@ -53,6 +80,7 @@ public:
 	
 	/**
 	 * デストラクタ
+	 * ロックしていた場合、解除する
 	 */
 	virtual ~WinCriticalSection() throw()
 	{
@@ -89,6 +117,8 @@ public:
 	 */
 	bool tryLock() throw()
 	{
+		assert(isLocked == false);
+
 		BOOL result =
 			TryEnterCriticalSection(CriticalSectionObject::get()->get());
 

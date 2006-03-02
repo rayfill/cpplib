@@ -4,6 +4,9 @@
 #include <exception>
 #include <stdexcept>
 
+/**
+ * XMLPathが不正な場合の例外
+ */
 class InvalidXMLPathException : public std::runtime_error
 {
 public:
@@ -16,6 +19,9 @@ public:
 	{}
 };
 
+/**
+ * 不正なXML文書を処理した場合の例外
+ */
 class WellformedException : public std::runtime_error
 {
 public:
@@ -28,6 +34,9 @@ public:
 	{}
 };
 
+/**
+ * タグが不正な場合の例外
+ */
 class InvalidTagException : public std::runtime_error
 {
 public:
