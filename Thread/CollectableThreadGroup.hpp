@@ -13,7 +13,7 @@ class CollectableThreadGroup :
 	public ThreadGroup, public Observer
 {
 private:
-	typedef std::set<Thread::ThreadId_t> CollectableThreadIds;
+	typedef std::set<Thread::thread_id_t> CollectableThreadIds;
 
 	/**
 	 * 回収可能となったThread ID を保持するコンテナ
@@ -89,7 +89,7 @@ public:
 	 * @param id 登録解除するスレッドのThreadID
 	 * @return 登録解除された Thread オブジェクトのポインタ
 	 */
-	virtual Thread* detach(const Thread::ThreadId_t id) throw()
+	virtual Thread* detach(const Thread::thread_id_t id) throw()
 	{
 		Thread* thread = ThreadGroup::detach(id);
 		assert(thread != NULL);

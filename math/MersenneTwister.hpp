@@ -12,6 +12,10 @@
 	static const unsigned int LowerMask = 0x7fffffffUL;
 #endif
 
+/**
+ * メルセンヌツイスタ乱数クラス
+ * @see http://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%AB%E3%82%BB%E3%83%B3%E3%83%8C%E3%83%BB%E3%83%84%E3%82%A4%E3%82%B9%E3%82%BF
+ */
 class MersenneTwister
 {
 private:

@@ -12,14 +12,14 @@ public:
 	/**
 	 * スレッド識別子型
 	 */
-	typedef pthread_t ThreadId_t;
+	typedef pthread_t thread_id_t;
 
 private:
 	/**
 	 * スレッドハンドル
 	 * スレッド識別子
 	 */
-	ThreadId_t ThreadId;
+	thread_id_t ThreadId;
 
 	/**
 	 * 処理例外伝達用ポインタ

@@ -19,6 +19,13 @@
 #include <iomanip>
 #include <limits>
 
+/**
+ * 多倍長整数クラス
+ * @param BaseUnit_ 基数となる型
+ * @param CalcBase_ 計算基数となる型。
+ * sizeof(BaseUnit_) < sizeof(CalcUnit_)が必須条件
+ * @param Allocator カスタムメモリ管理クラス。STLのアロケータ互換が必須条件
+ */
 template <
 	typename BaseUnit_ = unsigned int,
 	typename CalcBase_ = unsigned long long,
@@ -34,9 +41,15 @@ public:
 private:
 	friend class MPITest;
 
+	/// データの内部表現
 	MPVector value;
+
+	/// 符号。tureでマイナス
 	bool isMinusSign;
 
+	/**
+	 * valueの正規化用ヘルパファンクタ
+	 */
 	struct findFunc
 	{
 	private:
@@ -60,16 +73,27 @@ private:
 // 			&primes[sizeof(primes) / sizeof(unsigned int)]);
 // 	}
 
+	/**
+	 * 桁上がりのマスク値の取得
+	 * @todo テンプレートでenum使ってコンパイル時計算にできるか？
+	 */
 	const static CalcBase getCarryValue()
 	{
 		return std::numeric_limits<BaseUnit>::max() + 1;
 	}
 
+	/**
+	 * 基数の最大値の取得
+	 */
 	const static CalcBase getMaxBaseUnit()
 	{
 		return std::numeric_limits<BaseUnit>::max();
 	}
 
+	/**
+	 * 十六進表現文字列からの変換
+	 * @param str 変換元文字列
+	 */
 	void parseString(std::string str)
 	{
 		const unsigned int tokenLength = sizeof(BaseUnit) * 2;
@@ -121,7 +145,12 @@ private:
 			value.push_back(val);
 	}
 
-	MultiPrecisionInteger& swap(MultiPrecisionInteger target)
+	/**
+	 * 値の交換
+	 * @return 交換後の値
+	 * @param 交換対象のオブジェクト
+	 */
+	MultiPrecisionInteger& swap(MultiPrecisionInteger target) throw()
 	{
 		this->value.swap(target.value);
 		if (this->isMinusSign != target.isMinusSign)
@@ -133,6 +162,11 @@ private:
 		return *this;
 	}
 
+	/**
+	 * ビット値の取得
+	 * @return ビット値
+	 * @param offset LSBからの距離(MAXはMSB-LSB、MINはLSB)
+	 */
 	bool getBit(size_t offset) const
 	{
 		const size_t blockOffset = offset / (sizeof(BaseUnit) * 8);
@@ -141,6 +175,15 @@ private:
 		return ((value[blockOffset] >> bitOffset) & 0x01) == 1;
 	}
 
+	/**
+	 * モンゴメリ乗算
+	 * @return 乗算後の値
+	 * @param a 掛ける数
+	 * @param b 掛けられる数
+	 * @param r べき数
+	 * @param n 巡回群の剰余元
+	 * @param n_ nの逆元
+	 */
 	MultiPrecisionInteger
 	montgomeryProduct(const MultiPrecisionInteger& a,
 					  const MultiPrecisionInteger& b,
@@ -165,6 +208,11 @@ private:
 		return u;
 	}
 
+	/**
+	 * 剰余計算
+	 * @return BaseUnti 余り
+	 * @param divisor 割る数
+	 */
 	BaseUnit modulus(const BaseUnit divisor) const
 	{
 		CalcBase carry = 0;
@@ -177,6 +225,12 @@ private:
 		return static_cast<BaseUnit>(carry);
 	}
 
+	/**
+	 * 除算
+	 * @return 商
+	 * @param src 割る数
+	 * @param modulo 余り(出力値)
+	 */
 	MultiPrecisionInteger&
 	divide(const MultiPrecisionInteger& src,
 		   MultiPrecisionInteger& modulo)
@@ -271,22 +325,37 @@ private:
 
 public:
 		
+	/**
+	 * 自身の符号反転
+	 * @return 自身への参照
+	 */
 	MultiPrecisionInteger& negate()
 	{
 		isMinusSign = !isMinusSign;
 		return *this;
 	}
 
+	/**
+	 * 符号反転
+	 * @return 反転した値を持つ一時オブジェクト
+	 */
 	MultiPrecisionInteger getNegateValue() const
 	{
 		return MultiPrecisionInteger(*this).negate();
 	}
 
-
+	/**
+	 * デフォルトコンストラクタ
+	 */
 	MultiPrecisionInteger()
 		: value(), isMinusSign(false)
 	{}
 
+	/**
+	 * コンストラクタ
+	 * 基数範囲の値での初期化
+	 * @param value_ 基数型での数値
+	 */
 	MultiPrecisionInteger(
 		const BaseUnit value_)
 		: value(), isMinusSign(false)
@@ -294,6 +363,11 @@ public:
 		value.push_back(value_);
 	}
 
+	/**
+	 * コンストラクタ
+	 * 計算数値範囲の値での初期化
+	 * @param value_ 計算数値型での数値
+	 */
 	MultiPrecisionInteger(
 		CalcBase value_)
 		: value(), isMinusSign(false)
@@ -312,7 +386,12 @@ public:
 		}
 	}
 
-	BaseUnit toBaseUnit()
+	/**
+	 * オブジェクトから基数型での表現への変換
+	 * @return 変換された数値
+	 * @exception std::overflow_error 内部表現値が基数型に入らなかった場合
+	 */
+	BaseUnit toBaseUnit() const
 	{
 		if (this->getMaxColumn() > sizeof(BaseUnit))
 			throw std::overflow_error("can not convert.");
@@ -320,6 +399,12 @@ public:
 		return this->value.size() ? this->value[0] : 0;
 	}
 
+	/**
+	 * コンストラクタ
+	 * 内部値を同値が連続したもので埋めて初期化
+	 * @param fillValue 埋める値
+	 * @param fillLength 埋める個数
+	 */
 	MultiPrecisionInteger(
 		const BaseUnit fillValue,
 		const size_t fillLength)
@@ -328,7 +413,13 @@ public:
 		std::fill_n(value.begin(), fillLength, fillValue);
 	}
 	
-
+	/**
+	 * コンストラクタ
+	 * 基数型配列からの初期化
+	 * @param first 配列の初期ポインタ
+	 * @param last 終端要素の次の位置を表すポインタ
+	 * @param isMinus 符号フラグ(trueでマイナス)
+	 */
 	MultiPrecisionInteger(
 		const BaseUnit* first,
 		const BaseUnit* last,
@@ -337,14 +428,24 @@ public:
 	{
 	}
 
+	/**
+	 * コンストラクタ
+	 * 十六進表現文字列からの初期化
+	 * @param cstr 十六進表現で書かれた文字列
+	 */
 	MultiPrecisionInteger(
 		const char* cstr)
 		: value(), isMinusSign(false)
 	{
-		std::string str(cstr);
-		parseString(str);
+		const std::string str(cstr);
+		parseString(cstr);
 	}
 
+	/**
+	 * コンストラクタ
+	 * 十六進表現文字列からの初期化
+	 * @param str 十六進表現で書かれた文字列
+	 */
 	MultiPrecisionInteger(
 		const std::string& str)
 		: value(), isMinusSign(false)
@@ -352,35 +453,59 @@ public:
 		parseString(str);
 	}
 
+	/**
+	 * コピーコンストラクタ
+	 * @param src コピー元のオブジェクト
+	 */
 	MultiPrecisionInteger(
 		const MultiPrecisionInteger& src)
 		: value(src.value),
 		  isMinusSign(src.isMinusSign)
 	{}
 
+	/**
+	 * ビット数保証の多倍長数値作成
+	 * @param head 元となる数値ポインタの先頭
+	 * @param last 元となる数値ポインタの最終要素の次
+	 * 引数データは破壊されるので注意
+	 */
 	static MultiPrecisionInteger 
 	makeNumberOfBitSafe(BaseUnit* head, BaseUnit* last)
 	{
-		*head |= 0x01; // must odd prime.
-		// max bit safety.
+		*head |= 0x01; // 素数は(2以外は)奇素数なので
+		// MSBを1にすることでビット数を保証
 		*(last-1) |= 
 			(((CalcBase)std::numeric_limits<BaseUnit>::max() + 1) >> 1);
 
 		return MultiPrecisionInteger(head, last);
 	}
 	
+	/**
+	 * ビット数保証の多倍長数値作成
+	 * @param 元となる数値のstd::vector
+	 */
 	static MultiPrecisionInteger 
 	makeNumberOfBitSafe(std::vector<BaseUnit>& src)
 	{
 		return makeNumberOfBitSafe(&src[0], &src[src.size()]);
 	}
 
+	/**
+	 * 多倍長整数の内部表現をstd::vector<BaseUnit_>で返す
+	 * @return 基数のstd::vector
+	 */
 	std::vector<BaseUnit> toVector() const
 	{
 		return std::vector<BaseUnit>
 			(this->value.rbegin(), this->value.rend());
 	}
 
+	/**
+	 * ビッグエンディアンでの内部表現の取得
+	 * result[result.size() -1] が上位桁、result[0]が最下位桁
+	 * @return バイト配列としての多倍長整数
+	 * @param roundSize 最上位桁を何バイトで丸めて処理するか
+	 */
 	std::vector<unsigned char>
 	toBigEndianMemory(const size_t roundSize = 4) const
 	{
@@ -406,6 +531,12 @@ public:
 		return result;
 	}
 
+	/**
+	 * ビッグエンディアンバイト配列からの多倍長整数構築
+	 * 構築済みオブジェクトの値を書き換えることによって生成します
+	 * @return 自身への参照
+	 * @param source 元となるビッグエンディアンバイトstd::vector
+	 */
 	MultiPrecisionInteger&
 	fromBigEndianMemory(std::vector<unsigned char> source)
 	{
@@ -430,9 +561,16 @@ public:
 		return *this;
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	~MultiPrecisionInteger()
 	{}
 
+	/**
+	 * 十六進表現文字列への変換
+	 * @return 十六進表現の文字列
+	 */
 	std::string toString() const
 	{
 		if (this->isZero())
@@ -472,6 +610,10 @@ public:
 		return result.str();
 	}
 
+	/**
+	 * 内部表現が0かどうか
+	 * @return 0ならtrue
+	 */
 	bool isZero() const
 	{
 		if (this->value.size() == 0)
@@ -484,6 +626,10 @@ public:
 		return false;
 	}
 
+	/**
+	 * 内部表現が偶数かどうか
+	 * @return 偶数ならtrue
+	 */
 	bool isEven() const
 	{
 		if (isZero() == true)
@@ -492,6 +638,13 @@ public:
 		return !(this->value[0] & 0x01);
 	}
 
+	/**
+	 * べき乗計算
+	 * @param powerValue_ べき乗数
+	 * @return べき乗された数
+	 * @todo 非効率な実装なので自身をべき乗するように書き換えて
+	 * const版も作るように変更するべき
+	 */
 	MultiPrecisionInteger
 	power(const MultiPrecisionInteger& powerValue_) const
 	{
@@ -521,6 +674,12 @@ public:
 		return result;
 	}
 
+	/**
+	 * モンゴメリ剰余演算。通常のべき剰余演算より2倍程度高速になります
+	 * @param e べき乗数
+	 * @param n 剰余数
+	 * @return 自身への参照
+	 */
 	MultiPrecisionInteger&
 	montgomeryModulusExponential(const MultiPrecisionInteger& e,
 								 const MultiPrecisionInteger& n)
@@ -548,6 +707,10 @@ public:
 		return *this;
 	}
 
+	/**
+	 * 数値を表現するのに何ビット分必要かを取得
+	 * @return 表現するのに必要なbit数
+	 */
 	size_t getBitLength() const
 	{
 		typename 
@@ -578,6 +741,10 @@ public:
 			((count-1) * sizeof(BaseUnit) * 8 + offset);
 	}
 
+	/**
+	 * 数値を表現するのに基数の配列で何カラム必要かを取得
+	 * @return 表現に必要なカラム数
+	 */
 	const size_t getMaxColumn() const
 	{
 		return 
@@ -588,7 +755,11 @@ public:
 								 value.rend(),
 								 findFunc(0)).base()));
 	}
-	
+
+	/**
+	 * 内部表現の頭についた0パディングの削除
+	 * @return 自身への参照
+	 */
 	MultiPrecisionInteger& adjust()
 	{
 		value.erase(
@@ -601,7 +772,12 @@ public:
 	}
 
 public:
-	
+
+	/**
+	 * 代入演算子
+	 * @param rhs 代入元
+	 * @return 代入後の自身への参照
+	 */
 	MultiPrecisionInteger&
 	operator=(const MultiPrecisionInteger& rhs)
 	{
@@ -613,24 +789,44 @@ public:
 		return *this;
 	}
 
+	/**
+	 * 加算
+	 * @param 右辺値
+	 * @return 加算結果
+	 */
 	MultiPrecisionInteger
 	operator+(const MultiPrecisionInteger& rhs) const
 	{
 		return MultiPrecisionInteger(*this).operator+=(rhs);
 	}
 
+	/**
+	 * 減算
+	 * @param 右辺値
+	 * @return 減算結果
+	 */
 	MultiPrecisionInteger
 	operator-(const MultiPrecisionInteger& rhs) const
 	{
 		return MultiPrecisionInteger(*this).operator-=(rhs);
 	}
 
+	/**
+	 * 乗算
+	 * @param 乗数
+	 * @return 乗算結果
+	 */
 	MultiPrecisionInteger
 	operator*(const MultiPrecisionInteger& rhs) const
 	{
 		return MultiPrecisionInteger(*this).operator*=(rhs);
 	}
 
+	/**
+	 * 除算
+	 * @param 除数
+	 * @return 除算結果
+	 */
 	MultiPrecisionInteger
 	operator/(const MultiPrecisionInteger& rhs) const
 	{
@@ -638,6 +834,11 @@ public:
 		return MultiPrecisionInteger(*this).divide(rhs, modulo);
 	}
 
+	/**
+	 * 剰余計算
+	 * @param 除数
+	 * @return 余り
+	 */
 	MultiPrecisionInteger
 	operator%(const MultiPrecisionInteger& rhs) const
 	{
@@ -646,11 +847,23 @@ public:
 		return modulo;
 	}
 
+	/**
+	 * 剰余計算
+	 * 除数が基数で収まる場合はこちらを使ってください。
+	 * 一般バージョンと比べてはるかに高速に実行できます。
+	 * @param 除数(ただし型は基数)
+	 * @return 余り
+	 */
 	BaseUnit operator%(const BaseUnit& rhs) const
 	{
 		return this->modulus(rhs);
 	}
 
+	/**
+	 * 加算代入
+	 * @param rhs 右辺値
+	 * @return 加算後の自身への参照
+	 */
 	MultiPrecisionInteger&
 	operator+=(const MultiPrecisionInteger& rhs)
 	{
@@ -698,6 +911,11 @@ public:
 		return this->adjust();
 	}
 
+	/**
+	 * 減算代入
+	 * @param rhs 右辺値
+	 * @return 減算後の自身への参照
+	 */
 	MultiPrecisionInteger&
 	operator-=(const MultiPrecisionInteger& rhs)
 	{
@@ -777,6 +995,11 @@ public:
 		return this->adjust();
 	}
 	
+	/**
+	 * 乗算代入
+	 * @param rhs 乗数
+	 * @return 乗算後の自身への参照
+	 */
 	MultiPrecisionInteger&
 	operator*=(const MultiPrecisionInteger& rhs)
 	{
@@ -826,6 +1049,11 @@ public:
 		return this->adjust();
 	}
 
+	/**
+	 * 除算代入
+	 * @param rhs 除数
+	 * @return 割られた数
+	 */
 	MultiPrecisionInteger&
 	operator/=(const MultiPrecisionInteger& rhs)
 	{
@@ -833,6 +1061,11 @@ public:
 		return this->divide(rhs, modulo);
 	}
 
+	/**
+	 * 剰余代入
+	 * @param rhs 除数
+	 * @return 余りを代入した自身への参照
+	 */
 	MultiPrecisionInteger&
 	operator%=(const MultiPrecisionInteger& rhs)
 	{
@@ -842,6 +1075,10 @@ public:
 		return *this;
 	}
 	
+	/**
+	 * 前置インクリメント
+	 * @return インクリメント後の自身への参照
+	 */
 	MultiPrecisionInteger& operator++()
 	{
 		if (this->isMinusSign == true)
@@ -855,6 +1092,11 @@ public:
 		return *this;
 	}
 
+	/**
+	 * 後置インクリメント
+	 * @return インクリメント前の値
+	 * @todo 前置インクリメントへ委譲する実装への変更
+	 */
 	MultiPrecisionInteger operator++(int)
 	{
 		if (this->isMinusSign == true)
@@ -869,6 +1111,10 @@ public:
 		return result;
 	}
 
+	/**
+	 * 前置デクリメント
+	 * @return デクリメント後の自身への参照
+	 */
 	MultiPrecisionInteger& operator--()
 	{
 		if (this->isMinusSign == true)
@@ -882,6 +1128,11 @@ public:
 		return *this;
 	}
 
+	/**
+	 * 後置デクリメント
+	 * @return デクリメント前の値
+	 * @todo 前置デクリメントへの委譲を使った実装への変更
+	 */
 	MultiPrecisionInteger operator--(int)
 	{
 		if (this->isMinusSign == true)
@@ -896,11 +1147,21 @@ public:
 		return result;
 	}
 
+	/**
+	 * 左シフト
+	 * @param シフトするビット数
+	 * @return n シフト後のオブジェクト
+	 */
 	MultiPrecisionInteger operator<<(int n) const
 	{
 		return MultiPrecisionInteger(*this).operator<<=(n);
 	}
 
+	/**
+	 * 左シフト
+	 * @param シフトするビット数
+	 * @return n シフト後の自身への参照
+	 */
 	MultiPrecisionInteger& operator<<=(int n)
 	{
 		const size_t downShiftBitCount =
@@ -923,11 +1184,21 @@ public:
 		return this->adjust();
 	}
 
+	/**
+	 * 左シフト
+	 * @param n シフトするビット数
+	 * @return シフト後の値
+	 */
 	MultiPrecisionInteger operator>>(int n) const
 	{
 		return MultiPrecisionInteger(*this).operator>>=(n);
 	}
 
+	/**
+	 * 左シフト
+	 * @param n シフトするビット数
+	 * @return シフト後の自身への参照
+	 */
 	MultiPrecisionInteger& operator>>=(int n)
 	{
 		const size_t shiftColumnCount =
@@ -967,7 +1238,12 @@ public:
 
 		return this->adjust();
 	}
-	
+
+	/** 
+	 * 等号演算子
+	 * @return 同じ値ならtrue
+	 * @param rhs 比較対象
+	 */
 	bool operator==(const MultiPrecisionInteger& rhs) const
 	{
 		if (this->isZero() && rhs.isZero())
@@ -990,11 +1266,21 @@ public:
 		return true;
 	}
 
+	/**
+	 * 否定演算子
+	 * @param rhs 比較対象
+	 * @return 違う値を持っていればtrue
+	 */
 	bool operator!=(const MultiPrecisionInteger& rhs) const
 	{
 		return !this->operator==(rhs);
 	}
 
+	/**
+	 * LessThan比較演算子
+	 * @param rhs 比較対象
+	 * @return 比較対象より小さければtrue
+	 */
 	bool operator<(const MultiPrecisionInteger& rhs) const
 	{
 		if (this->isMinusSign == true && rhs.isMinusSign == false)
@@ -1019,11 +1305,21 @@ public:
 		return this->isMinusSign ? true : false;
 	}
 
+	/**
+	 * GreaterEqual比較演算子
+	 * @param rhs 比較対象
+	 * @return 対象と等しいまたはより大きければtrue
+	 */
 	bool operator>=(const MultiPrecisionInteger& rhs) const
 	{
 		return !this->operator<(rhs);
 	}
 
+	/**
+	 * GreaterThan比較演算子
+	 * @param rhs 比較対象
+	 * @return 対象より大きければtrue
+	 */
 	bool operator>(const MultiPrecisionInteger& rhs) const
 	{
 		if (this->isMinusSign == false && rhs.isMinusSign == true)
@@ -1048,11 +1344,24 @@ public:
 		return this->isMinusSign ? true : false;
 	}
 
+	/**
+	 * LessThan比較演算子
+	 * @param rhs 比較対象
+	 * @return 対象と同じかより小さければtrue
+	 */
 	bool operator<=(const MultiPrecisionInteger& rhs) const
 	{
 		return !this->operator>(rhs);
 	}
 
+	/**
+	 * 疑素数の生成
+	 * @param bitToLength 生成する疑素数のビット数
+	 * @param random Randomインタフェースを持つ擬似乱数オブジェクト
+	 * @param checkDepth ラビン-ミラー法によるチェックパス
+	 * @return 見つかった疑素数
+	 * @todo cehckDepthをせめて4くらいにはしとこう・・・
+	 */
 	static MultiPrecisionInteger
 	getProbablePrime(const size_t bitToLength,
 					 Random& random,
@@ -1094,7 +1403,7 @@ public:
 					}
 					else
 					{
-						// generate evidence number.
+						// 証拠数の作成
 						if (RabinPrimeTest(
 								baseNumber + offset,
 								MultiPrecisionInteger(primeCheckDepth + 2U))
@@ -1108,11 +1417,12 @@ public:
 					}
 				}
 			}
-			// out of range for sieves. slide offset base number retry.
+			// 篩の範囲限界を超えたため、基準値をずらして再試行
 			baseNumber += (BaseUnit)sieve.size();
 		}
 	}
 };
+
 
 typedef MultiPrecisionInteger<> MPInteger;
 

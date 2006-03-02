@@ -1,6 +1,10 @@
 #ifndef PRIMELIST_HPP_
 #define PRIMELIST_HPP_
 
+/**
+ * 16bit以下の素数表
+ * 今はSieveクラスで動的生成するのでいらない
+ */
 static unsigned int primes[] = 
 {
 		2,     3,     5,     7,    11,    13,    17,    19, 

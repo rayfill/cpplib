@@ -13,7 +13,7 @@ private:
 	/**
 	 * スレッドマッパー型
 	 */
-	typedef std::map<Thread::ThreadId_t, Thread*> ThreadMap;
+	typedef std::map<Thread::thread_id_t, Thread*> ThreadMap;
 
 	/**
 	 * スレッドマッピング用マップ変数
@@ -23,7 +23,7 @@ private:
 	/**
 	 * このオブジェクトのオーナーのThread ID
 	 */
-	const Thread::ThreadId_t ownerId;
+	const Thread::thread_id_t ownerId;
 
 	/**
 	 * コピー不可能のためのプライベートコピーコンストラクタ
@@ -71,7 +71,7 @@ public:
 	 * @param id 登録解除するスレッドのThreadID
 	 * @return 登録解除された Thread オブジェクトのポインタ
 	 */
-	virtual Thread* detach(const Thread::ThreadId_t id) throw()
+	virtual Thread* detach(const Thread::thread_id_t id) throw()
 	{
 		assert(threadMapper[id] != NULL);
 
@@ -88,7 +88,7 @@ public:
 	 * @exception ThreadException 待機するスレッドが例外を投げて終了し
 	 * た場合
 	 */
-	void join(const Thread::ThreadId_t id) throw(ThreadException)
+	void join(const Thread::thread_id_t id) throw(ThreadException)
 	{
 		assert(this->ownerId == GetCurrentThreadId());
 

@@ -15,7 +15,7 @@
 /**
  * Win32ベーススレッドクラス
  * 使用は継承し、仮想関数 run()をオーバーライドして下さい
- * @Todo 状態検査とシグナルベースの中断処理への変更
+ * @todo 状態検査とシグナルチックな中断処理への変更
  */
 class WinThread
 {
@@ -31,13 +31,16 @@ public:
 		stop
 	};
 
+	/// 例外により停止をあらわす定数
 	static const unsigned abort_by_exception = 0xffffffff;
+
+	/// 親からのリクエストにより中断を表す定数
 	static const unsigned abort_by_parent = 0xfffffffe;
 
 	/**
 	 * スレッド識別子型
 	 */
-	typedef unsigned ThreadId_t;
+	typedef unsigned thread_id_t;
 
 private:
 	friend class ThreadGroup;
@@ -55,7 +58,7 @@ private:
 	/**
 	 * スレッド識別子
 	 */
-	ThreadId_t ThreadId;
+	thread_id_t ThreadId;
 
 	/**
 	 * 処理例外伝達用ポインタ
@@ -121,6 +124,10 @@ protected:
 
 	/**
 	 * クラス構築ヘルパ
+	 * @param createOnRun 作成と同時にスレッドを実行するかのフラグ
+	 * trueで作成時に実行開始、falseだと作成後はsuspendしている。
+	 * start() メソッドで実行開始する。
+	 * @see start()
 	 */
 	void create(bool createOnRun) throw(ThreadException)
 	{
@@ -147,7 +154,7 @@ protected:
 public:
 	/**
 	 * デフォルトコンストラクタ
-	 * @param createOnRun 作成と同時に実行開始するかのフラグ
+	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
 		: threadStatus(), ThreadHandle(),
@@ -173,6 +180,7 @@ public:
 
 	/**
 	 * スレッドの実行
+	 * @return レジュームレベル。0で実行開始、>0でサスペンド中
 	 */
 	unsigned start() throw()
 	{
@@ -203,7 +211,7 @@ public:
 
 	/**
 	 * スレッドの実行を一時休止
-	 * \arg waitTimeForMilliSeconds 休止する時間をミリ秒で指定する
+	 * @param waitTimeForMilliSeconds 休止する時間をミリ秒で指定する
 	 * 0を渡すと実行権をほかのスレッドに渡す。
 	 */
 	static void sleep(unsigned int waitTimeForMilliSeconds) throw()
@@ -243,23 +251,25 @@ public:
 
 	/**
 	 * 現在のスレッドのスレッド識別子を返す
+	 * @return スレッド識別子
 	 */
-	static const WinThread::ThreadId_t self() throw()
+	static const WinThread::thread_id_t self() throw()
 	{
 		return GetCurrentThreadId();
 	}
 
 	/**
 	 * スレッドオブジェクトの識別子を返す
+	 * @return スレッド識別子
 	 */
-	const WinThread::ThreadId_t getThreadId() throw()
+	const WinThread::thread_id_t getThreadId() throw()
 	{
 		return this->ThreadId;
 	}
 
 	/**
 	 * スレッドの終了待機
-	 * \arg waitTime スレッドの終了待機時間(ミリ秒)。デフォルトは無限
+	 * @param waitTime スレッドの終了待機時間(ミリ秒)。デフォルトは無限
 	 * @exception TimeoutException 待機時間を過ぎてもスレッドが終了し
 	 * なかった場合
 	 * @exception ThreadExcpetion 何らかの異常が発生した場合
@@ -289,7 +299,8 @@ public:
 	}
 
 	/**
-	 * スレッドが例外を発行した場合の例外文字列を返す
+	 * スレッドが例外を発行した場合の例外理由文字列を返す
+	 * @return 例外理由
 	 */
 	std::string reason() const throw()
 	{

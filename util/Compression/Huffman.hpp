@@ -17,6 +17,12 @@
 #include <algorithm>
 #include <util/algorithm.hpp>
 
+/**
+ * 出現頻度表
+ * @param CountType 出現回数を数える型
+ * TargetType 計上する入力ストリームの型。デフォルトでchar
+ * @todo 計上インタフェースにイテレータを使うように変更とか
+ */
 template <typename CountType = size_t, typename TargetType = char>
 class FrequencyTable
 {
@@ -24,29 +30,48 @@ public:
 	enum { tableSize = 1 << (sizeof(TargetType) * 8) };
 
 private:
-
+	/**
+	 * 出現頻度表
+	 */
 	CountType frequencyTable[tableSize];
 
 public:
+	/**
+	 * コンストラクタ
+	 */
 	FrequencyTable()
 	{
 		for (size_t index = 0; index < tableSize; ++index)
 			frequencyTable[index] = 0;
 	}
 
+	/**
+	 * 外部配列からの出現頻度表の読み込み
+	 * @param table テーブルの先頭のポインタ
+	 * @todo templateを使ったイテレータベースへ変更
+	 */
 	void load(CountType* table)
 	{
 		for (size_t index = 0; index < tableSize; ++index)
 			frequencyTable[index] = table[index];
 	}
 
+	/**
+	 * 出現頻度表の出力
+	 * @param table 出力するテーブルの先頭アドレス
+	 */
 	void store(CountType* table)
 	{
 		for (size_t index = 0; index < tableSize; ++index)
 			table[index] = frequencyTable[index];
 	}
 	
-	const CountType getCount(TargetType ch) const
+	/**
+	 * 対象文字の出現回数
+	 * @param ch 対象文字
+	 * @return 出現回数
+	 */
+	const CountType getCount(TargetType ch) const throw()
 	{
 		assert((ch - std::numeric_limits<TargetType>::min()) >= 0);
 		assert((ch - std::numeric_limits<TargetType>::min()) <=
@@ -55,12 +80,20 @@ public:
 		
 		return frequencyTable[ch - std::numeric_limits<TargetType>::min()];
 	}
+
+	/**
+	 * 出現文字の計上
+	 * @param ch 出現した文字
+	 */
 	void addCount(TargetType ch)
 	{
 		++frequencyTable[ch - std::numeric_limits<TargetType>::min()];
 	}
 
-	virtual std::string toString()
+	/**
+	 * 文字列表現への変換
+	 */
+	 std::string toString()
 	{
 		std::string result;
 
@@ -82,35 +115,67 @@ public:
 	}
 };
 
+/**
+ * Huffman符号時の例外クラス
+ */
 class HuffmanCoderException
 	: public std::runtime_error
 {
 public:
+	/**
+	 * コンストラクタ
+	 * @param reason_ 例外理由
+	 */
 	HuffmanCoderException(const std::string reason_)
 		: std::runtime_error(reason_.c_str())
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~HuffmanCoderException() throw()
 	{}
 };
 
+/**
+ * ハフマン木クラス
+ */
 class HuffmanTree
 {
 private:
 	friend class HuffmanTest;
 
 public:
+	/**
+	 * ハフマン木のノードクラス
+	 * @param CountType 計上回数の型
+	 */
 	template <typename CountType = size_t>
 	struct HuffmanNode
 	{
 	private:
+		/// 左ノードへのポインタ
 		HuffmanNode* left;
+		
+		/// 右ノードへのポインタ
 		HuffmanNode* right;
+
+		/// 親ノードへのポインタ
 		HuffmanNode* up;
+
+		/// ノードの持つ値
 		int nodeValue;
+
+		/// 出現頻度
 		CountType appearanceFrequency;
 
 	public:
+		/**
+		 * コンストラクタ
+		 * ハフマン木の葉ノードを作成する
+		 * @param nodeValue_ ノードの持つ値
+		 * @param appearanceFrequency_ 出現頻度
+		 */
 		HuffmanNode(const char nodeValue_,
 					const CountType appearanceFrequency_):
 			left(NULL), right(NULL), up(NULL),
@@ -118,12 +183,21 @@ public:
 			appearanceFrequency(appearanceFrequency_)
 		{}
 
+		/**
+		 * デフォルトコンストラクタ
+		 */
 		HuffmanNode():
 			left(NULL), right(NULL), up(NULL),
 			nodeValue(std::numeric_limits<char>::max() + 1),
 			appearanceFrequency(0)
 		{}
 
+		/**
+		 * コンストラクタ
+		 * 中継ノードを作成する
+		 * @param left_ 左ノードへのポインタ
+		 * @param right_ 右ノードへのポインタ
+		 */
 		HuffmanNode(HuffmanNode<CountType>* left_,
 					HuffmanNode<CountType>* right_):
 			left(left_), right(right_), up(NULL),
@@ -136,6 +210,10 @@ public:
 			right->up = this;
 		}
 
+		/**
+		 * デストラクタ
+		 * 子ノードを持つ場合、それらも削除する
+		 */
 		virtual ~HuffmanNode() throw()
 		{
 			if (getLeft())
@@ -145,6 +223,10 @@ public:
 				delete getRight();
 		}
 
+		/**
+		 * 持っている子供ノードの数の取得
+		 * @return 子供ノードの個数
+		 */
 		size_t getChildrenCount() const
 		{
 			if (isLeaf())
@@ -158,6 +240,10 @@ public:
 				getRight()->getChildrenCount();
 		}
 
+		/**
+		 * 現在ノードから終端ノードへの最大深度を取得
+		 * @return 最大深度
+		 */
 		size_t getMaxDepth()
 		{
 			if (isLeaf())
@@ -178,11 +264,18 @@ public:
 			return ++rightCount;
 		}
 
+		/**
+		 * 終端ノード判定
+		 * @return 終端ノードであれば true
+		 */
 		bool isTerminateNode() const
 		{
 			return (nodeValue == std::numeric_limits<char>::max() + 1);
 		}
 
+		/**
+		 * ノードが持つ値の取得
+		 */
 		char getValue() const
 		{
 			assert(!isLeaf());
@@ -190,36 +283,64 @@ public:
 			return static_cast<char>(nodeValue);
 		}
 
+		/**
+		 * 左子ノードの取得
+		 * @return 左子ノードへのポインタ
+		 */
 		HuffmanNode* getLeft() const
 		{
 			return left;
 		}
 		
+		/**
+		 * 右子ノードの取得
+		 * @return 右子ノードへのポインタ
+		 */
 		HuffmanNode* getRight() const
 		{
 			return right;
 		}
 
+		/**
+		 * 親ノードの取得
+		 * @return 親ノードへのポインタ
+		 */
 		HuffmanNode* getUp() const
 		{
 			return up;
 		}
 
+		/**
+		 * ノードの値の取得
+		 * @return ノードの持つ値
+		 */
 		int getNodeValue() const
 		{
 			return nodeValue;
 		}
 
+		/**
+		 * 出現頻度の取得
+		 * @return 出現頻度
+		 */
 		CountType getFrequency() const
 		{
 			return appearanceFrequency;
 		}
 
+		/**
+		 * 葉ノードの判定
+		 * 
+		 */
 		bool isLeaf() const
 		{
 			return nodeValue != std::numeric_limits<int>::max();
 		}
 
+		/**
+		 * 文字列表現の取得
+		 * @return ハフマン木のS式での文字列表現
+		 */
 		virtual std::string toString()
 		{
 			if (isTerminateNode())
@@ -243,11 +364,21 @@ public:
 	};
 
 private:
+	/// ルートノード
 	HuffmanNode<>* root;
+
+	/**
+	 * 葉ノードへのショートカットマップ
+	 * @todo 多分vectorで定数時間探査できるのでstd::vectorへの交換
+	 */
 	std::map<int, HuffmanNode<>* > leafMapper;
 
 public:
 
+	/**
+	 * コンストラクタ
+	 * @param frequencyTable 出現頻度クラスオブジェクト
+	 */
 	HuffmanTree(const FrequencyTable<size_t>& frequencyTable):
 		root(NULL), leafMapper()
 	{
@@ -300,6 +431,7 @@ public:
 		// element is single.
 	}
 
+	/// デストラクタ
 	virtual ~HuffmanTree() throw()
 	{
 		if (root)
@@ -309,6 +441,12 @@ public:
 		}
 	}
 
+	/**
+	 * ノードの取得
+	 * @param flag 入力のビット値
+	 * @param currentNode 現在のノード位置
+	 * @return 次のノード
+	 */
 	HuffmanNode<>* getNode(
 		bool flag,
 		HuffmanNode<>* currentNode = NULL)
@@ -319,6 +457,10 @@ public:
 		return flag ? currentNode->getRight() : currentNode->getLeft();
 	}
 
+	/***
+	 * 終端コードの取得
+	 * @return 終端文字を表すHuffmanビット表現
+	 */
 	std::vector<bool> getTerminateCode()
 	{
 		assert(root != NULL);
@@ -351,11 +493,19 @@ public:
 		return std::vector<bool>(result.rbegin(), result.rend());
 	}
 
+	/**
+	 * 
+	 */
 	bool isHaveEntry(char ch)
 	{
 		return leafMapper[ch] != NULL;
 	}
 
+	/**
+	 * 入力に対応したハフマンビット表現を返す
+	 * @param ch 入力文字
+	 * @return ハフマンビット表現
+	 */
 	std::vector<bool> getHuffmanCode(char ch)
 	{
 		assert(root != NULL);
@@ -389,23 +539,37 @@ public:
 	}
 };
 
+/**
+ * ハフマンビット表現キャッシュ
+ */
 class HuffmanCodeCache
 {
 private:
+	/// キャッシュ
 	std::vector<std::vector<bool>*> cache;
+
+	/// 元となるハフマン木
 	HuffmanTree* stub;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param stub_ 元となるハフマン木
+	 */
 	HuffmanCodeCache(HuffmanTree* stub_ = NULL):
 		cache(256), stub(stub_)
 	{
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	~HuffmanCodeCache()
 	{
 		reset();
 	}
 
+	/// 初期化
 	void reset()
 	{
 		for (std::vector<std::vector<bool>*>::iterator itor = cache.begin();
@@ -417,17 +581,28 @@ public:
 		}
 	}
 
+	/**
+	 * 元となるハフマン木の設定
+	 */
 	void setHuffmanTree(HuffmanTree* stub_)
 	{
 		reset();
 		stub = stub_;
 	}
 
+	/**
+	 * 現在使用しているハフマン木の取得
+	 */
 	HuffmanTree* getHuffmanTree()
 	{
 		return stub;
 	}
 
+	/**
+	 * ハフマンビットコードの取得
+	 * @param ch 入力文字
+	 * @return ハフマンビットコード
+	 */
 	std::vector<bool>* getHuffmanCode(char ch)
 	{
 		const int offset = ch - std::numeric_limits<char>::min();
@@ -438,14 +613,26 @@ public:
 	}
 };
 
+/**
+ * ハフマンビット
+ */
 struct HuffmanBits
 {
 public:
+	/**
+	 * コンストラクタ
+	 */
 	HuffmanBits():
 		character(), bits(), bitLength()
 	{}
+
+	/// 
 	int character;
+
+	///
 	unsigned int bits;
+
+	///
 	size_t bitLength;
 
 	bool operator<(const HuffmanBits& src) const
@@ -481,6 +668,9 @@ public:
 	}
 };
 
+/**
+ * ビット表現と元の文字との対応表
+ */
 class BitsMap
 {
 private:
