@@ -6,6 +6,9 @@
 #include <math/Geometry.hpp>
 #include <Win32/Bitmap.hpp>
 
+/**
+ * 描画可能をあらわすインタフェース
+ */
 class Drawable
 {
 	friend class GrapicsTest;
@@ -33,6 +36,9 @@ public:
 	}
 };
 
+/**
+ * 移動可能をあらわすインタフェース
+ */
 class Movable
 {
 	friend class GraphicsTest;
@@ -73,6 +79,9 @@ public:
 
 };
 
+/**
+ * 選択可能をあらわすインタフェース
+ */
 class Selectable
 {
 	friend class GraphicsTest;
@@ -119,6 +128,9 @@ public:
 	{}
 };
 
+/**
+ * マウスピック可能をあらわすインタフェース
+ */
 class Pickable :
 	public Movable,
 	public Selectable
@@ -144,6 +156,9 @@ public:
 	}
 };
 
+/**
+ * 描画Zオーダのための順序リストクラス
+ */
 template <typename OrderedItemType>
 class OrderList
 {

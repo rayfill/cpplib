@@ -3,6 +3,15 @@
 #include <vector>
 #include <cassert>
 
+/**
+ * 行列クラス
+ * @param width 行列の幅
+ * @param height 行列の高さ
+ * @param ElementType 要素の型
+ * @todo 作成途中もいいとこなんで3D用途むけなどなら 
+ * http://rayfill.dyndns.org:2481/opengl_lib/ のほうを使ってください
+ * @see http://rayfill.dyndns.org:2481/opengl_lib/GL/Geometry.hpp
+ */
 template <size_t width, size_t height, typename ElementType = float>
 class Matrix
 {

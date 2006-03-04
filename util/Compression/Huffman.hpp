@@ -967,18 +967,38 @@ public:
 	}
 };
 
+/**
+ * ハフマン符号化ファイルヘッダ構造体
+ * @todo ファイルが小さい場合、出現頻度表の占める割合が馬鹿にならない
+ * ので効率的な格納方法への変更。それ以前に二段圧縮にしないとまともに
+ * 縮まらないけど・・・
+ */
 struct HuffmanEncodeFileHeader
 {
 public:
+	/**
+	 * 識別用マジック
+	 */
 	char magicHeader[2];
+	/**
+	 * 出現頻度表
+	 */
 	size_t frequencyTable[256];
 
+	/**
+	 * コンストラクタ
+	 */
 	HuffmanEncodeFileHeader()
 		: magicHeader(), frequencyTable()
 	{
 		magicHeader[0] = 'H';
 		magicHeader[1] = 'C';
 	}
+
+	/**
+	 * ヘッダチェック
+	 * @return 正しければtrue
+	 */
 	bool isValidHeader() const
 	{
 		if (magicHeader[0] == 'H' &&
@@ -986,29 +1006,57 @@ public:
 			return true;
 		return false;
 	}
+
+	/**
+	 * 出現頻度表の先頭アドレスの取得
+	 * @return 出現頻度表の先頭アドレス
+	 */
 	size_t* frequencyBegin()
 	{
 		return frequencyTable;
 	}
+
+	/**
+	 * 出現頻度表の先頭アドレスの取得
+	 * @return 出現頻度表の先頭アドレス
+	 */
 	const size_t* frequencyBegin() const
 	{
 		return frequencyTable;
 	}
+
+	/**
+	 * 出現頻度表の先頭アドレスの取得
+	 * @return 出現頻度表の終端アドレス
+	 */
 	size_t* frequencyEnd()
 	{
 		return frequencyTable + 256;
 	}
+
+	/**
+	 * 出現頻度表の先頭アドレスの取得
+	 * @return 出現頻度表の終端アドレス
+	 */
 	const size_t* frequencyEnd() const
 	{
 		return frequencyTable + 256;
 	}
 
+	/**
+	 * 構造体の先頭アドレスの取得
+	 * @return 構造体の先頭アドレス
+	 */
 	template <typename Pointer>
 	Pointer headerBegin()
 	{
 		return reinterpret_cast<Pointer>(this);
 	}
 
+	/**
+	 * 構造体の終端アドレスの取得
+	 * @return 構造体の終端アドレス
+	 */
 	template <typename Pointer>
 	Pointer headerEnd()
 	{

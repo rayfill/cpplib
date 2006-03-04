@@ -14,6 +14,9 @@
 
 namespace Exif
 {
+	/**
+	 * タグ情報
+	 */
 	class TagInfo
 	{
 	private:
@@ -74,6 +77,9 @@ namespace Exif
 
 	};
 
+	/**
+	 * タグ情報解析器
+	 */
 	class TagInfoParser
 	{
 		friend class ExifTest;
@@ -288,6 +294,9 @@ namespace Exif
 		{}
 	};
 
+	/**
+	 * Exif情報構造体
+	 */
 	struct ExifInfo
 	{
 		// for image information
@@ -1529,6 +1538,9 @@ namespace Exif
 		}
 	};
 
+	/**
+	 * Exifヘッダ解析器
+	 */
 	class ExifHeaderParser
 	{
 		friend class ExifTest;
@@ -1695,6 +1707,9 @@ namespace Exif
 		}
 	};
 
+	/**
+	 * Tiffヘッダディレクトリ解析器
+	 */
 	class DirectoryParser
 	{
 	private:
@@ -1771,6 +1786,9 @@ namespace Exif
 	
 	};
 
+	/**
+	 * Tiffヘッダ解析器
+	 */
 	class TiffHeaderParser
 	{
 	private:
@@ -1925,6 +1943,9 @@ namespace Exif
 		}
 	};
 
+	/**
+	 * タグ名解析器
+	 */
 	class TagNameResolver
 	{
 	private:

@@ -21,6 +21,10 @@ public:
 	}
 };
 
+/**
+ * 配列削除ポリシー
+ * @param Container 削除する配列の要素の型
+ */
 template <typename Container>
 class ArrayRemover
 {
@@ -53,17 +57,28 @@ private:
 	ReferenceCounter(const ReferenceCounter&);
 	ReferenceCounter operator=(const ReferenceCounter&);
 public:
+	/**
+	 * コンストラクタ
+	 */
 	ReferenceCounter()
 		: reference(0)
 	{
 		assert(reference == 0);
 	}
 
+	/**
+	 * 参照カウントの加算
+	 * @return 増加後の参照カウント数
+	 */
 	int addReference()
 	{
 		return ++reference;
 	}
 		
+	/**
+	 * 参照カウントの減算
+	 * @return 減算後の参照カウント数
+	 */
 	int release()
 	{
 		assert(reference > 0);
@@ -75,6 +90,7 @@ public:
  * スマートポインタクラス
  * @param Container コンテナ化するクラス
  * @param RemovePolicy 削除時のハンドリングポリシー
+ * @todo MultiThread環境のためのロックポリシーとかも必要かも
  */
 template <typename Container,
 	class RemovePolicy = DefaultRemover<Container> >
@@ -160,6 +176,12 @@ public:
 	}
 };
 
+/**
+ * スマート配列
+ * @param Container 要素の型
+ * @RemovePolicy メモリ開放ポリシー
+ * 要素のデストラクタは例外を投げないこと
+ */
 template <typename Container,
 	class RemovePolicy = ArrayRemover<Container> >
 class SmartArray
@@ -171,6 +193,10 @@ public:
 	typedef Container& Reference;
 
 private:
+	/**
+	 * 開放処理
+	 * ただし実際に開放されるのは参照がなくなった時のみ
+	 */
 	void release()
 	{
 		if (refCount->release() == 0)
@@ -180,10 +206,21 @@ private:
 		}
 	}
 
+	/**
+	 * 要素配列へのポインタ
+	 */
 	Pointer pointer;
+
+	/**
+	 * 参照カウンタへのポインタ
+	 */
 	ReferenceCounter* refCount;
 	
 public:
+	/**
+	 * コンストラクタ
+	 * @param pointer_ 管理対象の生ポインタ
+	 */
 	SmartArray(Pointer pointer_)
 		throw(std::bad_alloc, std::invalid_argument) :
 		pointer(pointer_),
@@ -198,6 +235,10 @@ public:
 		refCount->addReference();
 	}
 
+	/**
+	 * コピーコンストラクタ
+	 * @param src コピー元スマート配列
+	 */
 	SmartArray(const SmartArray& src)
 		throw() :
 		pointer(src.pointer),
@@ -206,21 +247,35 @@ public:
 		refCount->addReference();
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~SmartArray()
 	{
 		release();
 	}
 
+	/**
+	 * 生ポインタの取得
+	 */
 	Pointer get() const throw()
 	{
 		return pointer;
 	}
 
+	/**
+	 * 要素へのindexベースアクセス
+	 * @param index 要素へのオフセット値(ゼロオリジンベースです)
+	 */
 	Reference operator[](int index)
 	{
 		return pointer[index];
 	}
 
+	/**
+	 * 等価比較演算子
+	 * @return 保持しているポインタが同じものなら true
+	 */
 	bool operator==(const SmartArray& src) const throw()
 	{
 		if (this == &src)
@@ -229,6 +284,11 @@ public:
 		return this->pointer == src.pointer;
 	}
 
+	/**
+	 * 代入演算子
+	 * @param src コピー元
+	 * @return SmartArray コピー後の参照
+	 */
 	SmartArray& operator=(const SmartArray& src) throw()
 	{
 		if (this == &src)

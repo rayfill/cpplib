@@ -12,6 +12,9 @@
 
 #include <cassert>
 
+/**
+ * コンパイルエラー例外オブジェクト
+ */
 class CompileError : public std::runtime_error
 {
 public:
@@ -35,6 +38,9 @@ public:
 	}
 };
 
+/**
+ * 正規表現マッチストリーム入力クラス
+ */
 template <typename CharType>
 class RegexScanner
 {
@@ -102,6 +108,9 @@ public:
 	}
 };
 
+/**
+ * 正規表現マッチ結果クラス
+ */
 template <typename CharType>
 class RegexResult
 {
@@ -216,6 +225,9 @@ public:
 
 };
 
+/**
+ * 有限オートマトン基底クラス
+ */
 template <typename CharType>
 class RegexToken
 {
@@ -312,6 +324,9 @@ public:
 	}
 };
 
+/**
+ * イプシロン遷移クラス
+ */
 template <typename CharType>
 class EpsilonToken : public RegexToken<CharType>
 {
@@ -366,6 +381,9 @@ public:
 	}
 };
 
+/**
+ * グループ用ヘッドトークンクラス
+ */
 template <typename CharType>
 class GroupHeadToken : public EpsilonToken<CharType>
 {
@@ -405,6 +423,9 @@ public:
 
 };
 
+/**
+ * グループ用テイルトークンクラス
+ */
 template <typename CharType>
 class GroupTailToken : public EpsilonToken<CharType>
 {
@@ -438,6 +459,9 @@ public:
 	}
 };
 
+/**
+ * 正規表現開始トークンクラス
+ */
 template <typename CharType>
 class RegexHead : public GroupHeadToken<CharType>
 {
@@ -465,6 +489,9 @@ public:
 
 };
 
+/**
+ * 正規表現終端トークンクラス
+ */
 template <typename CharType>
 class RegexTail : public GroupTailToken<CharType>
 {
@@ -490,6 +517,9 @@ public:
 
 };
 
+/**
+ * キャラクタトークンクラス
+ */
 template <typename CharType>
 class CharacterToken : public RegexToken<CharType>
 {
@@ -536,6 +566,9 @@ public:
 
 };
 
+/**
+ * 範囲トークンクラス
+ */
 template <typename CharType>
 class RangeToken : public RegexToken<CharType>
 {
@@ -576,6 +609,9 @@ public:
 	}
 };
 
+/**
+ * 複数文字を含むトークンクラス
+ */
 template <typename CharType>
 class SetToken : public RegexToken<CharType>
 {
@@ -623,6 +659,9 @@ public:
 
 };
 
+/**
+ * 正規表現トークン管理クラス
+ */
 template <typename CharType>
 class RegexAutomatonManager
 {
@@ -796,6 +835,10 @@ public:
 	{}
 };
 
+/**
+ * 正規表現コンパイラ
+ * 正規表現から有限オートマトンへのコンパイラ
+ */
 template <typename CharType>
 class RegexCompiler : public RegexAutomatonManager<CharType>
 {
