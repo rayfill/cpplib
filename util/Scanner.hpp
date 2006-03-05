@@ -7,17 +7,36 @@
 #include <string>
 #include <stdexcept>
 
+/**
+ * 構文解析例外
+ */
 class ParseException : public std::runtime_error
 {
 private:
+	/**
+	 * 例外位置の行数
+	 */
+
 	int line;
+	/**
+	 * 例外位置のカラム数
+	 */
 	int column;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param reason 例外理由
+	 */
 	ParseException(const char* reason = "parsing exception."):
 		std::runtime_error(reason), line(-1), column(-1)
 	{}
 
+	/**
+	 * コンストラクタ
+	 * @param line_ 行数
+	 * @param column_ 列数
+	 */
 	ParseException(const unsigned int line_, const unsigned int column_):
 		std::runtime_error("parsing exception: " +
 						   stringCast(line_) + "," +
@@ -25,20 +44,37 @@ public:
 		line(line_), column(column_)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~ParseException() throw()
 	{}
 
+	/**
+	 * 行の取得
+	 * @return 例外位置の行数
+	 */
 	int getLine() const
 	{
 		return line;
 	}
 
+	/**
+	 * 列の取得
+	 * @return 例外位置の列数
+	 */
 	int getColumn() const
 	{
 		return column;
 	}
 };
 
+/**
+ * 汎用トークンクラス
+ * @param CharType 文字型
+ * @param CharTrait 文字列特徴クラス
+ * @todo 汎用にするにはもう少し設計いじらないとダメか･･･
+ */
 template <
 	typename CharType,
 	typename CharTrait = std::char_traits<CharType> >
@@ -106,37 +142,72 @@ public:
 
 	} TokenType;
 private:
+	/**
+	 * トークン文字列
+	 */
 	std::basic_string<CharType> token;
+
+	/**
+	 * トークン識別子
+	 */
 	TokenType typeId;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param typeId トークン識別子 
+	 * @param token_ トークン文字列
+	 */
 	Token(const TokenType& typeId_,
 		  const std::basic_string<CharType>& token_ =
 		  std::basic_string<CharType>()):
 		token(token_), typeId(typeId_)
 	{}
 
+	/**
+	 * トークン文字列の取得
+	 * @return トークン文字列
+	 */
 	std::basic_string<CharType> getToken()
 	{
 		return token;
 	}
 
+	/**
+	 * トークン識別子の取得
+	 * @return トークン識別子
+	 */
 	const TokenType getId()
 	{
 		return typeId;
 	}
 
+	/**
+	 * トークン等価比較
+	 * @param type 比較対象トークン
+	 * @return 一致しているならtrue
+	 */
 	bool operator==(const TokenType type)
 	{
 		return this->getId() == type;
 	}
 
+	/**
+	 * トークン等価比較
+	 * @param type 比較対象トークン
+	 * @return 一致していないならtrue
+	 */
 	bool operator!=(const TokenType type)
 	{
 		return this->getId() != type;
 	}
 };
 
+/**
+ * スキャナクラス
+ * @todo 解析用FSM構築のための構文とそのパーサルーチンの作成。
+ * 正規表現クラス完成させてNFA->DFA変換作れば何とかなるか？
+ */
 template <
 	typename CharType,
 	typename CharTrait = std::char_traits<CharType>,

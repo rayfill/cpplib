@@ -7,24 +7,45 @@
 #include <stdexcept>
 #include <iterator>
 
+/**
+ * 排他的論理和ファンクタ
+ */
 struct ExclusiveOr
 {
 public:
 	ExclusiveOr()
 	{}
 
+	/**
+	 * 排他的論理和ファンクタ
+	 * @param lhs 左辺値
+	 * @param rhs 右辺値
+	 * @param 両辺の排他的論理和
+	 */
 	unsigned char operator()(unsigned char lhs, unsigned char rhs)
 	{
 		return lhs ^ rhs;
 	}
 };
 
+/**
+ * 暗号ブロック連鎖
+ * 暗号化アルゴリズムを使ってブロックサイズごとに暗号ブロック連鎖処理を施す
+ * @param ChiperAlgorithm 暗号化アルゴリズム
+ */
 template <class CipherAlgorithm>
 class CipherBlockChain
 {
 	friend class CBCTest;
 
 public:
+	/**
+	 * 暗号化処理
+	 * @param plaintext 平文
+	 * @param 鍵
+	 * @param initialVector 初期暗号化ブロック列
+	 * @return 暗号ブロック連鎖を用いて処理された暗号文
+	 */
 	static std::vector<unsigned char>
 	encrypt(const std::vector<unsigned char>& plaintext,
 			const std::vector<unsigned char>& key,
@@ -71,6 +92,13 @@ public:
 		return plain;
 	}
 
+	/**
+	 * 復号化処理
+	 * @param ciphertext 暗号文
+	 * @param 鍵
+	 * @param initialVector 初期暗号化ブロック列
+	 * @return 暗号ブロック連鎖を用いて処理された平文
+	 */
 	static std::vector<unsigned char>
 	decrypt(const std::vector<unsigned char>& ciphertext,
 			const std::vector<unsigned char>& key,

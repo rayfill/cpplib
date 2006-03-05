@@ -958,6 +958,9 @@ public:
 	}
 };
 
+/**
+ * 排他的論理和転送
+ */
 template <class sourceType, class destinationType>
 class ExclusiveOrTransfer
 {
@@ -965,10 +968,24 @@ private:
 	typedef sourceType SourceType;
 	typedef destinationType DestinationType;
 
+	/**
+	 * 転送元
+	 */
 	const SourceType& source;
+
+	/**
+	 * 転送先
+	 */
 	DestinationType& destination;
+	
+	/**
+	 * マスクカラー
+	 */
 	const Color exclusiveColor;
 
+	/**
+	 * 一列分の転送
+	 */
 	template <typename SrcIterator,
 		typename DestIterator>
 	void transferFragment(SrcIterator head, SrcIterator tail,
@@ -981,15 +998,29 @@ private:
 	}
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param src 転送元
+	 * @param dest 転送先
+	 * @param color マスクカラー
+	 */
 	ExclusiveOrTransfer(const sourceType& src,
 						 destinationType& dest,
 						 Color color) throw()
 		: source(src), destination(dest), exclusiveColor(color)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	~ExclusiveOrTransfer() throw()
 	{}
 
+	/**
+	 * 転送関数
+	 * @param sourceRect 転送元矩形範囲
+	 * @param destPoint 転送先左上位置
+	 */
 	template <typename pointType> 
 	void transfer(
 		const geometry::Rectangle<pointType>& sourceRect,

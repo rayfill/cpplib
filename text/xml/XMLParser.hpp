@@ -95,12 +95,21 @@ public:
 		return *--itor;
 	}
 
+	/**
+	 * 子ノードの追加
+	 * @param newChild 新しい子供ノード
+	 */
 	void addChild(XMLNode* newChild)
 	{
 		newChild->parent = this;
 		childs.push_back(newChild);
 	}
 
+	/**
+	 * 子ノードの削除
+	 * @param child 削除する子供ノード
+	 * ノードが見つからない場合、何もしません
+	 */
 	void removeChild(XMLNode* child)
 	{
 		NodeType::iterator itor =
@@ -113,16 +122,30 @@ public:
 		}
 	}
 
+	/**
+	 * 親ノードへの接合
+	 * @param newParent 親ノード
+	 * @todo スコープprivateにして親からの接合しかできないようにした方がいいかも。
+	 */
 	void setParent(XMLNode* newParent) throw()
 	{
 		this->parent = newParent;
 	}
 
+	/**
+	 * 親ノードの取得
+	 * @return 親ノード
+	 */
 	XMLNode* getParent() const throw()
 	{
 		return this->parent;
 	}
 
+	/**
+	 * 子ノードの取得
+	 * @param index 0ベースインデックスとした子供ノードの位置。
+	 * インデックスが無効な場合NULLを返す。
+	 */
 	XMLNode* getChild(const size_t index) const throw()
 	{
 		if (index < childs.size())
@@ -131,26 +154,50 @@ public:
 		return NULL;
 	}
 
+	/**
+	 * 子ノード達の取得
+	 * @return すべての子ノード
+	 */
 	std::vector<XMLNode*> getChildren() const throw()
 	{
 		return childs;
 	}
 };
 
+/**
+ * ノード名からDOMノードを見つけるためのファンクタ
+ * @param BaseType 基底ノード型
+ * @param DeriverdType 見つけるノード型
+ */
 template <typename BaseType, typename DeriverdType>
 class FindNamePredicate
 {
 private:
+	/**
+	 * 見つけるノード名
+	 */
 	std::wstring findName;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param name 見つけるノード名
+	 */
 	FindNamePredicate(const std::wstring& name)
 		: findName(name)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	~FindNamePredicate() throw()
 	{}
 
+	/**
+	 * エントリポイント
+	 * @param child ノードのポインタ
+	 * @return 名前が同じならtrue 違うならfalse
+	 */
 	bool operator()(BaseType* child) const throw()
 	{
 		DeriverdType* tag = dynamic_cast<DeriverdType*>(child);
@@ -163,6 +210,10 @@ public:
 };
 
 class TagElement;
+
+/**
+ * XML要素クラス
+ */
 class Element : public XMLNode
 {
 private:
@@ -170,14 +221,30 @@ private:
 	Element& operator=(const Element&);
 
 public:
+	/**
+	 * 文字列変換
+	 * @param indentLevel プリティプリント用インデントレベル
+	 * @return 要素の文字列表現
+	 */
 	virtual std::wstring toString(const size_t indentLevel = 0) const throw() = 0;
 
+	/**
+	 * コンストラクタ
+	 */
 	Element() throw()
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~Element() throw()
 	{}
 
+	/**
+	 * 名前で指定した子要素の取得
+	 * @param name タグの名前
+	 * @return 見つかったXML要素のポインタ。見つからない場合はNULL
+	 */
 	virtual Element* getChildElement(const std::wstring& name)
 	{
 		NodeType::iterator itor =
@@ -191,6 +258,11 @@ public:
 		return NULL;
 	}
 
+	/**
+	 * 名前で指定した子要素の取得
+	 * @param name タグの名前
+	 * @return 見つかったXML要素のコレクション。見つからない場合は空のコレクション。
+	 */
 	virtual std::vector<Element*> getChildrenElements(const std::wstring& name)
 	{
 		FindNamePredicate<XMLNode, TagElement> predicate(name);
@@ -209,21 +281,40 @@ public:
 
 };
 
+/**
+ * XMLタグ要素
+ */
 class TagElement : public Element
 {
 	friend class XMLParserTest;
 
 protected:
+	/**
+	 * タグの名前
+	 */
 	std::wstring tagName;
+
+	/**
+	 * タグの属性
+	 */
 	std::map<std::wstring, std::wstring> attributes;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param tagName_ タグの名前
+	 * @param attrubutes_ タグの属性
+	 */
 	TagElement(const std::wstring& tagName_,
 			   const std::map<std::wstring, std::wstring>& attributes_)
 		:tagName(tagName_),
 		 attributes(attributes_)
 	{}
 
+	/**
+	 * コンストラクタ
+	 * @param token タグ名を含んだパース結果文字列
+	 */
 	TagElement(const std::wstring& token) throw(InvalidTagException)
 		:tagName(token.substr(0, token.find(L' '))),
 		 attributes()
@@ -280,6 +371,9 @@ public:
 		}
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~TagElement() throw()
 	{}
 
@@ -320,21 +414,38 @@ public:
 		return result;
 	}
 
+	/**
+	 * タグ名の取得
+	 * @return タグ名
+	 */
 	std::wstring getTagName() const throw()
 	{
 		return tagName;
 	}
 
+	/**
+	 * 属性セットの取得
+	 * @return 属性のコレクション
+	 */
 	std::map<std::wstring, std::wstring> getAttributes() const throw()
 	{
 		return attributes;
 	}
 
+	/**
+	 * 属性セットの設定
+	 * @param newAttributes 新しい属性のコレクション
+	 */
 	void setAttributes(const std::map<std::wstring, std::wstring>& newAttributes) throw()
 	{
 		attributes = newAttributes;
 	}
 
+	/**
+	 * 属性の取得
+	 * @param attributeName 属性の名前
+	 * @return 属性の値
+	 */
 	std::wstring getAttribute(const std::wstring& attributeName) const throw()
 	{
 		std::map<std::wstring, std::wstring>::const_iterator itor =
@@ -346,24 +457,41 @@ public:
 		return itor->second;
 	}
 
+	/**
+	 * 属性の設定
+	 * @param name 属性の名前
+	 * @param value 属性の値
+	 */
 	void setAttribute(const std::wstring& name, const std::wstring& value) throw()
 	{
 		attributes[name] = value;
 	}
 };
 
-
+/**
+ * コメントを表す要素
+ */
 class CommentElement : public Element
 {
 	friend class CommentElementTest;
 
 private:
+	/**
+	 * コメント
+	 */
 	std::wstring value;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param value_ コメント文字列
+	 */
 	CommentElement(const std::wstring& value_): value(value_)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~CommentElement() throw()
 	{}
 
@@ -376,28 +504,49 @@ public:
 			std::wstring(L"-->\n");
 	}
 
+	/**
+	 * コメント文字列の取得
+	 * @return コメント文字列
+	 */
 	std::wstring getComment() const throw()
 	{
 		return value;
 	}
 
+	/**
+	 * コメント文字列の設定
+	 * @param comment 新しいコメント文字列
+	 */
 	void setComment(const std::wstring& comment) throw()
 	{
 		value = comment;
 	}
 };
 
+/**
+ * CDATA文字列要素
+ */
 class StringElement : public Element
 {
 	friend class StringElementTest;
 
 private:
+	/**
+	 * 文字列
+	 */
 	std::wstring value;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param value_ CDATA文字列
+	 */
 	StringElement(const std::wstring& value_): value(value_)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~StringElement() throw()
 	{}
 	
@@ -406,11 +555,20 @@ public:
 		return std::wstring(indentLevel, L' ') + value + L"\n";
 	}
 	
+	/**
+	 * CDATA文字列の取得
+	 * @return 文字列
+	 */
 	std::wstring getString() const throw()
 	{
 		return value;
 	}
 
+	/**
+	 * CDATA文字列の設定
+	 * @param newString
+	 * 新しいCDATA文字列
+	 */
 	void setString(const std::wstring& newString) throw()
 	{
 		value = newString;
@@ -418,16 +576,25 @@ public:
 		
 };
 
-
+/**
+ * METAタグ要素
+ */
 class MetaElement : public TagElement
 {
 	friend class XMLParserTest;
 
 public:
+	/**
+	 * コンストラクタ
+	 * param token METAタグ名
+	 */
 	MetaElement(const std::wstring& token):
 		TagElement(token)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~MetaElement() throw()
 	{}
 
@@ -451,6 +618,9 @@ public:
 	}
 };
 
+/**
+ * XMLドキュメントクラス
+ */
 class XMLDocument : public Element
 {
 public:
@@ -466,21 +636,37 @@ public:
 		return result;
 	}
 
+	/**
+	 * コンストラクタ
+	 */
 	XMLDocument() throw()
 	{}
 	
+	/**
+	 * デストラクタ
+	 */
 	virtual ~XMLDocument() throw()
 	{}
 };
 
+/**
+ * XMLPathパーサ
+ */
 class XMLPath
 {
 	friend class XMLParserTest;
 
 private:
+	/**
+	 * 検索パス
+	 */
 	std::wstring path;
 
-
+	/**
+	 * 文字列から整数値への変換ヘルパ
+	 * @param value 文字列
+	 * @return 整数値
+	 */
 	int strToInt(const std::wstring& value)
 		const throw(std::invalid_argument)
 	{
@@ -502,6 +688,13 @@ private:
 		return result;
 	}
 
+	/**
+	 * インデックスオフセットの計算
+	 * @param param XPathトークン
+	 * @return インデックスオフセット
+	 * @todo 実装がまだちゃんとすんでません・・・
+	 * ブラケット内の数値をパースして戻り値にする必要があります
+	 */
 	int getIndexOf(const std::wstring& param)
 		const throw(std::invalid_argument)
 	{
@@ -533,6 +726,12 @@ private:
 		throw std::invalid_argument("");
 	}
 
+	/**
+	 * DOMツリーのトラバース
+	 * @param element DOM要素の探査元
+	 * @param nameList XPathからノード要素ごとに分解された文字列リスト
+	 * @reutrn 見つかった要素のコレクション
+	 */
 	std::vector<Element*> traverse(Element* element,
 					  std::vector<std::wstring> nameList)
 	{
@@ -608,6 +807,10 @@ private:
 		return results;
 	}
 
+	/**
+	 * XPathのトークン分割
+	 * @return 分割されたXPathトークン
+	 */
 	std::vector<std::wstring> tokenize() const
 	{
 		std::vector<std::wstring> result;
@@ -632,6 +835,10 @@ private:
 	XMLPath& operator=(const XMLPath&);
 public:
 
+	/**
+	 * コンストラクタ
+	 * @param path_ XPath
+	 */
 	XMLPath(const std::wstring& path_)
 		throw (std::invalid_argument)
 		: path(path_)
@@ -643,9 +850,17 @@ public:
 			throw std::invalid_argument("please set absolute xml path.");
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	~XMLPath() throw()
 	{}
 
+	/**
+	 * XPathの評価
+	 * @param element 評価対象となるTagElement
+	 * @return 評価結果となるTagElementのコレクション
+	 */
 	std::vector<Element*> evaluate(Element* element)
 	{
 		
@@ -676,36 +891,70 @@ public:
 	}
 };
 
+/**
+ * XMLパーサ
+ */
 class XMLParser
 {
 	friend class XMLParserTest;
 
 private:
+	/**
+	 * トークナイザ
+	 */
 	class Tokenizer
 	{
 		friend class XMLParserTest;
 	private:
+		/**
+		 * トークンの先頭位置
+		 */
 		const wchar_t* head;
+
+		/**
+		 * トークンの終端位置
+		 */
 		const wchar_t* const tail;
+
+		/**
+		 * ホワイトスペースの無視フラグ
+		 */
 		bool ignoreWhiteString;
 
 	public:
+		/**
+		 * ホワイトスペース無視状態の取得
+		 * @return ホワイトスペースを無視するか
+		 */
 		bool getIgnoreWhiteSpace() const throw()
 		{
 			return ignoreWhiteString;
 		}
 
+		/**
+		 * ホワイトスペース無視状態の設定
+		 * @param flag ホワイトスペース無視の設定値
+		 */
 		void setIgnoreWhiteSpace(const bool flag) throw()
 		{
 			ignoreWhiteString = flag;
 		}
 
+		/**
+		 * コンストラクタ
+		 * @param head_ トークナイズする文字列の先頭
+		 * @param tail_ トークナイズする文字列の終端
+		 */
 		Tokenizer(const wchar_t* head_, const wchar_t* const tail_):
 			head(head_), tail(tail_), ignoreWhiteString(false)
 		{
 			assert(head <= tail);
 		}
 
+		/**
+		 * トークンの取得
+		 * @return トークンの文字列表現
+		 */
 		std::wstring getToken() throw (WellformedException)
 		{
 			std::wstring token;
@@ -742,6 +991,10 @@ private:
 			return token;
 		}
 
+		/**
+		 * ストリームが終端に達しているかの判定
+		 * @return 終端に達した場合true
+		 */
 		bool isEof() const
 		{
 			assert(tail >= head);
@@ -749,8 +1002,14 @@ private:
 		}
 	};
 
+	/**
+	 * トークナイザへのポインタ
+	 */
 	Tokenizer* tokenizer;
 
+	/**
+	 * トークン種別
+	 */
 	enum TokenType 
 	{
 		OpenTag,
@@ -761,6 +1020,11 @@ private:
 		MetaTag
 	};
 
+	/**
+	 * トークンの識別
+	 * @param token 切り出されたトークン
+	 * @return 識別されたトークン種別
+	 */
 	TokenType getTokenType(const std::wstring& token)
 		throw (InvalidTagException)
 	{
@@ -804,6 +1068,11 @@ private:
 			Transcoder::UTF16toUTF8(token).c_str());
 	}
 
+	/**
+	 * タグ名使用文字判定
+	 * @param character タグ名の最初の一文字
+	 * @return 使用可能文字ならtrue
+	 */
 	bool isFirstChar(const wchar_t character) const
 	{
 		if (character >= 0x0100)
@@ -823,6 +1092,11 @@ private:
 		return false;
 	}
 
+	/**
+	 * タグ名使用文字判定
+	 * @param character タグ名の二文字目以降
+	 * @return 使用可能文字ならtrue
+	 */
 	bool isSecondAfterChar(const wchar_t character) const
 	{
 		if (character >= 0x0100)
@@ -844,6 +1118,11 @@ private:
 		return false;
 	}
 
+	/**
+	 * タグ名の妥当性検査
+	 * @param tagName タグの名称
+	 * @return タグ名として妥当ならtrue
+	 */
 	bool isValidTagName(const std::wstring& tagName) const
 	{
 		if (tagName.length() < 1)
@@ -871,6 +1150,11 @@ private:
 		return false;
 	}
 
+	/**
+	 * XML要素の作成
+	 * @param parent 親となるXML要素へのポインタ
+	 * @return 新規に作成された要素へのポインタ
+	 */
 	Element* createElement(Element* parent)
 	{
 		const std::wstring token = tokenizer->getToken();
@@ -932,15 +1216,27 @@ private:
 	}
 
 public:
+	/**
+	 * コンストラクタ
+	 */
 	XMLParser() throw():
 		tokenizer(NULL)
 	{}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~XMLParser() throw()
 	{
 		delete tokenizer;
 	}
 
+	/**
+	 * 構文解析
+	 * @param document XMLドキュメント文字列
+	 * @param ignoreFlag 解析に際してホワイトスペースを無視するかどうか
+	 * @return 解析結果として構築されたDOMツリーへのポインタ
+	 */
 	XMLDocument* parse(const std::wstring& document,
 					   const bool ignoreFlag = false)
 	{
@@ -949,6 +1245,13 @@ public:
 					 ignoreFlag);
 	}
 
+	/**
+	 * 構文解析
+	 * @param head XMLドキュメント文字列先頭
+	 * @param head XMLドキュメント文字列終端
+	 * @param ignoreFlag 解析に際してホワイトスペースを無視するかどうか
+	 * @return 解析結果として構築されたDOMツリーへのポインタ
+	 */
 	XMLDocument* parse(const wchar_t* head,
 					   const wchar_t* tail,
 					   const bool ignoreFlag = false)
