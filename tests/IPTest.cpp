@@ -21,9 +21,9 @@ public:
 
 	void resolvIPAddress()
 	{
-		ip.setIp("www.l.google.com");
+		ip.setIp("www.goo.ne.jp");
 		CPPUNIT_ASSERT(IP::getIpString(ip.getIp())
-					   == "66.249.89.99");
+					   == "210.150.25.37");
 	}
 	void resolvMachineName()
 	{	
