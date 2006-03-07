@@ -6,6 +6,7 @@
 
 /**
  * SmartPointer用ポインタ削除時動作ポリシー
+ * @param Container コンテナ型
  */
 template <typename Container>
 class DefaultRemover
@@ -29,6 +30,10 @@ template <typename Container>
 class ArrayRemover
 {
 public:
+	/**
+	 * 削除ハンドラ
+	 * @param pointer 削除オブジェクト配列の先頭ポインタ
+	 */
 	static void remove(Container* pointer)
 	{
 		delete[] pointer;
@@ -48,6 +53,10 @@ private:
 	 */
 	int reference;
 
+	/**
+	 * 参照カウント取得
+	 * @return 現在の参照カウント
+	 */
 	int getReferenceCount() const throw()
 	{
 		return reference;
@@ -102,6 +111,9 @@ public:
 private:
 	friend class SmartPointerTest;
 
+	/**
+	 * 所有権の破棄
+	 */
 	void release()
 	{
 		if (refCount->release() == 0)
@@ -112,10 +124,21 @@ private:
 		}
 	}
 
+	/**
+	 * 管理対象ポインタ
+	 */
 	Pointer pointer;
+
+	/**
+	 * 参照カウントホルダ
+	 */
 	ReferenceCounter* refCount;
 
 public:
+	/**
+	 * コンストラクタ
+	 * @param pointer_ 管理対象となるポインタ
+	 */
 	SmartPointer(Pointer pointer_)
 		throw(std::bad_alloc, std::invalid_argument) :
 		pointer(pointer_),
@@ -130,6 +153,10 @@ public:
 		refCount->addReference();
 	}
 
+	/**
+	 * コピーコンストラクタ
+	 * @param src コピー元オブジェクト
+	 */
 	SmartPointer(const SmartPointer& src)
 		throw() :
 		pointer(src.pointer),
@@ -138,16 +165,26 @@ public:
 		refCount->addReference();
 	}
 
+	/**
+	 * デストラクタ
+	 */
 	virtual ~SmartPointer()
 	{
 		release();
 	}
 
+	/**
+	 * ポインタの取得
+	 */
 	Pointer get() const throw()
 	{
 		return pointer;
 	}
 
+	/**
+	 * 比較演算
+	 * @return 等値なポインタを持つ場合、true
+	 */
 	bool operator==(const SmartPointer& src) const throw()
 	{
 		if (this == &src)
@@ -156,6 +193,11 @@ public:
 		return this->pointer == src.pointer;
 	}
 
+	/**
+	 * 代入演算
+	 * @param src コピー元
+	 * @return コピー後の自身への参照
+	 */
 	SmartPointer& operator=(const SmartPointer& src) throw()
 	{
 		if (this == &src)
@@ -170,6 +212,9 @@ public:
 		return *this;
 	}
 
+	/**
+	 * メンバ呼び出し
+	 */
 	Pointer operator->() const throw()
 	{
 		return pointer;

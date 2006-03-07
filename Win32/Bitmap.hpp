@@ -394,7 +394,7 @@ private:
 		info = (BITMAPINFO*)calloc(
 			sizeof(BITMAPINFOHEADER) + 
 			(PixelFormatClass::isBitFieldFormat() == false ?
-			 0 : sizeof(RGBQUAD) * 3), 1);
+			 sizeof(RGBQUAD) : sizeof(RGBQUAD) * 3), 1);
 		
 		if (info == NULL)
 			throw std::bad_alloc();
