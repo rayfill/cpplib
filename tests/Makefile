@@ -9,6 +9,7 @@ OBJS= TestMain.o \
 	ScannerTest.o \
 	SieveTest.o \
 	MPITest.o \
+	LZSSTest.o \
 	StateMachineTest.o \
 	FSMTest.o \
 	AlgebraTheoryTest.o \
