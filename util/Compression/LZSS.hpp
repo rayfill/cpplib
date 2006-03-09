@@ -163,27 +163,238 @@ public:
 };
 
 
-
 /**
- * 検索結果として返すトークンの基底。
+ * トークンの各種ポリシー及びヘルパ関数
+ * @param positionSize 位置を表すデータが占めるビット数
+ * @param lengthSize 長さをあらわすデータが占めるビット数
  */
-class AbstructToken
+template <size_t positionSize = 12,
+		  size_t lengthSize = 4>
+class TokenPolicy
 {
+	friend class TokenPolicyTest;
+
+private:
+	/**
+	 * トークンデータからビット表現への変換
+	 * @param token トークンデータ
+	 * @return ビット表現での値
+	 */
+	static unsigned int tokenToBitReps(const token_data_t& token)
+	{
+		unsigned int bitReps = 0;
+
+		for (token_data_t::const_iterator itor = token.begin();
+			 itor != token.end();
+			 ++itor)
+		{
+			bitReps <<= 8;
+			bitReps |= *itor;
+		}
+
+		return bitReps;
+	}
+
 public:
-	virtual ~AbstructToken() {}
+	/// トークンデータの型
+	typedef std::vector<char>  token_data_t;
+
+	enum {
+		/// 位置情報の占めるビット数
+		PositionSize = positionSize,
+		
+		/// 長さ情報の占めるビット数
+		LengthSize = lengthSize,
+
+		/// トークンの長さのバイト数
+		TokenLength = (positionsSize + lengthSize) / 8
+	};
+
+	/**
+	 * 非マッチトークンデータの作成
+	 * @param ch 文字
+	 * @return 非マッチトークンデータ
+	 * @note <MSB>[ch][length=0]<LSB>でBigEndianとして
+	 * データが入ってます。
+	 */
+	static token_data_t buildNoMatchToken(const char ch)
+	{
+		const size_t length = 0;
+		const size_t character =
+			static_cast<size_t>(std::char_traits<char>::to_int_type(ch));
+		const unsigned int bitReps = (character << lengthSize) | length;
+		token_data_t result(TokenSize);
+		for (int index = 1; index <= TokenLength; ++index)
+		{
+			result.push_back((bitReps >>
+							  ((TokenLength - index) * 8)) & 0xff); 
+		}
+	}
+
+	/**
+	 * マッチトークンデータの作成
+	 * @param position マッチ位置
+	 * @param length マッチ長
+	 * @return マッチトークンデータ
+	 * @note <MSB>[position][length]<LSB>でBigEndianとして
+	 * データが入ってます。
+	 */
+	static token_data_t buildMatchToken(const size_t position,
+										const size_t length)
+	{
+		const unsigned int bitReps = (position << lengthSize) | length;
+		token_data_t result(TokenSize);
+		for (int index = 1; index <= TokenLength; ++index)
+		{
+			result.push_back((bitReps >>
+							  ((TokenLength - index) * 8)) & 0xff); 
+		}
+	}
+
+	/**
+	 * マッチトークンデータから位置データの取り出し
+	 * @param token トークンデータ
+	 * @return 位置データの値
+	 */
+	static size_t getPosition(const token_data_t& token)
+	{
+		assert(token.size() == TokenLength);
+		const unsigned int positionMask = (1 << PositionSize) - 1;
+
+		return static_cast<size_t((tokenToBitReps(token) >> LengthSize)
+								  & positionMask);
+	}
+
+	/**
+	 * マッチトークンデータからマッチ長データの取り出し
+	 * @param token トークンデータ
+	 * @return マッチ長データの値
+	 */
+	static size_t getLength(const token_data_t& token)
+	{
+		assert(token.size() == TokenLength);
+		const unsigned int lengthMask = (1 << LengthSize) - 1;
+	
+		return static_cast<size_t>(tokenToBitReps(token) & lengthMask);
+	}
 };
 
 /**
- *  前方参照として見つかった文字、位置、長さをワンセットとしたトークン
+ * 検索結果として返すトークンの基底。
+ * @param positionSize 位置を表すデータが占めるビット数
+ * @param lengthSize 長さをあらわすデータが占めるビット数
  */
-class ReferenceValueToken : public AbstructToken
-{};
+template <typename TokenPolicyType>
+class AbstructToken
+{
+private:
+	typedef TokenPolicyType token_policy_t;
+
+public:
+	/**
+	 * コンストラクタ
+	 */
+	AbstructToken()
+	{}
+
+	/**
+	 * デストラクタ
+	 */
+	virtual ~AbstructToken() throw()
+	{}
+
+	/**
+	 * トークンの長さを返す
+	 */
+	size_t getTokenLength() const
+	{
+		return token_policy_t::TokenLength;
+	}
+
+	/**
+	 * バイト列表現としてのトークンの取得
+	 * @return バイト列表現としてのトークン
+	 */
+	virtual typename TokenPolicy::token_data_t
+	toByteReplesentation() const = 0;
+};
+
+/**
+ * 前方参照として見つかった位置、長さをワンセットとしたトークン
+ * @param TokenPolicyType トークンの各種ポリシーを持ったポリシークラス
+ */
+template <typename TokenPolicyType>
+class ReferenceValueToken : public AbstructToken<TokenPolicyType>
+{
+private:
+	typename TokenPolicyType token_policy_t;
+	
+	/**
+	 * 見つかった位置
+	 */
+	size_t position;
+
+	/**
+	 * マッチした長さ
+	 */
+	size_t length;
+
+public:
+	virtual typename TokenPolicyType::token_data_t 
+	toByteReplesentation() const
+	{
+		return token_policy_t::buildMatchToken(position, length);
+	}
+};
 
 /**
  * 見つからなかった文字トークン
  */
-class RealValueToken : public AbstructToken
-{};
+template <typename TokenPolicyType>
+class RealValueToken : public AbstructToken<TokenPolicyType>
+{
+private:
+	const char character;
+
+public:
+	/**
+	 * コンストラクタ
+	 * @param ch 保持する文字
+	 */
+	RealValueToken(const ch):
+		character(ch)
+	{}
+
+	/**
+	 * デストラクタ
+	 */
+	~RealValueToken() throw()
+	{}
+
+	/**
+	 * 保持している文字の取得
+	 * @return 保持している文字
+	 */
+	char getCharacter() const
+	{
+		return character;
+	}
+
+	/**
+	 * 保持している文字の変更
+	 * @param ch 新たに保持させる文字
+	 */
+	void setCharacter(const char ch)
+	{
+		character = ch;
+	}
+
+	virtual typename TokenPolicyType::token_data_t 
+	toByteReplesentation() const
+	{
+		return token_policy_t::buildNoMatchToken(character);
+	}
+};
 
 /**
  * LZSS圧縮アルゴリズム
