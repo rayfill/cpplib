@@ -174,6 +174,10 @@ class TokenPolicy
 {
 	friend class TokenPolicyTest;
 
+public:
+	/// トークンデータの型
+	typedef std::vector<char>  token_data_t;
+
 private:
 	/**
 	 * トークンデータからビット表現への変換
@@ -182,6 +186,9 @@ private:
 	 */
 	static unsigned int tokenToBitReps(const token_data_t& token)
 	{
+		assert(TokenLength <= sizeof (unsigned int));
+		assert(TokenLength == token.size());
+
 		unsigned int bitReps = 0;
 
 		for (token_data_t::const_iterator itor = token.begin();
@@ -189,16 +196,13 @@ private:
 			 ++itor)
 		{
 			bitReps <<= 8;
-			bitReps |= *itor;
+			bitReps |= static_cast<unsigned char>(*itor);
 		}
 
 		return bitReps;
 	}
 
 public:
-	/// トークンデータの型
-	typedef std::vector<char>  token_data_t;
-
 	enum {
 		/// 位置情報の占めるビット数
 		PositionSize = positionSize,
@@ -207,7 +211,7 @@ public:
 		LengthSize = lengthSize,
 
 		/// トークンの長さのバイト数
-		TokenLength = (positionsSize + lengthSize) / 8
+		TokenLength = (PositionSize + LengthSize) / 8
 	};
 
 	/**
@@ -222,13 +226,17 @@ public:
 		const size_t length = 0;
 		const size_t character =
 			static_cast<size_t>(std::char_traits<char>::to_int_type(ch));
+
 		const unsigned int bitReps = (character << lengthSize) | length;
-		token_data_t result(TokenSize);
+		token_data_t result;
+
 		for (int index = 1; index <= TokenLength; ++index)
 		{
-			result.push_back((bitReps >>
-							  ((TokenLength - index) * 8)) & 0xff); 
+			result.push_back(static_cast<char>
+				((bitReps >> ((TokenLength - index) * 8)) & 0xff));
 		}
+
+		return result;
 	}
 
 	/**
@@ -243,12 +251,14 @@ public:
 										const size_t length)
 	{
 		const unsigned int bitReps = (position << lengthSize) | length;
-		token_data_t result(TokenSize);
+		token_data_t result;
 		for (int index = 1; index <= TokenLength; ++index)
 		{
 			result.push_back((bitReps >>
 							  ((TokenLength - index) * 8)) & 0xff); 
 		}
+
+		return result;
 	}
 
 	/**
@@ -259,9 +269,11 @@ public:
 	static size_t getPosition(const token_data_t& token)
 	{
 		assert(token.size() == TokenLength);
+		assert(getLength(token) != 0);
+
 		const unsigned int positionMask = (1 << PositionSize) - 1;
 
-		return static_cast<size_t((tokenToBitReps(token) >> LengthSize)
+		return static_cast<size_t>((tokenToBitReps(token) >> LengthSize)
 								  & positionMask);
 	}
 
@@ -276,6 +288,20 @@ public:
 		const unsigned int lengthMask = (1 << LengthSize) - 1;
 	
 		return static_cast<size_t>(tokenToBitReps(token) & lengthMask);
+	}
+
+	/**
+	 * 非マッチトークンデータから文字の取り出し
+	 * @param token 非マッチトークンデータ
+	 * @return トークン中の文字
+	 */
+	static char getCharacter(const token_data_t& token)
+	{
+		assert(token.size() == TokenLength);
+		assert(getLength(token) == 0);
+
+		return static_cast<char>
+			((tokenToBitReps(token) >> LengthSize) & 0xff);
 	}
 };
 
@@ -315,7 +341,7 @@ public:
 	 * バイト列表現としてのトークンの取得
 	 * @return バイト列表現としてのトークン
 	 */
-	virtual typename TokenPolicy::token_data_t
+	virtual typename TokenPolicyType::token_data_t
 	toByteReplesentation() const = 0;
 };
 
@@ -327,7 +353,7 @@ template <typename TokenPolicyType>
 class ReferenceValueToken : public AbstructToken<TokenPolicyType>
 {
 private:
-	typename TokenPolicyType token_policy_t;
+	typedef TokenPolicyType token_policy_t;
 	
 	/**
 	 * 見つかった位置
@@ -361,7 +387,7 @@ public:
 	 * コンストラクタ
 	 * @param ch 保持する文字
 	 */
-	RealValueToken(const ch):
+	RealValueToken(const char ch):
 		character(ch)
 	{}
 
@@ -392,7 +418,7 @@ public:
 	virtual typename TokenPolicyType::token_data_t 
 	toByteReplesentation() const
 	{
-		return token_policy_t::buildNoMatchToken(character);
+		return TokenPolicyType::buildNoMatchToken(character);
 	}
 };
 

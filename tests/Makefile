@@ -8,31 +8,31 @@ TARGET= UnitTest
 OBJS= TestMain.o \
 	ScannerTest.o \
 	SieveTest.o \
-	MPITest.o \
 	LZSSTest.o \
 	StateMachineTest.o \
 	FSMTest.o \
-	AlgebraTheoryTest.o \
-	NumberTheoryTest.o \
-	AsymmetricKeyTest.o \
-	StackableScannerTest.o \
-	RegexTest.o \
-	RSATest.o \
-	SmartPointerTest.o \
-	RationalTest.o \
-	FontGrapherTest.o \
-	TranscodeTest.o \
-	XMLParserTest.o \
-	GeometryTest.o \
-	GraphicsTest.o \
-	BitmapTest.o \
-	EndianTest.o CBCTest.o \
-	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-	ImageTest.o SamplingScannerTest.o \
-	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \
-	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o EventTest.o \
-	JulianDateTest.o 
+# 	AlgebraTheoryTest.o \
+# 	NumberTheoryTest.o \
+# 	AsymmetricKeyTest.o \
+# 	StackableScannerTest.o \
+# 	RegexTest.o \
+# 	RSATest.o \
+# 	MPITest.o \
+# 	SmartPointerTest.o \
+# 	RationalTest.o \
+# 	FontGrapherTest.o \
+# 	TranscodeTest.o \
+# 	XMLParserTest.o \
+# 	GeometryTest.o \
+# 	GraphicsTest.o \
+# 	BitmapTest.o \
+# 	EndianTest.o CBCTest.o \
+# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
+# 	ImageTest.o SamplingScannerTest.o \
+# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+# 	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \
+# 	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o EventTest.o \
+# 	JulianDateTest.o 
 
 all: $(TARGET)
 
