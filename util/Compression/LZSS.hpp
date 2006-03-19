@@ -311,7 +311,7 @@ public:
  * @param lengthSize 長さをあらわすデータが占めるビット数
  */
 template <typename TokenPolicyType>
-class AbstructToken
+class AbstructLZSSToken
 {
 private:
 	typedef TokenPolicyType token_policy_t;
@@ -320,13 +320,13 @@ public:
 	/**
 	 * コンストラクタ
 	 */
-	AbstructToken()
+	AbstructLZSSToken()
 	{}
 
 	/**
 	 * デストラクタ
 	 */
-	virtual ~AbstructToken() throw()
+	virtual ~AbstructLZSSToken() throw()
 	{}
 
 	/**
@@ -350,7 +350,7 @@ public:
  * @param TokenPolicyType トークンの各種ポリシーを持ったポリシークラス
  */
 template <typename TokenPolicyType>
-class ReferenceValueToken : public AbstructToken<TokenPolicyType>
+class ReferenceValueToken : public AbstructLZSSToken<TokenPolicyType>
 {
 private:
 	typedef TokenPolicyType token_policy_t;
@@ -366,6 +366,13 @@ private:
 	size_t length;
 
 public:
+	ReferenceValueToken(const size_t pos, const size_t len):
+		position(pos), length(len)
+	{}
+
+	~ReferenceValueToken() throw()
+	{}
+
 	virtual typename TokenPolicyType::token_data_t 
 	toByteReplesentation() const
 	{
@@ -375,9 +382,10 @@ public:
 
 /**
  * 見つからなかった文字トークン
+ * @param TokenPolicyType トークンの各種ポリシーを持ったポリシークラス
  */
 template <typename TokenPolicyType>
-class RealValueToken : public AbstructToken<TokenPolicyType>
+class RealValueToken : public AbstructLZSSToken<TokenPolicyType>
 {
 private:
 	const char character;

@@ -11,6 +11,7 @@ OBJS= TestMain.o \
 	LZSSTest.o \
 	StateMachineTest.o \
 	FSMTest.o \
+	Base64Test.o \
 # 	AlgebraTheoryTest.o \
 # 	NumberTheoryTest.o \
 # 	AsymmetricKeyTest.o \

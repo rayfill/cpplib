@@ -215,9 +215,70 @@ public:
 	{}
 };
 
+class TokensTest : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(TokensTest);
+	CPPUNIT_TEST(referenceValTokenToByteRepsTest);
+	CPPUNIT_TEST(realValTokenToByteRepsTest);
+	CPPUNIT_TEST_SUITE_END();
+public:
 
+	void referenceValTokenToByteRepsTest()
+	{
+		/*
+		 * 1 << 4 | 2 == 16 + 2 = 18 == 0x0012
+		 */
+		ReferenceValueToken<TokenPolicy<12, 4> > rvt(1, 2);
+
+		std::vector<char> bitReps = rvt.toByteReplesentation();
+		
+		CPPUNIT_ASSERT(bitReps.size() == 2);
+		CPPUNIT_ASSERT(bitReps[0] == 0x00);
+		CPPUNIT_ASSERT(bitReps[1] == 0x12);
+
+		/*
+		 * 1 << 2 | 2 == 4 + 2 == 6 == 0x0006
+		 */
+		ReferenceValueToken<TokenPolicy<14, 2> > rvt2(1, 2);
+
+		bitReps = rvt2.toByteReplesentation();
+
+		CPPUNIT_ASSERT(bitReps.size() == 2);
+		CPPUNIT_ASSERT(bitReps[0] == 0x00);
+		CPPUNIT_ASSERT(bitReps[1] == 0x06);
+	}
+
+	void realValTokenToByteRepsTest()
+	{
+		/*
+		 * 'a'(0x61) << 4 | 0 == 0x0610
+		 */
+		RealValueToken<TokenPolicy<12, 4> > rvt('a');
+
+		std::vector<char> bitReps = rvt.toByteReplesentation();
+
+		CPPUNIT_ASSERT(bitReps.size() == 2);
+		CPPUNIT_ASSERT(bitReps[0] == 0x06);
+		CPPUNIT_ASSERT(bitReps[1] == 0x10);
+
+
+		/*
+		 * 'a'(0x61) << 2 | 0 == 0x0184
+		 */
+		RealValueToken<TokenPolicy<14, 2> > rvt2('a');
+
+		bitReps = rvt2.toByteReplesentation();
+
+		
+		CPPUNIT_ASSERT(bitReps.size() == 2);
+		CPPUNIT_ASSERT(bitReps[0] == 0x01);
+		CPPUNIT_ASSERT(std::char_traits<char>::to_int_type(bitReps[1]) ==
+					   0x84);
+	}
+};
 
 CPPUNIT_TEST_SUITE_REGISTRATION( WindowFunctionTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( TokenPolicyTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( TokensTest );
 
 
