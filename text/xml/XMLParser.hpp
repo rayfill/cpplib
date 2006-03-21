@@ -26,16 +26,16 @@ protected:
 	/**
 	 * 子ノードのコレクション
 	 */
-	NodeType childs;
+	NodeType children;
 
 public:
 	/**
 	 * コンストラクタ
-	 * @param parent 親コンストクラタへのポインタ
+	 * @param parent 親クラスへのポインタ
 	 */
 	XMLNode(XMLNode* parent = NULL):
 		parent(NULL),
-		childs()
+		children()
 	{}
 
 	/**
@@ -43,8 +43,8 @@ public:
 	 */
 	virtual ~XMLNode() throw()
 	{
-		for (NodeType::iterator itor = childs.begin();
-			 itor != childs.end();
+		for (NodeType::iterator itor = children.begin();
+			 itor != children.end();
 			 ++itor)
 			delete *itor;
 	}
@@ -59,14 +59,14 @@ public:
 			return NULL;
 
 		NodeType::iterator itor =
-			std::find(parent->childs.begin(),
-					  parent->childs.end(),
+			std::find(parent->children.begin(),
+					  parent->children.end(),
 					  this);
 		
-		if (itor == parent->childs.end())
+		if (itor == parent->children.end())
 			throw std::logic_error("bad index exception.");
 
-		if (itor+1 == parent->childs.end())
+		if (itor+1 == parent->children.end())
 			return NULL;
 
 		return *++itor;
@@ -82,14 +82,14 @@ public:
 			return NULL;
 
 		NodeType::iterator itor =
-			std::find(parent->childs.begin(),
-					  parent->childs.end(),
+			std::find(parent->children.begin(),
+					  parent->children.end(),
 					  this);
 
-		if (itor == childs.end())
+		if (itor == children.end())
 			throw std::logic_error("bad index exception.");
 
-		if (itor+1 == parent->childs.begin())
+		if (itor+1 == parent->children.begin())
 			return NULL;
 
 		return *--itor;
@@ -102,7 +102,7 @@ public:
 	void addChild(XMLNode* newChild)
 	{
 		newChild->parent = this;
-		childs.push_back(newChild);
+		children.push_back(newChild);
 	}
 
 	/**
@@ -113,12 +113,12 @@ public:
 	void removeChild(XMLNode* child)
 	{
 		NodeType::iterator itor =
-			std::find(childs.begin(), childs.end(), child);
+			std::find(children.begin(), children.end(), child);
 
-		if (itor != childs.end())
+		if (itor != children.end())
 		{
 			(*itor)->parent = NULL;
-			childs.erase(itor);
+			children.erase(itor);
 		}
 	}
 
@@ -148,8 +148,8 @@ public:
 	 */
 	XMLNode* getChild(const size_t index) const throw()
 	{
-		if (index < childs.size())
-			return childs[index];
+		if (index < children.size())
+			return children[index];
 
 		return NULL;
 	}
@@ -160,7 +160,7 @@ public:
 	 */
 	std::vector<XMLNode*> getChildren() const throw()
 	{
-		return childs;
+		return children;
 	}
 };
 
@@ -168,6 +168,7 @@ public:
  * ノード名からDOMノードを見つけるためのファンクタ
  * @param BaseType 基底ノード型
  * @param DeriverdType 見つけるノード型
+ * @todo これをコマンドパターンに変更してXPathのサポート述語の拡大を・・・
  */
 template <typename BaseType, typename DeriverdType>
 class FindNamePredicate
@@ -248,11 +249,11 @@ public:
 	virtual Element* getChildElement(const std::wstring& name)
 	{
 		NodeType::iterator itor =
-			std::find_if(childs.begin(),
-						 childs.end(),
+			std::find_if(children.begin(),
+						 children.end(),
 						 FindNamePredicate<XMLNode, TagElement>(name));
 
-		if (itor != childs.end())
+		if (itor != children.end())
 			return dynamic_cast<Element*>(*itor);
 
 		return NULL;
@@ -268,8 +269,8 @@ public:
 		FindNamePredicate<XMLNode, TagElement> predicate(name);
 		std::vector<Element*> result;
 
-		for (NodeType::iterator itor = childs.begin();
-			 itor != childs.end();
+		for (NodeType::iterator itor = children.begin();
+			 itor != children.end();
 			 ++itor)
 		{
 			if (predicate(*itor))
@@ -389,7 +390,7 @@ public:
 			 ++itor)
 			result += L" " + itor->first + L"=\"" + itor->second + L"\"";
 		
-		if (childs.size() == 0)
+		if (children.size() == 0)
 			result += L" />\n";
 
 		else
@@ -525,6 +526,7 @@ public:
 
 /**
  * CDATA文字列要素
+ * @note 前後の空白文字をchopするヘルパがあってもいいかも
  */
 class StringElement : public Element
 {
@@ -600,7 +602,7 @@ public:
 
 	virtual std::wstring toString(const size_t indentLevel = 0) const throw()
 	{
-		assert(childs.size() == 0);
+		assert(children.size() == 0);
 
 		std::wstring result(indentLevel, L' ');
 		result += std::wstring(L"<?");
@@ -628,8 +630,8 @@ public:
 	{
 		std::wstring result;
 
-		for (NodeType::const_iterator itor = childs.begin();
-			 itor != childs.end();
+		for (NodeType::const_iterator itor = children.begin();
+			 itor != children.end();
 			 ++itor)
 			result += dynamic_cast<const Element*>(*itor)->toString() + L"\n";
 
@@ -692,8 +694,9 @@ private:
 	 * インデックスオフセットの計算
 	 * @param param XPathトークン
 	 * @return インデックスオフセット
-	 * @todo 実装がまだちゃんとすんでません・・・
-	 * ブラケット内の数値をパースして戻り値にする必要があります
+	 * @todo ブラケット内がexpressionだった場合の対応。
+	 * XPathExpressionとか言うクラスでも作って評価式をオブジェクト化して
+	 * Commandパターン使ってトラバースさせるとかかなぁ・・・
 	 */
 	int getIndexOf(const std::wstring& param)
 		const throw(std::invalid_argument)
@@ -718,9 +721,13 @@ private:
 
 		if ((offset2 - offset1) > 1)
 		{
-			std::wstring argument(
-				&param[offset1+1],
-				&param[offset2]);
+			/**
+			 * @todo expressionがはいった場合の対応とか。
+			 * まぁ、その場合は基本部分の見直しが必要だろうけど・・・
+			 */
+			return
+				strToInt(std::wstring(&param[offset1+1],
+									  &param[offset2]));
 		}
 
 		throw std::invalid_argument("");
@@ -893,6 +900,7 @@ public:
 
 /**
  * XMLパーサ
+ * @todo 妥当性検証機能とか。
  */
 class XMLParser
 {

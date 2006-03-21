@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <Thread/Mutex.hpp>
 
+#include <map>
+
 /**
  * 再入ポリシー
  */
@@ -46,7 +48,7 @@ public:
 	/**
 	 * シングルトンオブジェクトの取得
 	 */
-	static ResultClass* get() throw(std::bad_alloc)
+	static ResultClass* get()
 	{
 		Policy policy;
 		policy.lock();
@@ -56,5 +58,56 @@ public:
 		return &body;
 	}
 };
+
+/**
+ * キー値にマッピングされたSingletonオブジェクト
+ * @param KeyType キーの型
+ * @param ResultClass バインドされた値の型
+ * @param Policy スレッド排他ポリシー
+ */
+template <typename KeyType,
+		  typename  ResultClass,
+		  typename Policy = SingleThreadPolicy>
+class SingletonMapper 
+{
+	friend class SingletonMapperTest;
+
+private:
+	SingletonMapper();
+	SingletonMapper(const SingletonMapper& );
+
+	typedef std::map<KeyType, ResultClass> mapper_t;
+
+	/**
+	 * マップオブジェクトの取得
+	 * @return マップオブジェクトの参照
+	 */
+	static ResultClass* getMappedObject(const KeyType& key)
+	{
+		static mapper_t mapObject;
+		
+		return &(mapObject[key]);
+	}
+
+public:
+	/**
+	 * シングルトンオブジェクトの取得
+	 * @return マッピングされたシングルトンオブジェクト
+	 * @param key オブジェクトにマップしたキーの値
+	 */ 
+	static ResultClass* get(const KeyType& key)
+	{
+		Policy policy;
+		policy.lock();
+		
+		ResultClass* result = getMappedObject(key);
+
+		policy.unlock();
+
+		return result;
+	}
+};
+
+
 
 #endif /* SINGLETON_HPP_ */

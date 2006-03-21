@@ -41,10 +41,17 @@ public:
 		for (size_type i = 0; i < result.size(); ++i)
 			CPPUNIT_ASSERT(result[i] == 1);
 		
-		base64encoded == "AQEBAQEBAQEBAQEB";
+		base64encoded = "AQEBAQEBAQEBAQEB";
+		result = Base64::decode(base64encoded);
+
 		CPPUNIT_ASSERT(result.size() == 12);
 		for (size_type i = 0; i < result.size(); ++i)
 			CPPUNIT_ASSERT(result[i] == 1);
+
+		base64encoded = "";
+		result = Base64::decode(base64encoded);
+		
+		CPPUNIT_ASSERT(result.size() == 0);
 	}
 
 	void decodeMapTest()
@@ -151,6 +158,10 @@ public:
 		CPPUNIT_ASSERT_MESSAGE(base64encoded,
 							   base64encoded == "AQEBAQEBAQEBAQEB");
 		
+		base64encoded = codec.encode(std::vector<char>());
+		CPPUNIT_ASSERT(base64encoded.size() == 0);
+		CPPUNIT_ASSERT_MESSAGE(base64encoded,
+							   base64encoded == "");
 	}
 };
 

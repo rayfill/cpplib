@@ -152,42 +152,66 @@ public:
 			base64String.length() / 4 * 3;
 		const size_type sourceLength =
 			base64String.length();
+		const char* reverseTable = getFromBase64Table();
+
 
 		std::vector<char> result;
 		result.reserve(resultLength);
 
 		for (size_type offset = 0; offset < sourceLength; ++offset)
 		{
-			if (base64String[offset] == '=')
-				break;
+			const bool isContinuable =
+				(offset + 1 < sourceLength) && base64String[offset+1] != '=';
 
 			switch (offset % 4)
 			{
 				case 0:
 				{
-					
+					// oooooo..|........|........
+					result.push_back(
+						(reverseTable[base64String[offset]] << 2) & 0xfc);
 				}
 				break;
 
 				case 1:
 				{
+					// xxxxxxoo|oooo....|........
+					result.back() |=
+						((reverseTable[base64String[offset]] >> 4) & 0x03);
+					if (isContinuable)
+						result.push_back(
+							(reverseTable[base64String[offset]] << 4) & 0xf0);
 				}
 				break;
 
 				case 2:
 				{
+					// xxxxxxxx|xxxxoooo|oo......
+					result.back() |=
+						((reverseTable[base64String[offset]] >> 2) & 0x0f);
+					if (isContinuable)
+						result.push_back(
+							(reverseTable[base64String[offset]] << 6) & 0xa0);
 				}
 				break;
 
 				case 3:
 				{
+					// xxxxxxxx|xxxxxxxx|xxoooooo
+					result.back() |=
+						(reverseTable[base64String[offset]] & 0x3f);
 				}
 				break;
 
 				default:
 					assert(false); // not reached.
 			}
+
+			if (isContinuable == false)
+				break;
 		}
+
+		return result;
 	}
 
 	

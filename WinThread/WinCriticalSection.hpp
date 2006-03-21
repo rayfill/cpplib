@@ -11,6 +11,7 @@
  * Win32用CriticalSectionクラス
  * @todo グローバルで単一のクリティカルセクションとなってしまうので
  * コンストラクタから文字列でも食ってセクションの識別を行う実装に変更したい･･･
+ * 新規に/util/Singleton.hppにMappingSingleton作ったのでそれで実現しませう
  */
 class WinCriticalSection
 {

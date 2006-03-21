@@ -44,7 +44,7 @@ public:
 		rootTag.addChild(&childTag2);
 		rootTag.addChild(&childTag1_);
 
-		CPPUNIT_ASSERT(rootTag.childs.size() == 3);
+		CPPUNIT_ASSERT(rootTag.children.size() == 3);
 		CPPUNIT_ASSERT(dynamic_cast<TagElement*>(rootTag.
 												 getChildElement(L"child1"))->
 					   getTagName() == L"child1");
