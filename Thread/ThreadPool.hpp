@@ -63,7 +63,12 @@ private:
 	protected:
 		virtual unsigned int callback() throw()
 		{
-			block();
+			for (;;)
+			{
+				block();
+
+				
+			}
 
 		}
 	};

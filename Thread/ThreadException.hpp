@@ -39,9 +39,32 @@ public:
 		: std::runtime_error(reason)
 	{}
 
-	virtual ThreadException* clone() const throw()
+	virtual ThreadException* clone() const throw(std::bad_alloc)
 	{
 		return new ThreadException(*this);
+	}
+};
+
+/**
+ * ThreadÇÃëÄçÏÇ…äÑÇËçûÇÒÇ≈ãNÇ±ÇÈó·äO
+ */
+class InteruptedException : public ThreadException
+{
+public:
+	InteruptedException(const char* reason = "InteruptedException raised.")
+		: ThreadException(reason)
+	{}
+
+	explicit InteruptedException(const InteruptedException& ie) throw()
+			: ThreadException(ie.what())
+	{}
+
+	virtual ~InteruptedException() throw()
+	{}
+
+	virtual InteruptedException* clone() const throw(std::bad_alloc)
+	{
+		return new InteruptedException(*this);
 	}
 };
 
