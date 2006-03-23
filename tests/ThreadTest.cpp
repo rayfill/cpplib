@@ -4,7 +4,7 @@
 class Worker : public Thread
 {
 private:
-	bool isQuitable;
+	volatile bool isQuitable;
 	
 protected:
 
@@ -18,6 +18,11 @@ protected:
 
 public:
 	Worker() : isQuitable(false) {}
+
+	bool isQuit() const throw()
+	{
+		return isQuitable;
+	}
 
 	void quit() throw()
 	{
@@ -43,14 +48,29 @@ private:
 	CPPUNIT_TEST(suspendTest);
 	CPPUNIT_TEST(abortTest);
 	CPPUNIT_TEST(exceptionTest);
+	CPPUNIT_TEST(runnableTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void runnableTest()
+	{
+		Worker worker;
+		Thread thread(&worker);
+
+		thread.start();
+		
+		CPPUNIT_ASSERT(worker.isQuit() == false);
+		worker.quit();
+		thread.join();
+
+		CPPUNIT_ASSERT(worker.isQuit() == true);
+	}
+
 	void runningStateTest()
 	{
 		Worker worker;
 
-		CPPUNIT_ASSERT(worker.isRunning() == true);
+		CPPUNIT_ASSERT(worker.isRunning() == false);
 
 		worker.start();
 		worker.cancel();

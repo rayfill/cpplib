@@ -11,31 +11,30 @@
 #include <string>
 #include <Thread/ThreadException.hpp>
 #include <Thread/CriticalSection.hpp>
+#include <Thread/Runnable.hpp>
 
 /**
  * Win32ベーススレッドクラス
- * 使用は継承し、仮想関数 run()をオーバーライドして下さい
+ *
+ * 継承し、仮想関数 run()をオーバーライドするか、
+ * Runnableインタフェースを実装したクラスを用意して
+ * コンストラクタに食わせてください。
+ * @todo 各ロック処理のポリシー化
  * @todo 状態検査とシグナルチックな中断処理への変更
+ * @todo RunnableホルダーもテンプレートにしとけばSmartPointerとか
+ * AutoPtrとか使えるなぁ・・・
  */
-class WinThread
+class WinThread : public Runnable
 {
+	friend class ThreadGroup;
+
 public:
-	/**
-	 * 状態定数
-	 */
-	enum ThreadStatus
-	{
-		created,
-		running,
-		suspend,
-		stop
+	enum {
+		/// 例外により停止をあらわす定数
+		abort_by_exception = 0xffffffff,
+		/// 親からのリクエストにより中断を表す定数
+		abort_by_parent = 0xfffffffe
 	};
-
-	/// 例外により停止をあらわす定数
-	static const unsigned abort_by_exception = 0xffffffff;
-
-	/// 親からのリクエストにより中断を表す定数
-	static const unsigned abort_by_parent = 0xfffffffe;
 
 	/**
 	 * スレッド識別子型
@@ -43,12 +42,26 @@ public:
 	typedef unsigned thread_id_t;
 
 private:
-	friend class ThreadGroup;
+	/**
+	 * 状態定数
+	 */
+	enum RunningStatus
+	{
+		created,
+		running,
+		suspend,
+		stop
+	};
+
+	/**
+	 * 実行対象
+	 */
+	Runnable* runningTarget;
 
 	/**
 	 * スレッド状態
 	 */
-	ThreadStatus threadStatus;
+	volatile RunningStatus status;
 
 	/**
 	 * スレッドハンドル
@@ -67,40 +80,13 @@ private:
 
 	/**
 	 * システムコールバック用エントリポイント
+	 * @see Win32 CreateThread() API
 	 */
 	static unsigned __stdcall CallbackDispatcher(void* DispatchKey) throw()
 	{
-		unsigned retValue = 0;
 		WinThread* This = reinterpret_cast<WinThread*>(DispatchKey);
 
-		{
-			CriticalSection atomicOp;
-			This->prepare();
-			This->threadStatus = running;
-		}
-
-		try
-		{
-			retValue = This->run();
-		}
-		catch (ThreadException& e)
-		{
-			This->transporter =	e.clone();
-			retValue = abort_by_exception;
-		}
-		catch (...)
-		{
-			This->transporter =	new ThreadException("unknown exception.");
-			retValue = abort_by_exception;
-		}
-
-		{
-			CriticalSection atomicOp;
-			This->dispose();
-			This->threadStatus = stop;
-		}
-
-		return retValue;
+		return This->callback();
 	}
 
 	/// コピー防止用
@@ -111,16 +97,45 @@ private:
 
 protected:
 	/**
-	 * 実行前の前処理
+	 * システムコールバック用エントリポイント
+	 * 動作をカスタマイズできるようprotectedスコープに配置
 	 */
-	virtual void prepare() throw()
-	{}
+	virtual unsigned int callback() throw()
+	{
+		unsigned retValue = 0;
 
-	/**
-	 * 実行後の後処理
-	 */
-	virtual void dispose() throw()
-	{}
+		if (this->runningTarget == NULL)
+			this->runningTarget = this;
+
+		{
+			CriticalSection atomicOp;
+			this->runningTarget->prepare();
+			this->status = running;
+		}
+
+		try
+		{
+			retValue = this->runningTarget->run();
+		}
+		catch (ThreadException& e)
+		{
+			this->transporter =	e.clone();
+			retValue = abort_by_exception;
+		}
+		catch (...)
+		{
+			this->transporter =	new ThreadException("unknown exception.");
+			retValue = abort_by_exception;
+		}
+
+		{
+			CriticalSection atomicOp;
+			this->runningTarget->dispose();
+			this->status = stop;
+		}
+
+		return retValue;
+	}
 
 	/**
 	 * クラス構築ヘルパ
@@ -145,11 +160,8 @@ protected:
 			this->ThreadHandle == INVALID_HANDLE_VALUE)
 			throw ThreadException("Can not create thread.");
 
-		threadStatus = created;
+		status = created;
 	}
-
-	/// ワーカー用エントリポイント。オーバーライドして使用する。
-	virtual unsigned run() throw(ThreadException) = 0;
 
 public:
 	/**
@@ -157,9 +169,23 @@ public:
 	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
-		: threadStatus(), ThreadHandle(),
+		: runningTarget(), status(), ThreadHandle(),
 		  ThreadId(), transporter(NULL)
 	{
+		create(createOnRun);
+	}
+
+	/**
+	 * コンストラクタ
+	 * @param runnableObject 実行エントリポイントオブジェクト
+	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
+	 */
+	WinThread(Runnable* runnable_,
+			  bool createOnRun = false) throw (ThreadException)
+		: runningTarget(runnable_), status(), ThreadHandle(),
+		  ThreadId(), transporter(NULL)
+	{
+		assert(runnable_ != NULL);
 		create(createOnRun);
 	}
 
@@ -168,7 +194,8 @@ public:
 	 */
 	virtual ~WinThread() throw()
 	{
-		assert(threadStatus == stop);
+		assert(status == stop ||
+			   status == created);
 
 		if ((HANDLE)(this->ThreadHandle) != INVALID_HANDLE_VALUE ||
 			this->ThreadHandle != 0)
@@ -187,7 +214,7 @@ public:
 		assert(this->ThreadHandle);
 
 		CriticalSection atomicOp;
-		threadStatus = running;
+		status = running;
 
 		DWORD resumeCount = ResumeThread((HANDLE)this->ThreadHandle);
 		assert(resumeCount == 1 || resumeCount == 0);
@@ -201,9 +228,8 @@ public:
 	bool isRunning() throw()
 	{
 		CriticalSection atomicOp;
-		if (threadStatus == running || 
-			threadStatus == suspend ||
-			threadStatus == created)
+		if (status == running || 
+			status == suspend)
 			return true;
 		else
 			return false;
@@ -232,7 +258,7 @@ public:
 							  static_cast<DWORD>(abort_by_parent)))
 			throw ThreadException("Thread termination fail.");
 
-		threadStatus = stop;
+		status = stop;
 	}
 
 	/**
@@ -244,7 +270,7 @@ public:
 
 		CriticalSection atomicOp;
 		DWORD suspendCount = SuspendThread((HANDLE)this->ThreadHandle);
-		threadStatus = suspend;
+		status = suspend;
 
 		assert(suspendCount == 0);
 	}
@@ -304,7 +330,7 @@ public:
 	 */
 	std::string reason() const throw()
 	{
-		assert(threadStatus == stop);
+		assert(status == stop);
 
 		if (transporter)
 			return transporter->what();
@@ -318,13 +344,24 @@ public:
 	 */
 	bool isAbnormalEnd() const throw()
 	{
-		assert(threadStatus == stop);
+		assert(status == stop);
 
 		if (transporter)
 			return true;
 		return false;
 	}
 
+	virtual void prepare() throw()
+	{}
+
+	virtual void dispose() throw()
+	{}
+
+	virtual unsigned run() throw(ThreadException) 
+	{
+		return 0;
+	}
+	
 };
 
 typedef WinThread Thread;

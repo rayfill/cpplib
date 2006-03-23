@@ -628,6 +628,7 @@ public:
 	/**
 	 * 終端画素へのイテレータの取得
 	 * @return 終端画素のイテレータ
+	 * @todo dword alignの調整
 	 */
 	iterator end() const
 	{
@@ -734,7 +735,7 @@ public:
 
 	/**
 	 * 内部表現ビットマップの保存
-	 * 
+	 * @todo 24bpp依存だ・・・32bppとかにも対応できるようにしとかないと・・・
 	 */
 	bool saveFile(const TCHAR* filename)
 	{
@@ -960,6 +961,11 @@ public:
 
 /**
  * 排他的論理和転送
+ * @todo MMXやMMX2などを使ったblitterの実装。
+ * そのためにコンストラクタと転送関数分けたんだし・・・
+ * あと各種論理演算系転送とか。
+ * 転送範囲計算を別ポリシーとして分割したほうがいいかも。
+ * そうすればすっきりするし、DirtyAreaとかとの兼ね合いもうまくいくかも。
  */
 template <class sourceType, class destinationType>
 class ExclusiveOrTransfer

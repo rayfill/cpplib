@@ -6,6 +6,7 @@
  * 修正ユリウス通日クラス
  * @see http://ja.wikipedia.org/wiki/%E3%83%A6%E3%83%AA%E3%82%A6%E3%82%B9%E9%80%9A%E6%97%A5
  * @see http://64.233.179.104/search?q=cache:pkzGhrOFHTIJ:kwi.cocolog-nifty.com/blog/delphi/index.html+%E3%83%95%E3%83%AA%E3%83%BC%E3%82%B2%E3%83%AB%E3%81%AE%E5%85%AC%E5%BC%8F&hl=ja&gl=jp&ct=clnk&cd=7
+ * @todo ユリウス暦と勘違いされそうなクラス名だな・・・改名したほうがいいな
  */
 class JulianDate
 {

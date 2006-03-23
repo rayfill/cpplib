@@ -1,0 +1,4 @@
+2006/03/22
+	Makefile内のファイル依存性情報をMakefile.dependへ切り離し。
+	依存性からのルール自動生成、make makedependを作成。
+	Threadの実行部分のRunnableインタフェースへの独立。
