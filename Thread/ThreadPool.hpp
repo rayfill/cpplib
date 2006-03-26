@@ -84,17 +84,10 @@ private:
 
 		/**
 		 * 脱出処理
-		 * @throw InterruptedException 脱出シグナル例外
-		 * @note 脱出処理に例外使うのは気が進まんが・・・いい方法が思いつかない
-		 * @todo 処理内部からInterruptedException投げられたら判断つかんので
-		 * QuitableExceptionでも作るか、もしくはblock()内からしかquitできない
-		 * (run()にいてquitする場合はThreadに明示的にabort()
-		 * してもらってInterruptExceptionハンドラ->block()でquit)
-		 * ようにするか・・・
 		 */
-		void quit() throw(InterruptedException)
+		void quit() throw()
 		{
-			throw InterruptedException();
+			quitable.setEvent();
 		}
 
 		/**
@@ -118,6 +111,9 @@ private:
 				startable.resetEvent();
 
 			HANDLE waits[2];
+			waits[0] = startable.getHandle();
+			waits[1] = quitable.getHandle();
+
 			DWORD result =
 				::WaitForMultipleObjects(2,
 										 waits,
@@ -149,7 +145,7 @@ private:
 		RerunnableThread()
 				: thread_t(false), 
 				  startable("startable", false),
-				  quitable("quitable", false)
+				  quitable("quitable", true)
 		{
 			assert(startable.getHandle() != NULL);
 			thread_t::start();
@@ -163,7 +159,7 @@ private:
 		 * @return 置換可能ならtrue
 		 * @todo ロック処理を前提とした安全なエントリポイント再配置処理の実装
 		 */
-		bool isReplacable() const
+		bool isReplacable()
 		{
 			return !startable.isEventArrived();
 		}

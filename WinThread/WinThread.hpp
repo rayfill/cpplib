@@ -214,8 +214,10 @@ public:
 	 */
 	virtual ~WinThread() throw()
 	{
-		assert(status == stop ||
-			   status == created);
+		if (status == stop ||
+			status == created)
+			assert(status == stop ||
+				   status == created);
 
 		if ((HANDLE)(this->ThreadHandle) != INVALID_HANDLE_VALUE ||
 			this->ThreadHandle != 0)
