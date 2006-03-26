@@ -58,6 +58,8 @@ public:
 		rerun_thread_t::sleep(100);
 
 		CPPUNIT_ASSERT(testRunner.getCounter() == 2);
+		testThread.quit();
+		testThread.join();
 	}
 
 };
