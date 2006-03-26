@@ -1,5 +1,5 @@
 CXX=/usr/bin/g++ 
-CXXFLAGS= -g -mno-cygwin -Wall -Wunused \
+CXXFLAGS= -g -mno-cygwin -O0 -Wall -Wunused \
 	-fno-default-inline -fmessage-length=78 -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
@@ -32,12 +32,16 @@ OBJS= TestMain.o \
 	ImageTest.o SamplingScannerTest.o \
 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
 	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \
-	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o EventTest.o \
-	JulianDateTest.o 
+	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o \
+	JulianDateTest.o \
+	EventTest.o \
+	ThreadPoolTest.o \
+
 DEPSOBJS= TestMain.d \
 	ScannerTest.d \
 	SieveTest.d \
 	LZSSTest.d \
+	ThreadPoolTest.d \
 	StateMachineTest.d \
 	FSMTest.d \
 	Base64Test.d \
@@ -68,7 +72,7 @@ DEPSOBJS= TestMain.d \
 
 all: $(TARGET)
 
-makedepend: $(DEPSOBJS)
+makedepend: cleandepend $(DEPSOBJS)
 
 test: all
 	./UnitTest
