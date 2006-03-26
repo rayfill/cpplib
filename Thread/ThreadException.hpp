@@ -48,23 +48,27 @@ public:
 /**
  * ThreadÇÃëÄçÏÇ…äÑÇËçûÇÒÇ≈ãNÇ±ÇÈó·äO
  */
-class InteruptedException : public ThreadException
+class InterruptedException : public ThreadException
 {
 public:
-	InteruptedException(const char* reason = "InteruptedException raised.")
-		: ThreadException(reason)
+	InterruptedException()
+			: ThreadException("InteruptedException raised.")
 	{}
 
-	explicit InteruptedException(const InteruptedException& ie) throw()
+	InterruptedException(const char* reason)
+			: ThreadException(reason)
+	{}
+
+	InterruptedException(const InterruptedException& ie) throw()
 			: ThreadException(ie.what())
 	{}
 
-	virtual ~InteruptedException() throw()
+	virtual ~InterruptedException() throw()
 	{}
 
-	virtual InteruptedException* clone() const throw(std::bad_alloc)
+	virtual InterruptedException* clone() const throw(std::bad_alloc)
 	{
-		return new InteruptedException(*this);
+		return new InterruptedException(*this);
 	}
 };
 

@@ -84,7 +84,7 @@ private:
 	 */
 	static unsigned __stdcall CallbackDispatcher(void* DispatchKey) throw()
 	{
-		WinThread* This = reinterpret_cast<WinThread*>(DispatchKey);
+		WinThread* This = static_cast<WinThread*>(DispatchKey);
 
 		return This->callback();
 	}
@@ -96,6 +96,26 @@ private:
 	WinThread(WinThread&);
 
 protected:
+	/**
+	 * 現在のエントリポイントの取得
+	 * @return 現在のエントリポイント
+	 */
+	Runnable* getRunningTarget() const throw()
+	{
+		return runningTarget;
+	}
+
+	/**
+	 * 新しいエントリポイントの設定
+	 * @param runnable 新しいエントリポイント
+	 * @note ロック機構備えてないので実行中に書き換えないよう注意。
+	 * @todo 必要ならロック機構備えたほうがいいかも
+	 */
+	void setRunningTarget(Runnable* runnable) throw()
+	{
+		runningTarget = runnable;
+	}
+
 	/**
 	 * システムコールバック用エントリポイント
 	 * 動作をカスタマイズできるようprotectedスコープに配置

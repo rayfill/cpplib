@@ -23,29 +23,44 @@ private:
 	 * @return 作成されたイベントハンドル
 	 */
 	HANDLE createEvent(const char* eventName,
-					   bool isAutoReset = true) const throw()
+					   bool isAutoReset) const throw()
 	{
-		return ::CreateEvent(NULL,
-							 static_cast<BOOL>(isAutoReset),
-							 FALSE,
-							 eventName);
+		HANDLE hEvent = ::CreateEvent(NULL,
+									  static_cast<BOOL>(!isAutoReset),
+									  FALSE,
+									  eventName);
+
+		
+		return hEvent;
 							 
 	}
-
-	/**
-	 * デフォルトコンストラクタ
-	 */
-	WinEvent();
 
 public:
 	/**
 	 * コンストラクタ
 	 * @param eventName イベントを識別する名前
+	 * @param isAutoReset イベント検地後にシグナル停止にするかのフラグ
+	 * @todo explicit つけてもなぜか自動型変換されてchar*引数ひとつだともうひとつの
+	 * コンストラクタが呼ばれる・・・
+	 * @note とりあえずデフォルト引数削るので対応。
 	 */
-	WinEvent(const std::string& eventName) throw(): event()
+	explicit WinEvent(const std::string& eventName, bool isAutoReset) throw()
+			: event()
 	{
-		event = createEvent(eventName.c_str());
-		assert(event);
+		event = createEvent(eventName.c_str(), isAutoReset);
+		assert(event != NULL);
+	}
+
+	/**
+	 * コンストラクタ
+	 * @param isAutoReset イベント検地後にシグナル停止にするかのフラグ
+	 * @note 名前なしイベントを作成する
+	 */
+	explicit WinEvent(bool isAutoReset) throw()
+			: event()
+	{
+		event = createEvent(NULL, isAutoReset);
+		assert(event != NULL);
 	}
 
 	/**
@@ -58,7 +73,8 @@ public:
 	}
 
 	/**
-	 * イベントシグナルの瞬間的にon/offする
+	 * イベントシグナルの待機しているものたちを全てブロック開放した後に
+	 * 非シグナルに切り替える
 	 * @see waitEventArrive()
 	 */
 	void pulseEvent() throw()
@@ -71,7 +87,7 @@ public:
 	}
 
 	/**
-	 * イベントシグナルのリセット
+	 * イベントシグナルのセット
 	 */
 	void setEvent() throw()
 	{
@@ -109,8 +125,11 @@ public:
 			return true;
 		else if (result == WAIT_TIMEOUT)
 			return false;
-		else
+		else if (result == WAIT_ABANDONED ||
+				 result == WAIT_FAILED)
 			assert(false);
+		else
+			assert(false && !"unknown result");
 	}
 
 	/**
@@ -122,6 +141,15 @@ public:
 		assert(event != 0);
 
 		this->isEventArrived(INFINITE);
+	}
+
+	/**
+	 * イベントハンドルの取得
+	 * @return イベントハンドル
+	 */
+	HANDLE getHandle() const throw()
+	{
+		return event;
 	}
 };
 
