@@ -41,6 +41,6 @@ http://rayfill.dyndns.org:2481/new_lib/
 以下にSubversionリポジトリが公開してありますのでそちらからアクセスする
 こともできます。
 
-何かありましたら alfeim@kba.att.ne.jp まで連絡いただければと思います。
+何かありましたら alfeim@kba.att.ne.jp まで連絡をお願いいたします。
 
 岡崎次朗

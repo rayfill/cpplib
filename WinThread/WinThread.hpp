@@ -19,7 +19,7 @@
  * 継承し、仮想関数 run()をオーバーライドするか、
  * Runnableインタフェースを実装したクラスを用意して
  * コンストラクタに食わせてください。
- * @todo 各ロック処理のポリシー化
+ * @todo 各ロック処理のポリシー化。thisポインタロックにしたほうが効率よさげ
  * @todo 状態検査とシグナルチックな中断処理への変更
  * @todo RunnableホルダーもテンプレートにしとけばSmartPointerとか
  * AutoPtrとか使えるなぁ・・・
@@ -77,6 +77,11 @@ private:
 	 * 処理例外伝達用ポインタ
 	 */
 	ThreadException* transporter;
+
+	/**
+	 * 停止用フラグ
+	 */
+	volatile bool isAborting;
 
 	/**
 	 * システムコールバック用エントリポイント
@@ -137,6 +142,11 @@ protected:
 		{
 			retValue = this->runningTarget->run();
 		}
+		catch (InterruptedException& e)
+		{
+			this->transporter = e.clone();
+			retValue = abort_by_parent;
+		}
 		catch (ThreadException& e)
 		{
 			this->transporter =	e.clone();
@@ -183,6 +193,15 @@ protected:
 		status = created;
 	}
 
+	/**
+	 * 停止判定
+	 * @return 停止状態ならtrue
+	 */
+	bool isAbort() const throw()
+	{
+		return isAborting;
+	}
+
 public:
 	/**
 	 * デフォルトコンストラクタ
@@ -190,7 +209,7 @@ public:
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
 		: runningTarget(), status(), ThreadHandle(),
-		  ThreadId(), transporter(NULL)
+		  ThreadId(), transporter(NULL), isAborting(false)
 	{
 		create(createOnRun);
 	}
@@ -203,7 +222,7 @@ public:
 	WinThread(Runnable* runnable_,
 			  bool createOnRun = false) throw (ThreadException)
 		: runningTarget(runnable_), status(), ThreadHandle(),
-		  ThreadId(), transporter(NULL)
+		  ThreadId(), transporter(NULL), isAborting(false)
 	{
 		assert(runnable_ != NULL);
 		create(createOnRun);
@@ -229,16 +248,33 @@ public:
 	 * スレッドの実行
 	 * @return レジュームレベル。0で実行開始、>0でサスペンド中
 	 */
-	unsigned start() throw()
+	virtual unsigned start() throw()
 	{
 		assert(this->ThreadHandle);
 
 		CriticalSection atomicOp;
+		assert(status == created);
+
 		status = running;
 
 		DWORD resumeCount = ResumeThread((HANDLE)this->ThreadHandle);
 		assert(resumeCount == 1 || resumeCount == 0);
 		return resumeCount;
+	}
+
+	/**
+	 * スレッドの実行
+	 * @param entryPoint 実行場所を持つオブジェクトのポインタ
+	 * @return レジュームレベル。0で実行開始、>0でサスペンド中
+	 */
+	virtual unsigned start(Runnable* entryPoint) throw()
+	{
+		assert(this->ThreadHandle);
+
+		CriticalSection atomicOp;
+		this->setRunningTarget(entryPoint);
+
+		return start();
 	}
 
 	/**
@@ -266,19 +302,30 @@ public:
 	}
 
 	/**
-	 * スレッドの実行を中止する。以後の状態は保証されない。
-	 * @exception ThreadException スレッドの中止が失敗した場合
+	 * スレッドの実行権を他へ渡す
+	 * @exception InterruptedException スレッドインスタンスから
+	 * abort()が呼ばれていた場合
 	 */
-	void abort() throw(ThreadException)
+	void yield() throw(InterruptedException)
+	{
+		if (isAbort())
+			throw InterruptedException();
+
+		WinThread::sleep(0);
+	}
+
+	/**
+	 * スレッドの実行を中止する。
+	 * 停止したスレッドは内部処理でyield()を呼び出したときに
+	 * InterruptedExceptionが発行される。
+	 * @todo 停止処理Methodの増量
+	 */
+	void abort() throw()
 	{
 		assert(this->ThreadHandle != NULL);
 
 		CriticalSection atmicOp;
-		if (!::TerminateThread(this->ThreadHandle,
-							  static_cast<DWORD>(abort_by_parent)))
-			throw ThreadException("Thread termination fail.");
-
-		status = stop;
+		isAborting = true;
 	}
 
 	/**
@@ -320,7 +367,7 @@ public:
 	 * なかった場合
 	 * @exception ThreadExcpetion 何らかの異常が発生した場合
 	 */
-	unsigned join(DWORD waitTime = INFINITE)
+	virtual unsigned join(DWORD waitTime = INFINITE)
 		throw(ThreadException, TimeoutException)
 	{
 		assert(this->ThreadHandle != NULL);

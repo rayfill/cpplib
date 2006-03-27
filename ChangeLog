@@ -1,3 +1,6 @@
+2006/03/27
+	ThreadPool::RerunnableThreadの開始/終了指示をEventベースに変更。
+	
 2006/03/24
 	Eventクラスの修正。
 	名前でスコープを区切れるようにした。

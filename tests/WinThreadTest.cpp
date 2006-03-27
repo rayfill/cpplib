@@ -22,6 +22,7 @@ class MyThread : public WinThread
 			MyThread::sleep((int)(1000 * ((double)rand() / RAND_MAX)));
 			{
 				CriticalSection lock;
+				this->yield();
 
 				std::cout << "ThreadId = " << this->self()
 						  << ":member thread id = " << this->getThreadId()
@@ -77,8 +78,20 @@ int main() {
   }
   std::cout << "all joined threads." << std::endl;
 
+  pThread = new MyThread();
+  pThread->start();
+//  pThread->abort();
 
-  OutputDebugString("Program terminate.");
+  try {
+  pThread->join();
+  } catch (...) {
+  }
+  if (pThread->isAbnormalEnd())
+	  std::cout << "aborting..."  << pThread->reason() << std::endl;
+  else
+	  std::cout << "exit normal" << std::endl;
+
+//  OutputDebugString("Program terminate.");
   return 0;
 }
 

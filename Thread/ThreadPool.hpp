@@ -60,6 +60,7 @@ private:
 
 	/**
 	 * 再実行可能なThread
+	 * @todo Runnableホルダーを基底のRunnableスロット以外に設ける
 	 */
 	class RerunnableThread : public thread_t
 	{
@@ -77,13 +78,8 @@ private:
 		Event quitable;
 
 		/**
-		 * 実行エントリポイントの置換可能判定フラグ
-		 * @todo イベントオブジェクトにすればロック機構なしでいけるかも
-		 */
-		volatile bool replacable;
-
-		/**
 		 * 脱出処理
+		 * run()ループ脱出指示
 		 */
 		void quit() throw()
 		{
@@ -101,9 +97,7 @@ private:
 
 		/**
 		 * 開始および完全終了用ブロックメソッド
-		 * @exception InterruptedException 終了処理例外
-		 * @todo quit() で書いてる通り方式かえると思うので例外指定とか
-		 * なくなる可能性高し
+		 * @return run()ループを脱出する場合true
 		 */
 		bool isQuitAndBlock() throw()
 		{
@@ -144,8 +138,8 @@ private:
 		 */
 		RerunnableThread()
 				: thread_t(false), 
-				  startable("startable", false),
-				  quitable("quitable", true)
+				  startable(false),
+				  quitable(true)
 		{
 			assert(startable.getHandle() != NULL);
 			thread_t::start();
@@ -176,7 +170,7 @@ private:
 		}
 
 	protected:
-		virtual unsigned int callback() throw()
+		virtual unsigned int run() throw()
 		{
 			assert(dynamic_cast<RerunnableThread*>(this) == this);
 
