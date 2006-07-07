@@ -3,14 +3,20 @@
 
 #include <string>
 #include <cassert>
-#include <exception>
+#include <stdexcept>
 #include <Socket/NativeSocket.hpp>
+#include <text/LexicalCast.hpp>
 
 /**
  * アドレス解決失敗例外クラス
  */
-class  NotAddressResolvException: public std::exception
+class  NotAddressResolvException : public std::runtime_error
 {
+public:
+	NotAddressResolvException(const char* reason = "address resonv failed."):
+		std::runtime_error(reason)
+	{}
+	
 };
 
 /**
@@ -32,14 +38,14 @@ private:
 	 * @exception NotAddressResolvException IPアドレスに変換できなかった場合
 	 * @return 変換されたネットワークバイトオーダIPアドレス
 	 */
-	unsigned long translateIp(const char* ipAddress)
+	unsigned long translateIp(const char* ipAddress) const
 		throw(NotAddressResolvException)
 	{
 		HostEnt* hostEntry = gethostbyname(ipAddress);
 		if (hostEntry == NULL)
-		{
-			throw NotAddressResolvException();
-		}
+			throw NotAddressResolvException((std::string("servername not "
+														 "found: ") +
+											 ipAddress).c_str());
 
 		assert(hostEntry->h_length == 4);
 
@@ -52,14 +58,16 @@ private:
 	 * @return FQDN名
 	 * @exception NotAddressResolvException ホスト名に変換できなかった場合
 	 */
-	std::string translateIp(const unsigned long ipAddress)
+	std::string translateIp(const unsigned long ipAddress) const
 	{
 		HostEnt* hostEntry =
 			gethostbyaddr(reinterpret_cast<const char*>(&ipAddress),
 						  sizeof(ipAddress), AF_INET);
 
 		if (hostEntry == NULL)
-			throw NotAddressResolvException();
+			throw NotAddressResolvException((std::string("address server "
+														"not found: ") +
+											 stringCast<unsigned long>(ipAddress)).c_str());
 
 		return std::string(hostEntry->h_name);
 	}
@@ -167,7 +175,7 @@ public:
 	 * @return ホスト名
 	 * @exception NotAddressResolvException ホスト名が解決できなかった場合
 	 */
-	std::string getHostname() throw(NotAddressResolvException)
+	std::string getHostname() const throw(NotAddressResolvException)
 	{
 		return translateIp(this->internalRepresentIP);
 	}

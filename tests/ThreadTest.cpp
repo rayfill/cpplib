@@ -11,7 +11,10 @@ protected:
 	virtual unsigned run() throw(ThreadException)
 	{
 		while(!isQuitable)
+		{
 			this->sleep(100);
+			this->yield();
+		}
 
 		return 1;
 	}

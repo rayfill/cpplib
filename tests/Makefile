@@ -6,19 +6,18 @@ CXXFLAGS= -g -mno-cygwin -O0 -Wall -Wunused \
 LIBS= -lwsock32 -lcppunit -lgdi32
 TARGET= UnitTest
 OBJS= TestMain.o \
-	ScannerTest.o \
-	SieveTest.o \
-	LZSSTest.o \
+	HTTPResultTest.o \
+	URLTest.o \
+	LexicalCastTest.o \
+	HTTPPropertyTest.o \
+	PropertyTest.o \
 	StateMachineTest.o \
 	FSMTest.o \
 	Base64Test.o \
-	AlgebraTheoryTest.o \
-	NumberTheoryTest.o \
-	AsymmetricKeyTest.o \
+	ScannerTest.o \
+	SieveTest.o \
 	StackableScannerTest.o \
 	RegexTest.o \
-	RSATest.o \
-	MPITest.o \
 	SmartPointerTest.o \
 	RationalTest.o \
 	FontGrapherTest.o \
@@ -27,17 +26,33 @@ OBJS= TestMain.o \
 	GeometryTest.o \
 	GraphicsTest.o \
 	BitmapTest.o \
-	EndianTest.o CBCTest.o \
-	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-	ImageTest.o SamplingScannerTest.o \
-	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-	IPTest.o NotifyTest.o RangeTest.o SingletonTest.o \
-	SingletonTestFunc1.o SingletonTestFunc2.o ThreadTest.o \
-	JulianDateTest.o \
-	EventTest.o \
+	EndianTest.o \
+	ThreadTest.o \
 	ThreadPoolTest.o \
+# 	ShiftJISTest.o \
+# 	ImageTest.o SamplingScannerTest.o \
+# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+# 	NotifyTest.o RangeTest.o SingletonTest.o \
+# 	SingletonTestFunc1.o SingletonTestFunc2.o \
+# 	LZSSTest.o \
+# 	EventTest.o \
+# 	JulianDateTest.o \
+# 	IPTest.o \
+# 	CBCTest.o \
+# 	AlgebraTheoryTest.o \
+# 	NumberTheoryTest.o \
+# 	AsymmetricKeyTest.o \
+# 	RSATest.o \
+# 	MPITest.o \
+# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
 
 DEPSOBJS= TestMain.d \
+	ShiftJISTest.d \
+	HTTPResultTest.d \
+	URLTest.d \
+	LexicalCastTest.d \
+	HTTPPropertyTest.d \
+	PropertyTest.d \
 	ScannerTest.d \
 	SieveTest.d \
 	LZSSTest.d \
@@ -83,8 +98,6 @@ document: ../Doxyfile
 $(TARGET): $(OBJS) Makefile
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS) 
 
-.cpp.o:
-	$(CXX) $(CXXFLAGS) -c $<
 
 %.d: %.cpp
 	$(CXX) -mno-cygwin -I.. -MM -MT $(<:.cpp=.o) $< >> makefile.depend

@@ -5,7 +5,7 @@
 
 /**
  * ラインダール暗号
- * @TODO まだ実装が完全ではありません
+ * @todo まだ実装が完全ではありません
  */
 template <size_t cipherBitsSize = 128, size_t keyBitsSize = 128>
 class Rijndael
@@ -208,7 +208,7 @@ private:
 
 	/**
 	 * SBox処理されたラインダール数から元のラインダール数を求める
-	 * @TODO 未実装
+	 * @todo 未実装
 	 */
 	const RijndaelNumber
 	getInvertSBoxValue(const RijndaelNumber& value) const

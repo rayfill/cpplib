@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <stdexcept>
 
 class SHA1
@@ -227,7 +229,7 @@ public:
 	template <typename Iterator> void setSource(Iterator current, Iterator tail)
 	{
 		for (; current != tail; ++current)
-			setSource(*current);
+			setSource(static_cast<const char>(*current));
 	}
 
 	void setSource(const char ch)
@@ -257,6 +259,20 @@ public:
 		return digest;
 	}
 
+	std::string toString()
+	{
+		std::vector<unsigned char> digest = getDigest();
+
+		std::stringstream code;
+
+		code.fill('0');
+		for (std::vector<unsigned char>::const_iterator itor = digest.begin();
+			 itor != digest.end(); ++itor)
+			code << std::setw(2) << std::hex <<
+				static_cast<unsigned short>(*itor);
+
+		return code.str();
+	}
 };
 
 #endif /* SHA1_HPP_ */

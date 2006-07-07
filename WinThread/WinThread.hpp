@@ -66,7 +66,7 @@ private:
 	/**
 	 * スレッドハンドル
 	 */
-	HANDLE ThreadHandle;
+	HANDLE threadHandle;
 
 	/**
 	 * スレッド識別子
@@ -92,6 +92,23 @@ private:
 		WinThread* This = static_cast<WinThread*>(DispatchKey);
 
 		return This->callback();
+	}
+
+	/**
+	 * 割り込み処理。
+	 * abort()された場合にスレッド内部でabort処理をするために
+	 * InterruptedExceptionを呼び出すヘルパ
+	 */
+	void processInterruption() throw (InterruptedException)
+	{
+		if (this->getThreadId() != self())
+			return;
+
+		if (isAbort())
+		{
+			isAborting = false;
+			throw InterruptedException();
+		}
 	}
 
 	/// コピー防止用
@@ -123,7 +140,8 @@ protected:
 
 	/**
 	 * システムコールバック用エントリポイント
-	 * 動作をカスタマイズできるようprotectedスコープに配置
+	 * @todo クリティカルセクションロックを変更してロック影響範囲を
+	 * もっと小さくする。
 	 */
 	virtual unsigned int callback() throw()
 	{
@@ -133,7 +151,7 @@ protected:
 			this->runningTarget = this;
 
 		{
-			CriticalSection atomicOp;
+			CriticalSection atomicOp(true);
 			this->runningTarget->prepare();
 			this->status = running;
 		}
@@ -159,7 +177,7 @@ protected:
 		}
 
 		{
-			CriticalSection atomicOp;
+			CriticalSection atomicOp(true);
 			this->runningTarget->dispose();
 			this->status = stop;
 		}
@@ -176,9 +194,9 @@ protected:
 	 */
 	void create(bool createOnRun) throw(ThreadException)
 	{
-		CriticalSection atomicOp;
+		CriticalSection atomicOp(true);
 
-		this->ThreadHandle = (HANDLE)_beginthreadex(
+		this->threadHandle = (HANDLE)_beginthreadex(
 			NULL,
 			0,
 			(unsigned (__stdcall*)(void*))WinThread::CallbackDispatcher,
@@ -186,8 +204,8 @@ protected:
 			createOnRun ? 0 : CREATE_SUSPENDED,
 			&this->ThreadId);
 
-		if (this->ThreadHandle == NULL ||
-			this->ThreadHandle == INVALID_HANDLE_VALUE)
+		if (this->threadHandle == NULL ||
+			this->threadHandle == INVALID_HANDLE_VALUE)
 			throw ThreadException("Can not create thread.");
 
 		status = created;
@@ -208,7 +226,7 @@ public:
 	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
-		: runningTarget(), status(), ThreadHandle(),
+		: runningTarget(this), status(), threadHandle(),
 		  ThreadId(), transporter(NULL), isAborting(false)
 	{
 		create(createOnRun);
@@ -221,7 +239,7 @@ public:
 	 */
 	WinThread(Runnable* runnable_,
 			  bool createOnRun = false) throw (ThreadException)
-		: runningTarget(runnable_), status(), ThreadHandle(),
+		: runningTarget(runnable_), status(), threadHandle(),
 		  ThreadId(), transporter(NULL), isAborting(false)
 	{
 		assert(runnable_ != NULL);
@@ -231,14 +249,17 @@ public:
 	/**
 	 * デストラクタ
 	 */
-	virtual ~WinThread() throw()
+	virtual ~WinThread() throw(ThreadException)
 	{
+		if (!(status == stop || status == created))
+			throw ThreadException();
+
 		assert(status == stop ||
 			   status == created);
 
-		if ((HANDLE)(this->ThreadHandle) != INVALID_HANDLE_VALUE ||
-			this->ThreadHandle != 0)
-			CloseHandle((HANDLE)this->ThreadHandle);
+		if ((HANDLE)(this->threadHandle) != INVALID_HANDLE_VALUE ||
+			this->threadHandle != 0)
+			CloseHandle((HANDLE)this->threadHandle);
 
 		if (transporter != NULL)
 			delete transporter;
@@ -250,14 +271,15 @@ public:
 	 */
 	virtual unsigned start() throw()
 	{
-		assert(this->ThreadHandle);
+		assert(this->threadHandle);
 
-		CriticalSection atomicOp;
-		assert(status == created);
+		CriticalSection atomicOp(true);
+		assert(status == created ||
+			status == suspend);
 
 		status = running;
 
-		DWORD resumeCount = ResumeThread((HANDLE)this->ThreadHandle);
+		DWORD resumeCount = ResumeThread((HANDLE)this->threadHandle);
 		assert(resumeCount == 1 || resumeCount == 0);
 		return resumeCount;
 	}
@@ -269,9 +291,9 @@ public:
 	 */
 	virtual unsigned start(Runnable* entryPoint) throw()
 	{
-		assert(this->ThreadHandle);
+		assert(this->threadHandle);
 
-		CriticalSection atomicOp;
+		CriticalSection atomicOp(true);
 		this->setRunningTarget(entryPoint);
 
 		return start();
@@ -283,7 +305,7 @@ public:
 	 */
 	bool isRunning() throw()
 	{
-		CriticalSection atomicOp;
+		CriticalSection atomicOp(true);
 		if (status == running || 
 			status == suspend)
 			return true;
@@ -322,9 +344,9 @@ public:
 	 */
 	void abort() throw()
 	{
-		assert(this->ThreadHandle != NULL);
+		assert(this->threadHandle != NULL);
 
-		CriticalSection atmicOp;
+		CriticalSection atmicOp(true);
 		isAborting = true;
 	}
 
@@ -333,11 +355,14 @@ public:
 	 */
 	void cancel() throw()
 	{
-		assert(this->ThreadHandle != NULL);
+		assert(this->threadHandle != NULL);
 
-		CriticalSection atomicOp;
-		DWORD suspendCount = SuspendThread((HANDLE)this->ThreadHandle);
+		CriticalSection atomicOp(true);
 		status = suspend;
+#ifndef NDEBUG		
+		DWORD suspendCount = 
+#endif
+			SuspendThread((HANDLE)this->threadHandle);
 
 		assert(suspendCount == 0);
 	}
@@ -370,14 +395,14 @@ public:
 	virtual unsigned join(DWORD waitTime = INFINITE)
 		throw(ThreadException, TimeoutException)
 	{
-		assert(this->ThreadHandle != NULL);
+		assert(this->threadHandle != NULL);
 
-		DWORD result = WaitForSingleObject(this->ThreadHandle, waitTime);
+		DWORD result = WaitForSingleObject(this->threadHandle, waitTime);
 		switch(result)
 		{
 		case WAIT_OBJECT_0:
 			unsigned retValue;
-			GetExitCodeThread(this->ThreadHandle, (DWORD*)&retValue);
+			GetExitCodeThread(this->threadHandle, (DWORD*)&retValue);
 			return retValue;
 
 		case WAIT_TIMEOUT:

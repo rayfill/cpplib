@@ -53,7 +53,7 @@ public:
 
 	/**
 	 * コンストラクタ
-	 * @param isAutoReset イベント検地後にシグナル停止にするかのフラグ
+	 * @param isAutoReset イベント検知後にシグナル停止にするかのフラグ
 	 * @note 名前なしイベントを作成する
 	 */
 	explicit WinEvent(bool isAutoReset) throw()
@@ -81,7 +81,10 @@ public:
 	{
 		assert(event != 0);
 
-		BOOL result = ::PulseEvent(event);
+#ifndef NDEBUG
+		BOOL result =
+#endif
+			::PulseEvent(event);
 
 		assert(result != FALSE);
 	}
@@ -93,7 +96,10 @@ public:
 	{
 		assert(event != 0);
 
-		BOOL result = ::SetEvent(event);
+#ifndef NDEBUG
+		BOOL result =
+#endif 
+			::SetEvent(event);
 
 		assert(result != FALSE);
 	}
@@ -105,7 +111,10 @@ public:
 	{
 		assert(event != 0);
 
-		BOOL result = ::ResetEvent(event);
+#ifndef NDEBUG
+		BOOL result =
+#endif
+			::ResetEvent(event);
 
 		assert(result != FALSE);
 	}
@@ -130,17 +139,19 @@ public:
 			assert(false);
 		else
 			assert(false && !"unknown result");
+
+		return false;
 	}
 
 	/**
 	 * イベント待ちブロッキング
 	 * イベントが到着するまで実行をブロックする。その間CPUは使わない
 	 */
-	void waitEventArrive()
+	void waitEventArrive(DWORD waitTime = INFINITE)
 	{
 		assert(event != 0);
 
-		this->isEventArrived(INFINITE);
+		this->isEventArrived(waitTime);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 #ifndef REGEXCOMPILE_HPP_
 #define REGEXCOMPILE_HPP_
 
+#include <util/SmartPointer.hpp>
 #include <string>
 #include <stdexcept>
 #include <iterator>
@@ -9,6 +10,7 @@
 #include <list>
 #include <utility>
 #include <set>
+#include <algorithm>
 
 #include <cassert>
 
@@ -48,7 +50,7 @@ public:
 	typedef CharType char_t;
 	typedef std::char_traits<char_t> char_trait_t;
 	typedef std::basic_string<char_t> string_t;
-	typedef typename string_t::iterator internal_iterator_t;
+	typedef typename string_t::const_iterator internal_iterator_t;
 
 private:
 	RegexScanner();
@@ -60,6 +62,10 @@ private:
 	internal_iterator_t last;
 
 public:
+	RegexScanner(const string_t& str):
+		head(str.begin()), current(str.begin()), last(str.end())
+	{}
+
 	RegexScanner(internal_iterator_t head_,
 				 internal_iterator_t last_):
 		head(head_), current(head_), last(last_)
@@ -72,9 +78,14 @@ public:
 
 	typename char_trait_t::int_type scan()
 	{
-		if (current != last)
+		/**
+		 * @todo 規格に反していると思います。
+		 * まぁ実際の実装的に大丈夫だと思うけど・・・
+		 */
+		if (current < last)
 			return char_trait_t::to_int_type(*current++);
 
+		++current;
 		return static_cast<typename char_trait_t::int_type>(-1);
 	}
 
@@ -84,6 +95,11 @@ public:
 			return char_trait_t::to_int_type(*current);
 
 		return static_cast<typename char_trait_t::int_type>(-1);
+	}
+
+	void advance(const size_t count)
+	{
+		current += count;
 	}
 
 	typename char_trait_t::int_type readAhead()
@@ -129,7 +145,11 @@ public:
 		typedef std::basic_string<CharType> string_t;
 
 	public:
-		OffsetPair(offset_t head_ = 0, offset_t last_ = string_t::npos)
+		OffsetPair(offset_t head_ = 0)
+			: head(head_), last(head_)
+		{}
+
+		OffsetPair(offset_t head_, offset_t last_)
 			: head(head_), last(last_)
 		{
 			if (this->getHead() > this->getLast())
@@ -184,33 +204,73 @@ private:
 	std::vector<OffsetPair> captures;
 
 	typedef int group_offset_t;
+
 public:
-	void setCapture(group_offset_t captureGroupNumber, const OffsetPair offsets)
+	RegexResult():
+		captures()
+	{}
+
+	RegexResult(const RegexResult& rhs):
+		captures(rhs.captures)
+	{}
+
+	RegexResult& operator=(const RegexResult& rhs)
+	{
+		captures = rhs.captures;
+	}
+
+	~RegexResult()
+	{}
+
+	void setCapture(group_offset_t captureGroupNumber,
+					const OffsetPair offsets)
 	{
 		assert(captures.size() >= static_cast<offset_t>(captureGroupNumber));
 
-		if (captureGroupNumber >= captures.size())
+		if (static_cast<size_t>(captureGroupNumber) >= captures.size())
 			captures.resize(captureGroupNumber + 1);
 
 		captures[captureGroupNumber] = offsets;
 	}
 
+	OffsetPair getCapture(group_offset_t captureGroupNumber) const
+	{
+		assert(captures.size() > static_cast<offset_t>(captureGroupNumber));
+
+		return captures[captureGroupNumber];
+	}
+
 	void setCaptureHead(group_offset_t captureGroupNumber, const offset_t head)
 	{
-		assert(captures.size() >= static_cast<offset_t>(captureGroupNumber));
-
 		if (static_cast<offset_t>(captureGroupNumber) >= captures.size())
 			captures.resize(captureGroupNumber + 1);
 
 		captures[captureGroupNumber] = OffsetPair(head);
 	}
 
-	void setCaptureLast(group_offset_t captureGroupNumber, const offset_t last)
+	void setCaptureTail(group_offset_t captureGroupNumber, const offset_t tail)
 	{
-		assert (static_cast<offset_t>(captureGroupNumber) < captures.size());
+		assert(static_cast<offset_t>(captureGroupNumber) < captures.size());
 
-		captures[captureGroupNumber] =
-			OffsetPair(captures[captureGroupNumber].getHead(), last);
+		captures[captureGroupNumber] = 
+			OffsetPair(captures[captureGroupNumber].getHead(), tail);
+	}
+
+	void remove(group_offset_t captureGroupNumber)
+	{
+		assert(static_cast<offset_t>(captureGroupNumber) < captures.size());
+
+		captures.erase(captures.begin() + captureGroupNumber, captures.end());
+	}
+
+	size_t size() const
+	{
+		return captures.size();
+	}
+
+	void clear()
+	{
+		captures.clear();
 	}
 
 	std::basic_string<char_t> getString(
@@ -222,7 +282,33 @@ public:
 
 		return captures[captureGroupNumber].getString(sourceStr);
 	}
+};
 
+/**
+ * isAcceptメソッドを軽量化するためのヘルパ構造体
+ */
+template <typename CharType>
+struct AcceptArgument
+{
+public:
+	typedef CharType char_t;
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+
+	scanner_t& scanner;
+	result_t& result;
+	const bool ignoreCase;
+
+	AcceptArgument(scanner_t& scanner_,
+				   result_t& result_,
+				   const bool ignoreCase_):
+		scanner(scanner_),
+		result(result_),
+		ignoreCase(ignoreCase_)
+	{}
+
+	~AcceptArgument()
+	{}
 };
 
 /**
@@ -231,6 +317,8 @@ public:
 template <typename CharType>
 class RegexToken
 {
+	friend class RegexTokenTest;
+
 public:
 	typedef CharType char_t;
 	typedef RegexToken* pointer_t;
@@ -247,7 +335,25 @@ private:
 	pointer_t next;
 
 protected:
-	std::list<pointer_t> epsilons;
+	std::vector<pointer_t> epsilons;
+
+	char_t lowerCase(char_t character) const
+	{
+		if (character >= 'A' &&
+			character <= 'Z')
+			return character + 0x20;
+		
+		return character;
+	}
+
+	char_t upperCase(char_t character) const
+	{
+		if (character >= 'a' &&
+			character <= 'z')
+			return character - 0x20;
+		
+		return character;
+	}
 
 public:
 	RegexToken():
@@ -264,19 +370,15 @@ public:
 
 	virtual ~RegexToken() {}
 
-	virtual pointer_t transit(char_t /*character*/) const
+	pointer_t transit(char_t /*character*/, bool ignoreCase) const
 	{
 		return getInvalidPointer();
 	}
 
-	virtual std::list<pointer_t> epsilonTransit() const
+	const std::vector<pointer_t>& epsilonTransit() const
 	{
 		return epsilons;
 	}
-
-	virtual void eval(RegexScanner<CharType>& scanner,
-					  RegexResult<CharType>& result)
-	{}
 
 	virtual void setNext(pointer_t newNext)
 	{
@@ -291,11 +393,17 @@ public:
 	void addEpsilon(pointer_t newEpsilon)
 	{
 		epsilons.push_back(newEpsilon);
+		assert(epsilons.size() <= 2);
 	}
 
 	void removeEpsilon(pointer_t removeValue)
 	{
-		epsilons.remove(removeValue);
+		typename std::vector<pointer_t>::iterator itor =
+			std::find(epsilons.begin(), epsilons.end(), removeValue);
+
+		assert(itor != epsilons.end());
+
+		epsilons.erase(itor);
 	}
 
 	virtual void traverse(std::set<token_t*>& alreadyList)
@@ -308,19 +416,19 @@ public:
 		if (next_ != getInvalidPointer())
 			next_->traverse(alreadyList);
 
-		std::list<pointer_t> epsilons = epsilonTransit();
-		for (typename std::list<pointer_t>::iterator itor = epsilons.begin();
-			 itor != epsilons.end();
-			 ++itor)
+		const std::vector<pointer_t>& epsilons = epsilonTransit();
+		for (typename std::vector<pointer_t>::const_iterator itor =
+				 epsilons.begin(); itor != epsilons.end(); ++itor)
 			(*itor)->traverse(alreadyList);
 	}
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
 
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	virtual bool isAccept(AcceptArgument<char_t>& /*argument*/) const
 	{
 		assert(!"not implement.");
+		return false;
 	}
 };
 
@@ -361,20 +469,24 @@ public:
 			base_t::addEpsilon(newNext);
 	}
 
-	virtual pointer_t transit(char_t) const
+	pointer_t transit(char_t, bool ignoreCase) const
 	{
 		return base_t::getInvalidPointer();
 	}
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+
+	/**
+	 * イプシロン遷移なので受諾/拒否ともにスキャナは操作しない。
+	 * リザルトも操作しない
+	 */
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
-		std::list<pointer_t> epsilons = this->epsilonTransit();
-		for (typename std::list<pointer_t>::iterator itor = epsilons.begin();
-			 itor != epsilons.end();
-			 ++itor)
-			if ((*itor)->isAccept(scanner, result))
+		const std::vector<pointer_t>& epsilons = this->epsilonTransit();
+		for (typename std::vector<pointer_t>::const_iterator itor =
+				 epsilons.begin(); itor != epsilons.end(); ++itor)
+			if ((*itor)->isAccept(argument))
 				return true;
 
 		return false;
@@ -389,7 +501,7 @@ class GroupHeadToken : public EpsilonToken<CharType>
 {
 public:
 	typedef EpsilonToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef typename base_t::pointer_t pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -410,17 +522,28 @@ public:
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	/**
+	 * 開き括弧遷移なのでスキャナは操作しない
+	 * リザルトは受諾時のみ現在位置の保存を行う
+	 */
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
-		result.setCaptureHead(this->getGroupNumber(),
-							  scanner.getPosition());
+		const size_t currentPosition = argument.scanner.getPosition();
 
-		std::list<pointer_t> epsilons = this->epsilonTransit();
-		assert(epsilons.size() == 1);
+		argument.result.setCaptureHead(this->getGroupNumber(), 0);
+		if (this->epsilons.front()->isAccept(argument))
+		{
+			const size_t currentLast =
+				argument.result.getCapture(this->getGroupNumber()).getLast();
+			argument.result.
+				setCapture(this->getGroupNumber(),
+						   typename result_t::OffsetPair(currentPosition,
+														 currentLast));
+			return true;
+		}
 
-		return epsilons.front()->isAccept(scanner, result);
+		return false;
 	}
-
 };
 
 /**
@@ -431,7 +554,7 @@ class GroupTailToken : public EpsilonToken<CharType>
 {
 public:
 	typedef EpsilonToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -452,10 +575,24 @@ public:
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+
+	/**
+	 * 受諾時、リザルトに終端位置を追加する。
+	 * 拒否時にはそのままスルーする。
+	 */
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
-		// set result tail position.
-		assert(false);
+		const std::vector<pointer_t>& epsilons = this->epsilonTransit();
+		assert(epsilons.size() == 1);
+
+		const size_t scanPosition = argument.scanner.getPosition();
+		if (epsilons.front()->isAccept(argument))
+		{
+			argument.result.setCaptureTail(this->getGroupNumber(),
+										   scanPosition);
+			return true;
+		}
+		return false;
 	}
 };
 
@@ -467,7 +604,7 @@ class RegexHead : public GroupHeadToken<CharType>
 {
 public:
 	typedef GroupHeadToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
 	
 	RegexHead():
@@ -479,14 +616,23 @@ public:
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
-		// set result head position. already result number of zero.
-		// sub token is accept failed then repeat scanner read token,
-		// repeat call sub token::isAccept().
-		assert(false);
-	}
+		if (argument.scanner.read() == -1)
+			return false;
 
+		do
+		{
+			argument.result.setCaptureHead(this->getGroupNumber(),
+										   argument.scanner.getPosition());
+
+			if (this->epsilons.front()->isAccept(argument))
+				return true;
+
+		} while (argument.scanner.scan() != -1);
+
+		return false;
+	}
 };
 
 /**
@@ -497,7 +643,7 @@ class RegexTail : public GroupTailToken<CharType>
 {
 public:
 	typedef GroupTailToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
 
 	RegexTail():
@@ -509,12 +655,15 @@ public:
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	/**
+	 * リザルトに終端位置を追加する。
+	 */
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
-		// set result tail position. already result number of zero.
-		assert(false);
+		argument.result.setCaptureTail(this->getGroupNumber(),
+									   argument.scanner.getPosition());
+		return true;
 	}
-
 };
 
 /**
@@ -525,7 +674,7 @@ class CharacterToken : public RegexToken<CharType>
 {
 public:
 	typedef RegexToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -547,9 +696,15 @@ public:
 	virtual ~CharacterToken()
 	{}
 
-	virtual pointer_t transit(char_t input) const
+	pointer_t transit(char_t input, bool ignoreCase) const
 	{
-		if (acceptCharacter == input)
+		if (ignoreCase)
+		{
+			if (acceptCharacter == base_t::lowerCase(input) ||
+				acceptCharacter == base_t::upperCase(input))
+				return base_t::getNext();
+		}
+		else if (acceptCharacter == input)
 			return base_t::getNext();
 
 		return base_t::getInvalidPointer();
@@ -557,13 +712,79 @@ public:
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
-	virtual bool isAccept(scanner_t& scanner, result_t& result)
+	/**
+	 * scannerから一文字取り出して自己と比較
+	 */
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
-		// if accept then scanner step ahead.
-		// but not accept scanner rewind and return false.
-		assert(false);
+		const int character = argument.scanner.scan();
+		if (character >= 0)
+		{
+			pointer_t next =this->transit(character,
+										  argument.ignoreCase);
+			if (next != base_t::getInvalidPointer() &&
+				next->isAccept(argument))
+				return true;
+		}
+		argument.scanner.backTrack();
+		return false;
+	}
+};
+
+/**
+ * 改行以外マッチトークンクラス
+ */
+template <typename CharType>
+class AnyMatchToken : public RegexToken<CharType>
+{
+public:
+	typedef RegexToken<CharType> base_t;
+	typedef RegexToken<CharType>* pointer_t;
+	typedef CharType char_t;
+
+private:
+	
+public:
+	AnyMatchToken():
+		base_t()
+	{}
+
+	AnyMatchToken(const AnyMatchToken& token):
+		base_t(token)
+	{}
+
+	AnyMatchToken(pointer_t next):
+		base_t(next)
+	{}
+
+	virtual ~AnyMatchToken()
+	{}
+
+	pointer_t transit(char_t /*input*/, bool /*ignoreCase*/) const
+	{
+		return base_t::getNext();
 	}
 
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	/**
+	 * scannerから一文字取り出して終端でなければマッチ
+	 */
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
+	{
+		const int character = argument.scanner.scan();
+		if (character >= 0 &&
+			character != '\r' &&
+			character != '\n')
+		{
+			pointer_t next =this->transit(character,
+										  argument.ignoreCase);
+			if (next->isAccept(argument))
+				return true;
+		}
+		argument.scanner.backTrack();
+		return false;
+	}
 };
 
 /**
@@ -574,7 +795,7 @@ class RangeToken : public RegexToken<CharType>
 {
 public:
 	typedef RegexToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -599,13 +820,30 @@ public:
 	virtual ~RangeToken()
 	{}
 
-	virtual pointer_t transit(char_t input) const
+	pointer_t transit(char_t input, bool ignoreCase) const
 	{
 		if (acceptMin <= input &&
 			acceptMax >= input)
 			return base_t::getNext();
 
 		return base_t::getInvalidPointer();
+	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
+	{
+		const int character = argument.scanner.scan();
+		if (character >= 0)
+		{
+			pointer_t next =this->transit(character,
+										  argument.ignoreCase);
+			if (next != base_t::getInvalidPointer() &&
+				next->isAccept(argument))
+				return true;
+		}
+		argument.scanner.backTrack();
+		return false;
 	}
 };
 
@@ -617,7 +855,7 @@ class SetToken : public RegexToken<CharType>
 {
 public:
 	typedef RegexToken<CharType> base_t;
-	typedef base_t* pointer_t;
+	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
 
 private:
@@ -648,15 +886,119 @@ public:
 		acceptSet.insert(character);
 	}
 
-	virtual pointer_t transit(char_t input) const
+	pointer_t transit(char_t input, bool ignoreCase) const
 	{
-		if (std::find(acceptSet.begin(), acceptSet.end(), input) !=
+		if (ignoreCase)
+		{
+			if (std::find(acceptSet.begin(),
+						  acceptSet.end(),
+						  base_t::lowerCase(input)) != acceptSet.end() ||
+				std::find(acceptSet.begin(),
+						  acceptSet.end(),
+						  base_t::upperCase(input)) != acceptSet.end())
+				return base_t::getNext();
+		}
+		else if (std::find(acceptSet.begin(), acceptSet.end(), input) !=
 			acceptSet.end())
 			return base_t::getNext();
 
 		return base_t::getInvalidPointer();
 	}
 
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
+	{
+		const int character = argument.scanner.scan();
+		if (character >= 0)
+		{
+			pointer_t next = this->transit(character,
+										   argument.ignoreCase);
+			if (next != base_t::getInvalidPointer() &&
+				next->isAccept(argument))
+				return true;
+		}
+
+		argument.scanner.backTrack();
+		return false;
+	}
+};
+
+/**
+ * 複数文字を含まないトークンクラス
+ */
+template <typename CharType>
+class NotSetToken : public RegexToken<CharType>
+{
+public:
+	typedef RegexToken<CharType> base_t;
+	typedef RegexToken<CharType>* pointer_t;
+	typedef CharType char_t;
+
+private:
+	std::set<char_t> rejectSet;
+	
+public:
+	NotSetToken():
+		base_t(), rejectSet()
+	{}
+
+	NotSetToken(const std::set<char_t>& sets):
+		base_t(), rejectSet(sets)
+	{}
+
+	NotSetToken(pointer_t next):
+		base_t(next), rejectSet()
+	{}
+
+	NotSetToken(const std::set<char_t>& sets, pointer_t next):
+		base_t(next), rejectSet(sets)
+	{}
+
+	virtual ~NotSetToken()
+	{}
+
+	void addReject(const char_t character)
+	{
+		rejectSet.insert(character);
+	}
+
+	pointer_t transit(char_t input, bool ignoreCase) const
+	{
+		if (ignoreCase)
+		{
+			if (std::find(rejectSet.begin(),
+						  rejectSet.end(),
+						  base_t::lowerCase(input)) != rejectSet.end() ||
+				std::find(rejectSet.begin(),
+						  rejectSet.end(),
+						  base_t::upperCase(input)) != rejectSet.end())
+				return base_t::getInvalidPointer();
+		}
+		else if (std::find(rejectSet.begin(), rejectSet.end(), input) !=
+			rejectSet.end())
+			return base_t::getInvalidPointer();
+
+		return base_t::getNext();
+	}
+
+	typedef RegexScanner<char_t> scanner_t;
+	typedef RegexResult<char_t> result_t;
+	virtual bool isAccept(AcceptArgument<char_t>& argument) const
+	{
+		const int character = argument.scanner.scan();
+		if (character >= 0)
+		{
+			pointer_t next = this->transit(character,
+										   argument.ignoreCase);
+			if (next != base_t::getInvalidPointer() &&
+				next->isAccept(argument))
+				return true;
+		}
+
+		argument.scanner.backTrack();
+		return false;
+	}
 };
 
 /**
@@ -675,9 +1017,21 @@ public:
 
 protected:
 	typedef EpsilonToken<char_t> epsilon_token_t;
+	typedef AnyMatchToken<char_t> any_token_t;
 	typedef CharacterToken<char_t> char_token_t;
 	typedef RangeToken<char_t> range_token_t;
 	typedef SetToken<char_t> set_token_t;
+	typedef GroupHeadToken<char_t> group_head_t;
+	typedef GroupTailToken<char_t> group_tail_t;
+
+	int parenCount;
+
+	static token_pair_t createAny()
+	{
+		token_t* result = new any_token_t();
+
+		return std::make_pair(result, result);
+	}
 
 	static token_pair_t createLiteral(const char_t character)
 	{
@@ -727,15 +1081,16 @@ protected:
 		return std::make_pair(selecter, terminater);
 	}
 
-	static token_pair_t group(token_t* left, token_t* right)
+	static token_pair_t group(token_t* left, token_t* right,
+							  const int groupNumber)
 	{
 		/*
 		 * g -> T -> t -> T::next
 		 *
 		 * g: grouper, T: token, t: terminater
 		 */
-		token_t* grouper = new epsilon_token_t();
-		token_t* terminater = new epsilon_token_t();
+		token_t* grouper = new group_head_t(groupNumber);
+		token_t* terminater = new group_tail_t(groupNumber);
 
 		grouper->setNext(left);
 		right->setNext(terminater);
@@ -743,9 +1098,9 @@ protected:
 		return std::make_pair(grouper, terminater);
 	}
 
-	static token_pair_t group(token_pair_t token)
+	static token_pair_t group(token_pair_t token, const int groupNumber)
 	{
-		return group(token.first, token.second);
+		return group(token.first, token.second, groupNumber);
 	}
 
 	static token_pair_t kleene(token_t* left, token_t* right)
@@ -828,11 +1183,154 @@ protected:
 	}
 
 public:
-	RegexAutomatonManager()
+	RegexAutomatonManager(): parenCount(0)
 	{}
 
 	~RegexAutomatonManager()
 	{}
+};
+
+
+/**
+ * RegexMatch内のheadを削除するためのファンクタ
+ */
+template <typename CharType>
+class TokenRemover
+{
+public:
+	/**
+	 * 削除ハンドラ
+	 * @param pointer 削除オブジェクトのポインタ
+	 */
+	static void remove(RegexToken<CharType>* pointer)
+	{
+		typedef std::set<RegexToken<CharType>*> objects_t;
+
+		objects_t automatons;
+		pointer->traverse(automatons);
+
+		for (typename objects_t::iterator itor = automatons.begin();
+			 itor != automatons.end(); ++itor)
+			delete *itor;
+
+		automatons.clear();
+	}
+};
+
+/**
+ * 正規表現マッチクラス
+ * @todo matchしたらマッチ個所のオブジェクトセットを返して
+ * matchedStringとかmatchedReplaceとかは別にヘルパ用意した設計の方が自然かも
+ */
+template <typename CharType>
+class RegexMatch
+{
+	friend class RegexMatchTest;
+
+public:
+	typedef CharType char_t;
+	typedef RegexResult<char_t> result_t;
+	typedef RegexScanner<char_t> scanner_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef SmartPointer<RegexToken<char_t>, TokenRemover<char_t> > smart_t;
+
+private:
+	result_t result;
+	smart_t head;
+	bool isMatched;
+
+public:
+		
+	RegexMatch(RegexToken<char_t>* first):
+		result(), head(first), isMatched(false)
+	{}
+
+	RegexMatch(const RegexMatch& rhs):
+		result(rhs.result), head(rhs.head), isMatched(rhs.isMatched)
+	{}
+
+	RegexMatch& operator=(const RegexMatch& rhs)
+	{
+		result = rhs.result;
+		head = rhs.head;
+		isMatched = rhs.isMatched;
+
+		return *this;
+	}
+
+	~RegexMatch()
+	{}
+
+	bool match(const string_t& source, bool ignoreCase = false)
+	{
+		scanner_t scanner(source.begin(), source.end());
+		result.clear();
+
+		AcceptArgument<char_t> arguments(scanner, result, ignoreCase);
+		isMatched = head->isAccept(arguments);
+		return isMatched;
+	}
+
+	bool nextMatch(const string_t& source, bool ignoreCase = false)
+	{
+		assert(isMatched == true);
+
+		const size_t offset = result.getCapture(0).getLast();
+		scanner_t scanner(source.begin(), source.end());
+		scanner.advance(offset);
+
+		result.clear();
+
+		AcceptArgument<char_t> arguments(scanner, result, ignoreCase);
+		isMatched = head->isAccept(arguments);
+
+		return isMatched;
+		
+	}
+
+	string_t matchedString(const string_t& source,
+						   const int groupNumber = 0) const
+	{
+		assert(isMatched == true);
+		assert(static_cast<size_t>(groupNumber) < result.size());
+
+		return result.getString(groupNumber, source);
+	}
+
+	string_t matchedReplace(const string_t& source,
+							const string_t& replaceString,
+							const int groupNumber = 0) const
+	{
+		assert(isMatched == true);
+		assert(static_cast<size_t>(groupNumber) < result.size());
+
+		typename result_t::OffsetPair offsetPair =
+			result.getCapture(groupNumber);
+
+		return source.substr(0, offsetPair.getHead()) +
+			replaceString + 
+			source.substr(offsetPair.getLast(), string_t::npos);
+	}
+
+	void reset()
+	{
+		isMatched = false;
+		result.clear();
+	}
+
+	size_t size() const
+	{
+		return result.size();
+	}
+
+	std::pair<size_t, size_t> getCapture(const int groupNumber) const
+	{
+		assert(groupNumber < this->size());
+
+		typename result_t::OffsetPair pair = result.getCapture(groupNumber);
+		
+		return std::make_pair(pair.getHead(), pair.getLast());
+	}
 };
 
 /**
@@ -846,6 +1344,7 @@ class RegexCompiler : public RegexAutomatonManager<CharType>
 
 private:
 	typedef CharType char_t;
+	typedef std::basic_string<char_t> string_t;
 	typedef RegexAutomatonManager<CharType> base_t;
 	typedef base_t* pointer_t;
 
@@ -854,6 +1353,9 @@ private:
 	typedef CharacterToken<char_t> char_token_t;
 	typedef RangeToken<char_t> range_token_t;
 	typedef SetToken<char_t> set_token_t;
+	typedef NotSetToken<char_t> notset_token_t;
+
+	int maxParenCount;
 
 public:
 	typedef std::pair<token_t*, token_t*> token_pair_t;
@@ -864,11 +1366,10 @@ private:
 		switch (character)
 		{
 		case '*':
-			return true;
-
 		case '+':
 		case '?':
-			assert(false); // not support yet.
+			return true;
+
 		}
 
 		return false;
@@ -877,6 +1378,11 @@ private:
 
 	typedef RegexScanner<char_t> scanner_t;
 	typedef std::char_traits<char_t> char_trait_t;
+
+	token_pair_t compileAny()
+	{
+		return base_t::createAny();
+	}
 
 	token_pair_t compileLiteral(typename char_trait_t::int_type currentRead,
 								scanner_t& scanner)
@@ -890,6 +1396,71 @@ private:
 		}
 
 		return literal;
+	}
+
+	std::set<char_t> compileGroups(typename string_t::const_iterator itor,
+								   typename string_t::const_iterator end)
+	{
+		std::set<char_t> groups;
+		typename string_t::const_iterator first = itor;
+
+		while (itor != end)
+		{
+			if (*itor == '-' &&
+				itor != first &&
+				(itor + 1) != end)
+			{
+				char current = *(itor - 1);
+				char last = *(++itor);
+				if (current >= last)
+					throw CompileError("range first greater than second.");
+
+				while (current != last)
+					groups.insert(current++);
+			}
+			else
+			{
+				groups.insert(*itor++);
+			}
+		}
+
+		return groups;
+	}
+
+	token_pair_t compileSet(scanner_t& scanner)
+	{
+		typedef std::char_traits<char_t> trait_t;
+
+		string_t setString;
+
+		int temp = scanner.scan();
+		if (temp == -1)
+			throw CompileError("unmatched [] bracket.");
+
+		setString += trait_t::to_char_type(temp);
+
+		while ((temp = scanner.scan()) >= 0)
+		{
+			if (trait_t::to_char_type(temp) == ']')
+				break;
+
+			setString += trait_t::to_char_type(temp);
+		}
+
+		if (trait_t::to_char_type(temp) != ']')
+			throw CompileError("unmatched [] bracket.");
+
+		const bool isReject = setString[0] == '^';
+		typename string_t::const_iterator itor = 
+			isReject ? setString.begin() + 1 : setString.begin();
+
+		std::set<char_t> groups = compileGroups(itor, setString.end());
+		
+		token_t* token = isReject ?
+			static_cast<token_t*>(new notset_token_t(groups)) :
+			static_cast<token_t*>(new set_token_t(groups));
+
+		return std::make_pair(token, token);
 	}
 
 	token_pair_t compileStar(token_pair_t tokenPair)
@@ -912,9 +1483,9 @@ private:
 		return base_t::select(leftToken, subCompile(scanner));
 	}
 
-	token_pair_t groupCompile(scanner_t& scanner)
+	token_pair_t groupCompile(scanner_t& scanner, const int groupNumber)
 	{
-		return base_t::group(subCompile(scanner));
+		return base_t::group(subCompile(scanner), groupNumber);
 	}
 
 	token_pair_t concatinateTokens(std::vector<token_pair_t>& parseStack) const
@@ -942,6 +1513,9 @@ private:
 		return right;
 	}
 
+	/**
+	 * @todo バックスラッシュによるエスケープ
+	 */
 	token_pair_t subCompile(scanner_t& scanner)
 	{
 		std::vector<token_pair_t> parseStack;
@@ -977,25 +1551,45 @@ private:
 				}
 
 				case '|':
-					return selectCompile(
-						scanner, concatinateTokens(parseStack));
+					return selectCompile(scanner,
+										 concatinateTokens(parseStack));
 
 				case '(':
-					++parenCount;
-					parseStack.push_back(groupCompile(scanner));
+					++base_t::parenCount;
+					++maxParenCount;
+					assert(base_t::parenCount > 0);
+					assert(maxParenCount > 0);
+					parseStack.push_back(groupCompile(scanner,
+													  maxParenCount));
 					break;
 
 				case ')':
-					--parenCount;
+					if (base_t::parenCount <= 0)
+						throw CompileError("not match paren count.");
+					--base_t::parenCount;
 					return concatinateTokens(parseStack);
 
-// 				case '[':
-// 					setCompile(scanner);
-// 					break;
+				case '[':
+					parseStack.push_back(compileSet(scanner));
+					break;
 
+				case '.':
+					parseStack.push_back(compileAny());
+					break;
+
+				case '\\':
+					if (scanner.read() == -1)
+						throw CompileError("escape character not found.");
+					currentRead = scanner.scan();
+					if (currentRead == 'n')
+						currentRead = '\n';
+					else if (currentRead == 't')
+						currentRead = '	'; // as \t(tab)
+					else if (currentRead == 'r')
+						currentRead = '\r';
+						
 				default:
-					parseStack.push_back(
-						compileLiteral(currentRead, scanner));
+					parseStack.push_back(compileLiteral(currentRead, scanner));
 					break;
 			}
 		}
@@ -1003,31 +1597,51 @@ private:
 		return concatinateTokens(parseStack);
 	}
 
-public:
-	token_pair_t compile(std::string pattern)
+	token_pair_t compileInternal(std::string pattern)
 	{
+		if (pattern.begin() == pattern.end())
+		{
+			RegexHead<char_t>* head = new RegexHead<char_t>();
+			RegexTail<char_t>* tail = new RegexTail<char_t>();
+
+			concatinate(head, tail);
+			return std::make_pair(head, tail);
+		}
+			
 		scanner_t scanner(pattern.begin(), pattern.end());
 
-		parenCount = 0;
+		base_t::parenCount = 0;
+		maxParenCount = 0;
 
 		token_pair_t pair = subCompile(scanner);
 
-		if (parenCount != 0)
+		if (base_t::parenCount != 0)
 			throw CompileError("not match paren pairs.");
 
-		return pair;
+		// attach RegexHead and RegexTail.
+		RegexHead<char_t>* head = new RegexHead<char_t>();
+		RegexTail<char_t>* tail = new RegexTail<char_t>();
+
+		concatinate(head, pair.first);
+		concatinate(pair.second, tail);
+
+		return std::make_pair(head, tail);
 	}
 
-	int parenCount;
-
+public:
 	RegexCompiler():
-		base_t(), parenCount(0)
+		base_t(), maxParenCount()
 	{}
 
-	RegexCompiler(const std::string& pattern):
-		base_t(), parenCount(0)
+	~RegexCompiler()
 	{}
-	
+
+	RegexMatch<char_t> compile(std::string pattern)
+	{
+		token_pair_t tokenPair = compileInternal(pattern);
+
+		return RegexMatch<char_t>(tokenPair.first);
+	}
 };
 
 #endif /* REGEXCOMPILE_HPP_ */

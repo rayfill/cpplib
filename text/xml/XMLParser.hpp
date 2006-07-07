@@ -12,28 +12,34 @@
 /**
  * XMLノードクラス
  */
+template <typename CharType, typename NodeType>
 class XMLNode
 {
+public:
 	friend class XMLNodeTest;
-	typedef std::vector<XMLNode*> NodeType;
+	typedef CharType char_t;
+	typedef NodeType node_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef std::vector<node_t*> nodes_t;
 
 protected:
 	/**
 	 * 親ノードへのポインタ
 	 */
-	XMLNode* parent;
+	node_t* parent;
 
 	/**
 	 * 子ノードのコレクション
 	 */
-	NodeType children;
+	nodes_t children;
 
 public:
 	/**
 	 * コンストラクタ
 	 * @param parent 親クラスへのポインタ
 	 */
-	XMLNode(XMLNode* parent = NULL):
+	XMLNode(node_t* parent = NULL):
 		parent(NULL),
 		children()
 	{}
@@ -43,7 +49,7 @@ public:
 	 */
 	virtual ~XMLNode() throw()
 	{
-		for (NodeType::iterator itor = children.begin();
+		for (typename nodes_t::iterator itor = children.begin();
 			 itor != children.end();
 			 ++itor)
 			delete *itor;
@@ -53,12 +59,12 @@ public:
 	 * 次の兄弟レベルのノードの探索
 	 * @return 見つかった次の兄弟ノードのポインタ。次が無い場合はNULLがかえる
 	 */
-	XMLNode* getNextSibling() const throw(std::logic_error)
+	node_t* getNextSibling() const throw(std::logic_error)
 	{
 		if (parent == NULL)
 			return NULL;
 
-		NodeType::iterator itor =
+		typename nodes_t::iterator itor =
 			std::find(parent->children.begin(),
 					  parent->children.end(),
 					  this);
@@ -76,12 +82,12 @@ public:
 	 * 前の兄弟レベルのノードの探索
 	 * @return 前の兄弟レベルノード
 	 */
-	XMLNode* getPrevSibling() const throw(std::logic_error)
+	node_t* getPrevSibling() const throw(std::logic_error)
 	{
 		if (parent == NULL)
 			return NULL;
 
-		NodeType::iterator itor =
+		typename nodes_t::iterator itor =
 			std::find(parent->children.begin(),
 					  parent->children.end(),
 					  this);
@@ -99,9 +105,9 @@ public:
 	 * 子ノードの追加
 	 * @param newChild 新しい子供ノード
 	 */
-	void addChild(XMLNode* newChild)
+	void addChild(node_t* newChild)
 	{
-		newChild->parent = this;
+		newChild->parent = dynamic_cast<node_t*>(this);
 		children.push_back(newChild);
 	}
 
@@ -110,9 +116,9 @@ public:
 	 * @param child 削除する子供ノード
 	 * ノードが見つからない場合、何もしません
 	 */
-	void removeChild(XMLNode* child)
+	void removeChild(node_t* child)
 	{
-		NodeType::iterator itor =
+		typename nodes_t::iterator itor =
 			std::find(children.begin(), children.end(), child);
 
 		if (itor != children.end())
@@ -125,9 +131,10 @@ public:
 	/**
 	 * 親ノードへの接合
 	 * @param newParent 親ノード
-	 * @todo スコープprivateにして親からの接合しかできないようにした方がいいかも。
+	 * @todo スコープprivateにして親からの接合しかできないように
+	 * した方がいいかも。
 	 */
-	void setParent(XMLNode* newParent) throw()
+	void setParent(node_t* newParent) throw()
 	{
 		this->parent = newParent;
 	}
@@ -136,7 +143,7 @@ public:
 	 * 親ノードの取得
 	 * @return 親ノード
 	 */
-	XMLNode* getParent() const throw()
+	node_t* getParent() const throw()
 	{
 		return this->parent;
 	}
@@ -146,7 +153,7 @@ public:
 	 * @param index 0ベースインデックスとした子供ノードの位置。
 	 * インデックスが無効な場合NULLを返す。
 	 */
-	XMLNode* getChild(const size_t index) const throw()
+	node_t* getChild(const size_t index) const throw()
 	{
 		if (index < children.size())
 			return children[index];
@@ -158,10 +165,17 @@ public:
 	 * 子ノード達の取得
 	 * @return すべての子ノード
 	 */
-	std::vector<XMLNode*> getChildren() const throw()
+	std::vector<node_t*> getChildren() const throw()
 	{
 		return children;
 	}
+
+	/**
+	 * 文字列変換
+	 * @param indentLevel プリティプリント用インデントレベル
+	 * @return 要素の文字列表現
+	 */
+	virtual string_t toString(const size_t indentLevel = 0) const throw() = 0;
 };
 
 /**
@@ -170,21 +184,26 @@ public:
  * @param DeriverdType 見つけるノード型
  * @todo これをコマンドパターンに変更してXPathのサポート述語の拡大を・・・
  */
-template <typename BaseType, typename DeriverdType>
+template <typename BaseType, typename DeriverdType, typename CharType>
 class FindNamePredicate
 {
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+
 private:
 	/**
 	 * 見つけるノード名
 	 */
-	std::wstring findName;
+	string_t findName;
 
 public:
 	/**
 	 * コンストラクタ
 	 * @param name 見つけるノード名
 	 */
-	FindNamePredicate(const std::wstring& name)
+	FindNamePredicate(const string_t& name)
 		: findName(name)
 	{}
 
@@ -210,24 +229,25 @@ public:
 	}
 };
 
-class TagElement;
+template <typename CharType> class TagElement;
 
 /**
  * XML要素クラス
  */
-class Element : public XMLNode
+template <typename CharType>
+class Element : public XMLNode<CharType, Element<CharType> >
 {
 private:
 	Element(const Element& );
 	Element& operator=(const Element&);
 
 public:
-	/**
-	 * 文字列変換
-	 * @param indentLevel プリティプリント用インデントレベル
-	 * @return 要素の文字列表現
-	 */
-	virtual std::wstring toString(const size_t indentLevel = 0) const throw() = 0;
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > base_t;
+	typedef typename base_t::nodes_t node_t;
+	typedef TagElement<char_t> tag_element_t;
 
 	/**
 	 * コンストラクタ
@@ -246,14 +266,14 @@ public:
 	 * @param name タグの名前
 	 * @return 見つかったXML要素のポインタ。見つからない場合はNULL
 	 */
-	virtual Element* getChildElement(const std::wstring& name)
+	virtual Element* getChildElement(const string_t& name)
 	{
-		NodeType::iterator itor =
-			std::find_if(children.begin(),
-						 children.end(),
-						 FindNamePredicate<XMLNode, TagElement>(name));
+		typename node_t::iterator itor =
+			std::find_if(base_t::children.begin(),
+						 base_t::children.end(),
+						 FindNamePredicate<base_t, tag_element_t, char_t>(name));
 
-		if (itor != children.end())
+		if (itor != base_t::children.end())
 			return dynamic_cast<Element*>(*itor);
 
 		return NULL;
@@ -262,16 +282,16 @@ public:
 	/**
 	 * 名前で指定した子要素の取得
 	 * @param name タグの名前
-	 * @return 見つかったXML要素のコレクション。見つからない場合は空のコレクション。
+	 * @return 見つかったXML要素のコレクション。
+	 * 見つからない場合は空のコレクション。
 	 */
-	virtual std::vector<Element*> getChildrenElements(const std::wstring& name)
+	virtual std::vector<Element*> getChildrenElements(const string_t& name)
 	{
-		FindNamePredicate<XMLNode, TagElement> predicate(name);
+		FindNamePredicate<base_t, tag_element_t, char_t> predicate(name);
 		std::vector<Element*> result;
 
-		for (NodeType::iterator itor = children.begin();
-			 itor != children.end();
-			 ++itor)
+		for (typename node_t::iterator itor = base_t::children.begin();
+			 itor != base_t::children.end(); ++itor)
 		{
 			if (predicate(*itor))
 				result.push_back(dynamic_cast<Element*>(*itor));
@@ -285,20 +305,29 @@ public:
 /**
  * XMLタグ要素
  */
-class TagElement : public Element
+template <typename CharType>
+class TagElement : public Element<CharType>
 {
 	friend class XMLParserTest;
+
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > node_t;
+	typedef Element<char_t> element_t;
+
 
 protected:
 	/**
 	 * タグの名前
 	 */
-	std::wstring tagName;
+	string_t tagName;
 
 	/**
 	 * タグの属性
 	 */
-	std::map<std::wstring, std::wstring> attributes;
+	std::map<string_t, string_t> attributes;
 
 public:
 	/**
@@ -306,8 +335,8 @@ public:
 	 * @param tagName_ タグの名前
 	 * @param attrubutes_ タグの属性
 	 */
-	TagElement(const std::wstring& tagName_,
-			   const std::map<std::wstring, std::wstring>& attributes_)
+	TagElement(const string_t& tagName_,
+			   const std::map<string_t, string_t>& attributes_)
 		:tagName(tagName_),
 		 attributes(attributes_)
 	{}
@@ -316,32 +345,30 @@ public:
 	 * コンストラクタ
 	 * @param token タグ名を含んだパース結果文字列
 	 */
-	TagElement(const std::wstring& token) throw(InvalidTagException)
-		:tagName(token.substr(0, token.find(L' '))),
+	TagElement(const string_t& token) throw(InvalidTagException)
+		:tagName(token.substr(0, token.find(' '))),
 		 attributes()
 	{
 		// skip white space.
-		std::wstring::size_type position =
-			token.find_first_not_of(L' ', tagName.length());
+		typename string_t::size_type position =
+			token.find_first_not_of(' ', tagName.length());
 
-		std::wstring attributesName;
-		std::wstring attributesValue;
+		string_t attributesName;
+		string_t attributesValue;
 
 		while (position < token.length())
 		{
 			// search attribute '=' token.
-			const std::wstring::size_type
-				equalPos = token.find(L'=', position + 1);
+			const typename string_t::size_type
+				equalPos = token.find('=', position + 1);
 
 			// not found to quit.
-			if (equalPos == std::wstring::npos)
+			if (equalPos == string_t::npos)
 			{
-				if (token.substr(position + 1).find_first_not_of(L' ') ==
-					std::wstring::npos)
-					break;
-
-				else
+				if (token.substr(position + 1).find_first_not_of(' ') !=
+					string_t::npos)
 					throw InvalidTagException();
+				break;
 			}
 
 			// found to get attributes name.
@@ -349,15 +376,15 @@ public:
 				token.substr(position, equalPos - position);
 
 			// equal token's next token is double quote.
-			if (token[equalPos + 1] != L'"')
+			if (token[equalPos + 1] != '"')
 				throw InvalidTagException();
 
 			// search closed quote pos.
-			const std::wstring::size_type
-				quotePos = token.find(L'"', equalPos + 2);
+			const typename string_t::size_type
+				quotePos = token.find('"', equalPos + 2);
 
 			// not found to invalid tag.
-			if (quotePos == std::wstring::npos)
+			if (quotePos == string_t::npos)
 				throw InvalidTagException();
 
 			// found to get attributes value.
@@ -368,7 +395,7 @@ public:
 			attributes[attributesName] = attributesValue;
 
 			// set next iterate.
-			position = token.find_first_not_of(L' ', quotePos + 1);
+			position = token.find_first_not_of(' ', quotePos + 1);
 		}
 	}
 
@@ -378,38 +405,53 @@ public:
 	virtual ~TagElement() throw()
 	{}
 
-	virtual std::wstring toString(const size_t indentLevel = 0) const throw()
+	virtual string_t toString(const size_t indentLevel = 0) const throw()
 	{
-		std::wstring result(indentLevel, L' ');
-		result += L"<";
+		string_t result(indentLevel, ' ');
+		result += '<';
 		result += tagName;
 
-		for (std::map<std::wstring, std::wstring>::const_iterator
+		for (typename std::map<string_t, string_t>::const_iterator
 				 itor = attributes.begin();
-			 itor != attributes.end();
-			 ++itor)
-			result += L" " + itor->first + L"=\"" + itor->second + L"\"";
+			 itor != attributes.end(); ++itor)
+		{
+			result += ' ';
+			result += itor->first;
+			result += '=';
+			result += '"';
+			result += itor->second;
+			result += '"';
+		}
 		
-		if (children.size() == 0)
-			result += L" />\n";
+		if (node_t::children.size() == 0)
+		{
+			result += ' ';
+			result += '/';
+			result += '>';
+			result += '\n';
+		}
 
 		else
 		{
-			result += L">\n";
+			result += '>';
+			result += '\n';
 
 			size_t index = 0;
-			XMLNode* currentChild = this->getChild(index++);
+			node_t* currentChild = this->getChild(index++);
 			while (currentChild != NULL)
 			{
 				result += 
-					dynamic_cast<Element*>(currentChild)->
+					dynamic_cast<element_t*>(currentChild)->
 					toString(indentLevel+1);
 				currentChild = this->getChild(index++);
 			}
 
-			result +=
-				std::wstring(indentLevel, L' ') +
-				L"</" + tagName + L">\n";
+			result += string_t(indentLevel, ' ');
+			result += '<';
+			result += '/';
+			result += tagName;
+			result += '>';
+			result += '\n';
 		}
 
 		return result;
@@ -419,7 +461,7 @@ public:
 	 * タグ名の取得
 	 * @return タグ名
 	 */
-	std::wstring getTagName() const throw()
+	string_t getTagName() const throw()
 	{
 		return tagName;
 	}
@@ -428,7 +470,7 @@ public:
 	 * 属性セットの取得
 	 * @return 属性のコレクション
 	 */
-	std::map<std::wstring, std::wstring> getAttributes() const throw()
+	std::map<string_t, string_t> getAttributes() const throw()
 	{
 		return attributes;
 	}
@@ -437,7 +479,8 @@ public:
 	 * 属性セットの設定
 	 * @param newAttributes 新しい属性のコレクション
 	 */
-	void setAttributes(const std::map<std::wstring, std::wstring>& newAttributes) throw()
+	void setAttributes(const std::map<string_t, string_t>& newAttributes)
+		throw()
 	{
 		attributes = newAttributes;
 	}
@@ -447,9 +490,9 @@ public:
 	 * @param attributeName 属性の名前
 	 * @return 属性の値
 	 */
-	std::wstring getAttribute(const std::wstring& attributeName) const throw()
+	string_t getAttribute(const string_t& attributeName) const throw()
 	{
-		std::map<std::wstring, std::wstring>::const_iterator itor =
+		typename std::map<string_t, string_t>::const_iterator itor =
 			attributes.find(attributeName);
 
 		if (itor != attributes.end())
@@ -463,7 +506,7 @@ public:
 	 * @param name 属性の名前
 	 * @param value 属性の値
 	 */
-	void setAttribute(const std::wstring& name, const std::wstring& value) throw()
+	void setAttribute(const string_t& name, const string_t& value) throw()
 	{
 		attributes[name] = value;
 	}
@@ -472,22 +515,28 @@ public:
 /**
  * コメントを表す要素
  */
-class CommentElement : public Element
+template <typename CharType>
+class CommentElement : public Element<CharType>
 {
 	friend class CommentElementTest;
+
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
 
 private:
 	/**
 	 * コメント
 	 */
-	std::wstring value;
+	string_t value;
 
 public:
 	/**
 	 * コンストラクタ
 	 * @param value_ コメント文字列
 	 */
-	CommentElement(const std::wstring& value_): value(value_)
+	CommentElement(const string_t& value_): value(value_)
 	{}
 
 	/**
@@ -496,20 +545,30 @@ public:
 	virtual ~CommentElement() throw()
 	{}
 
-	virtual std::wstring toString(const size_t indentLevel = 0) const throw()
+	virtual string_t toString(const size_t indentLevel = 0) const throw()
 	{
+		string_t commentPrefix;
+		commentPrefix += '<';
+		commentPrefix += '!';
+		commentPrefix += '-';
+		commentPrefix += '-';
+		string_t commentSuffix;
+		commentSuffix += '-';
+		commentSuffix += '-';
+		commentSuffix += '>';
+		commentSuffix += '\n';
 		return
-			std::wstring(indentLevel, L' ') +
-			std::wstring(L"<!--") +
+			string_t(indentLevel, ' ') +
+			commentPrefix +
 			value +
-			std::wstring(L"-->\n");
+			commentSuffix;
 	}
 
 	/**
 	 * コメント文字列の取得
 	 * @return コメント文字列
 	 */
-	std::wstring getComment() const throw()
+	string_t getComment() const throw()
 	{
 		return value;
 	}
@@ -518,7 +577,7 @@ public:
 	 * コメント文字列の設定
 	 * @param comment 新しいコメント文字列
 	 */
-	void setComment(const std::wstring& comment) throw()
+	void setComment(const string_t& comment) throw()
 	{
 		value = comment;
 	}
@@ -528,22 +587,28 @@ public:
  * CDATA文字列要素
  * @note 前後の空白文字をchopするヘルパがあってもいいかも
  */
-class StringElement : public Element
+template <typename CharType>
+class StringElement : public Element<CharType>
 {
 	friend class StringElementTest;
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > base_t;
 
 private:
 	/**
 	 * 文字列
 	 */
-	std::wstring value;
+	string_t value;
 
 public:
 	/**
 	 * コンストラクタ
 	 * @param value_ CDATA文字列
 	 */
-	StringElement(const std::wstring& value_): value(value_)
+	StringElement(const string_t& value_): value(value_)
 	{}
 
 	/**
@@ -552,16 +617,19 @@ public:
 	virtual ~StringElement() throw()
 	{}
 	
-	virtual std::wstring toString(const size_t indentLevel = 0) const throw()
+	virtual string_t toString(const size_t indentLevel = 0) const throw()
 	{
-		return std::wstring(indentLevel, L' ') + value + L"\n";
+		 string_t result = string_t(indentLevel, ' ');
+		 result += value;
+		 result += '\n';
+		 return result;
 	}
 	
 	/**
 	 * CDATA文字列の取得
 	 * @return 文字列
 	 */
-	std::wstring getString() const throw()
+	string_t getString() const throw()
 	{
 		return value;
 	}
@@ -571,7 +639,7 @@ public:
 	 * @param newString
 	 * 新しいCDATA文字列
 	 */
-	void setString(const std::wstring& newString) throw()
+	void setString(const string_t& newString) throw()
 	{
 		value = newString;
 	}
@@ -581,17 +649,24 @@ public:
 /**
  * METAタグ要素
  */
-class MetaElement : public TagElement
+template <typename CharType>
+class MetaElement : public TagElement<CharType>
 {
 	friend class XMLParserTest;
 
 public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > base_t;
+	typedef TagElement<char_t> tag_element_t;
+
 	/**
 	 * コンストラクタ
 	 * param token METAタグ名
 	 */
-	MetaElement(const std::wstring& token):
-		TagElement(token)
+	MetaElement(const string_t& token):
+		TagElement<CharType>(token)
 	{}
 
 	/**
@@ -600,21 +675,30 @@ public:
 	virtual ~MetaElement() throw()
 	{}
 
-	virtual std::wstring toString(const size_t indentLevel = 0) const throw()
+	virtual string_t toString(const size_t indentLevel = 0) const throw()
 	{
-		assert(children.size() == 0);
+		assert(base_t::children.size() == 0);
 
-		std::wstring result(indentLevel, L' ');
-		result += std::wstring(L"<?");
-		result += tagName;
+		string_t result(indentLevel, ' ');
+		result += '<';
+		result+= '?';
+		result += tag_element_t::tagName;
 
-		for (std::map<std::wstring, std::wstring>::const_iterator
-				 itor = attributes.begin();
-			 itor != attributes.end();
-			 ++itor)
-			result += L" " + itor->first + L"=\"" + itor->second + L"\"";
+		for (typename std::map<string_t, string_t>::const_iterator
+				 itor = tag_element_t::attributes.begin();
+			 itor != tag_element_t::attributes.end(); ++itor)
+		{
+			result += ' ';
+			result += itor->first;
+			result += '=';
+			result += '"';
+			result += itor->second;
+			result += '"';
+		}
 		
-		result += L" ?>";
+		result += ' ';
+		result += '?';
+		result += '>';
 
 		return result;
 	}
@@ -623,17 +707,27 @@ public:
 /**
  * XMLドキュメントクラス
  */
-class XMLDocument : public Element
+template <typename CharType>
+class XMLDocument : public Element<CharType>
 {
 public:
-	virtual std::wstring toString(const size_t = 0) const throw()
-	{
-		std::wstring result;
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > base_t;
+	typedef typename base_t::nodes_t node_t;
 
-		for (NodeType::const_iterator itor = children.begin();
-			 itor != children.end();
-			 ++itor)
-			result += dynamic_cast<const Element*>(*itor)->toString() + L"\n";
+	virtual string_t toString(const size_t = 0) const throw()
+	{
+		string_t result;
+
+		for (typename node_t::const_iterator itor = base_t::children.begin();
+			 itor != base_t::children.end(); ++itor)
+		{
+			result +=
+				dynamic_cast<const Element<char_t>*>(*itor)->toString();
+			result += '\n';
+		}
 
 		return result;
 	}
@@ -654,37 +748,46 @@ public:
 /**
  * XMLPathパーサ
  */
+template <typename CharType>
 class XMLPath
 {
 	friend class XMLParserTest;
+
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef Element<char_t> base_t;
+	typedef Element<char_t> element_t;
+	typedef TagElement<char_t> tag_element_t;
+	typedef typename base_t::nodes_t node_t;
 
 private:
 	/**
 	 * 検索パス
 	 */
-	std::wstring path;
+	string_t path;
 
 	/**
 	 * 文字列から整数値への変換ヘルパ
 	 * @param value 文字列
 	 * @return 整数値
 	 */
-	int strToInt(const std::wstring& value)
+	int strToInt(const string_t& value)
 		const throw(std::invalid_argument)
 	{
 		int result = 0;
-		for (std::wstring::const_iterator itor = value.begin();
-			 itor != value.end();
-			 ++itor)
+		for (typename string_t::const_iterator itor = value.begin();
+			 itor != value.end(); ++itor)
 		{
 			result *= 10;
-			if (*itor >= L'0' &&
-				*itor <= L'9')
+			if (*itor >= '0' &&
+				*itor <= '9')
 			{
 				result += static_cast<int>(*itor - '0');
 			}
 			else
-				throw std::invalid_argument("");
+				throw std::invalid_argument("invalid number format.");
 		}
 
 		return result;
@@ -698,19 +801,19 @@ private:
 	 * XPathExpressionとか言うクラスでも作って評価式をオブジェクト化して
 	 * Commandパターン使ってトラバースさせるとかかなぁ・・・
 	 */
-	int getIndexOf(const std::wstring& param)
+	int getIndexOf(const string_t& param)
 		const throw(std::invalid_argument)
 	{
-		const std::wstring::size_type offset1 =
-			param.find(L'[');
+		const typename string_t::size_type offset1 =
+			param.find('[');
 
-		if (offset1 == std::wstring::npos)
+		if (offset1 == string_t::npos)
 			return 0;
 
-		const std::wstring::size_type offset2 =
-			param.find(L']');
+		const typename string_t::size_type offset2 =
+			param.find(']');
 
-		if (offset2 == std::wstring::npos)
+		if (offset2 == string_t::npos)
 			throw std::invalid_argument("");
 
 		if (offset1 > offset2)
@@ -726,7 +829,7 @@ private:
 			 * まぁ、その場合は基本部分の見直しが必要だろうけど・・・
 			 */
 			return
-				strToInt(std::wstring(&param[offset1+1],
+				strToInt(string_t(&param[offset1+1],
 									  &param[offset2]));
 		}
 
@@ -739,43 +842,42 @@ private:
 	 * @param nameList XPathからノード要素ごとに分解された文字列リスト
 	 * @reutrn 見つかった要素のコレクション
 	 */
-	std::vector<Element*> traverse(Element* element,
-					  std::vector<std::wstring> nameList)
+	std::vector<Element<char_t>*> traverse(Element<char_t>* element,
+										   std::vector<string_t> nameList)
 	{
 		assert(nameList.size() > 0);
 
-		std::wstring name = nameList.back();
+		string_t name = nameList.back();
 		nameList.pop_back();
-		std::wstring canonicalizeName =
-			name.substr(0, name.find(L'['));
+		string_t canonicalizeName =
+			name.substr(0, name.find('['));
 		
-		TagElement* tag = dynamic_cast<TagElement*>(element);
+		tag_element_t* tag = dynamic_cast<tag_element_t*>(element);
 		if (tag == NULL)
-			return std::vector<Element*>();
+			return std::vector<element_t*>();
 
 		if (canonicalizeName != tag->getTagName())
-			return std::vector<Element*>();
+			return std::vector<element_t*>();
 
 		// enumerate children.
-		std::vector<Element*> results;
+		std::vector<element_t*> results;
 		if (nameList.size() > 0)
 		{
-			std::wstring childName = nameList.back();
+			string_t childName = nameList.back();
 			const int offset = getIndexOf(childName);
 			if (offset < 0)
 			{
-				std::vector<XMLNode*> children = 
+				std::vector<base_t*> children = 
 					element->getChildren();
 
-				for (std::vector<XMLNode*>::iterator itor =
-						 children.begin();
-					 itor != children.end();
-					 ++itor)
+				for (typename std::vector<base_t*>::iterator itor =
+						 children.begin(); itor != children.end(); ++itor)
 				{
-					TagElement* tagElem = dynamic_cast<TagElement*>(*itor);
+					tag_element_t* tagElem =
+						dynamic_cast<tag_element_t*>(*itor);
 					if (tagElem != NULL)
 					{
-						std::vector<Element*> result =
+						std::vector<element_t*> result =
 							traverse(tagElem, nameList);
 
 						if (result.size() > 0)
@@ -787,17 +889,17 @@ private:
 			}
 			else
 			{
-				std::wstring canonicalizeChildName =
+				string_t canonicalizeChildName =
 					childName.substr(0, childName.find('['));
 
-				std::vector<Element*> children =
+				std::vector<element_t*> children =
 					tag->getChildrenElements(canonicalizeChildName);
 
-				Element* elem = NULL;
+				element_t* elem = NULL;
 				if (children.size() > static_cast<unsigned int>(offset))
-					elem = dynamic_cast<Element*>(children[offset]);
+					elem = dynamic_cast<element_t*>(children[offset]);
 
-				std::vector<Element*> result;
+				std::vector<element_t*> result;
 				if (elem != NULL)
 					result = traverse(elem, nameList);
 
@@ -818,18 +920,18 @@ private:
 	 * XPathのトークン分割
 	 * @return 分割されたXPathトークン
 	 */
-	std::vector<std::wstring> tokenize() const
+	std::vector<string_t> tokenize() const
 	{
-		std::vector<std::wstring> result;
-		std::wstring path(this->path);
+		std::vector<string_t> result;
+		string_t path(this->path);
 		path.erase(path.begin());
 
-		std::wstring::size_type newPosition;
+		typename string_t::size_type newPosition;
 		while (newPosition =
-			   path.find_first_of(L'/'))
+			   path.find_first_of('/'))
 		{
-			result.push_back(std::wstring(path, 0, newPosition));
-			if (newPosition == std::wstring::npos)
+			result.push_back(string_t(path, 0, newPosition));
+			if (newPosition == string_t::npos)
 				break;
 
 			path.erase(0, newPosition+1);
@@ -846,15 +948,35 @@ public:
 	 * コンストラクタ
 	 * @param path_ XPath
 	 */
-	XMLPath(const std::wstring& path_)
+	XMLPath(const string_t& path_)
 		throw (std::invalid_argument)
 		: path(path_)
 	{
 		if (path.size() == 0)
 			throw std::invalid_argument("xml path is null test.");
 
-		if (path[0] != L'/')
+		if (path[0] != '/')
 			throw std::invalid_argument("please set absolute xml path.");
+	}
+
+	XMLPath() throw()
+		: path()
+	{}
+
+	void setPath(const string_t& path_) throw (std::invalid_argument)
+	{
+		path = path_;
+
+		if (path.size() == 0)
+			throw std::invalid_argument("xml path is null test.");
+
+		if (path[0] != '/')
+			throw std::invalid_argument("please set absolute xml path.");
+	}
+
+	string_t getPath() const throw()
+	{
+		return path;
 	}
 
 	/**
@@ -867,30 +989,30 @@ public:
 	 * XPathの評価
 	 * @param element 評価対象となるTagElement
 	 * @return 評価結果となるTagElementのコレクション
+	 * @todo documentRoot以外も受け付けるように変更
 	 */
-	std::vector<Element*> evaluate(Element* element)
+	std::vector<element_t*> evaluate(element_t* element)
 	{
 		
-		std::vector<std::wstring> names = tokenize();
-		std::vector<std::wstring> namelist(names.rbegin(), names.rend());
+		std::vector<string_t> names = tokenize();
+		std::vector<string_t> namelist(names.rbegin(), names.rend());
 
-		if (typeid(*element) == typeid(XMLDocument))
+		if (typeid(*element) == typeid(XMLDocument<char_t>))
 		{
-			Element* documentRoot = NULL;
-			std::vector<XMLNode*> children = element->getChildren();
-			for (std::vector<XMLNode*>::iterator itor = children.begin();
-				itor != children.end();
-				++itor)
+			element_t* documentRoot = NULL;
+			std::vector<base_t*> children = element->getChildren();
+			for (typename std::vector<base_t*>::iterator itor = 
+					 children.begin(); itor != children.end(); ++itor)
 			{
-				if (dynamic_cast<MetaElement*>(*itor) != NULL)
+				if (dynamic_cast<MetaElement<char_t>*>(*itor) != NULL)
 					continue;
 
-				documentRoot = dynamic_cast<TagElement*>(*itor);
+				documentRoot = dynamic_cast<tag_element_t*>(*itor);
 				if (documentRoot != NULL)
 					break;
 			}
 			if (documentRoot == NULL)
-				return std::vector<Element*>();
+				return std::vector<element_t*>();
 
 			element = documentRoot;
 		}
@@ -902,9 +1024,17 @@ public:
  * XMLパーサ
  * @todo 妥当性検証機能とか。
  */
+template <typename CharType>
 class XMLParser
 {
 	friend class XMLParserTest;
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > base_t;
+	typedef Element<char_t> element_t;
+	typedef typename base_t::nodes_t node_t;
 
 private:
 	/**
@@ -917,12 +1047,12 @@ private:
 		/**
 		 * トークンの先頭位置
 		 */
-		const wchar_t* head;
+		const char_t* head;
 
 		/**
 		 * トークンの終端位置
 		 */
-		const wchar_t* const tail;
+		const char_t* const tail;
 
 		/**
 		 * ホワイトスペースの無視フラグ
@@ -953,7 +1083,7 @@ private:
 		 * @param head_ トークナイズする文字列の先頭
 		 * @param tail_ トークナイズする文字列の終端
 		 */
-		Tokenizer(const wchar_t* head_, const wchar_t* const tail_):
+		Tokenizer(const char_t* head_, const char_t* const tail_):
 			head(head_), tail(tail_), ignoreWhiteString(false)
 		{
 			assert(head <= tail);
@@ -963,16 +1093,21 @@ private:
 		 * トークンの取得
 		 * @return トークンの文字列表現
 		 */
-		std::wstring getToken() throw (WellformedException)
+		string_t getToken() throw (WellformedException)
 		{
-			std::wstring token;
+			string_t token;
+			string_t separetor;
+			separetor += '\r';
+			separetor += '\n';
+			separetor += ' ';
+
 			while (head != tail)
 			{
-				if (*head == L'<' && token.length() != 0)
+				if (*head == '<' && token.length() != 0)
 				{
 					if (ignoreWhiteString &&
-						token.find_first_not_of(L"\r\n ") ==
-						std::wstring::npos)
+						token.find_first_not_of(separetor) ==
+						string_t::npos)
 					{
 						token.clear();
 						continue;
@@ -981,17 +1116,18 @@ private:
 					return token;
 				}
 
-				else if (*head == L'>')
+				else if (*head == '>')
 				{
-					if (token[0] != L'<')
+					if (token[0] != '<')
 						throw WellformedException();
 
 					return token += *head++;
 				}
 
-				if (token[0] == L'<')
+				if (token[0] == '<')
 					// remove \n character.
-					std::remove(token.begin(), token.end(), L'\n');
+					std::remove(token.begin(), token.end(),
+								traits_t::to_char_type('\n'));
 
 				token += *head++;
 			}
@@ -1033,22 +1169,22 @@ private:
 	 * @param token 切り出されたトークン
 	 * @return 識別されたトークン種別
 	 */
-	TokenType getTokenType(const std::wstring& token)
+	TokenType getTokenType(const string_t& token)
 		throw (InvalidTagException)
 	{
 		if (token.length() == 0 ||
-			token[0] != L'<')
+			token[0] != '<')
 			return Strings;
 
 		assert(token.length() > 2);
-		assert(token[token.length()-1] == L'>');
+		assert(token[token.length()-1] == '>');
 
 		if (token.length() > 7 &&
-			token[1] == L'!' &&
-			token[2] == L'-' &&
-			token[3] == L'-' &&
-			token[token.length()-2] == L'-' &&
-			token[token.length()-3] == L'-')
+			token[1] == '!' &&
+			token[2] == '-' &&
+			token[3] == '-' &&
+			token[token.length()-2] == '-' &&
+			token[token.length()-3] == '-')
 			return CommentTag;
 
 
@@ -1062,18 +1198,18 @@ private:
 			return OpenTag;
 
 		if (token.length() > 3 &&
-			token[1] == L'/' &&
+			token[1] == '/' &&
 			isValidTagName(token.substr(2, token.length()-3)))
 			return CloseTag;
 
 		if (token.length() > 4 &&
-			token[1] == L'?' &&
-			token[token.length()-2] == L'?' &&
+			token[1] == '?' &&
+			token[token.length()-2] == '?' &&
 			isValidTagName(token.substr(2, token.length()-4)))
 			return MetaTag;
 
 		throw InvalidTagException(
-			Transcoder::UTF16toUTF8(token).c_str());
+			Transcoder::toUTF8(token).c_str());
 	}
 
 	/**
@@ -1090,11 +1226,11 @@ private:
 				character != 0xfb30)
 				return true;
 		}
-		else if ((character >= L'A' &&
-				  character <= L'Z') ||
-				 (character >= L'a' &&
-				  character <= L'z') ||
-				 character == L'_')
+		else if ((character >= 'A' &&
+				  character <= 'Z') ||
+				 (character >= 'a' &&
+				  character <= 'z') ||
+				 character == '_')
 			return true;
 
 		return false;
@@ -1114,13 +1250,14 @@ private:
 				character != 0xfb30)
 				return true;
 		}
-		else if ((character >= L'A' &&
-				  character <= L'Z') ||
-				 (character >= L'a' &&
-				  character <= L'z') ||
-				 character == L'_' ||
-				 (character >= L'0' &&
-				  character <= L'9'))
+		else if ((character >= 'A' &&
+				  character <= 'Z') ||
+				 (character >= 'a' &&
+				  character <= 'z') ||
+				 character == '_' ||
+				 (character >= '0' &&
+				  character <= '9') ||
+				 character == ':')
 			return true;
 
 		return false;
@@ -1131,7 +1268,7 @@ private:
 	 * @param tagName タグの名称
 	 * @return タグ名として妥当ならtrue
 	 */
-	bool isValidTagName(const std::wstring& tagName) const
+	bool isValidTagName(const string_t& tagName) const
 	{
 		if (tagName.length() < 1)
 			return false;
@@ -1141,11 +1278,10 @@ private:
 			if (tagName.length() == 1)
 				return true;
 
-			for (std::wstring::const_iterator itor = tagName.begin();
-				itor != tagName.end();
-				++itor)
+			for (typename string_t::const_iterator itor = tagName.begin();
+				itor != tagName.end(); ++itor)
 			{
-				if (*itor == L' ')
+				if (*itor == ' ')
 					break;
 
 				if (!isSecondAfterChar(*itor))
@@ -1163,33 +1299,36 @@ private:
 	 * @param parent 親となるXML要素へのポインタ
 	 * @return 新規に作成された要素へのポインタ
 	 */
-	Element* createElement(Element* parent)
+	element_t* createElement(element_t* parent)
 	{
-		const std::wstring token = tokenizer->getToken();
-		if (token == L"")
+		const string_t token = tokenizer->getToken();
+		if (token.length() == 0)
 			return NULL;
 
-		Element* result = NULL;
+		element_t* result = NULL;
 
 		switch (getTokenType(token))
 		{
 			case Strings:
 			{
-				result = new StringElement(token);
+				result = new StringElement<char_t>(token);
 				parent->addChild(result);
 				break;
 			}
 
 			case CommentTag:
 			{
-				result = new CommentElement(token.substr(4, token.length()-7));
+				result =
+					new CommentElement<char_t>(token.substr(4,
+															token.length()-7));
 				parent->addChild(result);
 				break;
 			}
 
 			case OpenTag:
 			{
-				result = new TagElement(token.substr(1, token.length()-2));
+				result =
+					new TagElement<char_t>(token.substr(1, token.length()-2));
 				parent->addChild(result);
 				while(createElement(result) != NULL)
 					;
@@ -1203,14 +1342,16 @@ private:
 
 			case SingleTag:
 			{
-				result = new TagElement(token.substr(1, token.length()-3));
+				result =
+					new TagElement<char_t>(token.substr(1, token.length()-3));
 				parent->addChild(result);
 				break;
 			}
 
 			case MetaTag:
 			{
-				result = new MetaElement(token.substr(2, token.length()-3));
+				result =
+					new MetaElement<char_t>(token.substr(2, token.length()-3));
 				parent->addChild(result);
 				break;
 			}
@@ -1245,8 +1386,8 @@ public:
 	 * @param ignoreFlag 解析に際してホワイトスペースを無視するかどうか
 	 * @return 解析結果として構築されたDOMツリーへのポインタ
 	 */
-	XMLDocument* parse(const std::wstring& document,
-					   const bool ignoreFlag = false)
+	XMLDocument<char_t>* parse(const string_t& document,
+							   const bool ignoreFlag = false)
 	{
 		return parse(&document[0],
 					 &document[document.length()],
@@ -1260,14 +1401,14 @@ public:
 	 * @param ignoreFlag 解析に際してホワイトスペースを無視するかどうか
 	 * @return 解析結果として構築されたDOMツリーへのポインタ
 	 */
-	XMLDocument* parse(const wchar_t* head,
-					   const wchar_t* tail,
-					   const bool ignoreFlag = false)
+	XMLDocument<char_t>* parse(const char_t* head,
+							   const char_t* tail,
+							   const bool ignoreFlag = false)
 	{
 		tokenizer = new Tokenizer(head, tail);
 		tokenizer->setIgnoreWhiteSpace(ignoreFlag);
 
-		XMLDocument* theXMLDocument = new XMLDocument();
+		XMLDocument<char_t>* theXMLDocument = new XMLDocument<char_t>();
 
 		while(createElement(theXMLDocument) != NULL)
 			;

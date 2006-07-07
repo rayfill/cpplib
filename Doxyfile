@@ -30,7 +30,7 @@ PROJECT_NUMBER         =
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = ./documents
+OUTPUT_DIRECTORY       = ../documents
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -814,7 +814,7 @@ LATEX_HIDE_INDICES     = NO
 # The RTF output is optimized for Word 97 and may not look very pretty with 
 # other RTF readers or editors.
 
-GENERATE_RTF           = NO
+GENERATE_RTF           = YES
 
 # The RTF_OUTPUT tag is used to specify where the RTF docs will be put. 
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 

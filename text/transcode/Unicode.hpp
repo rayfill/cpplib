@@ -3,16 +3,7 @@
 #include <vector>
 #include <string>
 #include <cassert>
-#include <stdexcept>
-
-class InvalidCharacterException : public std::runtime_error
-{
-public:
-	InvalidCharacterException(const char* reason =
-							  "invalid character found to converting."):
-		std::runtime_error(reason)
-	{}
-};
+#include <text/transcode/InvalidCharacterException.hpp>
 
 class Transcoder
 {
@@ -213,6 +204,16 @@ private:
 	}
 
 public:
+	static std::string toUTF8(const std::string& utf8)
+	{
+		return utf8;
+	}
+
+	static std::string toUTF8(const std::wstring& utf16)
+	{
+		return UTF16toUTF8(utf16);
+	}
+
 	static std::string UTF16toUTF8(const std::wstring& utf16)
 	{
 		std::vector<unsigned short> utf16v(

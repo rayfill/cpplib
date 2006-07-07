@@ -11,7 +11,7 @@ class MyThread : public Thread
 		{
 			CriticalSection cs;
 			std::cout << "hello thread: " << this->getThreadId() << std::endl;
-			this->sleep(100);
+			this->sleep(this->getThreadId());
 		}
 		return this->getThreadId();
 	}

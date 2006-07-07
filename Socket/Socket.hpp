@@ -15,6 +15,7 @@ protected:
 	SocketHandle socket; ///< 生のソケットハンドル
 	timeval defaultTimeout; ///< send() や recv() を非ブロックで呼び出
 							///した場合のタイムアウト時間
+	bool isClosed; /// ソケットが閉じられているかどうか
 
 	/**
 	 * ソケットの読み込み可能検査
@@ -23,7 +24,7 @@ protected:
 	 * @return 検査結果. true: 読み込み可能, false: 読み込み不可能
 	 */
 	bool isReadable(const SocketHandle sock,
-					timeval timeout) const throw()
+					timeval& timeout) const throw()
 	{
 		fd_set fd;
 		FD_ZERO(&fd);
@@ -41,7 +42,7 @@ protected:
 	 * @return 検査結果. true: 書き込み可能, false: 書き込み不可能
 	 */
 	bool isWritable(const SocketHandle sock,
-					timeval timeout) const throw()
+					timeval& timeout) const throw()
 	{
 		fd_set fd;
 		FD_ZERO(&fd);
@@ -57,7 +58,7 @@ protected:
 	 * @param timedout 新しいデフォルトタイムアウト時間
 	 */
 	Socket(const timeval& timedout):
-		socket(), defaultTimeout(timedout) 
+		socket(), defaultTimeout(timedout), isClosed(true)
 	{
 		open();
 	}
@@ -68,22 +69,11 @@ protected:
 	void open() throw(SocketException)
 	{
 		assert(socket == static_cast<SocketHandle>(0));
+		assert(isClosed == true);
 	  
 		socket = ::socket(AF_INET, SOCK_STREAM, 0);
 		if (socket == static_cast<SocketHandle>(0))
-			throw SocketException();
-	}
-
-	/**
-	 * ソケットハンドルの開放
-	 */
-	void close() throw() 
-	{
-		if (socket != 0) 
-		{
-			SocketModule::SocketClose(socket);
-			socket = static_cast<SocketHandle>(0);
-		}
+			throw SocketException("can not open socket");
 	}
 
 public:
@@ -91,9 +81,9 @@ public:
 	 * デフォルトコンストラクタ
 	 */
 	Socket() throw()
-		: socket(), defaultTimeout()
+		: socket(), defaultTimeout(), isClosed(true)
 	{
-		defaultTimeout.tv_sec = 1;
+		defaultTimeout.tv_sec = 30;
 		defaultTimeout.tv_usec = 0;
 		open();
 	}
@@ -102,9 +92,9 @@ public:
 	 * ソケットハンドルからのコピーコンストラクタ
 	 */
 	Socket(const SocketHandle& inheritHandle)
-		: socket(inheritHandle), defaultTimeout()
+		: socket(inheritHandle), defaultTimeout(), isClosed(false)
 	{
-		defaultTimeout.tv_sec = 1;
+		defaultTimeout.tv_sec = 30;
 		defaultTimeout.tv_usec = 0;
 	}
 
@@ -114,6 +104,22 @@ public:
 	virtual ~Socket() throw()
 	{
 		close();
+	}
+
+	void setTimeout(const long sec, const long usec)
+	{
+		defaultTimeout.tv_sec = sec;
+		defaultTimeout.tv_usec = usec;
+	}
+
+	timeval getTimeout() const
+	{
+		return defaultTimeout;
+	}
+
+	bool isConnected() const
+	{
+		return !isClosed;
 	}
 
 	bool isReadable() const throw()
@@ -142,7 +148,14 @@ public:
 	 */
 	size_t read(void* buffer, const size_t readSize) 
 	{
-		return recv(socket, (char*)buffer, readSize, 0);
+		const size_t readed = recv(socket, (char*)buffer, readSize, 0);
+		if (readed == 0)
+		{
+			close();
+			open();
+			throw ConnectionClosedException();
+		}
+		return readed;
 	}
 
 	/**
@@ -168,10 +181,19 @@ public:
 	 * @param buffer 書き込むデータへのポインタ
 	 * @param writeSize 書き込むデータのサイズ
 	 * @return 実際に書き込まれたデータのサイズ
+	 * @throw ConnectionClosedException 
 	 */
 	size_t write(const void* buffer, const size_t writeSize) 
 	{
-		return send(socket, (char*)buffer, writeSize, 0);
+		const size_t writed =  send(socket, (char*)buffer, writeSize, 0);
+		if (writed == 0)
+		{
+			close();
+			open();
+			throw ConnectionClosedException();
+		}
+
+		return writed;
 	}
 
 	/**
@@ -183,13 +205,26 @@ public:
 	 * @exception TimeoutException 待機時間中にソケットが書き込み可能
 	 * にならなかった場合
 	 */
-	size_t writeAsync(void* buffer, const size_t writeSize) 
+	size_t writeAsync(const void* buffer, const size_t writeSize) 
 		throw(TimeoutException)
 	{
 		if (!this->isWritable(this->socket, this->defaultTimeout))
 			throw TimeoutException();
    
 		return write(buffer, writeSize);
+	}
+
+	/**
+	 * ソケットハンドルの開放
+	 */
+	void close() throw() 
+	{
+		if (socket != 0) 
+		{
+			SocketModule::SocketClose(socket);
+			socket = static_cast<SocketHandle>(0);
+			isClosed = true;
+		}
 	}
 };
 

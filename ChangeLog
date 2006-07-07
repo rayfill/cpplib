@@ -1,3 +1,15 @@
+2006/06/21
+	ThoreadPool内のRerunnableThreadの実行状態管理を変更
+	
+2006/03/31
+	CriticalSectionに対する考えをまとめる必要あり。リソースロックタイ
+	プにするのか、それともポイントゲートタイプにするのか。双方ともサポー
+	トするのが理想か？
+	
+2006/03/30
+	WinMutexの無名Mutexのサポート及びロックカウンタの追加。
+	TODO: ThreadPool::RerunnableThreadのstartableを無名Mutexに変更する
+	
 2006/03/27
 	ThreadPool::RerunnableThreadの開始/終了指示をEventベースに変更。
 	

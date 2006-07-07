@@ -1,6 +1,8 @@
 #include <cppunit/extensions/helpermacros.h>
 #include <Thread/ThreadPool.hpp>
 
+#include <iostream>
+
 class TestRunnable : public Runnable
 {
 private:
@@ -49,13 +51,13 @@ public:
 
 		CPPUNIT_ASSERT(testRunner.getCounter() == 0);
 
-		testThread.starting(&testRunner);
-		rerun_thread_t::sleep(100);
+		testThread.start(&testRunner);
+		testThread.join();
 
 		CPPUNIT_ASSERT(testRunner.getCounter() == 1);
 		
-		testThread.starting(&testRunner);
-		rerun_thread_t::sleep(100);
+		testThread.start(&testRunner);
+		testThread.join();
 
 		CPPUNIT_ASSERT(testRunner.getCounter() == 2);
 		testThread.quit();

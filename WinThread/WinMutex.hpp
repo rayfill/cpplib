@@ -6,14 +6,21 @@
 #include <string>
 
 /**
- * Win32 排他操作オブジェクト
+ * Win32排他操作用オブジェクト。
+ * @todo コピーコンストラクタをどうするかを決める。DuplicateHandleでコ
+ * ピーはできるけど、ProcessHandleをどうするか・・・。
+ * もともとプロセス間で無名Mutexを共有するためみたいだし無くてもいいか
+ * な、とは思うが・・・
  */
 class WinMutex {
 private:
 	/**
 	 * 排他オブジェクト名
+	 * @note toString()メソッドとか
+	 * operator<<(std::ostream& out, const WinMutex& self)メソッド
+	 * 用意しないんだったらいらないかも。
 	 */
-	const std::string MutexName;
+	const char* MutexName;
 	
 	/**
 	 * 排他オブジェクトハンドル
@@ -30,55 +37,105 @@ private:
 	 */
 	WinMutex(WinMutex&);
 
+	/**
+	 * ロックレベル
+	 */
+	int lockCount;
+
+	/**
+	 * ミューテックス作成ヘルパ
+	 * @param name ミューテックス名。NULLの場合、無名ミューテックスになる。
+	 * @param createOnLock 作成後に所有権を取得するかを示すフラグ。
+	 * @return 作成されたミューテックスのハンドル。NULLの場合はミューテックス
+	 * が作成できなかったことを表す。
+	 */
+	static HANDLE createMutex(const char* name) throw()
+	{
+		return  CreateMutex(NULL, FALSE, name);
+	}
+
+protected:
+
+	/**
+	 * 現在のロックレベルを取得する。
+	 * @return ロックのネストレベル。1以上で所有している。
+	 * 0で所有権を持っていない。
+	 */
+	int getLockLevel() const throw()
+	{
+		assert(lockCount >= 0);
+		return lockCount;
+	}
+
 public:
 	/**
 	 * コンストラクタ
-	 * @param createOnLock 作成とロックを同時に行うかのフラグ
+	 * 無名ミューテックスを作成する。ハンドルでの共有又はオブジェクト
+	 * を受け渡しての共有で使用する。
+	 * @param createOnLock 作成とロックを同時に行う
 	 */
-	WinMutex(bool createOnLock = true) throw()
-		: MutexName("WinMutex"), hMutex()
+	explicit WinMutex(bool createOnLock = true) throw()
+			: MutexName(NULL), hMutex(), lockCount()
 	{
-		hMutex = CreateMutex(NULL, TRUE, MutexName.c_str());
-		if (hMutex == NULL) 
-		{
-			// TODO: change error handling.
-			if (GetLastError() == ERROR_ALREADY_EXISTS)
-				OutputDebugString("Mutex already exists.");
-
-			if (createOnLock != false)
-				lock();
-		}
+		hMutex = createMutex(MutexName);
+		if (hMutex != NULL &&
+			createOnLock != false)
+			lock();
 	}
 
 	/**
 	 * コンストラクタ
 	 * @param MutexName_ 排他オブジェクト識別名。
 	 * 同じ名前のMutex同士で排他制御される
-	 * @param createOnLock 作成とロックを同時に行うかのフラグ
+	 * @param createOnLock 作成とロックを同時に行う
 	 */
-	WinMutex(const char* MutexName_, bool createOnLock = true) throw()
-		: MutexName(MutexName_), hMutex()
+	explicit WinMutex(const char* MutexName_, bool createOnLock = true) throw()
+			: MutexName(MutexName_), hMutex(), lockCount()
 	{
-		assert(MutexName.length() < MAX_PATH);
+		assert(MutexName != NULL);
+		assert(std::string(MutexName).length() < MAX_PATH);
+		assert(std::string(MutexName).find('\\') == std::string::npos);
 
-		hMutex = CreateMutex(NULL, TRUE, MutexName.c_str());
-		if (hMutex == NULL) 
-		{
-			/// @todo エラーハンドリングの実装
-			if (GetLastError() == ERROR_ALREADY_EXISTS)
-				OutputDebugString("Mutex already exists.");
+		hMutex = createMutex(MutexName);
+		if (hMutex != NULL &&
+			createOnLock != false)
+			lock();
+	}
 
-			if (createOnLock != false)
-				lock();
-		}
+	/**
+	 * ロック開放
+	 */
+	int unlock() throw()
+	{
+		assert(lockCount > 0);
+
+		volatile int result = --lockCount;
+		ReleaseMutex(hMutex);
+
+		assert(result >= 0);
+		return result;
+	}
+
+	/**
+	 * 強制的なロック開放
+	 */
+	void forceUnlock() throw()
+	{
+		while(unlock() > 0);
 	}
 
 	/**
 	 * 排他オブジェクトによるロック操作
+	 * @note ロックを掛けた分の回数分だけunlockを実施しなければならない。
+	 * コンストラクタ時のロックは明示的に開放しなくても良い。
 	 */
-	void lock() throw()
+	bool lock() throw()
 	{
-		WaitForSingleObject(hMutex, INFINITE);
+		lock(INFINITE);
+
+		assert(lockCount > 0);
+
+		return lockCount;
 	}
 
 	/**
@@ -88,7 +145,11 @@ public:
 	 */
 	bool lock(unsigned long WaitTime) throw()
 	{
-		return WaitForSingleObject(hMutex, WaitTime) != WAIT_TIMEOUT;
+		bool result = WaitForSingleObject(hMutex, WaitTime) != WAIT_TIMEOUT;
+		if (result)
+			++lockCount;
+
+		return result;
 	}
 
 	/**
@@ -97,7 +158,7 @@ public:
 	 */
 	bool isLock() throw()
 	{
-		return WaitForSingleObject(hMutex, 0) != WAIT_OBJECT_0;
+		return lockCount > 0;
 	}
 
 	/**
@@ -106,10 +167,14 @@ public:
 	virtual ~WinMutex()
 	{
 		if (hMutex != NULL) {
-			ReleaseMutex(hMutex);
+			if (isLock())
+				forceUnlock();
+
 			CloseHandle(hMutex);
 			hMutex = NULL;
 		}
+
+		assert(getLockLevel() == 0);
 	}
 };
 

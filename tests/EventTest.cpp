@@ -4,6 +4,8 @@
 #include <Thread/CriticalSection.hpp>
 #include <util/Notification.hpp>
 
+#include <iostream>
+
 class EventTestThreadBase : public Thread, public Observable
 {
 private:
@@ -27,7 +29,9 @@ class EventArrivedTestThread : public EventTestThreadBase
 protected:
 	virtual unsigned run() throw(ThreadException)
 	{
-		while(!event.isEventArrived());
+		while(!event.isEventArrived())
+			this->yield();
+
 		this->update();
 
 		return 0;
@@ -64,13 +68,13 @@ public:
 
 	virtual void notify(Observable* caller)
 	{
-		CriticalSection cs;
+		CriticalSection cs(this);
 		isSignaled = true;
 	}
 
 	bool getSignal() const throw()
 	{
-		CriticalSection cs;
+		CriticalSection cs(this);
 		return isSignaled;
 	}
 };
@@ -80,17 +84,17 @@ class EventTest : public CppUnit::TestFixture
 private:
  	CPPUNIT_TEST_SUITE(EventTest);
 	CPPUNIT_TEST(SetEventTest);
-// 	CPPUNIT_TEST(ResetEventTest);
-// 	CPPUNIT_TEST(PulseEventTest);
-// 	CPPUNIT_TEST(WaitEventTest);
-// 	CPPUNIT_TEST(OwnEventTest);
+	CPPUNIT_TEST(ResetEventTest);
+	CPPUNIT_TEST(PulseEventTest);
+	CPPUNIT_TEST(WaitEventTest);
+	CPPUNIT_TEST(OwnEventTest);
 	CPPUNIT_TEST_SUITE_END();
 
 	WinEvent* event;
 public:
 	void setUp()
 	{
-		event = new Event("EventTest", true);
+		event = new Event("EventTest", false);
 	}
 	void tearDown()
 	{

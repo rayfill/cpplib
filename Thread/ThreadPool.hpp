@@ -11,6 +11,7 @@
  * @param @isPrecreted 管理対象スレッドを最初から生成しておくかのフラグ
  * trueなら生成しておく。
  * @param ThreadType 管理対象のスレッドクラス
+ * 
  */
 template <typename ThreadType = Thread,
 		  int managementThreads = 10,
@@ -58,6 +59,8 @@ private:
 		return new RerunnableThread();
 	}
 
+	
+public:
 	/**
 	 * 再実行可能なThread
 	 * @todo Runnableホルダーを基底のRunnableスロット以外に設ける
@@ -70,20 +73,31 @@ private:
 		/**
 		 * 開始イベント
 		 */
-		Event startable;
+		Event started;
+
+	    /**
+	     * ジョブ終了イベント
+	     */
+		Event ended;
 
 		/**
-		 * 終了イベント
+		 * スレッド終了イベント
 		 */
 		Event quitable;
 
 		/**
-		 * 脱出処理
-		 * run()ループ脱出指示
+		 * このクラス専用の実行エントリポイント
 		 */
-		void quit() throw()
+		Runnable* runnablePoint;
+
+		Runnable* getRunnable() const
 		{
-			quitable.setEvent();
+			return runnablePoint;
+		}
+
+		void setRunnable(Runnable* newPoint)
+		{
+			runnablePoint = newPoint;
 		}
 
 		/**
@@ -101,11 +115,8 @@ private:
 		 */
 		bool isQuitAndBlock() throw()
 		{
-			if (startable.isEventArrived())
-				startable.resetEvent();
-
 			HANDLE waits[2];
-			waits[0] = startable.getHandle();
+			waits[0] = started.getHandle();
 			waits[1] = quitable.getHandle();
 
 			DWORD result =
@@ -113,6 +124,9 @@ private:
 										 waits,
 										 FALSE,
 										 INFINITE);
+			if (started.isEventArrived())
+				started.resetEvent();
+
 
 			if (result == WAIT_OBJECT_0)
 				return false;
@@ -120,6 +134,7 @@ private:
 				return true;
 				
 			assert(false); // not arraived.
+			return false;
 		}
 
 		/**
@@ -129,7 +144,7 @@ private:
 		{
 			assert(isReplacable());
 
-			thread_t::setRunningTarget(entryPoint);
+			setRunnable(entryPoint);
 		}
 
 	public:
@@ -137,11 +152,13 @@ private:
 		 * コンストラクタ
 		 */
 		RerunnableThread()
-				: thread_t(false), 
-				  startable(false),
-				  quitable(true)
+				: thread_t(this, false), 
+				  started(false),
+				  ended(true),
+				  quitable(true),
+				  runnablePoint()
 		{
-			assert(startable.getHandle() != NULL);
+			assert(started.getHandle() != NULL);
 			thread_t::start();
 		}
 
@@ -155,53 +172,76 @@ private:
 		 */
 		bool isReplacable()
 		{
-			return !startable.isEventArrived();
+			return !started.isEventArrived();
 		}
 
-		/**
-		 * 保持しているRunnableインタフェースの実行
-		 * @todo startableイベント見てまだ実行中ならブロックして待機
-		 */
-		void starting(Runnable* entryPoint) 
+		virtual unsigned start(Runnable* entryPoint) throw()
 		{
 			replace(entryPoint);
 
-			startable.setEvent();
+			started.setEvent();
+
+			return 0;
+		}
+
+		virtual unsigned start() throw()
+		{
+			return start(this);
+		}
+
+		virtual unsigned join(DWORD waitTime = INFINITE)
+		throw(ThreadException, TimeoutException)
+		{
+			ended.waitEventArrive(waitTime);
+
+			return 0;
+		}
+
+		/**
+		 * 脱出処理
+		 * run()ループ脱出指示
+		 */
+		void quit() throw()
+		{
+			quitable.setEvent();
+			Thread::join();
 		}
 
 	protected:
-		virtual unsigned int run() throw()
+		virtual unsigned int run() throw(ThreadException)
 		{
 			assert(dynamic_cast<RerunnableThread*>(this) == this);
 
-			try
+			for (;;)
 			{
-				for (;;)
+				if(isQuitAndBlock())
 				{
-					if(isQuitAndBlock())
-						break;
-
-					try
-					{
-						this->getRunningTarget()->prepare();
-						this->getRunningTarget()->run();
-						this->getRunningTarget()->dispose();
-					}
-					catch (InterruptedException& e)
-					{
-						;
-					}
+					ended.setEvent();
+					break;
 				}
-			} 
-			catch (...)
-			{
-				assert(false);
+
+				try
+				{
+					if (this->getRunnable() == this)
+						continue;
+
+//					assert(this->getRunnable() != this);
+
+					this->getRunnable()->prepare();
+					this->getRunnable()->run();
+					this->getRunnable()->dispose();
+				}
+				catch (InterruptedException& e)
+				{
+					;
+				}
+
+				ended.setEvent();
 			}
 			return 0;
 		}
 	};
-	
-public:
+
 	/**
 	 * スレッドプールの作成
 	 */

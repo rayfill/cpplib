@@ -17,9 +17,6 @@ public:
 	 */
 	ClientSocket() throw() : Socket()
 	{
-		defaultTimeout.tv_sec = 1;
-		defaultTimeout.tv_usec = 0;
-
 	}
 
 	/**
@@ -40,11 +37,16 @@ public:
 	void connect(const IP& ip)
 		throw(SocketException, NotAddressResolvException)
 	{
+		if (socket == 0)
+			Socket::open();
+
 		sockaddr_in info = ip.getInetInfo();
 
 		if (::connect(socket, (sockaddr*)&info, sizeof(info)) != 0)
-			throw SocketException();
-    
+			throw SocketException((std::string("can not connect server:") +
+								   ip.getHostname()).c_str());
+
+		isClosed = false;
 	}
 };
 

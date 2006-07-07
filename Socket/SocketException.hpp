@@ -9,8 +9,19 @@
 class SocketException : public std::runtime_error
 {
 public:
-	SocketException():
-		std::runtime_error("raise SocketException.")
+	explicit SocketException(const char* reason = "raise SocketException."):
+		std::runtime_error(reason)
+	{}
+};
+
+/**
+ * Ú‘±‚ª•Â‚¶‚ç‚ê‚Ä‚¢‚éê‡‚É”­¶‚·‚é—áŠO
+ */
+class ConnectionClosedException : public SocketException
+{
+public:
+	explicit ConnectionClosedException(const char* reason = "socket closed."):
+		SocketException(reason)
 	{}
 };
 
