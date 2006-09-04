@@ -168,7 +168,7 @@ public:
 	 * ‚Èƒf[ƒ^‚ª“ü‚Á‚Ä‚±‚È‚©‚Á‚½ê‡
 	 */
 	size_t readAsync(void* buffer, const size_t readSize)
-		throw(TimeoutException)
+		throw(TimeoutException, ConnectionClosedException)
 	{
 		if (!this->isReadable(this->socket, this->defaultTimeout))
 			throw TimeoutException();
