@@ -148,7 +148,7 @@ public:
 	 */
 	size_t read(void* buffer, const size_t readSize) 
 	{
-		const size_t readed = recv(socket, (char*)buffer, readSize, 0);
+		const size_t readed = recv(socket, static_cast<char*>(buffer), static_cast<int>(readSize), 0);
 		if (readed == 0)
 		{
 			close();
@@ -185,7 +185,7 @@ public:
 	 */
 	size_t write(const void* buffer, const size_t writeSize) 
 	{
-		const size_t writed =  send(socket, (char*)buffer, writeSize, 0);
+		const size_t writed =  send(socket, static_cast<const char*>(buffer), static_cast<int>(writeSize), 0);
 		if (writed == 0)
 		{
 			close();
@@ -206,7 +206,7 @@ public:
 	 * ‚É‚È‚ç‚È‚©‚Á‚½ê‡
 	 */
 	size_t writeAsync(const void* buffer, const size_t writeSize) 
-		throw(TimeoutException)
+		throw(TimeoutException, ConnectionClosedException)
 	{
 		if (!this->isWritable(this->socket, this->defaultTimeout))
 			throw TimeoutException();

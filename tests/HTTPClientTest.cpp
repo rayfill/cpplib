@@ -36,10 +36,10 @@ int main(int argc, char** argv)
 			client.setAcceptEncoding("");
 			client.addAcceptLanguage("ja");
 			client.addAcceptLanguage("en");
-			client.addCookie("afg=0");
-			client.setRange(499, 1000);
 
 			HTTPResult<> result = client.getResource(targetResource.c_str());
+			std::cout << "headers: " <<
+				result.getResponseHeaders().toString() << std::endl;
 
 			std::vector<unsigned char> resource = result.getResource();
 

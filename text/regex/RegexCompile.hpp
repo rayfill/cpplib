@@ -60,15 +60,16 @@ private:
 	internal_iterator_t head;
 	internal_iterator_t current;
 	internal_iterator_t last;
+	int overrun;
 
 public:
 	RegexScanner(const string_t& str):
-		head(str.begin()), current(str.begin()), last(str.end())
+		head(str.begin()), current(str.begin()), last(str.end()), overrun(0)
 	{}
 
 	RegexScanner(internal_iterator_t head_,
 				 internal_iterator_t last_):
-		head(head_), current(head_), last(last_)
+		head(head_), current(head_), last(last_), overrun(0)
 	{}
 
 	size_t getPosition() const
@@ -78,14 +79,10 @@ public:
 
 	typename char_trait_t::int_type scan()
 	{
-		/**
-		 * @todo 規格に反していると思います。
-		 * まぁ実際の実装的に大丈夫だと思うけど・・・
-		 */
 		if (current < last)
 			return char_trait_t::to_int_type(*current++);
 
-		++current;
+		++overrun;
 		return static_cast<typename char_trait_t::int_type>(-1);
 	}
 
@@ -99,12 +96,13 @@ public:
 
 	void advance(const size_t count)
 	{
+		assert((current + count) <= last);
 		current += count;
 	}
 
 	typename char_trait_t::int_type readAhead()
 	{
-		if (current + 1 != last)
+		if (current + 1 != last && current != last)
 			return char_trait_t::to_int_type(*(current + 1));
 
 		return static_cast<typename char_trait_t::int_type>(-1);
@@ -112,10 +110,15 @@ public:
 
 	void backTrack()
 	{
-		if (current != head)
-			--current;
-		else
+		if (current == head)
 			throw std::runtime_error("under flow exception.");
+
+		if (overrun > 0)
+			--overrun;
+		else
+			--current;
+
+		assert(overrun >= 0);
 	}
 
 	void reset()

@@ -26,10 +26,21 @@ private:
 		socket.connect(IP(serverName, portNumber));
 	}
 
+	bool isDisconnect(const HTTPResult<>& result) const
+	{
+		if (isKeepAlive == false ||
+			result.getResponseHeaders().get("Connection") == "Closed")
+			return true;
+
+		return false;
+	}
+
 	HTTPResult<> processHEADResponse()
 	{
 		HTTPResult<> result;
 		result.readHeadResponse(socket);
+		if (isDisconnect(result))
+			socket.close();
 
 		return result;
 	}
@@ -38,6 +49,8 @@ private:
 	{
 		HTTPResult<> result;
 		result.readGetResponse(socket);
+		if (isDisconnect(result))
+			socket.close();
 
 		return result;
 	}
@@ -165,12 +178,7 @@ public:
 		// send HTTP request terminater.
 		sendCommand(std::string("\r\n"));
 
-		HTTPResult<> result = processHEADResponse();
-
-		if (isKeepAlive == false && socket.isConnected() == false)
-			socket.close();
-
-		return result;
+		return processHEADResponse();
 	}
 
 	/**
@@ -190,11 +198,7 @@ public:
 		// send HTTP request terminater.
 		sendCommand(std::string("\r\n"));
 
-		HTTPResult<> result = processGETResponse();
-		if (isKeepAlive == false && socket.isConnected() == false)
-			socket.close();
-
-		return result;
+		return processGETResponse();
 	}
 
 	HTTPResult<> getHeaderResponse(const char* url)

@@ -4,6 +4,7 @@
 #include <string>
 #include <cassert>
 #include <stdexcept>
+#include <sstream>
 #include <Socket/NativeSocket.hpp>
 #include <text/LexicalCast.hpp>
 
@@ -67,7 +68,7 @@ private:
 		if (hostEntry == NULL)
 			throw NotAddressResolvException((std::string("address server "
 														"not found: ") +
-											 stringCast<unsigned long>(ipAddress)).c_str());
+											 getIpString(ipAddress)).c_str());
 
 		return std::string(hostEntry->h_name);
 	}
@@ -165,9 +166,9 @@ public:
 		ip[2] = static_cast<char>((hostSideIpReps >> 8) & 0x000000ff);
 		ip[3] = static_cast<char>((hostSideIpReps) & 0x000000ff);
 
-		char buffer[16];
-		sprintf(buffer, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-		return std::string(buffer);
+		std::stringstream ss;
+		ss << ip[0] << "." << ip[1] << "." << ip[2] << "." << ip[3];
+		return ss.str();
 	}
 
 	/**

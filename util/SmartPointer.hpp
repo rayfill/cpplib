@@ -118,8 +118,7 @@ private:
 	{
 		if (refCount->release() == 0)
 		{
-			RemovePolicy remover;
-			remover.remove(pointer);
+			RemovePolicy::remove(pointer);
 			delete refCount;
 		}
 	}
