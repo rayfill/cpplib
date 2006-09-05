@@ -29,8 +29,9 @@ protected:
 		fd_set fd;
 		FD_ZERO(&fd);
 		FD_SET(sock, &fd);
-    
-		if (::select((SelectRange)sock + 1, &fd, 0, 0, &timeout))
+
+		timeval val = timeout;
+		if (::select((SelectRange)sock + 1, &fd, 0, 0, &val))
 			return true;
 		return false;
 	}
@@ -48,7 +49,8 @@ protected:
 		FD_ZERO(&fd);
 		FD_SET(sock, &fd);
     
-		if (::select((SelectRange)sock + 1, 0, &fd, 0, &timeout))
+		timeval val = timeout;
+		if (::select((SelectRange)sock + 1, 0, &fd, 0, &val))
 			return true;
 		return false;
 	}
