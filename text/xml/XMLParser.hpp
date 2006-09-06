@@ -927,9 +927,9 @@ private:
 		path.erase(path.begin());
 
 		typename string_t::size_type newPosition;
-		while (newPosition =
-			   path.find_first_of('/'))
+		for(;;)
 		{
+			newPosition = path.find_first_of('/');
 			result.push_back(string_t(path, 0, newPosition));
 			if (newPosition == string_t::npos)
 				break;
