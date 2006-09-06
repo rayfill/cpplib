@@ -167,7 +167,10 @@ public:
 		ip[3] = static_cast<char>((hostSideIpReps) & 0x000000ff);
 
 		std::stringstream ss;
-		ss << ip[0] << "." << ip[1] << "." << ip[2] << "." << ip[3];
+		ss << static_cast<unsigned int>(ip[0])
+		   << "." << static_cast<unsigned int>(ip[1])
+		   << "." << static_cast<unsigned int>(ip[2])
+		   << "." << static_cast<unsigned int>(ip[3]);
 		return ss.str();
 	}
 

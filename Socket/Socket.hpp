@@ -31,8 +31,9 @@ protected:
 		FD_SET(sock, &fd);
 
 		timeval val = timeout;
-		if (::select((SelectRange)sock + 1, &fd, 0, 0, &val))
+		if (::select((SelectRange)sock + 1, &fd, 0, 0, &val) > 0)
 			return true;
+
 		return false;
 	}
 
@@ -50,7 +51,7 @@ protected:
 		FD_SET(sock, &fd);
     
 		timeval val = timeout;
-		if (::select((SelectRange)sock + 1, 0, &fd, 0, &val))
+		if (::select((SelectRange)sock + 1, 0, &fd, 0, &val) > 0)
 			return true;
 		return false;
 	}
@@ -147,11 +148,14 @@ public:
 	 * @param buffer 読み込んだデータへのポインタ
 	 * @param readSize 読み込み可能な最大サイズ
 	 * @return 実際に読み込まれたデータサイズ
+	 * @todo winsockのぼけぇ！！recvの戻り値がsize_tじゃないなんて・・・
 	 */
 	size_t read(void* buffer, const size_t readSize) 
 	{
-		const size_t readed = recv(socket, static_cast<char*>(buffer), static_cast<int>(readSize), 0);
-		if (readed == 0)
+		const int readed = recv(socket,
+								static_cast<char*>(buffer),
+								static_cast<int>(readSize), 0);
+		if (readed <= 0)
 		{
 			close();
 			open();
@@ -187,8 +191,10 @@ public:
 	 */
 	size_t write(const void* buffer, const size_t writeSize) 
 	{
-		const size_t writed =  send(socket, static_cast<const char*>(buffer), static_cast<int>(writeSize), 0);
-		if (writed == 0)
+		const int writed = send(socket,
+								static_cast<const char*>(buffer),
+								static_cast<int>(writeSize), 0);
+		if (writed < 0)
 		{
 			close();
 			open();
