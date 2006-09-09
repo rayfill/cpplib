@@ -8,7 +8,8 @@
 class Transcoder
 {
 private:
-	static std::basic_string<wchar_t> UCS4toUTF16(const std::vector<unsigned int>& ucs4)
+	static std::basic_string<wchar_t>
+	UCS4toUTF16(const std::vector<unsigned int>& ucs4)
 	{
 		std::basic_string<wchar_t> utf16;
 		for (std::vector<unsigned int>::const_iterator itor = ucs4.begin();
@@ -38,33 +39,37 @@ private:
 		return utf16;
 	}
 
-	static std::string UCS4toUTF8(const std::vector<unsigned int>& ucs4)
+	static std::string
+	UCS4toUTF8(const std::vector<unsigned int>& ucs4)
 	{
 		std::string utf8;
 		for (std::vector<unsigned int>::const_iterator itor = ucs4.begin();
 			 itor != ucs4.end();
 			 ++itor)
 		{
+			// compatible ascii.
 			if (*itor < 0x00000080)
-				// compatible ascii.
 				utf8.push_back(static_cast<const char>(*itor));
-
 			else if (*itor < 0x00000800)
 			{
 				const unsigned int codepoint = *itor;
-				const char first = static_cast<const char>(0xc0 | ((codepoint >> 6) & 0x1f));
-				const char second = static_cast<const char>(0x80 | (codepoint & 0x3f));
+				const char first = 
+					static_cast<const char>(0xc0 | ((codepoint >> 6) & 0x1f));
+				const char second = 
+					static_cast<const char>(0x80 | (codepoint & 0x3f));
 
 				utf8.push_back(first);
 				utf8.push_back(second);
 			}
-
 			else if (*itor < 0x00010000)
 			{
 				const unsigned int codepoint = *itor;
-				const char first = static_cast<const char>(0xe0 | ((codepoint >> 12) & 0x0f));
-				const char second = static_cast<const char>(0x80 | ((codepoint >> 6) & 0x3f));
-				const char third = static_cast<const char>(0x80 | (codepoint & 0x3f));
+				const char first = 
+					static_cast<const char>(0xe0 | ((codepoint >> 12) & 0x0f));
+				const char second = 
+					static_cast<const char>(0x80 | ((codepoint >> 6) & 0x3f));
+				const char third = 
+					static_cast<const char>(0x80 | (codepoint & 0x3f));
 
 				utf8.push_back(first);
 				utf8.push_back(second);
@@ -73,10 +78,14 @@ private:
 			else if (*itor < 0x00020000)
 			{
 				const unsigned int codepoint = *itor;
-				const char first = static_cast<const char>(0xf0 | ((codepoint >> 18) & 0x07));
-				const char second = static_cast<const char>(0x80 | (codepoint >> 12) & 0x3f);
-				const char third = static_cast<const char>(0x80 | ((codepoint >> 6) & 0x3f));
-				const char fourth = static_cast<const char>(0x80 | (codepoint & 0x3f));
+				const char first = 
+					static_cast<const char>(0xf0 | ((codepoint >> 18) & 0x07));
+				const char second = 
+					static_cast<const char>(0x80 | ((codepoint >> 12) & 0x3f));
+				const char third = 
+					static_cast<const char>(0x80 | ((codepoint >> 6) & 0x3f));
+				const char fourth = 
+					static_cast<const char>(0x80 | (codepoint & 0x3f));
 
 				utf8.push_back(first);
 				utf8.push_back(second);
@@ -103,12 +112,11 @@ private:
 		std::vector<unsigned char>::const_iterator itor = utf8.begin();
 		while (itor != utf8.end())
 		{
+			// 1 byte
 			if ((*itor & 0x80) == 0x00)
-				// 1 byte
 				ucs4.push_back(*itor++);
-
+			// 2 bytes
 			else if ((*itor & 0xe0) == 0xc0)
-				// 2 bytes
 			{
 				const unsigned char first = *itor & 0x1f;
 
@@ -120,8 +128,8 @@ private:
 				ucs4.push_back((first << 6) |
 							   second);
 			}
+			// 3 bytes
 			else if ((*itor & 0xf0) == 0xe0)
-				// 3 bytes
 			{
 				const unsigned char first = *itor & 0x0f;
 				if (!isSubCharacter(*++itor))
@@ -136,8 +144,8 @@ private:
 							   (second << 6) |
 							   third);
 			}
+			// 4 bytes
 			else if ((*itor & 0xf8) == 0xf0)
-				// 4 bytes
 			{
 				const unsigned char first = *itor & 0x0f;
 				if (!isSubCharacter(*++itor))
@@ -153,7 +161,7 @@ private:
 
 				ucs4.push_back((first << 18) |
 							   (second << 12) |
-							   (third << 12) |
+							   (third << 6) |
 							   fourth);
 			}
 			else
