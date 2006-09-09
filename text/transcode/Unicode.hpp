@@ -8,9 +8,9 @@
 class Transcoder
 {
 private:
-	static std::wstring UCS4toUTF16(const std::vector<unsigned int>& ucs4)
+	static std::basic_string<wchar_t> UCS4toUTF16(const std::vector<unsigned int>& ucs4)
 	{
-		std::wstring utf16;
+		std::basic_string<wchar_t> utf16;
 		for (std::vector<unsigned int>::const_iterator itor = ucs4.begin();
 			 itor != ucs4.end();
 			 ++itor)
@@ -209,12 +209,12 @@ public:
 		return utf8;
 	}
 
-	static std::string toUTF8(const std::wstring& utf16)
+	static std::string toUTF8(const std::basic_string<wchar_t>& utf16)
 	{
 		return UTF16toUTF8(utf16);
 	}
 
-	static std::string UTF16toUTF8(const std::wstring& utf16)
+	static std::string UTF16toUTF8(const std::basic_string<wchar_t>& utf16)
 	{
 		std::vector<unsigned short> utf16v(
 			reinterpret_cast<const unsigned short*>(&utf16[0]),
@@ -225,7 +225,7 @@ public:
 		return UCS4toUTF8(ucs4v);
 	}
 
-	static std::wstring UTF8toUTF16(const std::string& utf8)
+	static std::basic_string<wchar_t> UTF8toUTF16(const std::string& utf8)
 	{
 		std::vector<unsigned char> utf8v(
 			reinterpret_cast<const unsigned char*>(&utf8[0]),

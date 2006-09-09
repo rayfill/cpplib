@@ -300,7 +300,7 @@ public:
 
 	scanner_t& scanner;
 	result_t& result;
-	const bool ignoreCase;
+	bool ignoreCase;
 
 	AcceptArgument(scanner_t& scanner_,
 				   result_t& result_,
@@ -310,8 +310,23 @@ public:
 		ignoreCase(ignoreCase_)
 	{}
 
+	AcceptArgument(const AcceptArgument& rhs):
+		scanner(rhs.scanner),
+		result(rhs.result),
+		ignoreCase(rhs.ignoreCase)
+	{}
+
 	~AcceptArgument()
 	{}
+
+	AcceptArgument& operator=(const AcceptArgument& rhs)
+	{
+		this->scanner = rhs.scanner;
+		this->result = rhs.result;
+		this->ignoreCase = rhs.ignoreCase;
+
+		return *this;
+	}
 };
 
 /**
@@ -679,6 +694,7 @@ public:
 	typedef RegexToken<CharType> base_t;
 	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
+	typedef std::char_traits<char_t> trait_t;
 
 private:
 	const char_t acceptCharacter;
@@ -723,7 +739,7 @@ public:
 		const int character = argument.scanner.scan();
 		if (character >= 0)
 		{
-			pointer_t next =this->transit(character,
+			pointer_t next =this->transit(trait_t::to_char_type(character),
 										  argument.ignoreCase);
 			if (next != base_t::getInvalidPointer() &&
 				next->isAccept(argument))
@@ -744,6 +760,7 @@ public:
 	typedef RegexToken<CharType> base_t;
 	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
+	typedef std::char_traits<char_t> trait_t;
 
 private:
 	
@@ -780,7 +797,7 @@ public:
 			character != '\r' &&
 			character != '\n')
 		{
-			pointer_t next =this->transit(character,
+			pointer_t next =this->transit(trait_t::to_char_type(character),
 										  argument.ignoreCase);
 			if (next->isAccept(argument))
 				return true;
@@ -800,6 +817,7 @@ public:
 	typedef RegexToken<CharType> base_t;
 	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
+	typedef std::char_traits<char_t> trait_t;
 
 private:
 	const char_t acceptMin;
@@ -839,7 +857,7 @@ public:
 		const int character = argument.scanner.scan();
 		if (character >= 0)
 		{
-			pointer_t next =this->transit(character,
+			pointer_t next =this->transit(trait_t::to_char_type(character),
 										  argument.ignoreCase);
 			if (next != base_t::getInvalidPointer() &&
 				next->isAccept(argument))
@@ -860,6 +878,7 @@ public:
 	typedef RegexToken<CharType> base_t;
 	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
+	typedef std::char_traits<char_t> trait_t;
 
 private:
 	std::set<char_t> acceptSet;
@@ -915,7 +934,7 @@ public:
 		const int character = argument.scanner.scan();
 		if (character >= 0)
 		{
-			pointer_t next = this->transit(character,
+			pointer_t next = this->transit(trait_t::to_char_type(character),
 										   argument.ignoreCase);
 			if (next != base_t::getInvalidPointer() &&
 				next->isAccept(argument))
@@ -937,6 +956,7 @@ public:
 	typedef RegexToken<CharType> base_t;
 	typedef RegexToken<CharType>* pointer_t;
 	typedef CharType char_t;
+	typedef std::char_traits<char_t> trait_t;
 
 private:
 	std::set<char_t> rejectSet;
@@ -992,7 +1012,7 @@ public:
 		const int character = argument.scanner.scan();
 		if (character >= 0)
 		{
-			pointer_t next = this->transit(character,
+			pointer_t next = this->transit(trait_t::to_char_type(character),
 										   argument.ignoreCase);
 			if (next != base_t::getInvalidPointer() &&
 				next->isAccept(argument))
@@ -1390,7 +1410,8 @@ private:
 	token_pair_t compileLiteral(typename char_trait_t::int_type currentRead,
 								scanner_t& scanner)
 	{
-		token_pair_t literal = base_t::createLiteral(currentRead);
+		token_pair_t literal =
+			base_t::createLiteral(char_trait_t::to_char_type(currentRead));
 		
 		if (isKleeneCharacter(char_trait_t::to_char_type(scanner.read())))
 		{
