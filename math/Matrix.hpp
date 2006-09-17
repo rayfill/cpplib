@@ -55,16 +55,16 @@ public:
 
 	const ElementType operator()(const size_t x, const size_t y) const throw()
 	{
-		assert(x >= width);
-		assert(y >= height);
+		assert(x < width);
+		assert(y < height);
 
 		return matrix[y * width + x];
 	}
 
 	ElementType& operator()(size_t x, size_t y) throw()
 	{
-		assert(x >= width);
-		assert(y >= height);
+		assert(x < width);
+		assert(y < height);
 
 		return matrix[y * width + x];
 	}
