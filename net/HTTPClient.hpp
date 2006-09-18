@@ -16,7 +16,6 @@ private:
 	bool isKeepAlive;
 
 	void connect(const char* serverName, unsigned short portNumber)
-		throw (SocketException, NotAddressResolvException)
 	{
 		// set option.
 		setHostName(serverName);

@@ -1,7 +1,7 @@
 #ifndef CRITICALSECTION_HPP_
 #define CRITICALSECTION_HPP_
 
-#ifdef WIN32
+#ifdef _WIN32
 #	include <WinThread/WinCriticalSection.hpp>
 #else
 #	include <PThread/PosixCriticalSection.hpp>

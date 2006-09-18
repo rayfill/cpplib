@@ -29,22 +29,22 @@ OBJS= TestMain.o \
 	EndianTest.o \
 	ThreadTest.o \
 	ThreadPoolTest.o \
-# 	ShiftJISTest.o \
-# 	ImageTest.o SamplingScannerTest.o \
-# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-# 	NotifyTest.o RangeTest.o SingletonTest.o \
-# 	SingletonTestFunc1.o SingletonTestFunc2.o \
-# 	LZSSTest.o \
-# 	EventTest.o \
-# 	JulianDateTest.o \
+	ImageTest.o SamplingScannerTest.o \
+	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+	NotifyTest.o RangeTest.o SingletonTest.o \
+	SingletonTestFunc1.o SingletonTestFunc2.o \
+	LZSSTest.o \
+	EventTest.o \
+	JulianDateTest.o \
+	CBCTest.o \
+	AlgebraTheoryTest.o \
+	NumberTheoryTest.o \
+	AsymmetricKeyTest.o \
+	RSATest.o \
+	MPITest.o \
+	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
 # 	IPTest.o \
-# 	CBCTest.o \
-# 	AlgebraTheoryTest.o \
-# 	NumberTheoryTest.o \
-# 	AsymmetricKeyTest.o \
-# 	RSATest.o \
-# 	MPITest.o \
-# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
+# 	ShiftJISTest.o \
 
 DEPSOBJS= TestMain.d \
 	ShiftJISTest.d \

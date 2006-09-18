@@ -135,7 +135,7 @@ public:
 
 		assert(lockCount > 0);
 
-		return lockCount;
+		return lockCount != 0;
 	}
 
 	/**

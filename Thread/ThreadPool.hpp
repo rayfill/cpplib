@@ -13,59 +13,18 @@
  * @param ThreadType 管理対象のスレッドクラス
  * 
  */
-template <typename ThreadType = Thread,
-		  int managementThreads = 10,
+template <int managementThreads = 10,
 		  bool isPrecreated = false>
 class ThreadPool
 {
-	friend class ThreadPoolTest;
+friend class ThreadPoolTest;
 
-public:
-	typedef ThreadType thread_t;
-	
-private:
-	/**
-	 * 保持するスレッド
-	 */
-	thread_t* threads[managementThreads];
-
-	/**
-	 * スレッドの回収をおこなう。
-	 * 全ての保持スレッドの回収を行う。
-	 */
-	void collect() throw()
-	{
-		for (int index = 0; index < managementThreads; ++index)
-		{
-			if (threads[index])
-			{
-				if (threads[index]->isRunning())
-				{
-					threads[index]->quit();
-					threads[index]->join();
-				}
-
-				delete threads[index];
-				threads = NULL;
-			}
-		}
-	}
-
-	/**
-	 * 
-	 */
-	thread_t* poolCreate()
-	{
-		return new RerunnableThread();
-	}
-
-	
 public:
 	/**
 	 * 再実行可能なThread
 	 * @todo Runnableホルダーを基底のRunnableスロット以外に設ける
 	 */
-	class RerunnableThread : public thread_t
+	class RerunnableThread : public Thread
 	{
 		friend class ThreadPoolTest;
 
@@ -113,7 +72,7 @@ public:
 		 * 開始および完全終了用ブロックメソッド
 		 * @return run()ループを脱出する場合true
 		 */
-		bool isQuitAndBlock() throw()
+		bool isQuitAndBlock()
 		{
 			HANDLE waits[2];
 			waits[0] = started.getHandle();
@@ -152,14 +111,14 @@ public:
 		 * コンストラクタ
 		 */
 		RerunnableThread()
-				: thread_t(this, false), 
+				: Thread(this, false), 
 				  started(false),
 				  ended(true),
 				  quitable(true),
 				  runnablePoint()
 		{
 			assert(started.getHandle() != NULL);
-			thread_t::start();
+			Thread::start();
 		}
 
 		~RerunnableThread() throw()
@@ -231,7 +190,7 @@ public:
 					this->getRunnable()->run();
 					this->getRunnable()->dispose();
 				}
-				catch (InterruptedException& e)
+				catch (InterruptedException& /*e*/)
 				{
 					;
 				}
@@ -242,6 +201,47 @@ public:
 		}
 	};
 
+
+	typedef RerunnableThread thread_t;
+	
+private:
+	/**
+	 * 保持するスレッド
+	 */
+	thread_t* threads[managementThreads];
+
+	/**
+	 * スレッドの回収をおこなう。
+	 * 全ての保持スレッドの回収を行う。
+	 */
+	void collect() throw()
+	{
+		for (int index = 0; index < managementThreads; ++index)
+		{
+			if (threads[index])
+			{
+				if (threads[index]->isRunning())
+				{
+					threads[index]->quit();
+					threads[index]->join();
+				}
+
+				delete threads[index];
+				threads[index] = NULL;
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	thread_t* poolCreate()
+	{
+		return new RerunnableThread();
+	}
+
+	
+public:
 	/**
 	 * スレッドプールの作成
 	 */

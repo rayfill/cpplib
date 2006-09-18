@@ -163,17 +163,17 @@ protected:
 		catch (InterruptedException& e)
 		{
 			this->transporter = e.clone();
-			retValue = abort_by_parent;
+			retValue = static_cast<unsigned>(abort_by_parent);
 		}
 		catch (ThreadException& e)
 		{
 			this->transporter =	e.clone();
-			retValue = abort_by_exception;
+			retValue = static_cast<unsigned>(abort_by_exception);
 		}
 		catch (...)
 		{
 			this->transporter =	new ThreadException("unknown exception.");
-			retValue = abort_by_exception;
+			retValue = static_cast<unsigned>(abort_by_exception);
 		}
 
 		{
@@ -226,9 +226,10 @@ public:
 	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
-		: runningTarget(this), status(), threadHandle(),
+		: runningTarget(), status(), threadHandle(),
 		  ThreadId(), transporter(NULL), isAborting(false)
 	{
+		runningTarget = this;
 		create(createOnRun);
 	}
 

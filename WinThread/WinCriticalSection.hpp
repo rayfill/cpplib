@@ -5,8 +5,6 @@
 #include <util/Singleton.hpp>
 #include <cassert>
 
-#include <iostream>
-
 /**
  * Win32用CriticalSectionクラス
  * @todo グローバルで単一のクリティカルセクションとなってしまうのでコ
@@ -113,10 +111,12 @@ public:
 		LeaveCriticalSection(CriticalSectionObject::get()->get());
 	}
 
+	BOOL TryEnterCriticalSection(LPCRITICAL_SECTION);
 	/**
 	 * セクションのロック(非ブロック)
 	 * @return ロックされているかどうか. ロックされている: true, ロッ
 	 * クされていない: false
+	 * @note なんでかWindowsベースのコンパイラだと定義が無いって言われる･･･
 	 */
 	bool tryLock() throw()
 	{

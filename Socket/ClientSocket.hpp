@@ -35,7 +35,6 @@ public:
 	 * @see IP
 	 */
 	void connect(const IP& ip)
-		throw(SocketException, NotAddressResolvException)
 	{
 		if (socket == 0)
 			Socket::open();

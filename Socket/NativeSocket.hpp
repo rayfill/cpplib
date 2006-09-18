@@ -1,7 +1,7 @@
 #ifndef NATIVESOCKET_HPP_
 #define NATIVESOCKET_HPP_
 
-#ifdef WIN32
+#ifdef _WIN32
 #	include <winsock2.h>
 typedef HOSTENT HostEnt;
 typedef SOCKET SocketHandle;

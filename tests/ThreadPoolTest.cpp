@@ -42,7 +42,7 @@ public:
 
 	void internalThreadTest()
 	{
-		typedef ThreadPool<WinThread>::RerunnableThread rerun_thread_t;
+		typedef ThreadPool<>::RerunnableThread rerun_thread_t;
 
 		TestRunnable testRunner;
 
