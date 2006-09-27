@@ -553,6 +553,8 @@ protected:
 		fsm.removeOrphanedStates();
 	}
 
+	Scanner(const Scanner& rhs);
+	Scanner& operator=(const Scanner& rhs);
 public:
 	Scanner(iterator_t head_, iterator_t last_):
 		fsm(),

@@ -1,39 +1,60 @@
-#include <Cryptography/Random.hpp>
-#include <cassert>
-#include <limits>
-#include <iostream>
 #include <vector>
-#include <iomanip>
+#include <iostream>
+#include <string>
 
-template <typename ItorType>
-void display(ItorType head, const ItorType& tail)
+#include <stdexcept>
+
+class Test
 {
-	for (; head != tail; ++head)
-		std::cout << std::hex << std::setw(sizeof(*head)*2) << *head;
+private:
+	std::vector<int> vec;
+	std::string member;
+
+public:
+	Test():
+			vec(),
+			member()
+	{}
+
+	void setMember(const char* newString)
+	{
+		member = newString;
+	}
+
+	const char* getMember() const
+	{
+		return member.c_str();
+	}
+
+	virtual ~Test()
+	{}
+};
+
+void test(const std::string& reason)
+{
+	Test test2;
+
+	throw std::runtime_error((std::string("aaaabbbbcccc") + reason).c_str());
+}
+
+void nested(const int nest)
+{
+	if (nest == 0)
+		test("testtest");
+	else
+		nested(nest - 1);
 }
 
 int main()
 {
-	Random r;
-	unsigned char count = r.getNumber() & (std::numeric_limits<unsigned char>::max()-3);
-	std::cout << "count: " << (unsigned short)count << std::endl;
-
-	std::cout.fill('0');
-	std::vector<unsigned char> byteVec = r.getRandomByteVector(count);
-	for (std::vector<unsigned char>::iterator itor = byteVec.begin();
-		 itor != byteVec.end();
-		 ++itor)
-		std::cout << std::hex <<
-			std::setw(2) <<
-			(unsigned short)(*itor);
-	std::cout << std::endl;
-
-	std::vector<unsigned short> wordVec = r.getRandomWordVector(count/2);
-	std::vector<unsigned int> dwordVec = r.getRandomDoubleWordVector(count/4);
-	display(wordVec.begin(), wordVec.end());
-	std::cout << std::endl;
-	display(dwordVec.begin(), dwordVec.end());
-	std::cout << std::endl;
+	try
+	{
+		nested(10000);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 
 	return 0;
 }

@@ -40,7 +40,6 @@ private:
 	 * @return 変換されたネットワークバイトオーダIPアドレス
 	 */
 	unsigned long translateIp(const char* ipAddress) const
-		throw(NotAddressResolvException)
 	{
 		HostEnt* hostEntry = gethostbyname(ipAddress);
 		if (hostEntry == NULL)

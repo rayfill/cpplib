@@ -15,7 +15,7 @@ public:
 	/**
 	 * コンストラクタ
 	 */
-	ClientSocket() throw() : Socket()
+	ClientSocket() : Socket()
 	{
 	}
 
@@ -42,7 +42,7 @@ public:
 		sockaddr_in info = ip.getInetInfo();
 
 		if (::connect(socket, (sockaddr*)&info, sizeof(info)) != 0)
-			throw SocketException((std::string("can not connect server:") +
+			throw SocketException((std::string("can not connect server: ") +
 								   ip.getHostname()).c_str());
 
 		isClosed = false;

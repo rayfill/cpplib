@@ -185,10 +185,12 @@ public:
 						continue;
 
 //					assert(this->getRunnable() != this);
+					Runnable* target = this->getRunnable();
+					assert(target != NULL);
 
-					this->getRunnable()->prepare();
-					this->getRunnable()->run();
-					this->getRunnable()->dispose();
+					target->prepare();
+					target->run();
+					target->dispose();
 				}
 				catch (InterruptedException& /*e*/)
 				{

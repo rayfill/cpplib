@@ -28,7 +28,7 @@ public:
  * MultiByte -> WideChar コード変換器特殊化
  */
 template <>
-class CodeConvert<std::wstring, std::string>
+class CodeConvert<std::basic_string<wchar_t>, std::string>
 {
 public:
 	/**
@@ -36,7 +36,7 @@ public:
 	 * @param str マルチバイト文字列
 	 * @return 変換されたWideChar文字列
 	 */
-	std::wstring codeConvert(const std::string& str)
+	std::basic_string<wchar_t> codeConvert(const std::string& str)
 	{
 		const size_t translatedLength =
 			std::mbstowcs(NULL ,str.c_str(),str.length()+1);
@@ -45,7 +45,7 @@ public:
 
 		translated = new wchar_t[translatedLength];
 		std::mbstowcs(translated, str.c_str(), translatedLength);
-		std::wstring result(translated, translatedLength);
+		std::basic_string<wchar_t> result(translated, translatedLength);
 		delete[] translated;
 
 		return result;
@@ -57,7 +57,7 @@ public:
  * WideChar -> MultiByte コード変換器特殊化
  */
 template <>
-class CodeConvert<std::string, std::wstring>
+class CodeConvert<std::string, std::basic_string<wchar_t> >
 {
 public:
 	/**
@@ -65,7 +65,7 @@ public:
 	 * @param str WideChar文字列
 	 * @return 変換されたMultiByte文字列
 	 */
-	std::string codeConvert(const std::wstring& str)
+	std::string codeConvert(const std::basic_string<wchar_t>& str)
 	{
 		const size_t translatedLength =
 			wcstombs(NULL, str.c_str(), str.length() + 1);
@@ -125,7 +125,8 @@ class StringTraits<wchar_t>
 public:
 	std::basic_string<wchar_t> stringTraits(const std::string& str)
 	{
-		return CodeConvert<std::wstring, std::string>().codeConvert(str);
+		return CodeConvert<std::basic_string<wchar_t>,
+			std::string>().codeConvert(str);
 	}
 };
 

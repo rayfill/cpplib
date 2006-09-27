@@ -1,5 +1,5 @@
-CXX=/usr/bin/g++ 
-CXXFLAGS= -g -mno-cygwin -O0 -Wall -Wunused \
+CXX=C:/MinGW/bin/g++ 
+CXXFLAGS= -g -Wall -Wunused \
 	-fno-default-inline -fmessage-length=78 -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
@@ -7,6 +7,8 @@ LIBS= -lwsock32 -lcppunit -lgdi32
 TARGET= UnitTest
 OBJS= TestMain.o \
 	HTTPResultTest.o \
+	XMLParserTest.o \
+	ScannerTest.o \
 	URLTest.o \
 	LexicalCastTest.o \
 	HTTPPropertyTest.o \
@@ -14,7 +16,6 @@ OBJS= TestMain.o \
 	StateMachineTest.o \
 	FSMTest.o \
 	Base64Test.o \
-	ScannerTest.o \
 	SieveTest.o \
 	StackableScannerTest.o \
 	RegexTest.o \
@@ -22,7 +23,6 @@ OBJS= TestMain.o \
 	RationalTest.o \
 	FontGrapherTest.o \
 	TranscodeTest.o \
-	XMLParserTest.o \
 	GeometryTest.o \
 	GraphicsTest.o \
 	BitmapTest.o \
@@ -43,8 +43,8 @@ OBJS= TestMain.o \
 	RSATest.o \
 	MPITest.o \
 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-# 	IPTest.o \
-# 	ShiftJISTest.o \
+	IPTest.o \
+	ShiftJISTest.o \
 
 DEPSOBJS= TestMain.d \
 	ShiftJISTest.d \
