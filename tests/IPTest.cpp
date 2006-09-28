@@ -21,10 +21,11 @@ public:
 
 	void resolvIPAddress()
 	{
-		ip.setIp("www.goo.ne.jp");
+		ip.setIp("www.nic.ad.jp");
 		CPPUNIT_ASSERT(IP::getIpString(ip.getIp())
-					   == "210.150.25.37");
+					   == "202.12.30.115");
 	}
+
 	void resolvMachineName()
 	{	
 		try

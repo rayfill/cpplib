@@ -1,5 +1,5 @@
 CXX=C:/MinGW/bin/g++ 
-CXXFLAGS= -g -Wall -Wunused \
+CXXFLAGS= -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 	-fno-default-inline -fmessage-length=78 -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
