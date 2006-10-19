@@ -31,30 +31,26 @@ public:
 	{
 		typedef std::map<std::wstring, std::wstring> AttributesType;
 
-//		std::cout << std::hex << std::endl;
 		TagElement<wchar_t> rootTag(L"root");
-//		std::cout << "root pointer: " << &rootTag << std::endl;
 		TagElement<wchar_t> childTag1(L"child1");
-//		std::cout << "childTag1 pointer: " << &childTag1 << std::endl;
 		TagElement<wchar_t> childTag1_(L"child1");
-//		std::cout << "childTag1_ pointer: " << &childTag1_ << std::endl;
 		TagElement<wchar_t> childTag2(L"child2");
-//		std::cout << "childTag2 pointer: " << &childTag2 << std::endl;
 		rootTag.addChild(&childTag1);
 		rootTag.addChild(&childTag2);
 		rootTag.addChild(&childTag1_);
 
 		CPPUNIT_ASSERT(rootTag.children.size() == 3);
-		CPPUNIT_ASSERT(dynamic_cast<TagElement<wchar_t>*>(rootTag.
-												 getChildElement(L"child1"))->
-					   getTagName() == L"child1");
-		CPPUNIT_ASSERT(dynamic_cast<TagElement<wchar_t>*>(rootTag.
-												 getChildElement(L"child2"))->
-					   getTagName() == L"child2");
+		CPPUNIT_ASSERT(dynamic_cast<TagElement<wchar_t>*>
+					   (rootTag.getChildElement(L"child1"))->getTagName() ==
+					   L"child1");
+		CPPUNIT_ASSERT(dynamic_cast<TagElement<wchar_t>*>
+					   (rootTag.getChildElement(L"child2"))->getTagName() ==
+					   L"child2");
+
+		std::vector<Element<wchar_t>*> result;
 
 		XMLPath<wchar_t> path_root(L"/root");
-		std::vector<Element<wchar_t>*> result =
-			path_root.evaluate(&rootTag);
+		result = path_root.evaluate(&rootTag);
 		CPPUNIT_ASSERT(result.size() == 1);
 		CPPUNIT_ASSERT(result[0] == &rootTag);
 
@@ -67,13 +63,16 @@ public:
 		result = path_child1.evaluate(&rootTag);
 		CPPUNIT_ASSERT(result.size() == 1);
 		CPPUNIT_ASSERT(result[0] == &childTag1);
-		
+
 		XMLPath<wchar_t> path_child1s(L"/root/child1[]");
 		result = path_child1s.evaluate(&rootTag);
 		CPPUNIT_ASSERT(result.size() == 2);
 		CPPUNIT_ASSERT(result[0] == &childTag1);
 		CPPUNIT_ASSERT(result[1] == &childTag1_);
-		
+
+		rootTag.removeChild(&childTag1);
+		rootTag.removeChild(&childTag2);
+		rootTag.removeChild(&childTag1_);
 	}
 
 	void XMLPathTokenizerTest()

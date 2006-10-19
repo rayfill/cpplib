@@ -5,8 +5,8 @@ class LexicalCastTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(LexicalCastTest);
 	CPPUNIT_TEST(castTest);
-	CPPUNIT_TEST(stringCastTest);
 	CPPUNIT_TEST(hexCastTest);
+	CPPUNIT_TEST(stringCastTest);
 	CPPUNIT_TEST_SUITE_END();
 public:
 	void hexCastTest()

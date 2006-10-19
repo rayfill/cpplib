@@ -169,7 +169,8 @@ public:
 
 		CPPUNIT_ASSERT(lists.size() == 2);
 		CPPUNIT_ASSERT(*lists.begin() == (regex_t*)3);
-		CPPUNIT_ASSERT(*++lists.begin() == (regex_t*)4);
+		std::vector<regex_t*>::iterator itor = lists.begin();
+		CPPUNIT_ASSERT(*++itor == (regex_t*)4);
 	}
 
 	void anyTokenTest()
@@ -390,7 +391,8 @@ public:
 		std::vector<token_t*> epsilons = head->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons.size() == 2);
 		CPPUNIT_ASSERT(epsilons.front() == token);
-		CPPUNIT_ASSERT(*++epsilons.begin() == last);
+		std::vector<token_t*>::iterator itor = epsilons.begin();
+		CPPUNIT_ASSERT(*++itor == last);
 
 		CPPUNIT_ASSERT(token->transit('A', false) != NULL);
 		regex_token_t* loop = token->transit('A', false);
@@ -398,7 +400,8 @@ public:
 		epsilons = loop->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons.size() == 2);
 		CPPUNIT_ASSERT(epsilons.front() == head);
-		CPPUNIT_ASSERT(*++epsilons.begin() == last);
+		itor = epsilons.begin();
+		CPPUNIT_ASSERT(*++itor == last);
 	}
 
 	void kleenePlusTest()
@@ -453,7 +456,8 @@ public:
 		CPPUNIT_ASSERT(up == token_a);
 
 		// downside test. route as 'B'.
-		regex_token_t* down = *++epsilons.begin();
+		std::vector<token_t*>::iterator itor = epsilons.begin();
+		regex_token_t* down = *++itor;
 		CPPUNIT_ASSERT(down == token_b);
 
 		CPPUNIT_ASSERT(((char_token_t*)up)->transit('A', false) == tail);
@@ -841,7 +845,8 @@ public:
 		std::vector<token_t*> epsilons = current->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons.size() == 2);
 		current = epsilons.front();
-		token_t* shortcut = *++epsilons.begin();
+		std::vector<token_t*>::iterator itor = epsilons.begin();
+		token_t* shortcut = *++itor;
 
 		current = ((char_token_t*)current)->transit('b', false);
 		CPPUNIT_ASSERT(current != NULL);
@@ -849,7 +854,8 @@ public:
 		std::vector<token_t*> epsilons2 = current->epsilonTransit();
 		CPPUNIT_ASSERT(epsilons2.size() == 2);
 		CPPUNIT_ASSERT(epsilons2.front() == kleeneHead);
-		CPPUNIT_ASSERT(*++epsilons2.begin() == shortcut);
+		itor = epsilons2.begin();
+		CPPUNIT_ASSERT(*++itor == shortcut);
 
 		current = shortcut;
 		CPPUNIT_ASSERT(current->epsilonTransit().size() == 1);

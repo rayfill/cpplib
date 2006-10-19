@@ -4,6 +4,7 @@
 #include <math/Theory/AlgebraTheory.hpp>
 #include <math/ArithmeticException.hpp>
 #include <ostream>
+#include <cassert>
 
 /**
  * —L—”ƒNƒ‰ƒX

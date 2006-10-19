@@ -38,10 +38,8 @@ public:
 	 * @param column_ —ñ”
 	 */
 	ParseException(const unsigned int line_, const unsigned int column_):
-		std::runtime_error("parsing exception: " +
-						   stringCast(line_) + "," +
-						   stringCast(column_)),
-		line(line_), column(column_)
+			std::runtime_error("parsing exception"),
+			line(line_), column(column_)
 	{}
 
 	/**

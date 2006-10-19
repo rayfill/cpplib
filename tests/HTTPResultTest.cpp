@@ -4,8 +4,8 @@
 class HTTPResultTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE( HTTPResultTest );
-	CPPUNIT_TEST(stackTest);
-//	CPPUNIT_TEST(parseTest);
+//	CPPUNIT_TEST(stackTest);
+	CPPUNIT_TEST(parseTest);
 	CPPUNIT_TEST_SUITE_END();
 private:
 	void stackTest()

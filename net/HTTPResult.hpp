@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <map>
 #include <vector>
+#include <limits>
 #include <Socket/Socket.hpp>
 #include <util/Property.hpp>
 #include <text/LexicalCast.hpp>
@@ -212,6 +213,17 @@ public:
 				lexicalCast<size_t>(properties.get("Content-Length"));
 		
 			readResource(socket, contentLength);
+		}
+		else
+		{
+			// HTTP/1.0 version read contents.
+			try
+			{
+				readResource(socket, std::numeric_limits<size_t>::max());
+			}
+			catch (ConnectionClosedException& )
+			{
+			}
 		}
 	}
 };

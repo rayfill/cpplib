@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <util/Scanner.hpp>
+#include <cassert>
 
 template <
 	typename CharType,

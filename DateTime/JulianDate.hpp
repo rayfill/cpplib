@@ -1,6 +1,7 @@
 #ifndef JULIANDATE_HPP_
 #define JULIANDATE_HPP_
 #include <Time/Time.hpp>
+#include <cassert>
 
 /**
  * 修正ユリウス通日クラス

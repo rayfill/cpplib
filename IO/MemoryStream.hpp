@@ -4,8 +4,7 @@
 #include <iostream>
 #include <vector>
 
-// TODO:
-// 読み書き両対応への実装の変更
+// @todo 読み書き両対応への実装の変更。
 // bufferのdeque化か読み出し/書き込み位置をメンバとして持つか・・・
 template <typename BaseType, typename Traits = std::char_traits<BaseType> >
 class BasicMemoryStreamBuf : public std::basic_streambuf<BaseType, Traits>
@@ -85,13 +84,8 @@ private:
 
 public:
 	BasicMemoryStream() :
-#ifndef _MSC_VER
-		std::basic_iostream<T, Traits>(),
-		stub(new BasicMemoryStreamBuf<T, Traits>())
-#else
-		stub(new BasicMemoryStreamBuf<T, Traits>()),
-		std::basic_iostream<T, Traits>(stub)
-#endif
+			std::basic_iostream<T, Traits>(NULL),
+			stub(new BasicMemoryStreamBuf<T, Traits>())
 	{
 		this->init(stub);
 	}

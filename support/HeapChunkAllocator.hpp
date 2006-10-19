@@ -163,8 +163,7 @@ public:
 
 	void deallocate(pointer p, size_type n)
 	{
-		if (p == 0)
-			assert(false);
+		assert(p != 0);
 
 		if (n == 0)
 			return;

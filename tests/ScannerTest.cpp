@@ -6,11 +6,11 @@ class ScannerTest : public CppUnit::TestFixture
 {
 private:
 	CPPUNIT_TEST_SUITE(ScannerTest);
-	CPPUNIT_TEST(tokenInjectionTest);
 	CPPUNIT_TEST(parseErrorPosTest);
 	CPPUNIT_TEST(wideCharacterTokenInjectionTest);
 	CPPUNIT_TEST(numberTokenTest);
 	CPPUNIT_TEST(commentTokenTest);
+	CPPUNIT_TEST(tokenInjectionTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -97,6 +97,14 @@ public:
 		{
 			CPPUNIT_ASSERT(e.getLine() == 1);
 			CPPUNIT_ASSERT(e.getColumn() == 15);
+		}
+		catch (std::exception& e)
+		{
+			CPPUNIT_FAIL(e.what());
+		}
+		catch (...)
+		{
+			CPPUNIT_FAIL("unknown exception.");
 		}
 	}
 
