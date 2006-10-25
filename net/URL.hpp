@@ -58,7 +58,8 @@ private:
 		port = isWritePortNumber ?
 			lexicalCast<unsigned short>(
 					url.substr(portSeparatorPos + 1,
-							   serverWithPortTermPos - portSeparatorPos)) : 0;
+							   serverWithPortTermPos - portSeparatorPos - 1)) :
+			0;
 
 		resource = url.substr(serverWithPortTermPos);
 
@@ -68,7 +69,7 @@ private:
 	}
 
 public:
-	URL(const std::string& url) throw (URLParseError):
+	URL(const std::string& url):
 		scheme(),
 		urlString(),
 		server(),
