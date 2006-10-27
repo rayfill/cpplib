@@ -6,6 +6,7 @@ CXXFLAGS= -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 LIBS= -lwsock32 -lgdi32 -LC:/MinGW/lib -lcppunit -lstlport
 TARGET= UnitTest
 OBJS= TestMain.o \
+	CommandLineTest.o \
 	ScannerTest.o \
 	LexicalCastTest.o \
 	XMLParserTest.o \
@@ -47,6 +48,7 @@ OBJS= TestMain.o \
 	ShiftJISTest.o
 
 DEPSOBJS= TestMain.d \
+	CommandLineTest.d \
 	ShiftJISTest.d \
 	HTTPResultTest.d \
 	URLTest.d \
