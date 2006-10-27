@@ -76,14 +76,14 @@ public:
 	void setRange(const unsigned int first)
 	{
 		properties.set("Range", "bytes=" +
-					   stringCast<const unsigned int>(first) + "-");
+					   stringCast<unsigned int>(first) + "-");
 	}
 
 	void setRange(const unsigned int first, const unsigned int last)
 	{
 		properties.set("range", "bytes=" +
-					   stringCast<const unsigned int>(first) +
-					   "-" + stringCast<const unsigned int>(last));
+					   stringCast<unsigned int>(first) +
+					   "-" + stringCast<unsigned int>(last));
 	}
 
 	std::string toString()

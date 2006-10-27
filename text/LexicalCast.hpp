@@ -1,9 +1,9 @@
 #ifndef LEXICALCAST_HPP_
 #define LEXICALCAST_HPP_
 
-#include <sstream>
 #include <string>
 #include <stdexcept>
+#include <cassert>
 
 class CastError : public std::runtime_error
 {
@@ -64,7 +64,7 @@ CastType lexicalCast(const std::basic_string<char>& source)
 			break;
 
 		default:
-			throw CastError((source + (" hexstring cast failed.")).c_str());
+			throw CastError((source + (" string cast failed.")).c_str());
 		}
 	}
 		 
@@ -159,16 +159,58 @@ CastType hexLexicalCast(const std::basic_string<char>& source)
 	return result;
 }
 
+/**
+ * とりあえず実数型は無視の形で・・・
+ * STLPortのstringstream系が怪しいので排除する形に書き換え
+ */
 template <typename CastType>
-std::basic_string<char> stringCast(const CastType& value)
+std::basic_string<char> stringCast(const CastType& source)
 {
 	std::string result;
+	CastType value = source;
+
+	do
 	{
-		std::stringstream stringValue;
-		stringValue << value;
-		result = stringValue.str();
-	}
-	return result;
+		switch (value % 10)
+		{
+			case 0:
+				result.append("0");
+				break;
+			case 1:
+				result.append("1");
+				break;
+			case 2:
+				result.append("2");
+				break;
+			case 3:
+				result.append("3");
+				break;
+			case 4:
+				result.append("4");
+				break;
+			case 5:
+				result.append("5");
+				break;
+			case 6:
+				result.append("6");
+				break;
+			case 7:
+				result.append("7");
+				break;
+			case 8:
+				result.append("8");
+				break;
+			case 9:
+				result.append("9");
+				break;
+
+			defaut:
+				assert(!"non reached point.");
+		}
+		value /= 10;
+	} while (value != 0);
+
+	return std::string(result.rbegin(), result.rend());
 }
 
 #endif /* LEXICALCAST_HPP_ */

@@ -3,48 +3,48 @@ CXXFLAGS= -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 	-fno-default-inline -fmessage-length=78 -Ic:/mingw/include/stlport -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
-LIBS= -lwsock32 -lgdi32 -LC:/MinGW/lib -lcppunit -lstlport_debug
+LIBS= -lwsock32 -lgdi32 -LC:/MinGW/lib -lcppunit -lstlport
 TARGET= UnitTest
 OBJS= TestMain.o \
- 	ScannerTest.o \
- 	LexicalCastTest.o \
-# 	XMLParserTest.o \
-# 	HTTPResultTest.o \
-# 	URLTest.o \
-# 	HTTPPropertyTest.o \
-# 	PropertyTest.o \
-# 	StateMachineTest.o \
-# 	FSMTest.o \
-# 	Base64Test.o \
-# 	StackableScannerTest.o \
-# 	RegexTest.o \
-# 	SmartPointerTest.o \
-# 	RationalTest.o \
-# 	FontGrapherTest.o \
-# 	TranscodeTest.o \
-# 	GeometryTest.o \
-# 	GraphicsTest.o \
-# 	BitmapTest.o \
-# 	EndianTest.o \
-# 	ThreadTest.o \
-# 	ThreadPoolTest.o \
-# 	ImageTest.o SamplingScannerTest.o \
-# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-# 	NotifyTest.o RangeTest.o SingletonTest.o \
-# 	SingletonTestFunc1.o SingletonTestFunc2.o \
-# 	LZSSTest.o \
-# 	EventTest.o \
-# 	JulianDateTest.o \
-# 	CBCTest.o \
-# 	AsymmetricKeyTest.o \
-# 	SieveTest.o \
-# 	RSATest.o \
-# 	AlgebraTheoryTest.o \
-# 	NumberTheoryTest.o \
-# 	MPITest.o \
-# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-# 	IPTest.o \
-#	ShiftJISTest.o
+	ScannerTest.o \
+	LexicalCastTest.o \
+	XMLParserTest.o \
+	HTTPResultTest.o \
+	URLTest.o \
+	HTTPPropertyTest.o \
+	PropertyTest.o \
+	StateMachineTest.o \
+	FSMTest.o \
+	Base64Test.o \
+	StackableScannerTest.o \
+	RegexTest.o \
+	SmartPointerTest.o \
+	RationalTest.o \
+	FontGrapherTest.o \
+	TranscodeTest.o \
+	GeometryTest.o \
+	GraphicsTest.o \
+	BitmapTest.o \
+	EndianTest.o \
+	ThreadTest.o \
+	ThreadPoolTest.o \
+	ImageTest.o SamplingScannerTest.o \
+	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+	NotifyTest.o RangeTest.o SingletonTest.o \
+	SingletonTestFunc1.o SingletonTestFunc2.o \
+	LZSSTest.o \
+	EventTest.o \
+	JulianDateTest.o \
+	CBCTest.o \
+	AsymmetricKeyTest.o \
+	SieveTest.o \
+	RSATest.o \
+	AlgebraTheoryTest.o \
+	NumberTheoryTest.o \
+	MPITest.o \
+	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
+	IPTest.o \
+	ShiftJISTest.o
 
 DEPSOBJS= TestMain.d \
 	ShiftJISTest.d \

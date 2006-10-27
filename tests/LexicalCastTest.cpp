@@ -29,6 +29,9 @@ public:
 		std::string str = stringCast(1234567);
 
 		CPPUNIT_ASSERT_MESSAGE(str, str == "1234567");
+
+		str = stringCast(0);
+		CPPUNIT_ASSERT_MESSAGE(str, str == "0");
 	}
 };
 
