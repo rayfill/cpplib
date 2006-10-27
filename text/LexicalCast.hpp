@@ -204,7 +204,7 @@ std::basic_string<char> stringCast(const CastType& source)
 				result.append("9");
 				break;
 
-			defaut:
+			default:
 				assert(!"non reached point.");
 		}
 		value /= 10;
