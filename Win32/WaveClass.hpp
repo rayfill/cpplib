@@ -8,8 +8,15 @@
 #include <stdexcept>
 #include <exception>
 
-class BadFileException : public std::exception
+class BadFileException : public std::runtime_error
 {
+public:
+	BadFileException()
+	{}
+	
+	virtual ~BadFileException() throw()
+	{}
+
 	virtual const char* what() const throw()
 	{
 		return "open file type is bad.";
@@ -28,9 +35,11 @@ private:
 	T* container;
 public:
 	WaveFileIterator(): currentPointer() {}
+
 	WaveFileIterator(size_t currentPointer_, T* container_):
-		currentPointer(currentPointer_), container(container_)
+			currentPointer(currentPointer_), container(container_)
 	{}
+
 	WaveFileIterator(const WaveFileIterator& itor)
 	{
 		if (&itor == this)
@@ -59,6 +68,7 @@ public:
 		++currentPointer;
 		return *this;
 	}
+
 	WaveFileIterator operator++(int)
 	{
 		WaveFileIterator before = *this;
@@ -71,9 +81,7 @@ public:
 		container->seek(currentPointer);
 		return container->read();
 	}
-
 };
-
 
 class WaveFile 
 {
@@ -83,8 +91,10 @@ private:
 	private:
 		bool isRIFFChunk()
 		{ return strncmp(this->pRiffChunkId, "RIFF", 4) == 0; }
+
 		bool isWAVEfmtChunk()
 		{ return strncmp(this->pWaveTag, "WAVEfmt ", 8) == 0; }
+
 		bool isDATAChunk()
 		{ return strncmp(this->pDataChunkId, "data", 4) == 0; }
 
@@ -208,10 +218,12 @@ public:
 
 	WaveFile(): hFile(NULL)
 	{}
+
 	WaveFile(std::string filename): hFile(NULL)
 	{
 		open(filename);
 	}
+
 	virtual ~WaveFile()
 	{
 		close();
@@ -369,14 +381,14 @@ private:
 public:
 	WaveOutDevice(UINT DeviceID = WAVE_MAPPER,
 				  size_t bufferSize = 176400):
-		numberOfProcessing(static_cast<unsigned int>(numberOfData)),
-		maxPCMBufferSize(bufferSize),
-		playDone(false),
-		deviceId(DeviceID), 
-		waveOutHandle(NULL),
-		waveFormat(),
-		currentPoint(),
-		endPoint()
+			numberOfProcessing(static_cast<unsigned int>(numberOfData)),
+			maxPCMBufferSize(bufferSize),
+			playDone(false),
+			deviceId(DeviceID), 
+			waveOutHandle(NULL),
+			waveFormat(),
+			currentPoint(),
+			endPoint()
 	{
 	}
 
@@ -385,11 +397,13 @@ public:
 		this->currentPoint = beginPoint;
 		this->endPoint = endPoint_;
 	}
+
 	void setPCMData(Itor beginPoint, size_t length)
 	{
 		this->currentPoint = beginPoint;
 		this->endPoint = beginPoint + length;
 	}
+
 	bool open()
 	{
 		assert(this->waveOutHandle == NULL);

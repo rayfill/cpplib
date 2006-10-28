@@ -35,9 +35,14 @@ public:
 		TagElement<wchar_t> childTag1(L"child1");
 		TagElement<wchar_t> childTag1_(L"child1");
 		TagElement<wchar_t> childTag2(L"child2");
+		StringElement<wchar_t> stringTag(L"string");
+		CommentElement<wchar_t> commentTag(L"comment");
+
 		rootTag.addChild(&childTag1);
 		rootTag.addChild(&childTag2);
 		rootTag.addChild(&childTag1_);
+		childTag1.addChild(&stringTag);
+		childTag1_.addChild(&commentTag);
 
 		CPPUNIT_ASSERT(rootTag.children.size() == 3);
 		CPPUNIT_ASSERT(dynamic_cast<TagElement<wchar_t>*>
@@ -70,9 +75,21 @@ public:
 		CPPUNIT_ASSERT(result[0] == &childTag1);
 		CPPUNIT_ASSERT(result[1] == &childTag1_);
 
+		XMLPath<wchar_t> path_text(L"/root/child1[]/#text");
+		result = path_text.evaluate(&rootTag);
+		CPPUNIT_ASSERT(result.size() == 1);
+		CPPUNIT_ASSERT(result[0] == &stringTag);
+
+		XMLPath<wchar_t> path_comment(L"/root/child1[]/#comment");
+		result = path_comment.evaluate(&rootTag);
+		CPPUNIT_ASSERT(result.size() == 1);
+		CPPUNIT_ASSERT(result[0] == &commentTag);
+
 		rootTag.removeChild(&childTag1);
 		rootTag.removeChild(&childTag2);
 		rootTag.removeChild(&childTag1_);
+		childTag1.removeChild(&stringTag);
+		childTag1_.removeChild(&commentTag);
 	}
 
 	void XMLPathTokenizerTest()

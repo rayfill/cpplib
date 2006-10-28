@@ -329,6 +329,10 @@ protected:
 	 */
 	std::map<string_t, string_t> attributes;
 
+	TagElement():
+			tagName(),
+			attributes()
+	{}
 public:
 	/**
 	 * コンストラクタ
@@ -516,7 +520,7 @@ public:
  * コメントを表す要素
  */
 template <typename CharType>
-class CommentElement : public Element<CharType>
+class CommentElement : public TagElement<CharType>
 {
 	friend class CommentElementTest;
 
@@ -536,8 +540,18 @@ public:
 	 * コンストラクタ
 	 * @param value_ コメント文字列
 	 */
-	CommentElement(const string_t& value_): value(value_)
-	{}
+	CommentElement(const string_t& value_):
+			TagElement<char_t>(), value(value_)
+	{
+		TagElement<char_t>::tagName += '#';
+		TagElement<char_t>::tagName += 'c';
+		TagElement<char_t>::tagName += 'o';
+		TagElement<char_t>::tagName += 'm';
+		TagElement<char_t>::tagName += 'm';
+		TagElement<char_t>::tagName += 'e';
+		TagElement<char_t>::tagName += 'n';
+		TagElement<char_t>::tagName += 't';
+	}
 
 	/**
 	 * デストラクタ
@@ -588,7 +602,7 @@ public:
  * @note 前後の空白文字をchopするヘルパがあってもいいかも
  */
 template <typename CharType>
-class StringElement : public Element<CharType>
+class StringElement : public TagElement<CharType>
 {
 	friend class StringElementTest;
 public:
@@ -608,8 +622,15 @@ public:
 	 * コンストラクタ
 	 * @param value_ CDATA文字列
 	 */
-	StringElement(const string_t& value_): value(value_)
-	{}
+	StringElement(const string_t& value_):
+			TagElement<char_t>(),  value(value_)
+	{
+		TagElement<char_t>::tagName += '#';
+		TagElement<char_t>::tagName += 't';
+		TagElement<char_t>::tagName += 'e';
+		TagElement<char_t>::tagName += 'x';
+		TagElement<char_t>::tagName += 't';
+	}
 
 	/**
 	 * デストラクタ
@@ -773,8 +794,7 @@ private:
 	 * @param value 文字列
 	 * @return 整数値
 	 */
-	int strToInt(const string_t& value)
-		const throw(std::invalid_argument)
+	int strToInt(const string_t& value)	const
 	{
 		int result = 0;
 		for (typename string_t::const_iterator itor = value.begin();
@@ -873,18 +893,13 @@ private:
 				for (typename std::vector<base_t*>::iterator itor =
 						 children.begin(); itor != children.end(); ++itor)
 				{
-					tag_element_t* tagElem =
-						dynamic_cast<tag_element_t*>(*itor);
-					if (tagElem != NULL)
-					{
-						std::vector<element_t*> result =
-							traverse(tagElem, nameList);
+					std::vector<element_t*> result =
+						traverse(*itor, nameList);
 
-						if (result.size() > 0)
-							results.insert(results.end(),
-										   result.begin(),
-										   result.end());
-					}
+					if (result.size() > 0)
+						results.insert(results.end(),
+									   result.begin(),
+									   result.end());
 				}
 			}
 			else
@@ -993,13 +1008,14 @@ public:
 	 */
 	std::vector<element_t*> evaluate(element_t* element)
 	{
-		
+
 		std::vector<string_t> names = tokenize();
-		std::vector<string_t> namelist(names.rbegin(), names.rend());
+		std::vector<string_t> namelist =
+			std::vector<string_t>(names.rbegin(), names.rend());
 
 		if (typeid(*element) == typeid(XMLDocument<char_t>))
 		{
-			element_t* documentRoot = NULL;
+			tag_element_t* documentRoot = NULL;
 			std::vector<base_t*> children = element->getChildren();
 			for (typename std::vector<base_t*>::iterator itor = 
 					 children.begin(); itor != children.end(); ++itor)
@@ -1008,7 +1024,8 @@ public:
 					continue;
 
 				documentRoot = dynamic_cast<tag_element_t*>(*itor);
-				if (documentRoot != NULL)
+				if (documentRoot != NULL &&
+					documentRoot->getTagName()[0] != '#')
 					break;
 			}
 			if (documentRoot == NULL)
