@@ -1,4 +1,4 @@
-#include <cppunit/extensions/Helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <util/SmartPointer.hpp>
 #include <assert.h>
 

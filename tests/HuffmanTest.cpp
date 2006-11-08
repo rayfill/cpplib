@@ -272,28 +272,28 @@ public:
 		for (int index = 0; index < 128; ++index)
 			ht.addCount('A');
 		for (int index = 0; index < 64; ++index)
-			ht.addCount('±');
+			ht.addCount(0xee);
 
-		for (int index = std::numeric_limits<char>::min();
-			 index <= std::numeric_limits<char>::max();
+		for (int index = std::numeric_limits<unsigned char>::min();
+			 index <= std::numeric_limits<unsigned char>::max();
 			 ++index)
 		{
  			if (index == 'A')
  				CPPUNIT_ASSERT(ht.getCount(index) == 128);
- 			else if (index == ((signed char)('±')))
+ 			else if (index == 0xee)
  				CPPUNIT_ASSERT(ht.getCount(index) == 64);
  			else
  				CPPUNIT_ASSERT(ht.getCount(index) == 0);
 		}
 
-		ht.addCount('±');
+		ht.addCount(0xee);
 		ht.store(&table[0]);
 
 		for (int index = 0; index < 256; ++index)
 		{
-			if (index == ('A' + 128))
+			if (index == 'A')
 				CPPUNIT_ASSERT(table[index] == 128);
-			else if (index == ('±' + 128))
+			else if (index == 0xee)
 				CPPUNIT_ASSERT(table[index] == 65);
 			else
 				CPPUNIT_ASSERT(table[index] == 0);

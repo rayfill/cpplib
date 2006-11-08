@@ -23,7 +23,7 @@ public:
 
 	void littleEndianTest()
 	{
-		EndianConverter conv;
+		EndianConverter conv(new LittleEndian());
  		long long ll = 0x01234567;
 		ll <<= 32;
 		ll += 0x89abcdef;

@@ -2,7 +2,6 @@
 #include <math/Geometry.hpp>
 #include <iostream>
 
-using namespace geometry;
 
 class GeometryTest : public CppUnit::TestFixture
 {
@@ -21,6 +20,7 @@ private:
 public:
 	void projectionTest()
 	{
+		using namespace geometry;
 		const Rectangle<int> source1(-50, -50, 50, 50);
 		Rectangle<int> dest = source1.getProjection(Rectangle<int>(0, 0, 30, 30));
 		CPPUNIT_ASSERT(dest.getLeft() == 50);
@@ -43,6 +43,7 @@ public:
 
 	void unionTest()
 	{
+		using namespace geometry;
 		const Rectangle<int> source1(0, 0, 10, 10);
 		const Rectangle<int> source2(10, 10, 20, 20);
 		const Rectangle<int> source3(11, 11, 20, 20);
@@ -62,6 +63,7 @@ public:
 
 	void intersectionTest()
 	{
+		using namespace geometry;
 		const Rectangle<int> source1(0, 0, 10, 10);
 		const Rectangle<int> source2(10, 10, 20, 20);
 		const Rectangle<int> source3(11, 11, 20, 20);
@@ -78,6 +80,7 @@ public:
 
 	void slideTest()
 	{
+		using namespace geometry;
 		Rectangle<int> bounds(0, 0, 120, 240);
 		Rectangle<int> testerRect(0, 0, 120, 240);
 		Point<int> point(0, 0);
@@ -97,12 +100,13 @@ public:
 		CPPUNIT_ASSERT(bounds.isCollision(point));
 		CPPUNIT_ASSERT(bounds.isCollision(testerRect));
 
-		CPPUNIT_ASSERT(bounds.leftTop == Point<int>(0, 0));
-		CPPUNIT_ASSERT(bounds.rightBottom == Point<int>(120, 240));
+		CPPUNIT_ASSERT(bounds.getLeftTop() == Point<int>(0, 0));
+		CPPUNIT_ASSERT(bounds.getRightBottom() == Point<int>(120, 240));
 	}
 
 	void boundaryTest()
 	{
+		using namespace geometry;
 		Rectangle<int> bounds(0, 0, 120, 240);
 		Rectangle<int> rectangle1(0, 0, 120, 240);
 		Rectangle<int> rectangle2(1, 1, 1, 1);
@@ -143,16 +147,17 @@ public:
 
 	void RectangleCtorTest()
 	{
+		using namespace geometry;
 		CPPUNIT_ASSERT_THROW(Rectangle<int>(3, 2, 1, 4),
 							 std::invalid_argument);
 		CPPUNIT_ASSERT_THROW(Rectangle<int>(1, 4, 3, 2),
 							 std::invalid_argument);
 
 		Rectangle<int> rect(1, 1, 1, 1);
-		CPPUNIT_ASSERT(rect.leftTop.x == 1);
-		CPPUNIT_ASSERT(rect.leftTop.y == 1);
-		CPPUNIT_ASSERT(rect.rightBottom.x == 1);
-		CPPUNIT_ASSERT(rect.rightBottom.y == 1);
+		CPPUNIT_ASSERT(rect.getLeftTop().getX() == 1);
+		CPPUNIT_ASSERT(rect.getLeftTop().getY() == 1);
+		CPPUNIT_ASSERT(rect.getRightBottom().getX() == 1);
+		CPPUNIT_ASSERT(rect.getRightBottom().getY() == 1);
 
 		Rectangle<int> rect2(1, 2, 3, 4);
 		CPPUNIT_ASSERT(rect != rect2);
@@ -161,12 +166,13 @@ public:
 		CPPUNIT_ASSERT(rect == rect2);
 		CPPUNIT_ASSERT(!(rect != rect2));
 
-		CPPUNIT_ASSERT(rect.leftTop == Point<int>(1, 2));
-		CPPUNIT_ASSERT(rect.rightBottom == Point<int>(3, 4));
+		CPPUNIT_ASSERT(rect.getLeftTop() == Point<int>(1, 2));
+		CPPUNIT_ASSERT(rect.getRightBottom() == Point<int>(3, 4));
 	}
 
 	void pointOpTest()
 	{
+		using namespace geometry;
 		if (1) // operator== and !=
 		{
 			Point<int> x(1, 2);
@@ -230,6 +236,7 @@ public:
 
 	void pointTest()
 	{
+		using namespace geometry;
 		if (1) 
 		{
 			Point<int> pos;

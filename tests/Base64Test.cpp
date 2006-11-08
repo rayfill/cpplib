@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <iostream>
 #include <util/format/Base64.hpp>
 #include <vector>

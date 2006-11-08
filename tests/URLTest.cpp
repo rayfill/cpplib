@@ -1,7 +1,5 @@
-#include <iostream>
-
+#include <cppunit/extensions/HelperMacros.h>
 #include <net/URL.hpp>
-#include <cppunit/extensions/helpermacros.h>
 
 class URLTest : public CppUnit::TestFixture
 {

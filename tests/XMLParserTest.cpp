@@ -153,6 +153,7 @@ public:
 		CPPUNIT_ASSERT(tag3.attributes.size() == 1);
 		CPPUNIT_ASSERT(tag3.attributes[L"fuga"] == L"");
 
+		CPPUNIT_ASSERT_MESSAGE("whcar_t is not 2 byte.", sizeof(wchar_t) == 2);
 		std::string utf8str = Transcoder::UTF16toUTF8(tag3.toString());
 
 		const size_t pos = utf8str.find('\n');

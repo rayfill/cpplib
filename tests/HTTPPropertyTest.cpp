@@ -1,4 +1,4 @@
-#include <cppunit/extensions/helpermacros.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <net/HTTPProperty.hpp>
 
 class HTTPPropertyTest : public CppUnit::TestFixture

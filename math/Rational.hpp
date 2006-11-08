@@ -1,7 +1,7 @@
 #ifndef RATIONAL_HPP_
 #define RATIONAL_HPP_
 
-#include <math/Theory/AlgebraTheory.hpp>
+#include <math/theory/AlgebraTheory.hpp>
 #include <math/ArithmeticException.hpp>
 #include <ostream>
 #include <cassert>
