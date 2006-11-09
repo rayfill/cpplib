@@ -18,10 +18,10 @@
 #include <util/algorithm.hpp>
 
 /**
- * oŒ»•p“x•\
- * @param CountType oŒ»‰ñ”‚ğ”‚¦‚éŒ^
- * TargetType Œvã‚·‚é“ü—ÍƒXƒgƒŠ[ƒ€‚ÌŒ^BƒfƒtƒHƒ‹ƒg‚Åchar
- * @todo ŒvãƒCƒ“ƒ^ƒtƒF[ƒX‚ÉƒCƒeƒŒ[ƒ^‚ğg‚¤‚æ‚¤‚É•ÏX‚Æ‚©
+ * å‡ºç¾é »åº¦è¡¨
+ * @param CountType å‡ºç¾å›æ•°ã‚’æ•°ãˆã‚‹å‹
+ * TargetType è¨ˆä¸Šã™ã‚‹å…¥åŠ›ã‚¹ãƒˆãƒªãƒ¼ãƒ ã®å‹ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§char
+ * @todo è¨ˆä¸Šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã«ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’ä½¿ã†ã‚ˆã†ã«å¤‰æ›´ã¨ã‹
  */
 template <typename CountType = size_t, typename TargetType = char>
 class FrequencyTable
@@ -31,13 +31,13 @@ public:
 
 private:
 	/**
-	 * oŒ»•p“x•\
+	 * å‡ºç¾é »åº¦è¡¨
 	 */
 	CountType frequencyTable[tableSize];
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	FrequencyTable()
 	{
@@ -46,30 +46,34 @@ public:
 	}
 
 	/**
-	 * ŠO•””z—ñ‚©‚ç‚ÌoŒ»•p“x•\‚Ì“Ç‚İ‚İ
-	 * @param table ƒe[ƒuƒ‹‚Ìæ“ª‚Ìƒ|ƒCƒ“ƒ^
-	 * @todo template‚ğg‚Á‚½ƒCƒeƒŒ[ƒ^ƒx[ƒX‚Ö•ÏX
+	 * å¤–éƒ¨é…åˆ—ã‹ã‚‰ã®å‡ºç¾é »åº¦è¡¨ã®èª­ã¿è¾¼ã¿
+	 * @param table ãƒ†ãƒ¼ãƒ–ãƒ«ã®å…ˆé ­ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @todo templateã‚’ä½¿ã£ãŸã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã¸å¤‰æ›´
 	 */
 	void load(CountType* table)
 	{
-		for (size_t index = 0; index < tableSize; ++index)
-			frequencyTable[index] = table[index];
+		const int offset = std::numeric_limits<TargetType>::min();
+
+		for (int index = 0; index < tableSize; ++index)
+			frequencyTable[index] = table[index + offset];
 	}
 
 	/**
-	 * oŒ»•p“x•\‚Ìo—Í
-	 * @param table o—Í‚·‚éƒe[ƒuƒ‹‚Ìæ“ªƒAƒhƒŒƒX
+	 * å‡ºç¾é »åº¦è¡¨ã®å‡ºåŠ›
+	 * @param table å‡ºåŠ›ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	void store(CountType* table)
 	{
+		const int offset = std::numeric_limits<TargetType>::min();
+
 		for (size_t index = 0; index < tableSize; ++index)
-			table[index] = frequencyTable[index];
+			table[(index - offset) % tableSize] = frequencyTable[index];
 	}
 	
 	/**
-	 * ‘ÎÛ•¶š‚ÌoŒ»‰ñ”
-	 * @param ch ‘ÎÛ•¶š
-	 * @return oŒ»‰ñ”
+	 * å¯¾è±¡æ–‡å­—ã®å‡ºç¾å›æ•°
+	 * @param ch å¯¾è±¡æ–‡å­—
+	 * @return å‡ºç¾å›æ•°
 	 */
 	const CountType getCount(TargetType ch) const throw()
 	{
@@ -82,8 +86,8 @@ public:
 	}
 
 	/**
-	 * oŒ»•¶š‚ÌŒvã
-	 * @param ch oŒ»‚µ‚½•¶š
+	 * å‡ºç¾æ–‡å­—ã®è¨ˆä¸Š
+	 * @param ch å‡ºç¾ã—ãŸæ–‡å­—
 	 */
 	void addCount(TargetType ch)
 	{
@@ -91,7 +95,7 @@ public:
 	}
 
 	/**
-	 * •¶š—ñ•\Œ»‚Ö‚Ì•ÏŠ·
+	 * æ–‡å­—åˆ—è¡¨ç¾ã¸ã®å¤‰æ›
 	 */
 	 std::string toString()
 	{
@@ -116,29 +120,29 @@ public:
 };
 
 /**
- * Huffman•„†‚Ì—áŠOƒNƒ‰ƒX
+ * Huffmanç¬¦å·æ™‚ã®ä¾‹å¤–ã‚¯ãƒ©ã‚¹
  */
 class HuffmanCoderException
 	: public std::runtime_error
 {
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param reason_ —áŠO——R
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param reason_ ä¾‹å¤–ç†ç”±
 	 */
 	HuffmanCoderException(const std::string reason_)
 		: std::runtime_error(reason_.c_str())
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~HuffmanCoderException() throw()
 	{}
 };
 
 /**
- * ƒnƒtƒ}ƒ“–ØƒNƒ‰ƒX
+ * ãƒãƒ•ãƒãƒ³æœ¨ã‚¯ãƒ©ã‚¹
  */
 class HuffmanTree
 {
@@ -147,34 +151,34 @@ private:
 
 public:
 	/**
-	 * ƒnƒtƒ}ƒ“–Ø‚Ìƒm[ƒhƒNƒ‰ƒX
-	 * @param CountType Œvã‰ñ”‚ÌŒ^
+	 * ãƒãƒ•ãƒãƒ³æœ¨ã®ãƒãƒ¼ãƒ‰ã‚¯ãƒ©ã‚¹
+	 * @param CountType è¨ˆä¸Šå›æ•°ã®å‹
 	 */
 	template <typename CountType = size_t>
 	struct HuffmanNode
 	{
 	private:
-		/// ¶ƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		/// å·¦ãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		HuffmanNode* left;
 		
-		/// ‰Eƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		/// å³ãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		HuffmanNode* right;
 
-		/// eƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		/// è¦ªãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		HuffmanNode* up;
 
-		/// ƒm[ƒh‚Ì‚Â’l
+		/// ãƒãƒ¼ãƒ‰ã®æŒã¤å€¤
 		int nodeValue;
 
-		/// oŒ»•p“x
+		/// å‡ºç¾é »åº¦
 		CountType appearanceFrequency;
 
 	public:
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * ƒnƒtƒ}ƒ“–Ø‚Ì—tƒm[ƒh‚ğì¬‚·‚é
-		 * @param nodeValue_ ƒm[ƒh‚Ì‚Â’l
-		 * @param appearanceFrequency_ oŒ»•p“x
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * ãƒãƒ•ãƒãƒ³æœ¨ã®è‘‰ãƒãƒ¼ãƒ‰ã‚’ä½œæˆã™ã‚‹
+		 * @param nodeValue_ ãƒãƒ¼ãƒ‰ã®æŒã¤å€¤
+		 * @param appearanceFrequency_ å‡ºç¾é »åº¦
 		 */
 		HuffmanNode(const char nodeValue_,
 					const CountType appearanceFrequency_):
@@ -184,7 +188,7 @@ public:
 		{}
 
 		/**
-		 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		HuffmanNode():
 			left(NULL), right(NULL), up(NULL),
@@ -193,10 +197,10 @@ public:
 		{}
 
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * ’†Œpƒm[ƒh‚ğì¬‚·‚é
-		 * @param left_ ¶ƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		 * @param right_ ‰Eƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * ä¸­ç¶™ãƒãƒ¼ãƒ‰ã‚’ä½œæˆã™ã‚‹
+		 * @param left_ å·¦ãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		 * @param right_ å³ãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		 */
 		HuffmanNode(HuffmanNode<CountType>* left_,
 					HuffmanNode<CountType>* right_):
@@ -211,8 +215,8 @@ public:
 		}
 
 		/**
-		 * ƒfƒXƒgƒ‰ƒNƒ^
-		 * qƒm[ƒh‚ğ‚Âê‡A‚»‚ê‚ç‚àíœ‚·‚é
+		 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * å­ãƒãƒ¼ãƒ‰ã‚’æŒã¤å ´åˆã€ãã‚Œã‚‰ã‚‚å‰Šé™¤ã™ã‚‹
 		 */
 		virtual ~HuffmanNode() throw()
 		{
@@ -224,8 +228,8 @@ public:
 		}
 
 		/**
-		 * ‚Á‚Ä‚¢‚éq‹Ÿƒm[ƒh‚Ì”‚Ìæ“¾
-		 * @return q‹Ÿƒm[ƒh‚ÌŒÂ”
+		 * æŒã£ã¦ã„ã‚‹å­ä¾›ãƒãƒ¼ãƒ‰ã®æ•°ã®å–å¾—
+		 * @return å­ä¾›ãƒãƒ¼ãƒ‰ã®å€‹æ•°
 		 */
 		size_t getChildrenCount() const
 		{
@@ -241,8 +245,8 @@ public:
 		}
 
 		/**
-		 * Œ»İƒm[ƒh‚©‚çI’[ƒm[ƒh‚Ö‚ÌÅ‘å[“x‚ğæ“¾
-		 * @return Å‘å[“x
+		 * ç¾åœ¨ãƒãƒ¼ãƒ‰ã‹ã‚‰çµ‚ç«¯ãƒãƒ¼ãƒ‰ã¸ã®æœ€å¤§æ·±åº¦ã‚’å–å¾—
+		 * @return æœ€å¤§æ·±åº¦
 		 */
 		size_t getMaxDepth()
 		{
@@ -265,8 +269,8 @@ public:
 		}
 
 		/**
-		 * I’[ƒm[ƒh”»’è
-		 * @return I’[ƒm[ƒh‚Å‚ ‚ê‚Î true
+		 * çµ‚ç«¯ãƒãƒ¼ãƒ‰åˆ¤å®š
+		 * @return çµ‚ç«¯ãƒãƒ¼ãƒ‰ã§ã‚ã‚Œã° true
 		 */
 		bool isTerminateNode() const
 		{
@@ -274,7 +278,7 @@ public:
 		}
 
 		/**
-		 * ƒm[ƒh‚ª‚Â’l‚Ìæ“¾
+		 * ãƒãƒ¼ãƒ‰ãŒæŒã¤å€¤ã®å–å¾—
 		 */
 		char getValue() const
 		{
@@ -284,8 +288,8 @@ public:
 		}
 
 		/**
-		 * ¶qƒm[ƒh‚Ìæ“¾
-		 * @return ¶qƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		 * å·¦å­ãƒãƒ¼ãƒ‰ã®å–å¾—
+		 * @return å·¦å­ãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		 */
 		HuffmanNode* getLeft() const
 		{
@@ -293,8 +297,8 @@ public:
 		}
 		
 		/**
-		 * ‰Eqƒm[ƒh‚Ìæ“¾
-		 * @return ‰Eqƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		 * å³å­ãƒãƒ¼ãƒ‰ã®å–å¾—
+		 * @return å³å­ãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		 */
 		HuffmanNode* getRight() const
 		{
@@ -302,8 +306,8 @@ public:
 		}
 
 		/**
-		 * eƒm[ƒh‚Ìæ“¾
-		 * @return eƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		 * è¦ªãƒãƒ¼ãƒ‰ã®å–å¾—
+		 * @return è¦ªãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 		 */
 		HuffmanNode* getUp() const
 		{
@@ -311,8 +315,8 @@ public:
 		}
 
 		/**
-		 * ƒm[ƒh‚Ì’l‚Ìæ“¾
-		 * @return ƒm[ƒh‚Ì‚Â’l
+		 * ãƒãƒ¼ãƒ‰ã®å€¤ã®å–å¾—
+		 * @return ãƒãƒ¼ãƒ‰ã®æŒã¤å€¤
 		 */
 		int getNodeValue() const
 		{
@@ -320,8 +324,8 @@ public:
 		}
 
 		/**
-		 * oŒ»•p“x‚Ìæ“¾
-		 * @return oŒ»•p“x
+		 * å‡ºç¾é »åº¦ã®å–å¾—
+		 * @return å‡ºç¾é »åº¦
 		 */
 		CountType getFrequency() const
 		{
@@ -329,7 +333,7 @@ public:
 		}
 
 		/**
-		 * —tƒm[ƒh‚Ì”»’è
+		 * è‘‰ãƒãƒ¼ãƒ‰ã®åˆ¤å®š
 		 * 
 		 */
 		bool isLeaf() const
@@ -338,8 +342,8 @@ public:
 		}
 
 		/**
-		 * •¶š—ñ•\Œ»‚Ìæ“¾
-		 * @return ƒnƒtƒ}ƒ“–Ø‚ÌS®‚Å‚Ì•¶š—ñ•\Œ»
+		 * æ–‡å­—åˆ—è¡¨ç¾ã®å–å¾—
+		 * @return ãƒãƒ•ãƒãƒ³æœ¨ã®Så¼ã§ã®æ–‡å­—åˆ—è¡¨ç¾
 		 */
 		virtual std::string toString()
 		{
@@ -364,20 +368,20 @@ public:
 	};
 
 private:
-	/// ƒ‹[ƒgƒm[ƒh
+	/// ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰
 	HuffmanNode<>* root;
 
 	/**
-	 * —tƒm[ƒh‚Ö‚ÌƒVƒ‡[ƒgƒJƒbƒgƒ}ƒbƒv
-	 * @todo ‘½•ªvector‚Å’è”ŠÔ’T¸‚Å‚«‚é‚Ì‚Åstd::vector‚Ö‚ÌŒğŠ·
+	 * è‘‰ãƒãƒ¼ãƒ‰ã¸ã®ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆãƒãƒƒãƒ—
+	 * @todo å¤šåˆ†vectorã§å®šæ•°æ™‚é–“æ¢æŸ»ã§ãã‚‹ã®ã§std::vectorã¸ã®äº¤æ›
 	 */
 	std::map<int, HuffmanNode<>* > leafMapper;
 
 public:
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param frequencyTable oŒ»•p“xƒNƒ‰ƒXƒIƒuƒWƒFƒNƒg
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param frequencyTable å‡ºç¾é »åº¦ã‚¯ãƒ©ã‚¹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	HuffmanTree(const FrequencyTable<size_t>& frequencyTable):
 		root(NULL), leafMapper()
@@ -431,7 +435,7 @@ public:
 		// element is single.
 	}
 
-	/// ƒfƒXƒgƒ‰ƒNƒ^
+	/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~HuffmanTree() throw()
 	{
 		if (root)
@@ -442,10 +446,10 @@ public:
 	}
 
 	/**
-	 * ƒm[ƒh‚Ìæ“¾
-	 * @param flag “ü—Í‚Ìƒrƒbƒg’l
-	 * @param currentNode Œ»İ‚Ìƒm[ƒhˆÊ’u
-	 * @return Ÿ‚Ìƒm[ƒh
+	 * ãƒãƒ¼ãƒ‰ã®å–å¾—
+	 * @param flag å…¥åŠ›ã®ãƒ“ãƒƒãƒˆå€¤
+	 * @param currentNode ç¾åœ¨ã®ãƒãƒ¼ãƒ‰ä½ç½®
+	 * @return æ¬¡ã®ãƒãƒ¼ãƒ‰
 	 */
 	HuffmanNode<>* getNode(
 		bool flag,
@@ -458,8 +462,8 @@ public:
 	}
 
 	/***
-	 * I’[ƒR[ƒh‚Ìæ“¾
-	 * @return I’[•¶š‚ğ•\‚·Huffmanƒrƒbƒg•\Œ»
+	 * çµ‚ç«¯ã‚³ãƒ¼ãƒ‰ã®å–å¾—
+	 * @return çµ‚ç«¯æ–‡å­—ã‚’è¡¨ã™Huffmanãƒ“ãƒƒãƒˆè¡¨ç¾
 	 */
 	std::vector<bool> getTerminateCode()
 	{
@@ -502,9 +506,9 @@ public:
 	}
 
 	/**
-	 * “ü—Í‚É‘Î‰‚µ‚½ƒnƒtƒ}ƒ“ƒrƒbƒg•\Œ»‚ğ•Ô‚·
-	 * @param ch “ü—Í•¶š
-	 * @return ƒnƒtƒ}ƒ“ƒrƒbƒg•\Œ»
+	 * å…¥åŠ›ã«å¯¾å¿œã—ãŸãƒãƒ•ãƒãƒ³ãƒ“ãƒƒãƒˆè¡¨ç¾ã‚’è¿”ã™
+	 * @param ch å…¥åŠ›æ–‡å­—
+	 * @return ãƒãƒ•ãƒãƒ³ãƒ“ãƒƒãƒˆè¡¨ç¾
 	 */
 	std::vector<bool> getHuffmanCode(char ch)
 	{
@@ -540,21 +544,21 @@ public:
 };
 
 /**
- * ƒnƒtƒ}ƒ“ƒrƒbƒg•\Œ»ƒLƒƒƒbƒVƒ…
+ * ãƒãƒ•ãƒãƒ³ãƒ“ãƒƒãƒˆè¡¨ç¾ã‚­ãƒ£ãƒƒã‚·ãƒ¥
  */
 class HuffmanCodeCache
 {
 private:
-	/// ƒLƒƒƒbƒVƒ…
+	/// ã‚­ãƒ£ãƒƒã‚·ãƒ¥
 	std::vector<std::vector<bool>*> cache;
 
-	/// Œ³‚Æ‚È‚éƒnƒtƒ}ƒ“–Ø
+	/// å…ƒã¨ãªã‚‹ãƒãƒ•ãƒãƒ³æœ¨
 	HuffmanTree* stub;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param stub_ Œ³‚Æ‚È‚éƒnƒtƒ}ƒ“–Ø
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param stub_ å…ƒã¨ãªã‚‹ãƒãƒ•ãƒãƒ³æœ¨
 	 */
 	HuffmanCodeCache(HuffmanTree* stub_ = NULL):
 		cache(256), stub(stub_)
@@ -562,14 +566,14 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~HuffmanCodeCache()
 	{
 		reset();
 	}
 
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	void reset()
 	{
 		for (std::vector<std::vector<bool>*>::iterator itor = cache.begin();
@@ -582,7 +586,7 @@ public:
 	}
 
 	/**
-	 * Œ³‚Æ‚È‚éƒnƒtƒ}ƒ“–Ø‚Ìİ’è
+	 * å…ƒã¨ãªã‚‹ãƒãƒ•ãƒãƒ³æœ¨ã®è¨­å®š
 	 */
 	void setHuffmanTree(HuffmanTree* stub_)
 	{
@@ -591,7 +595,7 @@ public:
 	}
 
 	/**
-	 * Œ»İg—p‚µ‚Ä‚¢‚éƒnƒtƒ}ƒ“–Ø‚Ìæ“¾
+	 * ç¾åœ¨ä½¿ç”¨ã—ã¦ã„ã‚‹ãƒãƒ•ãƒãƒ³æœ¨ã®å–å¾—
 	 */
 	HuffmanTree* getHuffmanTree()
 	{
@@ -599,9 +603,9 @@ public:
 	}
 
 	/**
-	 * ƒnƒtƒ}ƒ“ƒrƒbƒgƒR[ƒh‚Ìæ“¾
-	 * @param ch “ü—Í•¶š
-	 * @return ƒnƒtƒ}ƒ“ƒrƒbƒgƒR[ƒh
+	 * ãƒãƒ•ãƒãƒ³ãƒ“ãƒƒãƒˆã‚³ãƒ¼ãƒ‰ã®å–å¾—
+	 * @param ch å…¥åŠ›æ–‡å­—
+	 * @return ãƒãƒ•ãƒãƒ³ãƒ“ãƒƒãƒˆã‚³ãƒ¼ãƒ‰
 	 */
 	std::vector<bool>* getHuffmanCode(char ch)
 	{
@@ -614,13 +618,13 @@ public:
 };
 
 /**
- * ƒnƒtƒ}ƒ“ƒrƒbƒg
+ * ãƒãƒ•ãƒãƒ³ãƒ“ãƒƒãƒˆ
  */
 struct HuffmanBits
 {
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	HuffmanBits():
 		character(), bits(), bitLength()
@@ -669,7 +673,7 @@ public:
 };
 
 /**
- * ƒrƒbƒg•\Œ»‚ÆŒ³‚Ì•¶š‚Æ‚Ì‘Î‰•\
+ * ãƒ“ãƒƒãƒˆè¡¨ç¾ã¨å…ƒã®æ–‡å­—ã¨ã®å¯¾å¿œè¡¨
  */
 class BitsMap
 {
@@ -968,25 +972,25 @@ public:
 };
 
 /**
- * ƒnƒtƒ}ƒ“•„†‰»ƒtƒ@ƒCƒ‹ƒwƒbƒ_\‘¢‘Ì
- * @todo ƒtƒ@ƒCƒ‹‚ª¬‚³‚¢ê‡AoŒ»•p“x•\‚Ìè‚ß‚éŠ„‡‚ª”n­‚É‚È‚ç‚È‚¢
- * ‚Ì‚ÅŒø—¦“I‚ÈŠi”[•û–@‚Ö‚Ì•ÏXB‚»‚êˆÈ‘O‚É“ñ’iˆ³k‚É‚µ‚È‚¢‚Æ‚Ü‚Æ‚à‚É
- * k‚Ü‚ç‚È‚¢‚¯‚ÇEEE
+ * ãƒãƒ•ãƒãƒ³ç¬¦å·åŒ–ãƒ•ã‚¡ã‚¤ãƒ«ãƒ˜ãƒƒãƒ€æ§‹é€ ä½“
+ * @todo ãƒ•ã‚¡ã‚¤ãƒ«ãŒå°ã•ã„å ´åˆã€å‡ºç¾é »åº¦è¡¨ã®å ã‚ã‚‹å‰²åˆãŒé¦¬é¹¿ã«ãªã‚‰ãªã„
+ * ã®ã§åŠ¹ç‡çš„ãªæ ¼ç´æ–¹æ³•ã¸ã®å¤‰æ›´ã€‚ãã‚Œä»¥å‰ã«äºŒæ®µåœ§ç¸®ã«ã—ãªã„ã¨ã¾ã¨ã‚‚ã«
+ * ç¸®ã¾ã‚‰ãªã„ã‘ã©ãƒ»ãƒ»ãƒ»
  */
 struct HuffmanEncodeFileHeader
 {
 public:
 	/**
-	 * ¯•Ê—pƒ}ƒWƒbƒN
+	 * è­˜åˆ¥ç”¨ãƒã‚¸ãƒƒã‚¯
 	 */
 	char magicHeader[2];
 	/**
-	 * oŒ»•p“x•\
+	 * å‡ºç¾é »åº¦è¡¨
 	 */
 	size_t frequencyTable[256];
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	HuffmanEncodeFileHeader()
 		: magicHeader(), frequencyTable()
@@ -996,8 +1000,8 @@ public:
 	}
 
 	/**
-	 * ƒwƒbƒ_ƒ`ƒFƒbƒN
-	 * @return ³‚µ‚¯‚ê‚Îtrue
+	 * ãƒ˜ãƒƒãƒ€ãƒã‚§ãƒƒã‚¯
+	 * @return æ­£ã—ã‘ã‚Œã°true
 	 */
 	bool isValidHeader() const
 	{
@@ -1008,8 +1012,8 @@ public:
 	}
 
 	/**
-	 * oŒ»•p“x•\‚Ìæ“ªƒAƒhƒŒƒX‚Ìæ“¾
-	 * @return oŒ»•p“x•\‚Ìæ“ªƒAƒhƒŒƒX
+	 * å‡ºç¾é »åº¦è¡¨ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å–å¾—
+	 * @return å‡ºç¾é »åº¦è¡¨ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	size_t* frequencyBegin()
 	{
@@ -1017,8 +1021,8 @@ public:
 	}
 
 	/**
-	 * oŒ»•p“x•\‚Ìæ“ªƒAƒhƒŒƒX‚Ìæ“¾
-	 * @return oŒ»•p“x•\‚Ìæ“ªƒAƒhƒŒƒX
+	 * å‡ºç¾é »åº¦è¡¨ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å–å¾—
+	 * @return å‡ºç¾é »åº¦è¡¨ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	const size_t* frequencyBegin() const
 	{
@@ -1026,8 +1030,8 @@ public:
 	}
 
 	/**
-	 * oŒ»•p“x•\‚Ìæ“ªƒAƒhƒŒƒX‚Ìæ“¾
-	 * @return oŒ»•p“x•\‚ÌI’[ƒAƒhƒŒƒX
+	 * å‡ºç¾é »åº¦è¡¨ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å–å¾—
+	 * @return å‡ºç¾é »åº¦è¡¨ã®çµ‚ç«¯ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	size_t* frequencyEnd()
 	{
@@ -1035,8 +1039,8 @@ public:
 	}
 
 	/**
-	 * oŒ»•p“x•\‚Ìæ“ªƒAƒhƒŒƒX‚Ìæ“¾
-	 * @return oŒ»•p“x•\‚ÌI’[ƒAƒhƒŒƒX
+	 * å‡ºç¾é »åº¦è¡¨ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å–å¾—
+	 * @return å‡ºç¾é »åº¦è¡¨ã®çµ‚ç«¯ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	const size_t* frequencyEnd() const
 	{
@@ -1044,8 +1048,8 @@ public:
 	}
 
 	/**
-	 * \‘¢‘Ì‚Ìæ“ªƒAƒhƒŒƒX‚Ìæ“¾
-	 * @return \‘¢‘Ì‚Ìæ“ªƒAƒhƒŒƒX
+	 * æ§‹é€ ä½“ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å–å¾—
+	 * @return æ§‹é€ ä½“ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	template <typename Pointer>
 	Pointer headerBegin()
@@ -1054,8 +1058,8 @@ public:
 	}
 
 	/**
-	 * \‘¢‘Ì‚ÌI’[ƒAƒhƒŒƒX‚Ìæ“¾
-	 * @return \‘¢‘Ì‚ÌI’[ƒAƒhƒŒƒX
+	 * æ§‹é€ ä½“ã®çµ‚ç«¯ã‚¢ãƒ‰ãƒ¬ã‚¹ã®å–å¾—
+	 * @return æ§‹é€ ä½“ã®çµ‚ç«¯ã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	template <typename Pointer>
 	Pointer headerEnd()

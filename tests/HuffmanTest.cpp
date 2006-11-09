@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <iterator>
+#include <iomanip>
 
 class HuffmanTest : public CppUnit::TestFixture
 {
@@ -267,7 +268,7 @@ public:
 	void loadStoreFrequencyTableTest()
 	{
 		FrequencyTable<size_t> ht;
-		std::vector<size_t> table(256);
+		size_t table[256];
 
 		for (int index = 0; index < 128; ++index)
 			ht.addCount('A');
@@ -287,7 +288,7 @@ public:
 		}
 
 		ht.addCount(0xee);
-		ht.store(&table[0]);
+		ht.store(table);
 
 		for (int index = 0; index < 256; ++index)
 		{
