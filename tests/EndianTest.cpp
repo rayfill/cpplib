@@ -102,15 +102,13 @@ public:
 		char* p = reinterpret_cast<char*>(&endianCheck);
 
 		UserDefinedEndianConverter converter(*p != 1 ?
-					UserDefinedEndianConverter::bigEndian :
-					UserDefinedEndianConverter::littleEndian);
+					bigEndian : littleEndian);
 
 		CPPUNIT_ASSERT(converter.to(0x12345678) == 0x12345678);
 		CPPUNIT_ASSERT(converter.from(0x12345678) == 0x12345678);
 
 		UserDefinedEndianConverter converter2(*p != 1 ?
-					UserDefinedEndianConverter::littleEndian :
-					UserDefinedEndianConverter::bigEndian);
+					littleEndian : bigEndian);
 
 		CPPUNIT_ASSERT(converter2.to(0x12345678) == 0x78563412);
 		CPPUNIT_ASSERT(converter2.from(0x12345678) == 0x78563412);

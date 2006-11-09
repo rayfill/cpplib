@@ -31,7 +31,7 @@ public:
 		TagInfo tag2(1, 2, 12, 0);
 		TagInfo rationalTag(1, 5, 2, 12);
 
-		UserDefinedEndianConverter conv(false);
+		UserDefinedEndianConverter conv(bigEndian);
 		TagInfoParser parser(memory, memory + sizeof(memory), conv);
 		CPPUNIT_ASSERT_MESSAGE(parser.getString(tag).c_str(),
 							   parser.getString(tag) == "ABC");
@@ -53,7 +53,7 @@ public:
 							0xff, 0xff, 0xff};
 
 		using namespace Exif;
-		UserDefinedEndianConverter conv(false); // big endian converter.
+		UserDefinedEndianConverter conv(bigEndian); // big endian converter.
 		TagInfo tag = TagInfo::parseMemoryToTagInfo(memory, conv);
 
 		CPPUNIT_ASSERT(tag.getTag() == 1);

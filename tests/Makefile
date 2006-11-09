@@ -1,10 +1,9 @@
-CXX=g++-4.1
-INCLUDE_PATH= -Ic:/mingw/include/stlport
-CXXFLAGS= -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
+INCLUDE_PATH += -Ic:/mingw/include/stlport
+CXXFLAGS += -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 	-fno-default-inline -fmessage-length=78 $(INCLUDE_PATH) -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
-LIBS= -lcppunit
+LIBS += -lcppunit
 TARGET= UnitTest
 OBJS= TestMain.o \
 	CommandLineTest.o \

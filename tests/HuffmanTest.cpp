@@ -303,12 +303,12 @@ public:
 	void FrequencyTableToTreeNodeCreateTest()
 	{
 		FrequencyTable<size_t> ht;
-		ht.addCount('±');
-		ht.addCount('±');
-		ht.addCount('±');
-		ht.addCount('±');
-		ht.addCount('±');
-		ht.addCount('±');
+		ht.addCount('x');
+		ht.addCount('x');
+		ht.addCount('x');
+		ht.addCount('x');
+		ht.addCount('x');
+		ht.addCount('x');
 		ht.addCount('B');
 		ht.addCount('B');
 		ht.addCount('B');
@@ -326,11 +326,11 @@ public:
 
 		CPPUNIT_ASSERT(huffmanTree.root->getRight() != NULL);
 		CPPUNIT_ASSERT(huffmanTree.root->getRight()->getLeft()->getRight()->getNodeValue() == 'C');
-		CPPUNIT_ASSERT(huffmanTree.root->getRight()->getRight()->getNodeValue() == '±');
+		CPPUNIT_ASSERT(huffmanTree.root->getRight()->getRight()->getNodeValue() == 'x');
 		CPPUNIT_ASSERT(huffmanTree.root->getLeft()->getNodeValue() == 'B');
 		CPPUNIT_ASSERT(huffmanTree.leafMapper['B']->getNodeValue() == 'B');
 		CPPUNIT_ASSERT(huffmanTree.leafMapper['C']->getNodeValue() == 'C');
-		CPPUNIT_ASSERT(huffmanTree.leafMapper['±']->getNodeValue() == '±');
+		CPPUNIT_ASSERT(huffmanTree.leafMapper['x']->getNodeValue() == 'x');
 	}
 
 	void HuffmanTreeNodeTest()

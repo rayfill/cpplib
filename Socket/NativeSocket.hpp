@@ -48,11 +48,11 @@ public:
 	~SocketModule() { terminate(); }
 public:
 	static inline void initialize()
-	{
-	}
+	{}
+
 	static inline void terminate()
-	{
-	}
+	{}
+
 	static void SocketClose(SocketHandle socketHandle)
 	{
 		close(socketHandle);

@@ -2,16 +2,22 @@
 #define ENDIAN_HPP_
 #include <util/SmartPointer.hpp>
 
+enum EndianType
+{
+	littleEndian,
+	bigEndian
+};
+
 /**
- * •ÏŠ·ƒNƒ‰ƒX‚ÌŠî’êƒNƒ‰ƒX
+ * å¤‰æ›ã‚¯ãƒ©ã‚¹ã®åŸºåº•ã‚¯ãƒ©ã‚¹
  **/
 class Endian
 {
 protected:
 	/**
-	 * •ÏŠ·ƒwƒ‹ƒpŠÖ”
-	 * @param convertValue •ÏŠ·‚·‚é•Ï”‚Ìƒ|ƒCƒ“ƒ^
-	 * @param valueSize •ÏŠ·‚·‚é•Ï”‚Ìè‚ß‚éƒoƒCƒg”
+	 * å¤‰æ›ãƒ˜ãƒ«ãƒ‘é–¢æ•°
+	 * @param convertValue å¤‰æ›ã™ã‚‹å¤‰æ•°ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param valueSize å¤‰æ›ã™ã‚‹å¤‰æ•°ã®å ã‚ã‚‹ãƒã‚¤ãƒˆæ•°
 	 **/
 	void convert(void* convertValue, const size_t valueSize) const
 	{
@@ -27,36 +33,36 @@ public:
 	{}
 
 	/**
-	 * ©•ª‚ÌƒGƒ“ƒfƒBƒAƒ“Œ^‚©‚çBigEndian‚Ö‚Ì•ÏŠ·
-	 * @param value •ÏŠ·‚·‚é•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param size •ÏŠ·‚·‚é•Ï”‚Ìè‚ß‚éƒoƒCƒg”
+	 * è‡ªåˆ†ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å‹ã‹ã‚‰BigEndianã¸ã®å¤‰æ›
+	 * @param value å¤‰æ›ã™ã‚‹å¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param size å¤‰æ›ã™ã‚‹å¤‰æ•°ã®å ã‚ã‚‹ãƒã‚¤ãƒˆæ•°
 	 **/
 	virtual void toBig(void* value, const size_t size) const = 0;
 
 	/**
-	 * ©•ª‚ÌƒGƒ“ƒfƒBƒAƒ“Œ^‚©‚çLittleEndian‚Ö‚Ì•ÏŠ·
-	 * @param value •ÏŠ·‚·‚é•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param size •ÏŠ·‚·‚é•Ï”‚Ìè‚ß‚éƒoƒCƒg”
+	 * è‡ªåˆ†ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å‹ã‹ã‚‰LittleEndianã¸ã®å¤‰æ›
+	 * @param value å¤‰æ›ã™ã‚‹å¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param size å¤‰æ›ã™ã‚‹å¤‰æ•°ã®å ã‚ã‚‹ãƒã‚¤ãƒˆæ•°
 	 **/
 	virtual void toLittle(void* value, const size_t size) const = 0;
 
 	/**
-	 * BigEndian‚©‚ç©•ª‚ÌƒGƒ“ƒfƒBƒAƒ“Œ^‚Ö‚Ì•ÏŠ·
-	 * @param value •ÏŠ·‚·‚é•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param size •ÏŠ·‚·‚é•Ï”‚Ìè‚ß‚éƒoƒCƒg”
+	 * BigEndianã‹ã‚‰è‡ªåˆ†ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å‹ã¸ã®å¤‰æ›
+	 * @param value å¤‰æ›ã™ã‚‹å¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param size å¤‰æ›ã™ã‚‹å¤‰æ•°ã®å ã‚ã‚‹ãƒã‚¤ãƒˆæ•°
 	 **/
 	virtual void fromBig(void* value, const size_t size) const = 0;
 
 	/**
-	 * BigEndian‚©‚ç©•ª‚ÌƒGƒ“ƒfƒBƒAƒ“Œ^‚Ö‚Ì•ÏŠ·
-	 * @param value •ÏŠ·‚·‚é•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param size •ÏŠ·‚·‚é•Ï”‚Ìè‚ß‚éƒoƒCƒg”
+	 * BigEndianã‹ã‚‰è‡ªåˆ†ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å‹ã¸ã®å¤‰æ›
+	 * @param value å¤‰æ›ã™ã‚‹å¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param size å¤‰æ›ã™ã‚‹å¤‰æ•°ã®å ã‚ã‚‹ãƒã‚¤ãƒˆæ•°
 	 **/
 	virtual void fromLittle(void* value, const size_t size) const = 0;
 };
 
 /**
- * –³•ÏŠ·ƒGƒ“ƒfƒBƒAƒ“ƒRƒ“ƒo[ƒ^
+ * ç„¡å¤‰æ›ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚³ãƒ³ãƒãƒ¼ã‚¿
  **/
 class NoconvertEndian : public Endian
 {
@@ -71,7 +77,7 @@ class NoconvertEndian : public Endian
 };
 
 /**
- * ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚ğ•\‚·•ÏŠ·ƒNƒ‰ƒX
+ * ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’è¡¨ã™å¤‰æ›ã‚¯ãƒ©ã‚¹
  **/
 class BigEndian : public Endian
 {
@@ -98,7 +104,7 @@ class BigEndian : public Endian
 };
 
 /**
- * ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“‚ğ•\‚·•ÏŠ·ƒNƒ‰ƒX
+ * ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’è¡¨ã™å¤‰æ›ã‚¯ãƒ©ã‚¹
  **/
 class LittleEndian : public Endian
 {
@@ -125,8 +131,8 @@ class LittleEndian : public Endian
 };
 
 /**
- * •ÏŠ·ƒTƒ|[ƒgƒNƒ‰ƒXBƒ}ƒVƒ“‚ÌƒGƒ“ƒfƒBƒAƒ“‚ğ”F¯‚µA©“®‚ÅƒXƒ^ƒu•ÏŠ·
- * ‚ğ¶¬A·ˆÙ‚ğ‹zû‚·‚é
+ * å¤‰æ›ã‚µãƒãƒ¼ãƒˆã‚¯ãƒ©ã‚¹ã€‚ãƒã‚·ãƒ³ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’èªè­˜ã—ã€è‡ªå‹•ã§ã‚¹ã‚¿ãƒ–å¤‰æ›
+ * ã‚’ç”Ÿæˆã€å·®ç•°ã‚’å¸åã™ã‚‹
  **/
 class EndianConverter
 {
@@ -134,14 +140,14 @@ class EndianConverter
 
 protected:
 	/**
-	 * ƒGƒ“ƒfƒBƒAƒ“•ÏŠ·ƒXƒ^ƒu
+	 * ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å¤‰æ›ã‚¹ã‚¿ãƒ–
 	 */
 	SmartPointer<const Endian> endian;
 
 	/**
-	 * ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“”»’è
-	 * @return ƒ}ƒVƒ“‚ªƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“‚È‚çtrue
-	 * @exception std::logic_error ƒGƒ“ƒfƒBƒAƒ“‚ª”»’è‚Å‚«‚È‚©‚Á‚½ê‡
+	 * ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³åˆ¤å®š
+	 * @return ãƒã‚·ãƒ³ãŒãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãªã‚‰true
+	 * @exception std::logic_error ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãŒåˆ¤å®šã§ããªã‹ã£ãŸå ´åˆ
 	 */
 	static bool isLittleEndian() throw (std::logic_error)
 	{
@@ -157,9 +163,9 @@ protected:
 	}
 
 	/**
-	 * ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“”»’è
-	 * @return ƒ}ƒVƒ“‚ªƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚È‚çtrue
-	 * @exception std::logic_error ƒGƒ“ƒfƒBƒAƒ“‚ª”»’è‚Å‚«‚È‚©‚Á‚½ê‡
+	 * ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³åˆ¤å®š
+	 * @return ãƒã‚·ãƒ³ãŒãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãªã‚‰true
+	 * @exception std::logic_error ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãŒåˆ¤å®šã§ããªã‹ã£ãŸå ´åˆ
 	 */
 	static bool isBigEndian() throw (std::logic_error)
 	{
@@ -167,7 +173,7 @@ protected:
 	}
 
 	/**
-	 * ƒGƒ“ƒfƒBƒAƒ“‚ğ”»’è‚µA“KØ‚È•ÏŠ·ƒXƒ^ƒu‚ğ¶¬‚·‚éB
+	 * ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’åˆ¤å®šã—ã€é©åˆ‡ãªå¤‰æ›ã‚¹ã‚¿ãƒ–ã‚’ç”Ÿæˆã™ã‚‹ã€‚
 	 **/
 	static Endian* machineAdaptEndianFactory()
 	{
@@ -179,21 +185,21 @@ protected:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	EndianConverter():
 		endian(machineAdaptEndianFactory())
 	{}
 
 	/**
-	 * ƒGƒ“ƒfƒBƒAƒ“w’èƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³æŒ‡å®šã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	EndianConverter(const Endian* endian_):
 		endian(endian_)
 	{}
 
 	/**
-	 * ‘ã“ü‰‰Zq
+	 * ä»£å…¥æ¼”ç®—å­
 	 */
 	EndianConverter& operator=(const EndianConverter& source)
 	{
@@ -203,7 +209,7 @@ public:
 	}
 
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	EndianConverter(const EndianConverter& source):
 		endian(source.endian)
@@ -214,7 +220,7 @@ public:
 	{}
 
 	/**
-	 * ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“‚Ö•ÏŠ·
+	 * ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã¸å¤‰æ›
 	 */
 	char toLittle(char value) const
 	{
@@ -508,11 +514,6 @@ public:
 
 		return *this;
 	}
-
-	enum EndianType {
-		littleEndian,
-		bigEndian
-	};
 
 	UserDefinedEndianConverter(EndianType endianType)
 		: EndianConverter(),

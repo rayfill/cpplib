@@ -15,7 +15,7 @@
 namespace Exif
 {
 	/**
-	 * ƒ^ƒOî•ñ
+	 * ã‚¿ã‚°æƒ…å ±
 	 */
 	class TagInfo
 	{
@@ -78,7 +78,7 @@ namespace Exif
 	};
 
 	/**
-	 * ƒ^ƒOî•ñ‰ğÍŠí
+	 * ã‚¿ã‚°æƒ…å ±è§£æå™¨
 	 */
 	class TagInfoParser
 	{
@@ -295,7 +295,7 @@ namespace Exif
 	};
 
 	/**
-	 * Exifî•ñ\‘¢‘Ì
+	 * Exifæƒ…å ±æ§‹é€ ä½“
 	 */
 	struct ExifInfo
 	{
@@ -1539,7 +1539,7 @@ namespace Exif
 	};
 
 	/**
-	 * Exifƒwƒbƒ_‰ğÍŠí
+	 * Exifãƒ˜ãƒƒãƒ€è§£æå™¨
 	 */
 	class ExifHeaderParser
 	{
@@ -1708,7 +1708,7 @@ namespace Exif
 	};
 
 	/**
-	 * Tiffƒwƒbƒ_ƒfƒBƒŒƒNƒgƒŠ‰ğÍŠí
+	 * Tiffãƒ˜ãƒƒãƒ€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªè§£æå™¨
 	 */
 	class DirectoryParser
 	{
@@ -1787,7 +1787,7 @@ namespace Exif
 	};
 
 	/**
-	 * Tiffƒwƒbƒ_‰ğÍŠí
+	 * Tiffãƒ˜ãƒƒãƒ€è§£æå™¨
 	 */
 	class TiffHeaderParser
 	{
@@ -1886,8 +1886,9 @@ namespace Exif
 
 			try
 			{
-				converter =
-					new UserDefinedEndianConverter(isLittleEndian());
+				const EndianType endian =
+					isLittleEndian() ? littleEndian : bigEndian;
+				converter =	new UserDefinedEndianConverter(endian);
 
 				// TIFF identifier code
 				if (converter->from(*(reinterpret_cast<const unsigned short*>(
@@ -1944,7 +1945,7 @@ namespace Exif
 	};
 
 	/**
-	 * ƒ^ƒO–¼‰ğÍŠí
+	 * ã‚¿ã‚°åè§£æå™¨
 	 */
 	class TagNameResolver
 	{
