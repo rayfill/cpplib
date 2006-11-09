@@ -5,7 +5,7 @@ class MessageDigest5Test : public CppUnit::TestFixture
 {
 private:
 	CPPUNIT_TEST_SUITE(MessageDigest5Test);
-	CPPUNIT_TEST(initializeTest);
+//	CPPUNIT_TEST(initializeTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:

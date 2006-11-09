@@ -10,7 +10,6 @@ OBJS= TestMain.o \
 	CommandLineTest.o \
 	ScannerTest.o \
 	LexicalCastTest.o \
-	XMLParserTest.o \
 	HTTPResultTest.o \
 	URLTest.o \
 	HTTPPropertyTest.o \
@@ -31,6 +30,7 @@ OBJS= TestMain.o \
 	CBCTest.o \
 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
 	IPTest.o \
+	XMLParserTest.o \
 #	NumberTheoryTest.o \
 #	AlgebraTheoryTest.o \
 #	SieveTest.o \

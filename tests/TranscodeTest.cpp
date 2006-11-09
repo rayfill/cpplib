@@ -10,12 +10,25 @@ private:
 	CPPUNIT_TEST_SUITE(TranscodeTest);
 	CPPUNIT_TEST(utf8toUtf8Test);
 	CPPUNIT_TEST(utf8To16);
+	CPPUNIT_TEST(lengthTest);
 	CPPUNIT_TEST_SUITE_END();
 public:
+	void lengthTest()
+	{
+		std::string utf8( "abcdEFG" );
+		
+		std::vector<ucs4_t> ucs4 = Transcoder::UTF8toUCS4(utf8.begin(), utf8.end());
+		CPPUNIT_ASSERT(ucs4.size() == utf8.size());
+		CPPUNIT_ASSERT(ucs4[0] == 'a');
+	
+		std::basic_string<utf16_t> utf16 = Transcoder::UCS4toUTF16(ucs4);
+		CPPUNIT_ASSERT(utf16.size() == ucs4.size());
+	}
+
 	void utf8toUtf8Test()
 	{
 		std::string utf8 ( "abcdEFG\xe5\xb2\xa1\xe5\xb4\x8e" );
-		std::wstring utf16 = Transcoder::UTF8toUTF16(utf8);
+		std::basic_string<utf16_t> utf16 = Transcoder::UTF8toUTF16(utf8);
 		
 		CPPUNIT_ASSERT(utf16[0] == L'a');
 		CPPUNIT_ASSERT(utf16[1] == L'b');
@@ -26,6 +39,7 @@ public:
 		CPPUNIT_ASSERT(utf16[6] == L'G');
 		CPPUNIT_ASSERT(utf16[7] == 0x5ca1);
 		CPPUNIT_ASSERT(utf16[8] == 0x5d0e);
+		CPPUNIT_ASSERT(utf16.length() == 9);
 
 		CPPUNIT_ASSERT(utf8 == Transcoder::UTF16toUTF8(utf16));
 	}
@@ -36,9 +50,9 @@ public:
 							  "\x83\x83\xe3\x83\x88\xe4\xb8\x8d\xe6\x8e"
 							  "\xb2\xe7\xa4\xba\xe9\x81\x95\xe5\x8f\x8d");
 
-		std::wstring code = Transcoder::UTF8toUTF16(debugCode);
-		Transcoder::UTF16toUTF8(code);
-		CPPUNIT_ASSERT(Transcoder::UTF16toUTF8(code) == debugCode);
+		std::basic_string<utf16_t> code = Transcoder::UTF8toUTF16(debugCode);
+		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(code),
+				Transcoder::UTF16toUTF8(code) == debugCode);
 	}
 };
 

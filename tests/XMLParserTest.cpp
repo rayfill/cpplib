@@ -109,51 +109,48 @@ public:
 
 	void createElementTest()
 	{
-		std::wstring source = L"<?xml\n version=\"1.0\" \n"
+		std::basic_string<utf16_t> source = Transcoder::UTF8toUTF16("<?xml\n version=\"1.0\" \n"
 			"standalone=\"yes\"?>"
 			"<test><hoge /><!-- comment -->"
-			"<fuga/><fuga attr=\"atr\">test</fuga></test>";
+			"<fuga/><fuga attr=\"atr\">test</fuga></test>");
 
-		XMLParser<wchar_t> parser;
-		XMLDocument<wchar_t>* document = parser.parse(source);
-
-// 		std::cout << std::endl;
-// 		std::cout << Transcoder::UTF16toUTF8(document->toString()) << std::endl;
+		XMLParser<utf16_t> parser;
+		XMLDocument<utf16_t>* document = parser.parse(source);
 
 		delete document;
 	}
 
 	void TagElementTest()
 	{
-		std::wstring testTag = L"tagname hoge=\"fuga\" ";
-		TagElement<wchar_t> tag(testTag);
+		std::basic_string<utf16_t> testTag = Transcoder::UTF8toUTF16("tagname hoge=\"fuga\" ");
+		TagElement<utf16_t> tag(testTag);
 
 		CPPUNIT_ASSERT(tag.tagName.length() == 7);
 
 		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(tag.tagName.c_str()),
-							   tag.tagName == L"tagname");
+							   tag.tagName == Transcoder::UTF8toUTF16("tagname"));
 		CPPUNIT_ASSERT(tag.attributes.size() == 1);
-		CPPUNIT_ASSERT(tag.attributes[L"hoge"] == L"fuga");
+		CPPUNIT_ASSERT(tag.attributes[Transcoder::UTF8toUTF16("hoge")] ==
+				Transcoder::UTF8toUTF16("fuga"));
 
-		testTag = std::wstring(L"tagname2");
-		TagElement<wchar_t> tag2(testTag);
+		testTag = std::basic_string<utf16_t>(Transcoder::UTF8toUTF16("tagname2"));
+		TagElement<utf16_t> tag2(testTag);
 		CPPUNIT_ASSERT(tag2.tagName.length() == 8);
 
-		CPPUNIT_ASSERT(tag2.tagName == L"tagname2");
+		CPPUNIT_ASSERT(tag2.tagName == Transcoder::UTF8toUTF16("tagname2"));
 		CPPUNIT_ASSERT(tag2.attributes.size() == 0);
 
-		CPPUNIT_ASSERT_THROW(TagElement<wchar_t>(L"hoge fuga=123"),
+		CPPUNIT_ASSERT_THROW(TagElement<utf16_t>(Transcoder::UTF8toUTF16("hoge fuga=123")),
 							 InvalidTagException);
-		CPPUNIT_ASSERT_THROW(TagElement<wchar_t>(L"hoge fuga="),
+		CPPUNIT_ASSERT_THROW(TagElement<utf16_t>(Transcoder::UTF8toUTF16("hoge fuga=")),
 							 InvalidTagException);
-		CPPUNIT_ASSERT_THROW(TagElement<wchar_t>(L"hoge fuga\"123\""),
+		CPPUNIT_ASSERT_THROW(TagElement<utf16_t>(Transcoder::UTF8toUTF16("hoge fuga\"123\"")),
 							 InvalidTagException);
 
-		TagElement<wchar_t> tag3(L"hoge fuga=\"\"");
+		TagElement<utf16_t> tag3(Transcoder::UTF8toUTF16("hoge fuga=\"\""));
 		CPPUNIT_ASSERT(tag3.attributes.size() == 1);
-		CPPUNIT_ASSERT(tag3.attributes[L"fuga"] == L"");
+		CPPUNIT_ASSERT(tag3.attributes[Transcoder::UTF8toUTF16("fuga")] == Transcoder::UTF8toUTF16(""));
 
-		CPPUNIT_ASSERT_MESSAGE("whcar_t is not 2 byte.", sizeof(wchar_t) == 2);
 		std::string utf8str = Transcoder::UTF16toUTF8(tag3.toString());
 
 		const size_t pos = utf8str.find('\n');
@@ -166,32 +163,31 @@ public:
 
 	void TokenizerTest()
 	{
-		const wchar_t* xmlText =
-			L"<token1><token2 />\nhello world.\nhello xml.</token1>";
-		XMLParser<wchar_t>::Tokenizer tokenizer(xmlText,
-												xmlText + wcslen(xmlText));
+		const std::basic_string<utf16_t> xmlText =
+			Transcoder::UTF8toUTF16("<token1><token2 />\nhello world.\nhello xml.</token1>");
+		XMLParser<utf16_t>::Tokenizer tokenizer(xmlText.c_str(), xmlText.c_str() + xmlText.size());
 
-		std::wstring result = tokenizer.getToken();
+		std::basic_string<utf16_t> result = tokenizer.getToken();
 		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(result),
-							   result == L"<token1>");
-
-		result = tokenizer.getToken();
-		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(result),
-							   result == L"<token2 />");
+							   result == Transcoder::UTF8toUTF16("<token1>"));
 
 		result = tokenizer.getToken();
 		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(result),
-							   result == L"\nhello world.\nhello xml.");
+							   result == Transcoder::UTF8toUTF16("<token2 />"));
 
 		result = tokenizer.getToken();
 		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(result),
-							   result == L"</token1>");
+							   result == Transcoder::UTF8toUTF16("\nhello world.\nhello xml."));
+
+		result = tokenizer.getToken();
+		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(result),
+							   result == Transcoder::UTF8toUTF16("</token1>"));
 
 		CPPUNIT_ASSERT(tokenizer.isEof());
 
 		result = tokenizer.getToken();
 		CPPUNIT_ASSERT_MESSAGE(Transcoder::UTF16toUTF8(result),
-							   result == L"");
+							   result == Transcoder::UTF8toUTF16(""));
 
 		CPPUNIT_ASSERT(tokenizer.isEof());
 	}

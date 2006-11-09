@@ -15,10 +15,13 @@ public:
 
 	void endianCheckTest()
 	{
+		int endianCheck = 1;
+		char* p = reinterpret_cast<char*>(&endianCheck);
+
 		EndianConverter conv;
 		CPPUNIT_ASSERT_MESSAGE(typeid(*conv.endian.get()).name(),
 							   typeid(*conv.endian.get()) ==
-							   typeid(LittleEndian));
+							   (*p != 0 ? typeid(LittleEndian) : typeid(BigEndian)));
 	}
 
 	void littleEndianTest()
@@ -95,12 +98,19 @@ public:
 
 	void userDefinedEndianConverterTest()
 	{
-		UserDefinedEndianConverter converter(true);
+		int endianCheck = 1;
+		char* p = reinterpret_cast<char*>(&endianCheck);
+
+		UserDefinedEndianConverter converter(*p != 1 ?
+					UserDefinedEndianConverter::bigEndian :
+					UserDefinedEndianConverter::littleEndian);
 
 		CPPUNIT_ASSERT(converter.to(0x12345678) == 0x12345678);
 		CPPUNIT_ASSERT(converter.from(0x12345678) == 0x12345678);
 
-		UserDefinedEndianConverter converter2(false);
+		UserDefinedEndianConverter converter2(*p != 1 ?
+					UserDefinedEndianConverter::littleEndian :
+					UserDefinedEndianConverter::bigEndian);
 
 		CPPUNIT_ASSERT(converter2.to(0x12345678) == 0x78563412);
 		CPPUNIT_ASSERT(converter2.from(0x12345678) == 0x78563412);
