@@ -509,11 +509,15 @@ public:
 		return *this;
 	}
 
-	UserDefinedEndianConverter(const bool isSourceLittle_)
+	enum EndianType {
+		littleEndian,
+		bigEndian
+	};
+
+	UserDefinedEndianConverter(EndianType endianType)
 		: EndianConverter(),
-		  isSourceLittle(isSourceLittle_)
-	{
-	}
+		  isSourceLittle(endianType == littleEndian)
+	{}
 
 	// to big convert.
 	char to(char value) const 

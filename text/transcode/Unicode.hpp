@@ -5,29 +5,35 @@
 #include <cassert>
 #include <text/transcode/InvalidCharacterException.hpp>
 
+typedef unsigned char utf8_t;
+typedef unsigned short utf16_t;
+typedef unsigned int ucs4_t;
+
 class Transcoder
 {
+	friend class TranscodeTest;
+
 private:
-	static std::basic_string<wchar_t>
-	UCS4toUTF16(const std::vector<unsigned int>& ucs4)
+	static std::basic_string<utf16_t>
+	UCS4toUTF16(const std::vector<ucs4_t>& ucs4)
 	{
-		std::basic_string<wchar_t> utf16;
-		for (std::vector<unsigned int>::const_iterator itor = ucs4.begin();
+		std::basic_string<utf16_t> utf16;
+		for (std::vector<ucs4_t>::const_iterator itor = ucs4.begin();
 			 itor != ucs4.end();
 			 ++itor)
 		{
 			if (*itor < 0x00010000)
 			{
-				utf16.push_back(static_cast<const wchar_t>(*itor));
+				utf16.push_back(static_cast<const utf16_t>(*itor));
 			}
 
 			else if (*itor < 0x00020000)
 			{
-				const unsigned int codepoint = *itor;
-				const wchar_t highSurrogate = 
-					static_cast<const wchar_t>((codepoint >> 10) & 0x03ff);
-				const wchar_t lowSurrogate =
-					static_cast<const wchar_t>((codepoint) & 0x03ff);
+				const ucs4_t codepoint = *itor;
+				const utf16_t highSurrogate = 
+					static_cast<const utf16_t>((codepoint >> 10) & 0x03ff);
+				const utf16_t lowSurrogate =
+					static_cast<const utf16_t>((codepoint) & 0x03ff);
 
 				utf16.push_back(highSurrogate);
 				utf16.push_back(lowSurrogate);
@@ -40,10 +46,10 @@ private:
 	}
 
 	static std::string
-	UCS4toUTF8(const std::vector<unsigned int>& ucs4)
+	UCS4toUTF8(const std::vector<ucs4_t>& ucs4)
 	{
 		std::string utf8;
-		for (std::vector<unsigned int>::const_iterator itor = ucs4.begin();
+		for (std::vector<ucs4_t>::const_iterator itor = ucs4.begin();
 			 itor != ucs4.end();
 			 ++itor)
 		{
@@ -52,7 +58,7 @@ private:
 				utf8.push_back(static_cast<const char>(*itor));
 			else if (*itor < 0x00000800)
 			{
-				const unsigned int codepoint = *itor;
+				const ucs4_t codepoint = *itor;
 				const char first = 
 					static_cast<const char>(0xc0 | ((codepoint >> 6) & 0x1f));
 				const char second = 
@@ -63,7 +69,7 @@ private:
 			}
 			else if (*itor < 0x00010000)
 			{
-				const unsigned int codepoint = *itor;
+				const ucs4_t codepoint = *itor;
 				const char first = 
 					static_cast<const char>(0xe0 | ((codepoint >> 12) & 0x0f));
 				const char second = 
@@ -77,7 +83,7 @@ private:
 			}
 			else if (*itor < 0x00020000)
 			{
-				const unsigned int codepoint = *itor;
+				const ucs4_t codepoint = *itor;
 				const char first = 
 					static_cast<const char>(0xf0 | ((codepoint >> 18) & 0x07));
 				const char second = 
@@ -99,18 +105,18 @@ private:
 		return utf8;
 	}
 
-	static bool isSubCharacter(const unsigned char value)
+	static bool isSubCharacter(const utf8_t value)
 	{
 		return (value & 0xc0) == 0x80;
 	}
 
-	static std::vector<unsigned int>
-	UTF8toUCS4(const std::vector<unsigned char>& utf8)
+	static std::vector<ucs4_t>
+	UTF8toUCS4(std::string::const_iterator head, std::string::const_iterator last)
 	{
-		std::vector<unsigned int> ucs4;
+		std::vector<ucs4_t> ucs4;
 
-		std::vector<unsigned char>::const_iterator itor = utf8.begin();
-		while (itor != utf8.end())
+		std::string::const_iterator itor = head;
+		while (itor != last)
 		{
 			// 1 byte
 			if ((*itor & 0x80) == 0x00)
@@ -118,11 +124,11 @@ private:
 			// 2 bytes
 			else if ((*itor & 0xe0) == 0xc0)
 			{
-				const unsigned char first = *itor & 0x1f;
+				const utf8_t first = *itor & 0x1f;
 
 				if (!isSubCharacter(*++itor))
 					throw InvalidCharacterException();
-				const unsigned char second = *itor & 0x3f;
+				const utf8_t second = *itor & 0x3f;
 				++itor;
 
 				ucs4.push_back((first << 6) |
@@ -131,13 +137,13 @@ private:
 			// 3 bytes
 			else if ((*itor & 0xf0) == 0xe0)
 			{
-				const unsigned char first = *itor & 0x0f;
+				const utf8_t first = *itor & 0x0f;
 				if (!isSubCharacter(*++itor))
 					throw InvalidCharacterException();
-				const unsigned char second = *itor & 0x3f;
+				const utf8_t second = *itor & 0x3f;
 				if (!isSubCharacter(*++itor))
 					throw InvalidCharacterException();
-				const unsigned char third = *itor & 0x3f;
+				const utf8_t third = *itor & 0x3f;
 				++itor;
 
 				ucs4.push_back((first << 12) |
@@ -147,16 +153,16 @@ private:
 			// 4 bytes
 			else if ((*itor & 0xf8) == 0xf0)
 			{
-				const unsigned char first = *itor & 0x0f;
+				const utf8_t first = *itor & 0x0f;
 				if (!isSubCharacter(*++itor))
 					throw InvalidCharacterException();
-				const unsigned char second = *itor & 0x3f;
+				const utf8_t second = *itor & 0x3f;
 				if (!isSubCharacter(*++itor))
 					throw InvalidCharacterException();
-				const unsigned char third = *itor & 0x3f;
+				const utf8_t third = *itor & 0x3f;
 				if (!isSubCharacter(*++itor))
 					throw InvalidCharacterException();
-				const unsigned char fourth = *itor & 0x3f;
+				const utf8_t fourth = *itor & 0x3f;
 				++itor;
 
 				ucs4.push_back((first << 18) |
@@ -171,26 +177,27 @@ private:
 		return ucs4;
 	}
 
-	static std::vector<unsigned int>
-	UTF16toUCS4(const std::vector<unsigned short>& utf16)
+	static std::vector<ucs4_t>
+	UTF16toUCS4(std::basic_string<utf16_t>::const_iterator head,
+			std::basic_string<utf16_t>::const_iterator last)
 	{
-		std::vector<unsigned int> ucs4;
+		std::vector<ucs4_t> ucs4;
 
-		std::vector<unsigned short>::const_iterator itor = utf16.begin();
-		while (itor != utf16.end())
+		std::basic_string<utf16_t>::const_iterator itor = head;
+		while (itor != last)
 		{
 			if (isHighSurrogate(*itor))
 			{
-				const unsigned short highSurrogate = *itor & 0x3ff;
+				const utf16_t highSurrogate = *itor & 0x3ff;
 				++itor;
 
 				if (!isLowSurrogate(*itor))
 					throw InvalidCharacterException();
 
-				const unsigned short lowSurrogate = *itor & 0x3ff;
+				const utf16_t lowSurrogate = *itor & 0x3ff;
 				++itor;
 
-				const unsigned int codepoint = 
+				const ucs4_t codepoint = 
 					(highSurrogate << 10) | lowSurrogate;
 				ucs4.push_back(codepoint);
 			}
@@ -201,12 +208,12 @@ private:
 		return ucs4;
 	}
 
-	static bool isHighSurrogate(const unsigned short codepoint)
+	static bool isHighSurrogate(const utf16_t codepoint)
 	{
 		return (codepoint >= 0xDB00) && (codepoint <= 0xDBFF);
 	}
 
-	static bool isLowSurrogate(const unsigned short codepoint)
+	static bool isLowSurrogate(const utf16_t codepoint)
 	{
 		return (codepoint >= 0xDC00) && (codepoint <= 0xDFFF);
 	}
@@ -217,31 +224,19 @@ public:
 		return utf8;
 	}
 
-	static std::string toUTF8(const std::basic_string<wchar_t>& utf16)
+	static std::string toUTF8(const std::basic_string<utf16_t>& utf16)
 	{
 		return UTF16toUTF8(utf16);
 	}
 
-	static std::string UTF16toUTF8(const std::basic_string<wchar_t>& utf16)
+	static std::string UTF16toUTF8(const std::basic_string<utf16_t>& utf16)
 	{
-		std::vector<unsigned short> utf16v(
-			reinterpret_cast<const unsigned short*>(&utf16[0]),
-			reinterpret_cast<const unsigned short*>(&utf16[utf16.length()]));
-
-		std::vector<unsigned int> ucs4v = UTF16toUCS4(utf16v);
-
-		return UCS4toUTF8(ucs4v);
+		return UCS4toUTF8(UTF16toUCS4(utf16.begin(), utf16.end()));
 	}
 
-	static std::basic_string<wchar_t> UTF8toUTF16(const std::string& utf8)
+	static std::basic_string<utf16_t> UTF8toUTF16(const std::string& utf8)
 	{
-		std::vector<unsigned char> utf8v(
-			reinterpret_cast<const unsigned char*>(&utf8[0]),
-			reinterpret_cast<const unsigned char*>(&utf8[utf8.length()]));
-
-		std::vector<unsigned int> ucs4v = UTF8toUCS4(utf8v);
-
-		return UCS4toUTF16(ucs4v);
+		return UCS4toUTF16(UTF8toUCS4(utf8.begin(), utf8.end()));
 	}
 };
 

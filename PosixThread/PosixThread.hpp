@@ -5,35 +5,35 @@ class PosixThread
 {
 public:
 	/**
-	 * I—¹ó‘Ô‚ğ¦‚·’è”
+	 * çµ‚äº†çŠ¶æ…‹ã‚’ç¤ºã™å®šæ•°
 	 */
 	static const unsigned abort_by_exception = 0xffffffff;
 
 	/**
-	 * ƒXƒŒƒbƒh¯•ÊqŒ^
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­å‹
 	 */
 	typedef pthread_t thread_id_t;
 
 private:
 	/**
-	 * ƒXƒŒƒbƒhƒnƒ“ƒhƒ‹
-	 * ƒXƒŒƒbƒh¯•Êq
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒ³ãƒ‰ãƒ«
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­
 	 */
 	thread_id_t ThreadId;
 
 	/**
-	 * ˆ——áŠO“`’B—pƒ|ƒCƒ“ƒ^
+	 * å‡¦ç†ä¾‹å¤–ä¼é”ç”¨ãƒã‚¤ãƒ³ã‚¿
 	 */
 	ThreadException* transporter;
 
 	/**
-	 * Àsó‘Ôƒtƒ‰ƒO
+	 * å®Ÿè¡ŒçŠ¶æ…‹ãƒ•ãƒ©ã‚°
 	 */
 	bool isRun;
 	ThreadException
 
 	/**
-	 * ƒVƒXƒeƒ€ƒR[ƒ‹ƒoƒbƒN—pƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
+	 * ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ç”¨ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
 	 */
 	static void CallbackDispatcher(void* DispatchKey)
 	{
@@ -68,30 +68,30 @@ private:
 		pthread_exit(reinterpret_cast<void*>(retValue));
 	}
 
-	/// ƒRƒs[–h~—p
+	/// ã‚³ãƒ”ãƒ¼é˜²æ­¢ç”¨
 	PosixThread& operator=(PosixThread&);
-	/// ƒRƒs[–h~—p
+	/// ã‚³ãƒ”ãƒ¼é˜²æ­¢ç”¨
 	PosixThread(PosixThread&);
 
 protected:
 	void create(bool createOnRun) throw(ThreadException)
 	{
-		/// @Todo —áŠOˆ—‹@\‚Ì’Ç‰Á
+		/// @Todo ä¾‹å¤–å‡¦ç†æ©Ÿæ§‹ã®è¿½åŠ 
 		pthread_create(&this->ThreadId, NULL,
 					   static_cast<void*(*)(void*)>
 					   (PosixThread::CallbackDispatcher),
 					   this);
 	}
 
-	/// ƒ[ƒJ[—pƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒgBƒI[ƒo[ƒ‰ƒCƒh‚µ‚Äg—p‚·‚éB
+	/// ãƒ¯ãƒ¼ã‚«ãƒ¼ç”¨ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã€‚ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¦ä½¿ç”¨ã™ã‚‹ã€‚
 	virtual unsigned int run() throw(ThreadException)
 	{
 	}
 
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param createOnRun ì¬‚Æ“¯‚ÉÀsŠJn‚·‚é‚©‚Ìƒtƒ‰ƒO
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param createOnRun ä½œæˆã¨åŒæ™‚ã«å®Ÿè¡Œé–‹å§‹ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
 	 */
 	PosixThread(bool createOnRun = false) throw (ThreadException)
 		: ThreadId(), transporter(NULL), isRun(false)
@@ -100,7 +100,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~PosixThread()
 	{
