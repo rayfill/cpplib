@@ -348,4 +348,61 @@ public:
 	}
 };
 
+/**
+ * スコープドポインタクラス
+ * @param Container コンテナ化するクラス
+ * @param RemovePolicy 削除時のハンドリングポリシー
+ * @todo MultiThread環境のためのロックポリシーとかも必要かも
+ */
+template <typename Container,
+	class RemovePolicy = DefaultRemover<Container> >
+class ScopedPointer
+{
+public:
+	typedef Container* Pointer;
+	typedef Container& Reference;
+
+private:
+	Pointer pointer;
+
+	ScopedPointer& operator=(const ScopedPointer&);
+	ScopedPointer(const ScopedPointer&);
+
+public:
+	ScopedPointer(Pointer p):
+			pointer(p)
+	{}
+
+	~ScopedPointer()
+	{
+		RemovePolicy::remove(pointer);
+	}
+
+	Reference operator*()
+	{
+		return *pointer;
+	}
+
+	const Reference operator*() const
+	{
+		return *pointer;
+	}
+
+	Pointer get() const throw()
+	{
+		return pointer;
+	}
+
+	Pointer operator->()
+	{
+		return pointer;
+	}
+
+	const Pointer operator->() const
+	{
+		return pointer;
+	}
+};
+
+
 #endif /* SMARTPOINTER_HPP_ */

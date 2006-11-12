@@ -34,7 +34,7 @@ private:
 		InnerCriticalSectionObject() throw()
 			: sectionHandle()
 		{
-			InitializeCriticalSection(&sectionHandle);
+			::InitializeCriticalSection(&sectionHandle);
 		}
 
 		/**
@@ -42,7 +42,7 @@ private:
 		 */
 		~InnerCriticalSectionObject() throw()
 		{
-			DeleteCriticalSection(&sectionHandle);
+			::DeleteCriticalSection(&sectionHandle);
 		}
 		
 		/**

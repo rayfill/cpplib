@@ -122,4 +122,54 @@ public:
 	}
 };
 
+class ScopedPointerTest : public CppUnit::TestFixture
+{
+private:
+	CPPUNIT_TEST_SUITE(ScopedPointerTest);
+	CPPUNIT_TEST(referenceTest);
+	CPPUNIT_TEST(operatorEqualTest);
+	CPPUNIT_TEST_SUITE_END();
+
+public:
+	void operatorEqualTest()
+	{
+		bool isDeleted = false;
+		bool isDeleted2 = false;
+		{
+			Callbacker* p = new Callbacker(&isDeleted);
+			Callbacker* p2 = new Callbacker(&isDeleted2);
+
+			ScopedPointer<Callbacker> sp(p);
+			{
+				ScopedPointer<Callbacker> sp2(p2);
+				//sp = sp2; // compile time error.
+
+				CPPUNIT_ASSERT(isDeleted == false);
+				CPPUNIT_ASSERT(isDeleted2 == false);
+			}
+			CPPUNIT_ASSERT(isDeleted == false);
+			CPPUNIT_ASSERT(isDeleted2 == true);
+			
+		}
+		CPPUNIT_ASSERT(isDeleted == true);
+	}
+
+	void referenceTest()
+	{
+		bool isDeleted = false;
+
+		{
+			Callbacker* p = new Callbacker(&isDeleted);
+			ScopedPointer<Callbacker> sp(p);
+			{
+				CPPUNIT_ASSERT(sp.get() == p);
+			}
+			CPPUNIT_ASSERT(isDeleted == false);
+			CPPUNIT_ASSERT(sp.get() == p);
+		}
+		CPPUNIT_ASSERT(isDeleted == true);
+	}
+};
+
 CPPUNIT_TEST_SUITE_REGISTRATION( SmartPointerTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( ScopedPointerTest );
