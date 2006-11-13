@@ -14,15 +14,15 @@
 #include <Thread/Runnable.hpp>
 
 /**
- * Win32ƒx[ƒXƒXƒŒƒbƒhƒNƒ‰ƒX
+ * Win32ãƒ™ãƒ¼ã‚¹ã‚¹ãƒ¬ãƒƒãƒ‰ã‚¯ãƒ©ã‚¹
  *
- * Œp³‚µA‰¼‘zŠÖ” run()‚ğƒI[ƒo[ƒ‰ƒCƒh‚·‚é‚©A
- * RunnableƒCƒ“ƒ^ƒtƒF[ƒX‚ğÀ‘•‚µ‚½ƒNƒ‰ƒX‚ğ—pˆÓ‚µ‚Ä
- * ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÉH‚í‚¹‚Ä‚­‚¾‚³‚¢B
- * @todo ŠeƒƒbƒNˆ—‚Ìƒ|ƒŠƒV[‰»Bthisƒ|ƒCƒ“ƒ^ƒƒbƒN‚É‚µ‚½‚Ù‚¤‚ªŒø—¦‚æ‚³‚°
- * @todo ó‘ÔŒŸ¸‚ÆƒVƒOƒiƒ‹ƒ`ƒbƒN‚È’†’fˆ—‚Ö‚Ì•ÏX
- * @todo Runnableƒzƒ‹ƒ_[‚àƒeƒ“ƒvƒŒ[ƒg‚É‚µ‚Æ‚¯‚ÎSmartPointer‚Æ‚©
- * AutoPtr‚Æ‚©g‚¦‚é‚È‚ŸEEE
+ * ç¶™æ‰¿ã—ã€ä»®æƒ³é–¢æ•° run()ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹ã‹ã€
+ * Runnableã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’å®Ÿè£…ã—ãŸã‚¯ãƒ©ã‚¹ã‚’ç”¨æ„ã—ã¦
+ * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã«é£Ÿã‚ã›ã¦ãã ã•ã„ã€‚
+ * @todo å„ãƒ­ãƒƒã‚¯å‡¦ç†ã®ãƒãƒªã‚·ãƒ¼åŒ–ã€‚thisãƒã‚¤ãƒ³ã‚¿ãƒ­ãƒƒã‚¯ã«ã—ãŸã»ã†ãŒåŠ¹ç‡ã‚ˆã•ã’
+ * @todo çŠ¶æ…‹æ¤œæŸ»ã¨ã‚·ã‚°ãƒŠãƒ«ãƒãƒƒã‚¯ãªä¸­æ–­å‡¦ç†ã¸ã®å¤‰æ›´
+ * @todo Runnableãƒ›ãƒ«ãƒ€ãƒ¼ã‚‚ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«ã—ã¨ã‘ã°SmartPointerã¨ã‹
+ * AutoPtrã¨ã‹ä½¿ãˆã‚‹ãªããƒ»ãƒ»ãƒ»
  */
 class WinThread : public Runnable
 {
@@ -30,20 +30,20 @@ class WinThread : public Runnable
 
 public:
 	enum {
-		/// —áŠO‚É‚æ‚è’â~‚ğ‚ ‚ç‚í‚·’è”
+		/// ä¾‹å¤–ã«ã‚ˆã‚Šåœæ­¢ã‚’ã‚ã‚‰ã‚ã™å®šæ•°
 		abort_by_exception = 0xffffffff,
-		/// e‚©‚ç‚ÌƒŠƒNƒGƒXƒg‚É‚æ‚è’†’f‚ğ•\‚·’è”
+		/// è¦ªã‹ã‚‰ã®ãƒªã‚¯ã‚¨ã‚¹ãƒˆã«ã‚ˆã‚Šä¸­æ–­ã‚’è¡¨ã™å®šæ•°
 		abort_by_parent = 0xfffffffe
 	};
 
 	/**
-	 * ƒXƒŒƒbƒh¯•ÊqŒ^
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­å‹
 	 */
 	typedef unsigned thread_id_t;
 
 private:
 	/**
-	 * ó‘Ô’è”
+	 * çŠ¶æ…‹å®šæ•°
 	 */
 	enum RunningStatus
 	{
@@ -54,37 +54,37 @@ private:
 	};
 
 	/**
-	 * Às‘ÎÛ
+	 * å®Ÿè¡Œå¯¾è±¡
 	 */
 	Runnable* runningTarget;
 
 	/**
-	 * ƒXƒŒƒbƒhó‘Ô
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰çŠ¶æ…‹
 	 */
 	volatile RunningStatus status;
 
 	/**
-	 * ƒXƒŒƒbƒhƒnƒ“ƒhƒ‹
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HANDLE threadHandle;
 
 	/**
-	 * ƒXƒŒƒbƒh¯•Êq
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­
 	 */
 	thread_id_t ThreadId;
 
 	/**
-	 * ˆ——áŠO“`’B—pƒ|ƒCƒ“ƒ^
+	 * å‡¦ç†ä¾‹å¤–ä¼é”ç”¨ãƒã‚¤ãƒ³ã‚¿
 	 */
 	ThreadException* transporter;
 
 	/**
-	 * ’â~—pƒtƒ‰ƒO
+	 * åœæ­¢ç”¨ãƒ•ãƒ©ã‚°
 	 */
 	volatile bool isAborting;
 
 	/**
-	 * ƒVƒXƒeƒ€ƒR[ƒ‹ƒoƒbƒN—pƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
+	 * ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ç”¨ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
 	 * @see Win32 CreateThread() API
 	 */
 	static unsigned __stdcall CallbackDispatcher(void* DispatchKey) throw()
@@ -95,9 +95,9 @@ private:
 	}
 
 	/**
-	 * Š„‚è‚İˆ—B
-	 * abort()‚³‚ê‚½ê‡‚ÉƒXƒŒƒbƒh“à•”‚Åabortˆ—‚ğ‚·‚é‚½‚ß‚É
-	 * InterruptedException‚ğŒÄ‚Ño‚·ƒwƒ‹ƒp
+	 * å‰²ã‚Šè¾¼ã¿å‡¦ç†ã€‚
+	 * abort()ã•ã‚ŒãŸå ´åˆã«ã‚¹ãƒ¬ãƒƒãƒ‰å†…éƒ¨ã§abortå‡¦ç†ã‚’ã™ã‚‹ãŸã‚ã«
+	 * InterruptedExceptionã‚’å‘¼ã³å‡ºã™ãƒ˜ãƒ«ãƒ‘
 	 */
 	void processInterruption() throw (InterruptedException)
 	{
@@ -111,16 +111,16 @@ private:
 		}
 	}
 
-	/// ƒRƒs[–h~—p
+	/// ã‚³ãƒ”ãƒ¼é˜²æ­¢ç”¨
 	WinThread& operator=(WinThread&);
 
-	/// ƒRƒs[–h~—p
+	/// ã‚³ãƒ”ãƒ¼é˜²æ­¢ç”¨
 	WinThread(WinThread&);
 
 protected:
 	/**
-	 * Œ»İ‚ÌƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg‚Ìæ“¾
-	 * @return Œ»İ‚ÌƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
+	 * ç¾åœ¨ã®ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã®å–å¾—
+	 * @return ç¾åœ¨ã®ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
 	 */
 	Runnable* getRunningTarget() const throw()
 	{
@@ -128,10 +128,10 @@ protected:
 	}
 
 	/**
-	 * V‚µ‚¢ƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg‚Ìİ’è
-	 * @param runnable V‚µ‚¢ƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
-	 * @note ƒƒbƒN‹@\”õ‚¦‚Ä‚È‚¢‚Ì‚ÅÀs’†‚É‘‚«Š·‚¦‚È‚¢‚æ‚¤’ˆÓB
-	 * @todo •K—v‚È‚çƒƒbƒN‹@\”õ‚¦‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à
+	 * æ–°ã—ã„ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã®è¨­å®š
+	 * @param runnable æ–°ã—ã„ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+	 * @note ãƒ­ãƒƒã‚¯æ©Ÿæ§‹å‚™ãˆã¦ãªã„ã®ã§å®Ÿè¡Œä¸­ã«æ›¸ãæ›ãˆãªã„ã‚ˆã†æ³¨æ„ã€‚
+	 * @todo å¿…è¦ãªã‚‰ãƒ­ãƒƒã‚¯æ©Ÿæ§‹å‚™ãˆãŸã»ã†ãŒã„ã„ã‹ã‚‚
 	 */
 	void setRunningTarget(Runnable* runnable) throw()
 	{
@@ -139,9 +139,9 @@ protected:
 	}
 
 	/**
-	 * ƒVƒXƒeƒ€ƒR[ƒ‹ƒoƒbƒN—pƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
-	 * @todo ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“ƒƒbƒN‚ğ•ÏX‚µ‚ÄƒƒbƒN‰e‹¿”ÍˆÍ‚ğ
-	 * ‚à‚Á‚Æ¬‚³‚­‚·‚éB
+	 * ã‚·ã‚¹ãƒ†ãƒ ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ç”¨ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+	 * @todo ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ­ãƒƒã‚¯ã‚’å¤‰æ›´ã—ã¦ãƒ­ãƒƒã‚¯å½±éŸ¿ç¯„å›²ã‚’
+	 * ã‚‚ã£ã¨å°ã•ãã™ã‚‹ã€‚
 	 */
 	virtual unsigned int callback() throw()
 	{
@@ -186,10 +186,10 @@ protected:
 	}
 
 	/**
-	 * ƒNƒ‰ƒX\’zƒwƒ‹ƒp
-	 * @param createOnRun ì¬‚Æ“¯‚ÉƒXƒŒƒbƒh‚ğÀs‚·‚é‚©‚Ìƒtƒ‰ƒO
-	 * true‚Åì¬‚ÉÀsŠJnAfalse‚¾‚Æì¬Œã‚Ísuspend‚µ‚Ä‚¢‚éB
-	 * start() ƒƒ\ƒbƒh‚ÅÀsŠJn‚·‚éB
+	 * ã‚¯ãƒ©ã‚¹æ§‹ç¯‰ãƒ˜ãƒ«ãƒ‘
+	 * @param createOnRun ä½œæˆã¨åŒæ™‚ã«ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’å®Ÿè¡Œã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+	 * trueã§ä½œæˆæ™‚ã«å®Ÿè¡Œé–‹å§‹ã€falseã ã¨ä½œæˆå¾Œã¯suspendã—ã¦ã„ã‚‹ã€‚
+	 * start() ãƒ¡ã‚½ãƒƒãƒ‰ã§å®Ÿè¡Œé–‹å§‹ã™ã‚‹ã€‚
 	 * @see start()
 	 */
 	void create(bool createOnRun) throw(ThreadException)
@@ -212,8 +212,8 @@ protected:
 	}
 
 	/**
-	 * ’â~”»’è
-	 * @return ’â~ó‘Ô‚È‚çtrue
+	 * åœæ­¢åˆ¤å®š
+	 * @return åœæ­¢çŠ¶æ…‹ãªã‚‰true
 	 */
 	bool isAbort() const throw()
 	{
@@ -222,8 +222,8 @@ protected:
 
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param createOnRun ì¬‚Æ“¯‚ÉÀsŠJn‚·‚é‚©‚ğ¯•Ê‚·‚éƒtƒ‰ƒO
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param createOnRun ä½œæˆã¨åŒæ™‚ã«å®Ÿè¡Œé–‹å§‹ã™ã‚‹ã‹ã‚’è­˜åˆ¥ã™ã‚‹ãƒ•ãƒ©ã‚°
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
 		: runningTarget(), status(), threadHandle(),
@@ -234,9 +234,9 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param runnableObject ÀsƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒgƒIƒuƒWƒFƒNƒg
-	 * @param createOnRun ì¬‚Æ“¯‚ÉÀsŠJn‚·‚é‚©‚ğ¯•Ê‚·‚éƒtƒ‰ƒO
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param runnableObject å®Ÿè¡Œã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @param createOnRun ä½œæˆã¨åŒæ™‚ã«å®Ÿè¡Œé–‹å§‹ã™ã‚‹ã‹ã‚’è­˜åˆ¥ã™ã‚‹ãƒ•ãƒ©ã‚°
 	 */
 	WinThread(Runnable* runnable_,
 			  bool createOnRun = false) throw (ThreadException)
@@ -248,7 +248,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~WinThread() throw(ThreadException)
 	{
@@ -267,8 +267,8 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀs
-	 * @return ƒŒƒWƒ…[ƒ€ƒŒƒxƒ‹B0‚ÅÀsŠJnA>0‚ÅƒTƒXƒyƒ“ƒh’†
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œ
+	 * @return ãƒ¬ã‚¸ãƒ¥ãƒ¼ãƒ ãƒ¬ãƒ™ãƒ«ã€‚0ã§å®Ÿè¡Œé–‹å§‹ã€>0ã§ã‚µã‚¹ãƒšãƒ³ãƒ‰ä¸­
 	 */
 	virtual unsigned start() throw()
 	{
@@ -286,9 +286,9 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀs
-	 * @param entryPoint ÀsêŠ‚ğ‚ÂƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
-	 * @return ƒŒƒWƒ…[ƒ€ƒŒƒxƒ‹B0‚ÅÀsŠJnA>0‚ÅƒTƒXƒyƒ“ƒh’†
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œ
+	 * @param entryPoint å®Ÿè¡Œå ´æ‰€ã‚’æŒã¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
+	 * @return ãƒ¬ã‚¸ãƒ¥ãƒ¼ãƒ ãƒ¬ãƒ™ãƒ«ã€‚0ã§å®Ÿè¡Œé–‹å§‹ã€>0ã§ã‚µã‚¹ãƒšãƒ³ãƒ‰ä¸­
 	 */
 	virtual unsigned start(Runnable* entryPoint) throw()
 	{
@@ -301,8 +301,8 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀsó‘Ô‚Ìæ“¾
-	 * @return true: Às–”‚ÍƒTƒXƒyƒ“ƒh’†, false: ’â~’†
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡ŒçŠ¶æ…‹ã®å–å¾—
+	 * @return true: å®Ÿè¡Œåˆã¯ã‚µã‚¹ãƒšãƒ³ãƒ‰ä¸­, false: åœæ­¢ä¸­
 	 */
 	bool isRunning() throw()
 	{
@@ -315,9 +315,9 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀs‚ğˆê‹x~
-	 * @param waitTimeForMilliSeconds ‹x~‚·‚éŠÔ‚ğƒ~ƒŠ•b‚Åw’è‚·‚é
-	 * 0‚ğ“n‚·‚ÆÀsŒ ‚ğ‚Ù‚©‚ÌƒXƒŒƒbƒh‚É“n‚·B
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œã‚’ä¸€æ™‚ä¼‘æ­¢
+	 * @param waitTimeForMilliSeconds ä¼‘æ­¢ã™ã‚‹æ™‚é–“ã‚’ãƒŸãƒªç§’ã§æŒ‡å®šã™ã‚‹
+	 * 0ã‚’æ¸¡ã™ã¨å®Ÿè¡Œæ¨©ã‚’ã»ã‹ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã«æ¸¡ã™ã€‚
 	 */
 	static void sleep(unsigned int waitTimeForMilliSeconds) throw()
 	{
@@ -325,9 +325,9 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀsŒ ‚ğ‘¼‚Ö“n‚·
-	 * @exception InterruptedException ƒXƒŒƒbƒhƒCƒ“ƒXƒ^ƒ“ƒX‚©‚ç
-	 * abort()‚ªŒÄ‚Î‚ê‚Ä‚¢‚½ê‡
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œæ¨©ã‚’ä»–ã¸æ¸¡ã™
+	 * @exception InterruptedException ã‚¹ãƒ¬ãƒƒãƒ‰ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‹ã‚‰
+	 * abort()ãŒå‘¼ã°ã‚Œã¦ã„ãŸå ´åˆ
 	 */
 	void yield() throw(InterruptedException)
 	{
@@ -338,10 +338,10 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀs‚ğ’†~‚·‚éB
-	 * ’â~‚µ‚½ƒXƒŒƒbƒh‚Í“à•”ˆ—‚Åyield()‚ğŒÄ‚Ño‚µ‚½‚Æ‚«‚É
-	 * InterruptedException‚ª”­s‚³‚ê‚éB
-	 * @todo ’â~ˆ—Method‚Ì‘—Ê
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œã‚’ä¸­æ­¢ã™ã‚‹ã€‚
+	 * åœæ­¢ã—ãŸã‚¹ãƒ¬ãƒƒãƒ‰ã¯å†…éƒ¨å‡¦ç†ã§yield()ã‚’å‘¼ã³å‡ºã—ãŸã¨ãã«
+	 * InterruptedExceptionãŒç™ºè¡Œã•ã‚Œã‚‹ã€‚
+	 * @todo åœæ­¢å‡¦ç†Methodã®å¢—é‡
 	 */
 	void abort() throw()
 	{
@@ -352,7 +352,7 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀs‚Ì’†’fBÄŠJ‚·‚éê‡‚Ístart()ƒƒ\ƒbƒh‚ğg‚¤
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œã®ä¸­æ–­ã€‚å†é–‹ã™ã‚‹å ´åˆã¯start()ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ä½¿ã†
 	 */
 	void cancel() throw()
 	{
@@ -369,8 +369,8 @@ public:
 	}
 
 	/**
-	 * Œ»İ‚ÌƒXƒŒƒbƒh‚ÌƒXƒŒƒbƒh¯•Êq‚ğ•Ô‚·
-	 * @return ƒXƒŒƒbƒh¯•Êq
+	 * ç¾åœ¨ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­ã‚’è¿”ã™
+	 * @return ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­
 	 */
 	static const WinThread::thread_id_t self() throw()
 	{
@@ -378,8 +378,8 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒhƒIƒuƒWƒFƒNƒg‚Ì¯•Êq‚ğ•Ô‚·
-	 * @return ƒXƒŒƒbƒh¯•Êq
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è­˜åˆ¥å­ã‚’è¿”ã™
+	 * @return ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­
 	 */
 	const WinThread::thread_id_t getThreadId() throw()
 	{
@@ -387,11 +387,11 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌI—¹‘Ò‹@
-	 * @param waitTime ƒXƒŒƒbƒh‚ÌI—¹‘Ò‹@ŠÔ(ƒ~ƒŠ•b)BƒfƒtƒHƒ‹ƒg‚Í–³ŒÀ
-	 * @exception TimeoutException ‘Ò‹@ŠÔ‚ğ‰ß‚¬‚Ä‚àƒXƒŒƒbƒh‚ªI—¹‚µ
-	 * ‚È‚©‚Á‚½ê‡
-	 * @exception ThreadExcpetion ‰½‚ç‚©‚ÌˆÙí‚ª”­¶‚µ‚½ê‡
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ‚äº†å¾…æ©Ÿ
+	 * @param waitTime ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ‚äº†å¾…æ©Ÿæ™‚é–“(ãƒŸãƒªç§’)ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯ç„¡é™
+	 * @exception TimeoutException å¾…æ©Ÿæ™‚é–“ã‚’éãã¦ã‚‚ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚äº†ã—
+	 * ãªã‹ã£ãŸå ´åˆ
+	 * @exception ThreadExcpetion ä½•ã‚‰ã‹ã®ç•°å¸¸ãŒç™ºç”Ÿã—ãŸå ´åˆ
 	 */
 	virtual unsigned join(DWORD waitTime = INFINITE)
 		throw(ThreadException, TimeoutException)
@@ -418,8 +418,8 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ª—áŠO‚ğ”­s‚µ‚½ê‡‚Ì—áŠO——R•¶š—ñ‚ğ•Ô‚·
-	 * @return —áŠO——R
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ãŒä¾‹å¤–ã‚’ç™ºè¡Œã—ãŸå ´åˆã®ä¾‹å¤–ç†ç”±æ–‡å­—åˆ—ã‚’è¿”ã™
+	 * @return ä¾‹å¤–ç†ç”±
 	 */
 	std::string reason() const throw()
 	{
@@ -432,8 +432,8 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌI—¹ó‘Ô‚Ìæ“¾
-	 * @return true: ˆÙíI—¹, false: ³íI—¹
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ‚äº†çŠ¶æ…‹ã®å–å¾—
+	 * @return true: ç•°å¸¸çµ‚äº†, false: æ­£å¸¸çµ‚äº†
 	 */
 	bool isAbnormalEnd() const throw()
 	{

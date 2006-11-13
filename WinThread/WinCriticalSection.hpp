@@ -6,30 +6,30 @@
 #include <cassert>
 
 /**
- * Win32—pCriticalSectionƒNƒ‰ƒX
- * @todo ƒOƒ[ƒoƒ‹‚Å’Pˆê‚ÌƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“‚Æ‚È‚Á‚Ä‚µ‚Ü‚¤‚Ì‚ÅƒR
- * ƒ“ƒXƒgƒ‰ƒNƒ^‚©‚ç•¶Žš—ñ‚Å‚àH‚Á‚ÄƒZƒNƒVƒ‡ƒ“‚ÌŽ¯•Ê‚ðs‚¤ŽÀ‘•‚É•ÏX‚µ
- * ‚½‚¢¥¥¥‚Á‚Ä‚»‚ê‚â‚Á‚½‚çƒvƒƒZƒXƒ[ƒJƒ‹Mutex‚É‚È‚Á‚¿‚Ü‚¤‚ÈEEE‘f
- * ’¼‚ÉstaticéŒ¾‚Å‚¨’ƒ‘÷‚·‚©EEE‚Á‚Ä‚»‚ê‚¾‚ÆƒfƒXƒgƒ‰ƒNƒ^‚ª“®‚©‚ñ
- * ‚©EEE
+ * Win32ç”¨CriticalSectionã‚¯ãƒ©ã‚¹
+ * @todo ã‚°ãƒ­ãƒ¼ãƒãƒ«ã§å˜ä¸€ã®ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã¨ãªã£ã¦ã—ã¾ã†ã®ã§ã‚³
+ * ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‹ã‚‰æ–‡å­—åˆ—ã§ã‚‚é£Ÿã£ã¦ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®è­˜åˆ¥ã‚’è¡Œã†å®Ÿè£…ã«å¤‰æ›´ã—
+ * ãŸã„ï½¥ï½¥ï½¥ã£ã¦ãã‚Œã‚„ã£ãŸã‚‰ãƒ—ãƒ­ã‚»ã‚¹ãƒ­ãƒ¼ã‚«ãƒ«Mutexã«ãªã£ã¡ã¾ã†ãªãƒ»ãƒ»ãƒ»ç´ 
+ * ç›´ã«staticå®£è¨€ã§ãŠèŒ¶æ¿ã™ã‹ãƒ»ãƒ»ãƒ»ã£ã¦ãã‚Œã ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒå‹•ã‹ã‚“
+ * ã‹ãƒ»ãƒ»ãƒ»
  */
 class WinCriticalSection
 {
 private:
 	/**
-	 * ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“ƒnƒ“ƒhƒ‹ƒ}ƒl[ƒWƒƒ
+	 * ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«ãƒžãƒãƒ¼ã‚¸ãƒ£
 	 */
 	class InnerCriticalSectionObject
 	{
 	private:
 		/**
-		 * ƒNƒŠƒeƒBƒJƒ‹ƒZƒNƒVƒ‡ƒ“ƒnƒ“ƒhƒ‹
+		 * ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«
 		 */
 		CRITICAL_SECTION sectionHandle;
 
 	public:
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		InnerCriticalSectionObject() throw()
 			: sectionHandle()
@@ -38,7 +38,7 @@ private:
 		}
 
 		/**
-		 * ƒfƒXƒgƒ‰ƒNƒ^
+		 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		~InnerCriticalSectionObject() throw()
 		{
@@ -46,8 +46,8 @@ private:
 		}
 		
 		/**
-		 * ƒZƒNƒVƒ‡ƒ“ƒnƒ“ƒhƒ‹‚ÌŽæ“¾
-		 * @return ƒZƒNƒVƒ‡ƒ“ƒnƒ“ƒhƒ‹‚ÌŽæ“¾
+		 * ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
+		 * @return ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
 		 */
 		LPCRITICAL_SECTION get() throw()
 		{
@@ -58,7 +58,7 @@ private:
 	typedef Singleton<InnerCriticalSectionObject> CriticalSectionObject;
 
 	/**
-	 * ƒZƒNƒVƒ‡ƒ“ƒƒbƒN”»•Ê
+	 * ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ­ãƒƒã‚¯åˆ¤åˆ¥
 	 */
 	bool isLocked;
 
@@ -69,8 +69,8 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param createOnLock ì¬Žž‚ÉƒƒbƒN‚ðs‚¤‚©‚Ç‚¤‚©
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param createOnLock ä½œæˆæ™‚ã«ãƒ­ãƒƒã‚¯ã‚’è¡Œã†ã‹ã©ã†ã‹
 	 */
 	WinCriticalSection(bool createOnLock = true) throw()
 		: isLocked(false)
@@ -80,8 +80,8 @@ public:
 	}
 	
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
-	 * ƒƒbƒN‚µ‚Ä‚¢‚½ê‡A‰ðœ‚·‚é
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * ãƒ­ãƒƒã‚¯ã—ã¦ã„ãŸå ´åˆã€è§£é™¤ã™ã‚‹
 	 */
 	virtual ~WinCriticalSection() throw()
 	{
@@ -90,7 +90,7 @@ public:
 	}
 
 	/**
-	 * ƒZƒNƒVƒ‡ƒ“ƒƒbƒN
+	 * ã‚»ã‚¯ã‚·ãƒ§ãƒ³ãƒ­ãƒƒã‚¯
 	 */
 	void lock() throw()
 	{
@@ -101,7 +101,7 @@ public:
 	}
 	
 	/**
-	 * ƒZƒNƒVƒ‡ƒ“ƒAƒ“ƒƒbƒN
+	 * ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã‚¢ãƒ³ãƒ­ãƒƒã‚¯
 	 */
 	void unlock() throw()
 	{
@@ -113,10 +113,10 @@ public:
 
 	BOOL TryEnterCriticalSection(LPCRITICAL_SECTION);
 	/**
-	 * ƒZƒNƒVƒ‡ƒ“‚ÌƒƒbƒN(”ñƒuƒƒbƒN)
-	 * @return ƒƒbƒN‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©. ƒƒbƒN‚³‚ê‚Ä‚¢‚é: true, ƒƒb
-	 * ƒN‚³‚ê‚Ä‚¢‚È‚¢: false
-	 * @note ‚È‚ñ‚Å‚©Windowsƒx[ƒX‚ÌƒRƒ“ƒpƒCƒ‰‚¾‚Æ’è‹`‚ª–³‚¢‚Á‚ÄŒ¾‚í‚ê‚é¥¥¥
+	 * ã‚»ã‚¯ã‚·ãƒ§ãƒ³ã®ãƒ­ãƒƒã‚¯(éžãƒ–ãƒ­ãƒƒã‚¯)
+	 * @return ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹. ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹: true, ãƒ­ãƒƒ
+	 * ã‚¯ã•ã‚Œã¦ã„ãªã„: false
+	 * @note ãªã‚“ã§ã‹Windowsãƒ™ãƒ¼ã‚¹ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã ã¨å®šç¾©ãŒç„¡ã„ã£ã¦è¨€ã‚ã‚Œã‚‹ï½¥ï½¥ï½¥
 	 */
 	bool tryLock() throw()
 	{
@@ -133,8 +133,8 @@ public:
 	}
 
 	/**
-	 * ƒZƒNƒVƒ‡ƒ““à‚É‚¢‚é‚©‚Ì”»’è
-	 * @return ƒZƒNƒVƒ‡ƒ““à‚É‚¢‚é‚È‚çtrue, ‚Å‚È‚¯‚ê‚Îfalse.
+	 * ã‚»ã‚¯ã‚·ãƒ§ãƒ³å†…ã«ã„ã‚‹ã‹ã®åˆ¤å®š
+	 * @return ã‚»ã‚¯ã‚·ãƒ§ãƒ³å†…ã«ã„ã‚‹ãªã‚‰true, ã§ãªã‘ã‚Œã°false.
 	 */
 	bool isLock() const throw()
 	{

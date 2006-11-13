@@ -5,22 +5,22 @@
 #include <cassert>
 
 /**
- * Win32 ƒCƒxƒ“ƒgƒNƒ‰ƒX
+ * Win32 ã‚¤ãƒ™ãƒ³ãƒˆã‚¯ãƒ©ã‚¹
  */
 class WinEvent
 {
 private:
 	/**
-	 * ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‹
+	 * ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HANDLE event;
 
 	/**
-	 * ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‹‚Ìì¬
-	 * @param eventName ƒCƒxƒ“ƒg–¼
-	 * @param isAutoReset ƒCƒxƒ“ƒg‚ªon‚É‚È‚Á‚½ê‡A
-	 * ƒCƒxƒ“ƒg‚ğ©“®ƒŠƒZƒbƒg‚·‚é‚©H
-	 * @return ì¬‚³‚ê‚½ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‹
+	 * ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®ä½œæˆ
+	 * @param eventName ã‚¤ãƒ™ãƒ³ãƒˆå
+	 * @param isAutoReset ã‚¤ãƒ™ãƒ³ãƒˆãŒonã«ãªã£ãŸå ´åˆã€
+	 * ã‚¤ãƒ™ãƒ³ãƒˆã‚’è‡ªå‹•ãƒªã‚»ãƒƒãƒˆã™ã‚‹ã‹ï¼Ÿ
+	 * @return ä½œæˆã•ã‚ŒãŸã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HANDLE createEvent(const char* eventName,
 					   bool isAutoReset) const throw()
@@ -37,12 +37,12 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param eventName ƒCƒxƒ“ƒg‚ğ¯•Ê‚·‚é–¼‘O
-	 * @param isAutoReset ƒCƒxƒ“ƒgŒŸ’nŒã‚ÉƒVƒOƒiƒ‹’â~‚É‚·‚é‚©‚Ìƒtƒ‰ƒO
-	 * @todo explicit ‚Â‚¯‚Ä‚à‚È‚º‚©©“®Œ^•ÏŠ·‚³‚ê‚Ächar*ˆø”‚Ğ‚Æ‚Â‚¾‚Æ‚à‚¤‚Ğ‚Æ‚Â‚Ì
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ªŒÄ‚Î‚ê‚éEEE
-	 * @note ‚Æ‚è‚ ‚¦‚¸ƒfƒtƒHƒ‹ƒgˆø”í‚é‚Ì‚Å‘Î‰B
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param eventName ã‚¤ãƒ™ãƒ³ãƒˆã‚’è­˜åˆ¥ã™ã‚‹åå‰
+	 * @param isAutoReset ã‚¤ãƒ™ãƒ³ãƒˆæ¤œåœ°å¾Œã«ã‚·ã‚°ãƒŠãƒ«åœæ­¢ã«ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+	 * @todo explicit ã¤ã‘ã¦ã‚‚ãªãœã‹è‡ªå‹•å‹å¤‰æ›ã•ã‚Œã¦char*å¼•æ•°ã²ã¨ã¤ã ã¨ã‚‚ã†ã²ã¨ã¤ã®
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒå‘¼ã°ã‚Œã‚‹ãƒ»ãƒ»ãƒ»
+	 * @note ã¨ã‚Šã‚ãˆãšãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå¼•æ•°å‰Šã‚‹ã®ã§å¯¾å¿œã€‚
 	 */
 	explicit WinEvent(const std::string& eventName, bool isAutoReset) throw()
 			: event()
@@ -52,9 +52,9 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param isAutoReset ƒCƒxƒ“ƒgŒŸ’mŒã‚ÉƒVƒOƒiƒ‹’â~‚É‚·‚é‚©‚Ìƒtƒ‰ƒO
-	 * @note –¼‘O‚È‚µƒCƒxƒ“ƒg‚ğì¬‚·‚é
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param isAutoReset ã‚¤ãƒ™ãƒ³ãƒˆæ¤œçŸ¥å¾Œã«ã‚·ã‚°ãƒŠãƒ«åœæ­¢ã«ã™ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°
+	 * @note åå‰ãªã—ã‚¤ãƒ™ãƒ³ãƒˆã‚’ä½œæˆã™ã‚‹
 	 */
 	explicit WinEvent(bool isAutoReset) throw()
 			: event()
@@ -64,7 +64,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~WinEvent() throw()
 	{
@@ -73,8 +73,8 @@ public:
 	}
 
 	/**
-	 * ƒCƒxƒ“ƒgƒVƒOƒiƒ‹‚Ì‘Ò‹@‚µ‚Ä‚¢‚é‚à‚Ì‚½‚¿‚ğ‘S‚ÄƒuƒƒbƒNŠJ•ú‚µ‚½Œã‚É
-	 * ”ñƒVƒOƒiƒ‹‚ÉØ‚è‘Ö‚¦‚é
+	 * ã‚¤ãƒ™ãƒ³ãƒˆã‚·ã‚°ãƒŠãƒ«ã®å¾…æ©Ÿã—ã¦ã„ã‚‹ã‚‚ã®ãŸã¡ã‚’å…¨ã¦ãƒ–ãƒ­ãƒƒã‚¯é–‹æ”¾ã—ãŸå¾Œã«
+	 * éã‚·ã‚°ãƒŠãƒ«ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
 	 * @see waitEventArrive()
 	 */
 	void pulseEvent() throw()
@@ -90,7 +90,7 @@ public:
 	}
 
 	/**
-	 * ƒCƒxƒ“ƒgƒVƒOƒiƒ‹‚ÌƒZƒbƒg
+	 * ã‚¤ãƒ™ãƒ³ãƒˆã‚·ã‚°ãƒŠãƒ«ã®ã‚»ãƒƒãƒˆ
 	 */
 	void setEvent() throw()
 	{
@@ -105,7 +105,7 @@ public:
 	}
 
 	/**
-	 * ƒCƒxƒ“ƒgƒVƒOƒiƒ‹‚ÌƒŠƒZƒbƒg
+	 * ã‚¤ãƒ™ãƒ³ãƒˆã‚·ã‚°ãƒŠãƒ«ã®ãƒªã‚»ãƒƒãƒˆ
 	 */
 	void resetEvent() throw()
 	{
@@ -120,9 +120,9 @@ public:
 	}
 
 	/**
-	 * ƒCƒxƒ“ƒg‚Ì“’BŒŸ¸
-	 * @param milliseconds ƒCƒxƒ“ƒg‘Ò‚¿‚ÌÅ‘åŠÔBƒfƒtƒHƒ‹ƒg‚Å‚Íƒmƒ“ƒuƒƒbƒN
-	 * @return ‘Ò‚¿ŠÔ’†‚ÉƒCƒxƒ“ƒg‚ª“’B‚·‚ê‚Îtrue
+	 * ã‚¤ãƒ™ãƒ³ãƒˆã®åˆ°é”æ¤œæŸ»
+	 * @param milliseconds ã‚¤ãƒ™ãƒ³ãƒˆå¾…ã¡ã®æœ€å¤§æ™‚é–“ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯ãƒãƒ³ãƒ–ãƒ­ãƒƒã‚¯
+	 * @return å¾…ã¡æ™‚é–“ä¸­ã«ã‚¤ãƒ™ãƒ³ãƒˆãŒåˆ°é”ã™ã‚Œã°true
 	 */
 	bool isEventArrived(DWORD milliseconds = 0)
 	{
@@ -144,8 +144,8 @@ public:
 	}
 
 	/**
-	 * ƒCƒxƒ“ƒg‘Ò‚¿ƒuƒƒbƒLƒ“ƒO
-	 * ƒCƒxƒ“ƒg‚ª“’…‚·‚é‚Ü‚ÅÀs‚ğƒuƒƒbƒN‚·‚éB‚»‚ÌŠÔCPU‚Íg‚í‚È‚¢
+	 * ã‚¤ãƒ™ãƒ³ãƒˆå¾…ã¡ãƒ–ãƒ­ãƒƒã‚­ãƒ³ã‚°
+	 * ã‚¤ãƒ™ãƒ³ãƒˆãŒåˆ°ç€ã™ã‚‹ã¾ã§å®Ÿè¡Œã‚’ãƒ–ãƒ­ãƒƒã‚¯ã™ã‚‹ã€‚ãã®é–“CPUã¯ä½¿ã‚ãªã„
 	 */
 	void waitEventArrive(DWORD waitTime = INFINITE)
 	{
@@ -155,8 +155,8 @@ public:
 	}
 
 	/**
-	 * ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‹‚Ìæ“¾
-	 * @return ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‹
+	 * ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
+	 * @return ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HANDLE getHandle() const throw()
 	{

@@ -1,4 +1,5 @@
 INCLUDE_PATH += -Ic:/mingw/include/stlport
+
 CXXFLAGS += -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 	-fno-default-inline -fmessage-length=78 $(INCLUDE_PATH) -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
@@ -6,6 +7,7 @@ CXXFLAGS += -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 LIBS += -lcppunit
 TARGET= UnitTest
 OBJS= TestMain.o \
+	ThreadTest.o \
 	CommandLineTest.o \
 	ScannerTest.o \
 	LexicalCastTest.o \
@@ -30,6 +32,7 @@ OBJS= TestMain.o \
 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
 	IPTest.o \
 	XMLParserTest.o \
+#	MutexTest.o \
 #	NumberTheoryTest.o \
 #	AlgebraTheoryTest.o \
 #	SieveTest.o \
@@ -41,7 +44,6 @@ OBJS= TestMain.o \
 #	SingletonTestFunc1.o SingletonTestFunc2.o \
 #	SamplingScannerTest.o \
 #	ImageTest.o \
-#	ThreadTest.o \
 #	ThreadPoolTest.o \
 #	GraphicsTest.o \
 #	FontGrapherTest.o \
@@ -49,7 +51,9 @@ OBJS= TestMain.o \
 #	EventTest.o \
 #	ShiftJISTest.o
 
+
 DEPSOBJS= TestMain.d \
+	MutexTest.d \
 	CommandLineTest.d \
 	ShiftJISTest.d \
 	HTTPResultTest.d \
