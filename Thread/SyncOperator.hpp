@@ -5,21 +5,21 @@ template<typename LockedObject>
 class ScopedLock
 {
 private:
-	LockedObject& object;
+	LockedObject* object;
 
 	void lock()
 	{
-		object.lock();
+		object->lock();
 	}
 
 	void unlock()
 	{
-		object.unlock();
+		object->unlock();
 	}
 
 public:
-	ScopedLock(const LockedObject& target):
-		object(target)
+	ScopedLock(LockedObject& target):
+		object(&target)
 	{
 		lock();
 	}

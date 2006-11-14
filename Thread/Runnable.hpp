@@ -4,30 +4,31 @@
 #include <Thread/ThreadException.hpp>
 
 /**
- * ÀsƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒgƒCƒ“ƒ^ƒtƒF[ƒX
+ * å®Ÿè¡Œã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
  */
 class Runnable
 {
 public:
 	/**
-	 * Às‘O‚Ì‘Oˆ—
+	 * å®Ÿè¡Œå‰ã®å‰å‡¦ç†
 	 */
 	virtual void prepare() throw()
 	{}
 		
-
 	/**
-	 * ÀsŒã‚ÌŒãˆ—
+	 * å®Ÿè¡Œå¾Œã®å¾Œå‡¦ç†
 	 */
 	virtual void dispose() throw()
 	{}
 
-	/// ƒ[ƒJ[—pƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒgBƒI[ƒo[ƒ‰ƒCƒh‚µ‚Äg—p‚·‚éB
+	/// ãƒ¯ãƒ¼ã‚«ãƒ¼ç”¨ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆã€‚ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã—ã¦ä½¿ç”¨ã™ã‚‹ã€‚
 	virtual unsigned run() throw(ThreadException)
 	{
 		return 0;
 	}
 
+	virtual ~Runnable()
+	{}
 };
 
 #endif /* RUNNABLE_HPP_ */

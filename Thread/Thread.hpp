@@ -4,7 +4,7 @@
 #ifdef WIN32
 #	include <WinThread/WinThread.hpp>
 #else
-#	include <PThread/PosixThread.hpp>
+#	include <PosixThread/PosixThread.hpp>
 #endif /* WIN32 */
 
 #endif /* THREAD_HPP_ */

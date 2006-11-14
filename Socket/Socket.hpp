@@ -49,7 +49,7 @@ protected:
 		fd_set fd;
 		FD_ZERO(&fd);
 		FD_SET(sock, &fd);
-    
+	
 		timeval val = timeout;
 		if (::select((SelectRange)sock + 1, 0, &fd, 0, &val) > 0)
 			return true;
@@ -178,7 +178,7 @@ public:
 	{
 		if (!this->isReadable(this->socket, this->defaultTimeout))
 			throw TimeoutException();
-    
+
 		return read(buffer, readSize);
 	}  
 

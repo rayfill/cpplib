@@ -48,8 +48,6 @@ class ThreadTest : public CppUnit::TestFixture
 private:
 	CPPUNIT_TEST_SUITE(ThreadTest);
 	CPPUNIT_TEST(runningStateTest);
-	CPPUNIT_TEST(suspendTest);
-	CPPUNIT_TEST(abortTest);
 	CPPUNIT_TEST(exceptionTest);
 	CPPUNIT_TEST(runnableTest);
 	CPPUNIT_TEST_SUITE_END();
@@ -76,35 +74,10 @@ public:
 		CPPUNIT_ASSERT(worker.isRunning() == false);
 
 		worker.start();
-		worker.cancel();
 		CPPUNIT_ASSERT(worker.isRunning() == true);
 
 		worker.start();
 		worker.quit();
-		worker.join();
-		CPPUNIT_ASSERT(worker.isRunning() == false);
-	}
-
-	void suspendTest()
-	{
-		Worker worker;
-		
-		worker.start();
-		worker.cancel();
-		worker.quit();
-		CPPUNIT_ASSERT_THROW(worker.join(1000), TimeoutException);
-
-		worker.start();
-		worker.join();
-		CPPUNIT_ASSERT(worker.isRunning() == false);
-	}
-
-	void abortTest()
-	{
-		Worker worker;
-		
-		worker.start();
-		worker.abort();
 		worker.join();
 		CPPUNIT_ASSERT(worker.isRunning() == false);
 	}

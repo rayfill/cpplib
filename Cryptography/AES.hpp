@@ -246,7 +246,7 @@ private:
 			byteSub(static_cast<byte>((val >> 24) & 0xff)),
 			byteSub(static_cast<byte>((val >> 16) & 0xff)),
 			byteSub(static_cast<byte>((val >>  8) & 0xff)),
-			byteSub(static_cast<byte>((val      ) & 0xff)));
+			byteSub(static_cast<byte>((val) & 0xff)));
 	}
 
 	word invertWordSub(const word val) const
@@ -255,7 +255,7 @@ private:
 			invertByteSub(static_cast<byte>((val >> 24) & 0xff)),
 			invertByteSub(static_cast<byte>((val >> 16) & 0xff)),
 			invertByteSub(static_cast<byte>((val >>  8) & 0xff)),
-			invertByteSub(static_cast<byte>((val      ) & 0xff)));
+			invertByteSub(static_cast<byte>((val) & 0xff)));
 	}
 
 	void byteSub(std::vector<byte>& state)

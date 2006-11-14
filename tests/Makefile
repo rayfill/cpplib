@@ -7,7 +7,6 @@ CXXFLAGS += -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 LIBS += -lcppunit
 TARGET= UnitTest
 OBJS= TestMain.o \
-	ThreadTest.o \
 	CommandLineTest.o \
 	ScannerTest.o \
 	LexicalCastTest.o \
@@ -32,6 +31,7 @@ OBJS= TestMain.o \
 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
 	IPTest.o \
 	XMLParserTest.o \
+	ThreadTest.o \
 #	MutexTest.o \
 #	NumberTheoryTest.o \
 #	AlgebraTheoryTest.o \
@@ -51,51 +51,13 @@ OBJS= TestMain.o \
 #	EventTest.o \
 #	ShiftJISTest.o
 
+DEPENDFILES=$(OBJS:.o=.d) 
 
-DEPSOBJS= TestMain.d \
-	MutexTest.d \
-	CommandLineTest.d \
-	ShiftJISTest.d \
-	HTTPResultTest.d \
-	URLTest.d \
-	LexicalCastTest.d \
-	HTTPPropertyTest.d \
-	PropertyTest.d \
-	ScannerTest.d \
-	SieveTest.d \
-	LZSSTest.d \
-	ThreadPoolTest.d \
-	StateMachineTest.d \
-	FSMTest.d \
-	Base64Test.d \
-	AlgebraTheoryTest.d \
-	NumberTheoryTest.d \
-	AsymmetricKeyTest.d \
-	StackableScannerTest.d \
-	RegexTest.d \
-	RSATest.d \
-	MPITest.d \
-	SmartPointerTest.d \
-	RationalTest.d \
-	FontGrapherTest.d \
-	TranscodeTest.d \
-	XMLParserTest.d \
-	GeometryTest.d \
-	GraphicsTest.d \
-	BitmapTest.d \
-	EndianTest.d CBCTest.d \
-	AESTest.d MD5Test.d SHA1Test.d ExifTest.d \
-	ImageTest.d SamplingScannerTest.d \
-	BitStreamTest.d HuffmanTest.d MemoryStreamTest.d \
-	IPTest.d NotifyTest.d RangeTest.d SingletonTest.d \
-	SingletonTestFunc1.d SingletonTestFunc2.d ThreadTest.d EventTest.d \
-	JulianDateTest.d 
-
-.PHONY: clean %.d makedepend cleandepend
+.PHONY: clean %.d makedepend cleandepend remake
 
 all: $(TARGET)
 
-makedepend: cleandepend $(DEPSOBJS)
+makedepend: cleandepend $(DEPENDFILES)
 
 test: all
 	./UnitTest
@@ -115,5 +77,7 @@ clean:
 
 cleandepend:
 	rm -f makefile.depend
+
+remake: cleandepend makedepend
 
 -include makefile.dpend

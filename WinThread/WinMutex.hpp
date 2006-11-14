@@ -7,21 +7,10 @@
 
 /**
  * Win32排他操作用オブジェクト。
- * @todo コピーコンストラクタをどうするかを決める。DuplicateHandleでコ
- * ピーはできるけど、ProcessHandleをどうするか・・・。
- * もともとプロセス間で無名Mutexを共有するためみたいだし無くてもいいか
- * な、とは思うが・・・
  */
-class WinMutex {
+class WinMutex 
+{
 private:
-	/**
-	 * 排他オブジェクト名
-	 * @note toString()メソッドとか
-	 * operator<<(std::ostream& out, const WinMutex& self)メソッド
-	 * 用意しないんだったらいらないかも。
-	 */
-	const char* MutexName;
-	
 	/**
 	 * 排他オブジェクトハンドル
 	 */
@@ -54,36 +43,6 @@ private:
 		return  CreateMutex(NULL, FALSE, name);
 	}
 
-	/**
-	 * ロック検査
-	 * @return ロックされていればtrue, されていなければfalse.
-	 */
-	bool isLock() throw()
-	{
-		return lockCount > 0;
-	}
-
-protected:
-
-	/**
-	 * 現在のロックレベルを取得する。
-	 * @return ロックのネストレベル。1以上で所有している。
-	 * 0で所有権を持っていない。
-	 */
-	int getLockLevel() const throw()
-	{
-		assert(lockCount >= 0);
-		return lockCount;
-	}
-
-	/**
-	 * 強制的なロック開放
-	 */
-	void forceUnlock() throw()
-	{
-		while(unlock() > 0);
-	}
-
 public:
 	/**
 	 * コンストラクタ
@@ -92,82 +51,32 @@ public:
 	 * @param createOnLock 作成とロックを同時に行う
 	 */
 	explicit WinMutex()
-			: MutexName(NULL), hMutex(), lockCount()
+		: hMutex()
 	{
-		hMutex = createMutex(MutexName);
-	}
-
-	/**
-	 * コンストラクタ
-	 * @param MutexName_ 排他オブジェクト識別名。
-	 * 同じ名前のMutex同士で排他制御される
-	 * @param createOnLock 作成とロックを同時に行う
-	 */
-	explicit WinMutex(const char* MutexName_) throw()
-			: MutexName(MutexName_), hMutex(), lockCount()
-	{
-		assert(MutexName != NULL);
-		assert(std::string(MutexName).length() < MAX_PATH);
-		assert(std::string(MutexName).find('\\') == std::string::npos);
-
-		hMutex = createMutex(MutexName);
+		hMutex = createMutex(NULL);
 	}
 
 	/**
 	 * ロック開放
 	 */
-	int unlock() throw()
+	void unlock() throw()
 	{
-		assert(lockCount > 0);
-
-		volatile int result = --lockCount;
 		ReleaseMutex(hMutex);
-
-		assert(result >= 0);
-		return result;
 	}
 
 	/**
 	 * 排他オブジェクトによるロック操作
-	 * @note ロックを掛けた分の回数分だけunlockを実施しなければならない。
-	 * コンストラクタ時のロックは明示的に開放しなくても良い。
 	 */
-	bool lock() throw()
+	void lock(unsigned long waitTime = INFINITE) throw()
 	{
-		lock(INFINITE);
-
-		assert(lockCount > 0);
-
-		return lockCount != 0;
-	}
-
-	/**
-	 * タイムアウト付き排他オブジェクトによるロック操作
-	 * @param WaitTime タイムアウト時間(Millisecond単位)
-	 * @return ロックが取得できた場合、true
-	 */
-	void lock(unsigned long waitTime) throw()
-	{
-		bool result = WaitForSingleObject(hMutex, waitTime) != WAIT_TIMEOUT;
-		if (result == WAIT_OBJECT_0)
-			++lockCount;
+		WaitForSingleObject(hMutex, waitTime);
 	}
 
 	/**
 	 * デストラクタ
 	 */
 	virtual ~WinMutex()
-	{
-		if (hMutex != NULL) {
-			if (isLock())
-				forceUnlock();
-
-			CloseHandle(hMutex);
-			hMutex = NULL;
-		}
-
-		assert(getLockLevel() == 0);
-	}
+	{}
 };
 
 typedef WinMutex Mutex;

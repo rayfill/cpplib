@@ -352,23 +352,6 @@ public:
 	}
 
 	/**
-	 * スレッドの実行の中断。再開する場合はstart()メソッドを使う
-	 */
-	void cancel() throw()
-	{
-		assert(this->threadHandle != NULL);
-
-		CriticalSection atomicOp(true);
-		status = suspend;
-#ifndef NDEBUG		
-		DWORD suspendCount = 
-#endif
-			SuspendThread((HANDLE)this->threadHandle);
-
-		assert(suspendCount == 0);
-	}
-
-	/**
 	 * 現在のスレッドのスレッド識別子を返す
 	 * @return スレッド識別子
 	 */

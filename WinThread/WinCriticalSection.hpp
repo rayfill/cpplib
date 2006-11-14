@@ -2,16 +2,10 @@
 #define WINCRITICALSECTION_HPP_
 
 #include <windows.h>
-#include <util/Singleton.hpp>
 #include <cassert>
 
 /**
  * Win32用CriticalSectionクラス
- * @todo グローバルで単一のクリティカルセクションとなってしまうのでコ
- * ンストラクタから文字列でも食ってセクションの識別を行う実装に変更し
- * たい･･･ってそれやったらプロセスローカルMutexになっちまうな・・・素
- * 直にstatic宣言でお茶濁すか・・・ってそれだとデストラクタが動かん
- * か・・・
  */
 class WinCriticalSection
 {
@@ -53,10 +47,8 @@ private:
 		{
 			return &sectionHandle;
 		}
-	};
+	} section;
 	
-	typedef Singleton<InnerCriticalSectionObject> CriticalSectionObject;
-
 	/**
 	 * セクションロック判別
 	 */
@@ -65,29 +57,21 @@ private:
 	/**
 	 * non copyable
 	 */
-	WinCriticalSection(const WinCriticalSection&) throw() {}
-
+	WinCriticalSection(const WinCriticalSection&);
+	WinCriticalsection& operator=(const WinCriticalSection&);
 public:
 	/**
 	 * コンストラクタ
-	 * @param createOnLock 作成時にロックを行うかどうか
 	 */
-	WinCriticalSection(bool createOnLock = true) throw()
+	WinCriticalSection() throw()
 		: isLocked(false)
-	{
-		if (createOnLock != false)
-			lock();
-	}
+	{}
 	
 	/**
 	 * デストラクタ
-	 * ロックしていた場合、解除する
 	 */
 	virtual ~WinCriticalSection() throw()
-	{
-		if (isLock())
-			unlock();
-	}
+	{}
 
 	/**
 	 * セクションロック
@@ -96,7 +80,7 @@ public:
 	{
 		assert(isLocked == false);
 
-		EnterCriticalSection(CriticalSectionObject::get()->get());
+		EnterCriticalSection(section.get());
 		isLocked = true;
 	}
 	
@@ -108,7 +92,7 @@ public:
 		assert(isLocked != false);
 
 		isLocked = false;
-		LeaveCriticalSection(CriticalSectionObject::get()->get());
+		LeaveCriticalSection(section.get());
 	}
 
 	BOOL TryEnterCriticalSection(LPCRITICAL_SECTION);
@@ -123,7 +107,7 @@ public:
 		assert(isLocked == false);
 
 		BOOL result =
-			TryEnterCriticalSection(CriticalSectionObject::get()->get());
+			TryEnterCriticalSection(section.get());
 
 		if (result == FALSE)
 			return false;

@@ -6,11 +6,11 @@
 #include <Thread/ThreadException.hpp>
 
 /**
- * ƒXƒŒƒbƒhƒv[ƒ‹
- * @param @managementThreads ŠÇ—‘ÎÛ‚ÌƒXƒŒƒbƒh”
- * @param @isPrecreted ŠÇ—‘ÎÛƒXƒŒƒbƒh‚ğÅ‰‚©‚ç¶¬‚µ‚Ä‚¨‚­‚©‚Ìƒtƒ‰ƒO
- * true‚È‚ç¶¬‚µ‚Ä‚¨‚­B
- * @param ThreadType ŠÇ—‘ÎÛ‚ÌƒXƒŒƒbƒhƒNƒ‰ƒX
+ * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ—ãƒ¼ãƒ«
+ * @param @managementThreads ç®¡ç†å¯¾è±¡ã®ã‚¹ãƒ¬ãƒƒãƒ‰æ•°
+ * @param @isPrecreted ç®¡ç†å¯¾è±¡ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’æœ€åˆã‹ã‚‰ç”Ÿæˆã—ã¦ãŠãã‹ã®ãƒ•ãƒ©ã‚°
+ * trueãªã‚‰ç”Ÿæˆã—ã¦ãŠãã€‚
+ * @param ThreadType ç®¡ç†å¯¾è±¡ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã‚¯ãƒ©ã‚¹
  * 
  */
 template <int managementThreads = 10,
@@ -21,8 +21,8 @@ friend class ThreadPoolTest;
 
 public:
 	/**
-	 * ÄÀs‰Â”\‚ÈThread
-	 * @todo Runnableƒzƒ‹ƒ_[‚ğŠî’ê‚ÌRunnableƒXƒƒbƒgˆÈŠO‚Éİ‚¯‚é
+	 * å†å®Ÿè¡Œå¯èƒ½ãªThread
+	 * @todo Runnableãƒ›ãƒ«ãƒ€ãƒ¼ã‚’åŸºåº•ã®Runnableã‚¹ãƒ­ãƒƒãƒˆä»¥å¤–ã«è¨­ã‘ã‚‹
 	 */
 	class RerunnableThread : public Thread
 	{
@@ -30,22 +30,22 @@ public:
 
 	private:
 		/**
-		 * ŠJnƒCƒxƒ“ƒg
+		 * é–‹å§‹ã‚¤ãƒ™ãƒ³ãƒˆ
 		 */
 		Event started;
 
-	    /**
-	     * ƒWƒ‡ƒuI—¹ƒCƒxƒ“ƒg
-	     */
+		/**
+		 * ã‚¸ãƒ§ãƒ–çµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆ
+		 */
 		Event ended;
 
 		/**
-		 * ƒXƒŒƒbƒhI—¹ƒCƒxƒ“ƒg
+		 * ã‚¹ãƒ¬ãƒƒãƒ‰çµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆ
 		 */
 		Event quitable;
 
 		/**
-		 * ‚±‚ÌƒNƒ‰ƒXê—p‚ÌÀsƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
+		 * ã“ã®ã‚¯ãƒ©ã‚¹å°‚ç”¨ã®å®Ÿè¡Œã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
 		 */
 		Runnable* runnablePoint;
 
@@ -60,8 +60,8 @@ public:
 		}
 
 		/**
-		 * ƒXƒŒƒbƒh‚ğ’â~‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢ó‘Ô‚©‚Ì”»’è
-		 * @return ’â~‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚Æ‚«‚Étrue
+		 * ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’åœæ­¢ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„çŠ¶æ…‹ã‹ã®åˆ¤å®š
+		 * @return åœæ­¢ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã¨ãã«true
 		 */
 		bool isQuit() throw()
 		{
@@ -69,8 +69,8 @@ public:
 		}
 
 		/**
-		 * ŠJn‚¨‚æ‚ÑŠ®‘SI—¹—pƒuƒƒbƒNƒƒ\ƒbƒh
-		 * @return run()ƒ‹[ƒv‚ğ’Eo‚·‚éê‡true
+		 * é–‹å§‹ãŠã‚ˆã³å®Œå…¨çµ‚äº†ç”¨ãƒ–ãƒ­ãƒƒã‚¯ãƒ¡ã‚½ãƒƒãƒ‰
+		 * @return run()ãƒ«ãƒ¼ãƒ—ã‚’è„±å‡ºã™ã‚‹å ´åˆtrue
 		 */
 		bool isQuitAndBlock()
 		{
@@ -97,7 +97,7 @@ public:
 		}
 
 		/**
-		 * RunnableƒCƒ“ƒ^ƒtƒF[ƒX‚Ì’uŠ·
+		 * Runnableã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ç½®æ›
 		 */
 		void replace(Runnable* entryPoint) throw()
 		{
@@ -108,7 +108,7 @@ public:
 
 	public:
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		RerunnableThread()
 				: Thread(this, false), 
@@ -125,9 +125,9 @@ public:
 		{}
 
 		/**
-		 * RunnableƒCƒ“ƒ^ƒtƒF[ƒX‚Ì’uŠ·”»’è
-		 * @return ’uŠ·‰Â”\‚È‚çtrue
-		 * @todo ƒƒbƒNˆ—‚ğ‘O’ñ‚Æ‚µ‚½ˆÀ‘S‚ÈƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒgÄ”z’uˆ—‚ÌÀ‘•
+		 * Runnableã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ç½®æ›åˆ¤å®š
+		 * @return ç½®æ›å¯èƒ½ãªã‚‰true
+		 * @todo ãƒ­ãƒƒã‚¯å‡¦ç†ã‚’å‰æã¨ã—ãŸå®‰å…¨ãªã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆå†é…ç½®å‡¦ç†ã®å®Ÿè£…
 		 */
 		bool isReplacable()
 		{
@@ -157,8 +157,8 @@ public:
 		}
 
 		/**
-		 * ’Eoˆ—
-		 * run()ƒ‹[ƒv’Eow¦
+		 * è„±å‡ºå‡¦ç†
+		 * run()ãƒ«ãƒ¼ãƒ—è„±å‡ºæŒ‡ç¤º
 		 */
 		void quit() throw()
 		{
@@ -208,13 +208,13 @@ public:
 	
 private:
 	/**
-	 * •Û‚·‚éƒXƒŒƒbƒh
+	 * ä¿æŒã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰
 	 */
 	thread_t* threads[managementThreads];
 
 	/**
-	 * ƒXƒŒƒbƒh‚Ì‰ñû‚ğ‚¨‚±‚È‚¤B
-	 * ‘S‚Ä‚Ì•ÛƒXƒŒƒbƒh‚Ì‰ñû‚ğs‚¤B
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å›åã‚’ãŠã“ãªã†ã€‚
+	 * å…¨ã¦ã®ä¿æŒã‚¹ãƒ¬ãƒƒãƒ‰ã®å›åã‚’è¡Œã†ã€‚
 	 */
 	void collect() throw()
 	{
@@ -245,7 +245,7 @@ private:
 	
 public:
 	/**
-	 * ƒXƒŒƒbƒhƒv[ƒ‹‚Ìì¬
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ—ãƒ¼ãƒ«ã®ä½œæˆ
 	 */
 	ThreadPool():
 		threads()
