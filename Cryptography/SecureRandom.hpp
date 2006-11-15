@@ -2,7 +2,7 @@
 #define SECURERANDOM_HPP_
 
 #include <Cryptography/Random.hpp>
-#include <Win32/Noise.hpp>
+#include <System/Noise.hpp>
 #include <util/hash/SHA1.hpp>
 
 class SecureRandom : public Random

@@ -177,7 +177,7 @@ public:
 		assert(threadId == 0);
 	}
 
-	void sleep(const unsigned int waitTimeForMilliSeconds)
+	static void sleep(const unsigned int waitTimeForMilliSeconds)
 	{
 		timespec spec;
 		spec.tv_sec = waitTimeForMilliSeconds / 1000;
@@ -192,9 +192,22 @@ public:
 		return this->isRun;
 	}
 
-	static pthread_t self()
+	/**
+	 * 現在のスレッドのスレッド識別子を返す
+	 * @return スレッド識別子
+	 */
+	static const PosixThread::thread_id_t self()
 	{
 		return pthread_self();
+	}
+
+	/**
+	 * スレッドオブジェクトの識別子を返す
+	 * @return スレッド識別子
+	 */
+	thread_id_t getThreadId() throw()
+	{
+		return this->threadId;
 	}
 
 	/**

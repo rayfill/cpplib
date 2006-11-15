@@ -1,11 +1,7 @@
 #ifndef RANDOM_HPP_
 #define RANDOM_HPP_
 
-#ifdef WIN32
-#	include <Win32/Noise.hpp>
-#else
-#	include <Posix/Noise.hpp>
-#endif /* WIN32 */
+#include <System/Noise.hpp>
 #include <math/MersenneTwister.hpp>
 #include <limits>
 
