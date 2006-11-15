@@ -6,6 +6,8 @@
 
 /**
  * Win32 イベントクラス
+ * @todo PosixEventとあわせるため、名前つきコンストラクタの削除
+ * autoresetも常にtrueしか作れないっぽいのでresetEvent()も削除の方向で。
  */
 class WinEvent
 {
@@ -123,25 +125,26 @@ public:
 	 * イベントの到達検査
 	 * @param milliseconds イベント待ちの最大時間。デフォルトではノンブロック
 	 * @return 待ち時間中にイベントが到達すればtrue
+	 * @todo Posix版のほうでつかえないっぽいのでdepretedで。
 	 */
-	bool isEventArrived(DWORD milliseconds = 0)
-	{
-		assert(event != 0);
+// 	bool isEventArrived(DWORD milliseconds = 0)
+// 	{
+// 		assert(event != 0);
 
-		DWORD result = WaitForSingleObject(event, milliseconds);
+// 		DWORD result = WaitForSingleObject(event, milliseconds);
 
-		if (result == WAIT_OBJECT_0)
-			return true;
-		else if (result == WAIT_TIMEOUT)
-			return false;
-		else if (result == WAIT_ABANDONED ||
-				 result == WAIT_FAILED)
-			assert(false);
-		else
-			assert(false && !"unknown result");
+// 		if (result == WAIT_OBJECT_0)
+// 			return true;
+// 		else if (result == WAIT_TIMEOUT)
+// 			return false;
+// 		else if (result == WAIT_ABANDONED ||
+// 				 result == WAIT_FAILED)
+// 			assert(false);
+// 		else
+// 			assert(false && !"unknown result");
 
-		return false;
-	}
+// 		return false;
+// 	}
 
 	/**
 	 * イベント待ちブロッキング

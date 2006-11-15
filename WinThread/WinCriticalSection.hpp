@@ -95,7 +95,7 @@ public:
 		LeaveCriticalSection(section.get());
 	}
 
-	BOOL TryEnterCriticalSection(LPCRITICAL_SECTION);
+	//BOOL TryEnterCriticalSection(LPCRITICAL_SECTION);
 	/**
 	 * セクションのロック(非ブロック)
 	 * @return ロックされているかどうか. ロックされている: true, ロッ
@@ -107,7 +107,7 @@ public:
 		assert(isLocked == false);
 
 		BOOL result =
-			TryEnterCriticalSection(section.get());
+			::TryEnterCriticalSection(section.get());
 
 		if (result == FALSE)
 			return false;

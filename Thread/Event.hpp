@@ -4,7 +4,7 @@
 #ifdef WIN32
 #	include <WinThread/WinEvent.hpp>
 #else
-#	include <PThread/PosixEvent.hpp>
+#	include <PosixThread/PosixEvent.hpp>
 #endif /* WIN32 */
 
 #endif /* EVENT_HPP_ */

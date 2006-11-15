@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <Thread/Mutex.hpp>
+#include <Thread/SyncOperator.hpp>
 
 #include <map>
 
@@ -18,17 +19,23 @@ public:
 	{}
 };
 
+/**
+ * ロック対象が
+ */
 class MultiThreadPolicy
 {
-	Mutex* mutex;
+	typedef ScopedLock<Mutex> Locker;
+	Mutex mutex;
+	Locker* locker;
 public:
 	void lock()
 	{
-		mutex = new Mutex("Singleton Creator");
+		locker = new Locker(mutex);
 	}
+
 	void unlock()
 	{
-		delete mutex;
+		delete locker;
 	}
 };
 
@@ -40,7 +47,6 @@ template <typename ResultClass,
 class Singleton
 {
 private:
-
 	Singleton();
 	Singleton(const Singleton& );
 public:
@@ -50,7 +56,12 @@ public:
 	 */
 	static ResultClass* get()
 	{
-		Policy policy;
+		/**
+		 * @todo たしかstatic変数の初期化に関する
+		 * rase conditionの規定はgcc以外なかったな・・・
+		 */
+		static Policy policy;
+
 		policy.lock();
 		static ResultClass body;
 		policy.unlock();

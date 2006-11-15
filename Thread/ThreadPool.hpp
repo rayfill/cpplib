@@ -4,6 +4,7 @@
 #include <Thread/Thread.hpp>
 #include <Thread/Event.hpp>
 #include <Thread/ThreadException.hpp>
+#include <Thread/SyncOperator.hpp>
 
 /**
  * スレッドプール
@@ -11,10 +12,10 @@
  * @param @isPrecreted 管理対象スレッドを最初から生成しておくかのフラグ
  * trueなら生成しておく。
  * @param ThreadType 管理対象のスレッドクラス
- * 
+ * @todo さっさと完成させちゃいましょう・・・
  */
 template <int managementThreads = 10,
-		  bool isPrecreated = false>
+		  bool isPreCreated = false>
 class ThreadPool
 {
 friend class ThreadPoolTest;
@@ -22,32 +23,40 @@ friend class ThreadPoolTest;
 public:
 	/**
 	 * 再実行可能なThread
-	 * @todo Runnableホルダーを基底のRunnableスロット以外に設ける
+	 * @todo quitable とかを変数にしてロック併用でやんなきゃダメか・・・
 	 */
 	class RerunnableThread : public Thread
 	{
 		friend class ThreadPoolTest;
 
+	public:
+		enum State {
+			none,
+			started,
+			ended,
+			quitable
+		};
 	private:
-		/**
-		 * 開始イベント
-		 */
-		Event started;
-
-		/**
-		 * ジョブ終了イベント
-		 */
-		Event ended;
-
-		/**
-		 * スレッド終了イベント
-		 */
-		Event quitable;
-
 		/**
 		 * このクラス専用の実行エントリポイント
 		 */
 		Runnable* runnablePoint;
+
+		/**
+		 * 実行状態制御用
+		 */
+		Event starter;
+
+		/**
+		 * 実行状態変更の排他制御用
+		 */
+		Mutex stateLock;
+
+		/**
+		 * スレッドの実行状態
+		 */
+		State state;
+
 
 		Runnable* getRunnable() const
 		{
@@ -56,6 +65,7 @@ public:
 
 		void setRunnable(Runnable* newPoint)
 		{
+			ScopedLock<Mutex> lock(stateLock);
 			runnablePoint = newPoint;
 		}
 
@@ -65,7 +75,8 @@ public:
 		 */
 		bool isQuit() throw()
 		{
-			return quitable.isEventArrived();
+			ScopedLock<Mutex> lock(stateLock);
+			return state == quitable;
 		}
 
 		/**
@@ -74,27 +85,31 @@ public:
 		 */
 		bool isQuitAndBlock()
 		{
-			HANDLE waits[2];
-			waits[0] = started.getHandle();
-			waits[1] = quitable.getHandle();
-
-			DWORD result =
-				::WaitForMultipleObjects(2,
-										 waits,
-										 FALSE,
-										 INFINITE);
-			if (started.isEventArrived())
-				started.resetEvent();
-
-
-			if (result == WAIT_OBJECT_0)
-				return false;
-			else if (result == (WAIT_OBJECT_0 + 1))
-				return true;
-				
-			assert(false); // not arraived.
-			return false;
+			{
+				starter.lock(); // parent thread ownership release wait.
+				starter.unlock(); // release ownership.
+			}
+			ScopedLock<Mutex> lock(stateLock);
+			state = started;
 		}
+
+		virtual unsigned start(Runnable* entryPoint) throw()
+		{
+			while (state == none)
+				Thread::yield();
+
+			{
+				replace(entryPoint);
+			}
+			
+			starter.unlock();
+			ScopedLock<Mutex> lock(stateLock);
+			while (!starter.tryLock());
+
+
+			return 0;
+		}
+
 
 		/**
 		 * Runnableインタフェースの置換
@@ -111,13 +126,12 @@ public:
 		 * コンストラクタ
 		 */
 		RerunnableThread()
-				: Thread(this, false), 
-				  started(false),
-				  ended(true),
-				  quitable(true),
-				  runnablePoint()
+				: Thread(this, false),
+				  runnablePoint(),
+				  starter(),
+				  stateLock(),
+				  state(none)
 		{
-			assert(started.getHandle() != NULL);
 			Thread::start();
 		}
 
@@ -127,11 +141,16 @@ public:
 		/**
 		 * Runnableインタフェースの置換判定
 		 * @return 置換可能ならtrue
+		 * @note PosixMutexが再入ロックサポートしてるか不明なので
+		 * todoの実現はちょっと無理そう。再入できるんなら呼出元でロックして
+		 * ここの中でもロックを行うことで実現可能なんだけど・・・
+		 * PosixMutexをPosixCriticalSectionにしてMutexはそれを包括する形で
+		 * 実装した方がいいのかねぇ?ってWinCriticalSection再入可能ジャン!!
 		 * @todo ロック処理を前提とした安全なエントリポイント再配置処理の実装
 		 */
 		bool isReplacable()
 		{
-			return !started.isEventArrived();
+			return (state == non || state == ended);
 		}
 
 		virtual unsigned start(Runnable* entryPoint) throw()
@@ -174,18 +193,15 @@ public:
 			for (;;)
 			{
 				if(isQuitAndBlock())
-				{
-					ended.setEvent();
 					break;
-				}
-
+					
 				try
 				{
-					if (this->getRunnable() == this)
-						continue;
-
-//					assert(this->getRunnable() != this);
-					Runnable* target = this->getRunnable();
+					Runnable* target = NULL;
+					{
+						ScopedLock<Mutex> lock(stateLock);
+						target = this->getRunnable();
+					}
 					assert(target != NULL);
 
 					target->prepare();
@@ -194,11 +210,14 @@ public:
 				}
 				catch (InterruptedException& /*e*/)
 				{
+					/// @todo ログクラスとか作ったらそのエントリを置くか・・・
 					;
 				}
 
-				ended.setEvent();
+				ScopedLock<Mutex> lock(stateLock);
+				states = ended;
 			}
+
 			return 0;
 		}
 	};
