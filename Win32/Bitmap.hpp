@@ -10,30 +10,30 @@
 #include <math/Geometry.hpp>
 
 /**
- * PixelFormatBase‚Ì32bit bit field‚ÌÀ‘•
- * ”z—ñ‚Æ‚µ‚Äˆµ‚¤‚Ì‚ÅƒfƒXƒgƒ‰ƒNƒ^‚Ì—áŠOˆÀ‘S«‚ª•K{B
- * ‚Ü‚½ƒCƒeƒŒ[ƒVƒ‡ƒ“‚Ì·•ªƒTƒCƒY‚ªƒNƒ‰ƒXŒ^‚ÉˆË‘¶‚·‚é‚Ì‚Å
- * POD struct‚É‹ß‚¢\‘¢‚É‚µ‚Ä‚­‚¾‚³‚¢B
- * ‚Ü‚ŸA‚»‚ê‚Å‚à‚¾‚ß‚È‚çPOD\‘¢‘Ì‚Å‰½‚Æ‚©‚·‚é•û–@l‚¦‚Ü‚·B
- * @todo •K—v‚È‚ç16bit”Å‚à—pˆÓ‚·‚é‚¯‚ÇEEE‚¢‚Ü‚³‚ç‚¢‚ç‚È‚¢‚æ‚Ë?
+ * PixelFormatBaseã®32bit bit fieldã®å®Ÿè£…
+ * é…åˆ—ã¨ã—ã¦æ‰±ã†ã®ã§ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®ä¾‹å¤–å®‰å…¨æ€§ãŒå¿…é ˆã€‚
+ * ã¾ãŸã‚¤ãƒ†ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³æ™‚ã®å·®åˆ†ã‚µã‚¤ã‚ºãŒã‚¯ãƒ©ã‚¹å‹ã«ä¾å­˜ã™ã‚‹ã®ã§
+ * POD structã«è¿‘ã„æ§‹é€ ã«ã—ã¦ãã ã•ã„ã€‚
+ * ã¾ãã€ãã‚Œã§ã‚‚ã ã‚ãªã‚‰PODæ§‹é€ ä½“ã§ä½•ã¨ã‹ã™ã‚‹æ–¹æ³•è€ƒãˆã¾ã™ã€‚
+ * @todo å¿…è¦ãªã‚‰16bitç‰ˆã‚‚ç”¨æ„ã™ã‚‹ã‘ã©ãƒ»ãƒ»ãƒ»ã„ã¾ã•ã‚‰ã„ã‚‰ãªã„ã‚ˆã­?
  */
 class RGB32
 {
 private:
 	/**
-	 * ‰æ‘f’l‚Ì“à•”•\Œ»
+	 * ç”»ç´ å€¤ã®å†…éƒ¨è¡¨ç¾
 	 */
 	unsigned char pixel[4];
 
 public:
 	enum
 	{
-		offsetSize = 4 /// ‰æ‘f‚ ‚½‚è‚ÌƒTƒCƒY
+		offsetSize = 4 /// ç”»ç´ ã‚ãŸã‚Šã®ã‚µã‚¤ã‚º
 	};
 
 	/**
-	 * Ô—v‘f‚Ìæ“¾
-	 * @return Ô—v‘f’l
+	 * èµ¤è¦ç´ ã®å–å¾—
+	 * @return èµ¤è¦ç´ å€¤
 	 */
 	unsigned char getRed() const throw()
 	{
@@ -41,8 +41,8 @@ public:
 	}
 
 	/**
-	 * —Î—v‘f‚Ìæ“¾
-	 * @return —Î—v‘f’l
+	 * ç·‘è¦ç´ ã®å–å¾—
+	 * @return ç·‘è¦ç´ å€¤
 	 */
 	unsigned char getGreen() const throw()
 	{
@@ -50,8 +50,8 @@ public:
 	}
 
 	/**
-	 * Â—v‘f‚Ìæ“¾
-	 * @return Â—v‘f’l
+	 * é’è¦ç´ ã®å–å¾—
+	 * @return é’è¦ç´ å€¤
 	 */
 	unsigned char getBlue() const throw()
 	{
@@ -59,14 +59,14 @@ public:
 	}
 
 	/**
-	 * F\‘¢‘Ì‚Ìæ“¾
-	 * @return F\‘¢‘Ì
-	 * ‚±‚ê‚ğg‚¤‚±‚Æ‚ÅŒ^ˆá‚¢“¯m‚Å‚ÌFƒRƒs[‚ğÀŒ»‚µ‚Ä‚Ü‚·B
-	 * ƒCƒ“ƒ‰ƒCƒ““WŠJ‹y‚ÑÅ“K‰»‚³‚ê‚é‚Æ•¡”‰ñ‚ÌƒRƒs[ˆ—‚ªÜ‚è‚½‚½‚Ü‚ê‚Ä
-	 * ó‚¯æ‚è‘¤‰æ‘f = Œ³‰æ‘f;
-	 * ‚ÌŒ`‚É‚Ü‚ÅÅ“K‰»‚³‚ê‚é‚±‚Æ‚Å‘¬“xŒüã‚ª}‚ê‚Ü‚·B
-	 * ‚±‚êˆÈã‚É‚·‚é‚Æ‚È‚é‚ÆDMA’¼Ú‘€ì‚Æ‚©Œ^‚²‚Æ‚Å“Á•Ê‰»‚µ‚½
-	 * Blitterƒtƒ@ƒ“ƒNƒ^‚ÅŠg’£–½—ß‚Â‚©‚Á‚½‚è‚Æ‚©‚Å‰½‚Æ‚©‚·‚é‚µ‚©EEE
+	 * è‰²æ§‹é€ ä½“ã®å–å¾—
+	 * @return è‰²æ§‹é€ ä½“
+	 * ã“ã‚Œã‚’ä½¿ã†ã“ã¨ã§å‹é•ã„åŒå£«ã§ã®è‰²ã‚³ãƒ”ãƒ¼ã‚’å®Ÿç¾ã—ã¦ã¾ã™ã€‚
+	 * ã‚¤ãƒ³ãƒ©ã‚¤ãƒ³å±•é–‹åŠã³æœ€é©åŒ–ã•ã‚Œã‚‹ã¨è¤‡æ•°å›ã®ã‚³ãƒ”ãƒ¼å‡¦ç†ãŒæŠ˜ã‚ŠãŸãŸã¾ã‚Œã¦
+	 * å—ã‘å–ã‚Šå´ç”»ç´  = å…ƒç”»ç´ ;
+	 * ã®å½¢ã«ã¾ã§æœ€é©åŒ–ã•ã‚Œã‚‹ã“ã¨ã§é€Ÿåº¦å‘ä¸ŠãŒå›³ã‚Œã¾ã™ã€‚
+	 * ã“ã‚Œä»¥ä¸Šã«ã™ã‚‹ã¨ãªã‚‹ã¨DMAç›´æ¥æ“ä½œã¨ã‹å‹ã”ã¨ã§ç‰¹åˆ¥åŒ–ã—ãŸ
+	 * Blitterãƒ•ã‚¡ãƒ³ã‚¯ã‚¿ã§æ‹¡å¼µå‘½ä»¤ã¤ã‹ã£ãŸã‚Šã¨ã‹ã§ä½•ã¨ã‹ã™ã‚‹ã—ã‹ãƒ»ãƒ»ãƒ»
 	 */
 	Color getColor() const throw()
 	{
@@ -76,8 +76,8 @@ public:
 	}
 
 	/**
-	 * Ô—v‘f‚Ìİ’è
-	 * @param r Ô—v‘f
+	 * èµ¤è¦ç´ ã®è¨­å®š
+	 * @param r èµ¤è¦ç´ 
 	 */
 	void setRed(const unsigned char r) throw()
 	{
@@ -85,8 +85,8 @@ public:
 	}
 
 	/**
-	 * —Î—v‘f‚Ìİ’è
-	 * @param g —Î—v‘f
+	 * ç·‘è¦ç´ ã®è¨­å®š
+	 * @param g ç·‘è¦ç´ 
 	 */
 	void setGreen(const unsigned char g) throw()
 	{
@@ -94,8 +94,8 @@ public:
 	}
 
 	/**
-	 * Â—v‘f‚Ìİ’è
-	 * @param b Â—v‘f
+	 * é’è¦ç´ ã®è¨­å®š
+	 * @param b é’è¦ç´ 
 	 */
 	void setBlue(const unsigned char b) throw()
 	{
@@ -103,10 +103,10 @@ public:
 	}
 
 	/**
-	 * F‚Ìİ’è
-	 * @param r Ô—v‘f
-	 * @param g —Î—v‘f
-	 * @param b Â—v‘f
+	 * è‰²ã®è¨­å®š
+	 * @param r èµ¤è¦ç´ 
+	 * @param g ç·‘è¦ç´ 
+	 * @param b é’è¦ç´ 
 	 */
 	void setColor(const unsigned char r,
 				  const unsigned char g,
@@ -117,8 +117,8 @@ public:
 	}
 
 	/**
-	 * F‚Ìİ’è
-	 * @param color F‚ğ•\‚·\‘¢‘Ì
+	 * è‰²ã®è¨­å®š
+	 * @param color è‰²ã‚’è¡¨ã™æ§‹é€ ä½“
 	 */
 	void setColor(const Color& color) throw()
 	{
@@ -127,8 +127,8 @@ public:
 	}
 
 	/**
-	 * “™’l”äŠr
-	 * F‚ª“™‚µ‚¯‚ê‚Îtrue
+	 * ç­‰å€¤æ¯”è¼ƒ
+	 * è‰²ãŒç­‰ã—ã‘ã‚Œã°true
 	 */
 	bool operator==(const RGB32& dist) const throw()
 	{
@@ -138,8 +138,8 @@ public:
 	}
 
 	/**
-	 * DIB•\Œ»‚Ìê‡‚ÉƒrƒbƒgƒtƒB[ƒ‹ƒh‚ª•K—v‚©
-	 * @return •K—v‚È‚Ì‚Åí‚Étrue
+	 * DIBè¡¨ç¾ã®å ´åˆã«ãƒ“ãƒƒãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒå¿…è¦ã‹
+	 * @return å¿…è¦ãªã®ã§å¸¸ã«true
 	 */
 	static bool isBitFieldFormat() throw()
 	{
@@ -147,8 +147,8 @@ public:
 	}
 
 	/**
-	 * Ô—v‘f‚ğŒ»‚·ƒrƒbƒgƒtƒB[ƒ‹ƒhƒ}ƒXƒN’l
-	 * @return Ô—v‘fƒ}ƒXƒN
+	 * èµ¤è¦ç´ ã‚’ç¾ã™ãƒ“ãƒƒãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãƒã‚¹ã‚¯å€¤
+	 * @return èµ¤è¦ç´ ãƒã‚¹ã‚¯
 	 */
 	static DWORD getRedBitField() throw()
 	{
@@ -156,8 +156,8 @@ public:
 	}
 
 	/**
-	 * —Î—v‘f‚ğŒ»‚·ƒrƒbƒgƒtƒB[ƒ‹ƒhƒ}ƒXƒN’l
-	 * @return —Î—v‘fƒ}ƒXƒN
+	 * ç·‘è¦ç´ ã‚’ç¾ã™ãƒ“ãƒƒãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãƒã‚¹ã‚¯å€¤
+	 * @return ç·‘è¦ç´ ãƒã‚¹ã‚¯
 	 */
 	static DWORD getGreenBitField() throw()
 	{
@@ -165,8 +165,8 @@ public:
 	}
 
 	/**
-	 * Â—v‘f‚ğŒ»‚·ƒrƒbƒgƒtƒB[ƒ‹ƒhƒ}ƒXƒN’l
-	 * @return Â—v‘fƒ}ƒXƒN
+	 * é’è¦ç´ ã‚’ç¾ã™ãƒ“ãƒƒãƒˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãƒã‚¹ã‚¯å€¤
+	 * @return é’è¦ç´ ãƒã‚¹ã‚¯
 	 */
 	static DWORD getBlueBitField() throw()
 	{
@@ -176,8 +176,8 @@ public:
 
 
 /**
- * PixelFormatBase‚ÌR(8bit), G(8bit), B(8bit)‚ÌÀ‘•
- * ƒƒ\ƒbƒhà–¾‚ÍRGB32‚Ì•û‚ğQÆ
+ * PixelFormatBaseã®R(8bit), G(8bit), B(8bit)ã®å®Ÿè£…
+ * ãƒ¡ã‚½ãƒƒãƒ‰èª¬æ˜ã¯RGB32ã®æ–¹ã‚’å‚ç…§
  * @see RGB32
  */
 class RGB24
@@ -187,7 +187,7 @@ private:
 	
 public:
 	enum {
-		offsetSize = 3 /// ‰æ‘f‚ ‚½‚è‚ÌƒTƒCƒY
+		offsetSize = 3 /// ç”»ç´ ã‚ãŸã‚Šã®ã‚µã‚¤ã‚º
 	};
 
 	unsigned char getRed() const throw()
@@ -264,10 +264,10 @@ public:
 };
 
 /**
- * ƒsƒNƒZƒ‹ƒtƒH[ƒ}ƒbƒgƒNƒ‰ƒX
- * ‰æ‘f‚Ì’ŠÛ‰»
- * —vPOD\‘¢B‰¼‘zŠÖ”‚Æ‚©‚Í‹Ö~‚Å‚·B
- * @param PixelFormatBase ‰æ‘fƒNƒ‰ƒXŒ^
+ * ãƒ”ã‚¯ã‚»ãƒ«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚¯ãƒ©ã‚¹
+ * ç”»ç´ ã®æŠ½è±¡åŒ–
+ * è¦PODæ§‹é€ ã€‚ä»®æƒ³é–¢æ•°ã¨ã‹ã¯ç¦æ­¢ã§ã™ã€‚
+ * @param PixelFormatBase ç”»ç´ ã‚¯ãƒ©ã‚¹å‹
  */
 template <typename PixelFormatBase>
 class PixelFormat : public PixelFormatBase
@@ -278,16 +278,16 @@ public:
 	typedef const PixelFormatBase* const_iterator;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	PixelFormat() throw()
 	{
 	}
 	
 	/**
-	 * ‘ã“ü‰‰Zq
-	 * @param ƒRƒs[Œ³ƒsƒNƒZƒ‹ƒtƒH[ƒ}ƒbƒg
-	 * @return ‘ã“üŒã‚Ì©g‚Ö‚ÌQÆ
+	 * ä»£å…¥æ¼”ç®—å­
+	 * @param ã‚³ãƒ”ãƒ¼å…ƒãƒ”ã‚¯ã‚»ãƒ«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+	 * @return ä»£å…¥å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	PixelFormat& operator=(const PixelFormat& src) throw()
 	{
@@ -296,8 +296,8 @@ public:
 	}
 
 	/**
-	 * ”äŠr‰‰Zq
-	 * @return F‚ª“™‚µ‚¯‚ê‚Îtrue
+	 * æ¯”è¼ƒæ¼”ç®—å­
+	 * @return è‰²ãŒç­‰ã—ã‘ã‚Œã°true
 	 */
 	bool operator==(const PixelFormat<PixelFormatBase>& dist) const throw()
 	{
@@ -307,24 +307,24 @@ public:
 
 
 /**
- * ƒfƒoƒCƒX“Æ—§ƒrƒbƒgƒ}ƒbƒvƒNƒ‰ƒX
- * @param PixelFormatClass ƒsƒNƒZƒ‹ƒtƒH[ƒ}ƒbƒgƒNƒ‰ƒX
- * @param DPISize ‰æ–Ê‚Ì‰ğ‘œ“x 
- * (‚Ü‚ŸA‚Ù‚Æ‚ñ‚ÇˆÓ–¡‚ª‚È‚¢‚Ì‚ÅƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü‚ÅOK‚Å‚µ‚å‚¤)
- * @todo ‰æ‘fs‚Ì––’[‚Å‚Ì4ƒoƒCƒgƒAƒ‰ƒCƒ“‚É‚Â‚¢‚Ä‚¿‚á‚ñ‚Æ
- * ‘Îˆ‚µ‚Ä‚È‚¢‚Ì‚Å‚»‚Ì‘Î‰‚ª•K—v
+ * ãƒ‡ãƒã‚¤ã‚¹ç‹¬ç«‹ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¯ãƒ©ã‚¹
+ * @param PixelFormatClass ãƒ”ã‚¯ã‚»ãƒ«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚¯ãƒ©ã‚¹
+ * @param DPISize ç”»é¢ã®è§£åƒåº¦ 
+ * (ã¾ãã€ã»ã¨ã‚“ã©æ„å‘³ãŒãªã„ã®ã§ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾ã§OKã§ã—ã‚‡ã†)
+ * @todo ç”»ç´ è¡Œã®æœ«ç«¯ã§ã®4ãƒã‚¤ãƒˆã‚¢ãƒ©ã‚¤ãƒ³ã«ã¤ã„ã¦ã¡ã‚ƒã‚“ã¨
+ * å¯¾å‡¦ã—ã¦ãªã„ã®ã§ãã®å¯¾å¿œãŒå¿…è¦
  */
 template <typename PixelFormatClass, size_t DPISize = 96>
 class DIBitmap
 {
 private:
 	/**
-	 * ƒrƒbƒgƒ}ƒbƒvƒCƒ“ƒtƒHƒwƒbƒ_\‘¢‘Ì
+	 * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ³ãƒ•ã‚©ãƒ˜ãƒƒãƒ€æ§‹é€ ä½“
 	 */
 	BITMAPINFOHEADER bitmapInfo;
 
 	/**
-	 * 16/32ƒrƒbƒgDIB—pƒ}ƒXƒNƒe[ƒuƒ‹
+	 * 16/32ãƒ“ãƒƒãƒˆDIBç”¨ãƒã‚¹ã‚¯ãƒ†ãƒ¼ãƒ–ãƒ«
 	 */
 	DWORD bitField[3];
 
@@ -336,31 +336,31 @@ private:
 	};
 
 	/**
-	 * ƒrƒbƒgƒ}ƒbƒvƒCƒ“ƒtƒH\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ³ãƒ•ã‚©æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	BITMAPINFO* info;
 
 	/**
-	 * DIBSectionƒnƒ“ƒhƒ‹
+	 * DIBSectionãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HBITMAP bitmapResource;
 
 	/**
-	 * ‰æ‘f‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * ç”»ç´ ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	PixelFormatClass* pixelPointer;
 
 	/**
-	 * DIB‚ªƒgƒbƒvƒ_ƒEƒ“‚©ƒ{ƒgƒ€ƒAƒbƒv‚©‚ğ‚ ‚ç‚í‚·ƒtƒ‰ƒO
-	 * true‚Åƒgƒbƒvƒ_ƒEƒ“
+	 * DIBãŒãƒˆãƒƒãƒ—ãƒ€ã‚¦ãƒ³ã‹ãƒœãƒˆãƒ ã‚¢ãƒƒãƒ—ã‹ã‚’ã‚ã‚‰ã‚ã™ãƒ•ãƒ©ã‚°
+	 * trueã§ãƒˆãƒƒãƒ—ãƒ€ã‚¦ãƒ³
 	 */
 	bool isTopDown;
 
 	/**
-	 * ‰æ‘f‚ÌI’[
+	 * ç”»ç´ ã®çµ‚ç«¯
 	 * @todo first = getPointer(), last = getPointer() + getPointerLength();
-	 * ‚Æ‚©‚â‚ç‚ê‚é‚ÆŠë‚È‚¢‚±‚Æ‚ª‚ ‚é‚Ì‚Åƒƒ\ƒbƒh‚È‚­‚·‚©‚àB
-	 * blitterŒo—R‚È‚çsƒRƒs[‚ğ‚‚³•ª‚¾‚¯ŒJ‚è•Ô‚·‚Ì‚Å‘åä•v‚È‚ñ‚¾‚ªEEE
+	 * ã¨ã‹ã‚„ã‚‰ã‚Œã‚‹ã¨å±ãªã„ã“ã¨ãŒã‚ã‚‹ã®ã§ãƒ¡ã‚½ãƒƒãƒ‰ãªãã™ã‹ã‚‚ã€‚
+	 * blitterçµŒç”±ãªã‚‰è¡Œã‚³ãƒ”ãƒ¼ã‚’é«˜ã•åˆ†ã ã‘ç¹°ã‚Šè¿”ã™ã®ã§å¤§ä¸ˆå¤«ãªã‚“ã ãŒãƒ»ãƒ»ãƒ»
 	 */
 	const size_t getPointerLength() const throw()
 	{
@@ -368,7 +368,7 @@ private:
 	}
 
 	/**
-	 * ‰æ‘f‚ÌsI’[
+	 * ç”»ç´ ã®è¡Œçµ‚ç«¯
 	 */
 	const size_t getLineLengthForByte() const throw()
 	{
@@ -377,7 +377,7 @@ private:
 	}
 
 	/**
-	 * ƒrƒbƒgƒ}ƒbƒvƒCƒ“ƒtƒH\‘¢‘Ì‚ÌŠJ•ú
+	 * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ³ãƒ•ã‚©æ§‹é€ ä½“ã®é–‹æ”¾
 	 */
 	void bitmapInfoClose() throw()
 	{
@@ -386,7 +386,7 @@ private:
 	}
 
 	/**
-	 * ƒrƒbƒgƒ}ƒbƒvƒCƒ“ƒtƒH\‘¢‘Ì‚Ìì¬
+	 * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ³ãƒ•ã‚©æ§‹é€ ä½“ã®ä½œæˆ
 	 */
 	void bitmapInfoCreate() throw(std::bad_alloc)
 	{
@@ -419,7 +419,7 @@ private:
 	}
 
 	/** 
-	 * DIBƒnƒ“ƒhƒ‹‚ÌŠJ•ú
+	 * DIBãƒãƒ³ãƒ‰ãƒ«ã®é–‹æ”¾
 	 */
 	void closeBitmap()
 	{
@@ -431,7 +431,7 @@ private:
 	}
 
 	/**
-	 * ‰æ‘f‚Ì’l‚ªRGB’l‚ğ•\‚·ê‡‚Ìİ’è
+	 * ç”»ç´ ã®å€¤ãŒRGBå€¤ã‚’è¡¨ã™å ´åˆã®è¨­å®š
 	 */
 	void setColorPixelFormat()
 	{
@@ -440,7 +440,7 @@ private:
 	}
 
 	/**
-	 * ‰æ‘f‚Ì’l‚ªƒ}ƒXƒN’l‚É‚æ‚éRGB’l‚ğ•\‚·ê‡‚Ìİ’è
+	 * ç”»ç´ ã®å€¤ãŒãƒã‚¹ã‚¯å€¤ã«ã‚ˆã‚‹RGBå€¤ã‚’è¡¨ã™å ´åˆã®è¨­å®š
 	 */
 	void setBitFieldPixelFormat()
 	{
@@ -474,7 +474,7 @@ public:
 	typedef typename PixelFormatClass::const_iterator const_iterator;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	DIBitmap() throw()
 		: bitmapInfo(), bitField(), info(NULL),
@@ -491,8 +491,8 @@ public:
 	}
 
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param source Œ³‚ÌDIBitmapƒIƒuƒWƒFƒNƒg
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param source å…ƒã®DIBitmapã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	DIBitmap(const DIBitmap& source)
 		: bitmapInfo(source.bitmapInfo), bitField(), info(NULL),
@@ -504,7 +504,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~DIBitmap() throw()
 	{
@@ -512,7 +512,7 @@ public:
 	}
 
 	/**
-	 * ŠÇ—ƒŠƒ\[ƒX‚ÌŠJ•ú
+	 * ç®¡ç†ãƒªã‚½ãƒ¼ã‚¹ã®é–‹æ”¾
 	 */
 	void close()
 	{
@@ -522,8 +522,8 @@ public:
 	}
 
 	/**
-	 * ˆês‚Ì‰æ‘f”‚ğæ“¾‚·‚é
-	 * @return ˆês‚Ì‰æ‘f”
+	 * ä¸€è¡Œã®ç”»ç´ æ•°ã‚’å–å¾—ã™ã‚‹
+	 * @return ä¸€è¡Œã®ç”»ç´ æ•°
 	 */
 	const size_t getWidth() const
 	{
@@ -531,8 +531,8 @@ public:
 	}
 	
 	/**
-	 * ˆês‚Ì‰æ‘f”‚ğİ’è‚·‚é
-	 * @param width ˆês‚Ì‰æ‘f”
+	 * ä¸€è¡Œã®ç”»ç´ æ•°ã‚’è¨­å®šã™ã‚‹
+	 * @param width ä¸€è¡Œã®ç”»ç´ æ•°
 	 */
 	void setWidth(size_t width)
 	{
@@ -541,8 +541,8 @@ public:
 	}
 
 	/**
-	 * s‚Ì‚‚³‚ğæ“¾‚·‚é
-	 * @return DIB‚Ìs”
+	 * è¡Œã®é«˜ã•ã‚’å–å¾—ã™ã‚‹
+	 * @return DIBã®è¡Œæ•°
 	 */
 	const size_t getHeight() const
 	{
@@ -553,7 +553,7 @@ public:
 	}
 
 	/**
-	 * ƒgƒbƒvƒ_ƒEƒ“DIB‚É‚·‚é
+	 * ãƒˆãƒƒãƒ—ãƒ€ã‚¦ãƒ³DIBã«ã™ã‚‹
 	 */
 	void setTopDown() throw()
 	{
@@ -563,7 +563,7 @@ public:
 	}
 
 	/**
-	 * ƒ{ƒgƒ€ƒAƒbƒvDIB‚É‚·‚é
+	 * ãƒœãƒˆãƒ ã‚¢ãƒƒãƒ—DIBã«ã™ã‚‹
 	 */
 	void setBottomUp() throw()
 	{
@@ -573,8 +573,8 @@ public:
 	}
 
 	/**
-	 * ‚‚³‚Ìİ’è
-	 * @param height ‚‚³‚Ì’l
+	 * é«˜ã•ã®è¨­å®š
+	 * @param height é«˜ã•ã®å€¤
 	 */
 	void setHeight(size_t height)
 	{
@@ -585,7 +585,7 @@ public:
 	}
 
 	/**
-	 * DIBSeciton‚Ìì¬
+	 * DIBSecitonã®ä½œæˆ
 	 */
 	bool createDIBSection()
 	{
@@ -617,8 +617,8 @@ public:
 	}
 
 	/**
-	 * æ“ª‰æ‘f‚Ö‚ÌƒCƒeƒŒ[ƒ^‚Ìæ“¾
-	 * @return æ“ª‰æ‘f‚ÌƒCƒeƒŒ[ƒ^
+	 * å…ˆé ­ç”»ç´ ã¸ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã®å–å¾—
+	 * @return å…ˆé ­ç”»ç´ ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
 	 */
 	iterator begin() const
 	{
@@ -626,9 +626,9 @@ public:
 	}
 
 	/**
-	 * I’[‰æ‘f‚Ö‚ÌƒCƒeƒŒ[ƒ^‚Ìæ“¾
-	 * @return I’[‰æ‘f‚ÌƒCƒeƒŒ[ƒ^
-	 * @todo dword align‚Ì’²®
+	 * çµ‚ç«¯ç”»ç´ ã¸ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã®å–å¾—
+	 * @return çµ‚ç«¯ç”»ç´ ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
+	 * @todo dword alignã®èª¿æ•´
 	 */
 	iterator end() const
 	{
@@ -636,10 +636,10 @@ public:
 	}
 
 	/**
-	 * w’èˆÊ’u‚Ì‰æ‘fƒCƒeƒŒ[ƒ^‚Ìæ“¾
-	 * @return w’èˆÊ’u‰æ‘f‚ÌƒCƒeƒŒ[ƒ^
-	 * @param x ‰æ‘œ‚ÌxÀ•W
-	 * @param y ‰æ‘œ‚ÌyÀ•W
+	 * æŒ‡å®šä½ç½®ã®ç”»ç´ ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã®å–å¾—
+	 * @return æŒ‡å®šä½ç½®ç”»ç´ ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
+	 * @param x ç”»åƒã®xåº§æ¨™
+	 * @param y ç”»åƒã®yåº§æ¨™
 	 */
 	iterator getPixel(size_t x, size_t y) throw()
 	{
@@ -647,10 +647,10 @@ public:
 	}
 
 	/**
-	 * w’èˆÊ’u‚Ì‰æ‘fƒCƒeƒŒ[ƒ^‚Ìæ“¾
-	 * @param x ‰æ‘œ‚ÌxÀ•W
-	 * @param y ‰æ‘œ‚ÌyÀ•W
-	 * @return w’èˆÊ’u‰æ‘f‚ÌƒCƒeƒŒ[ƒ^
+	 * æŒ‡å®šä½ç½®ã®ç”»ç´ ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã®å–å¾—
+	 * @param x ç”»åƒã®xåº§æ¨™
+	 * @param y ç”»åƒã®yåº§æ¨™
+	 * @return æŒ‡å®šä½ç½®ç”»ç´ ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
 	 */
 	const_iterator getPixel(size_t x, size_t y) const throw()
 	{
@@ -658,8 +658,8 @@ public:
 	}
 
 	/**
-	 * ƒrƒbƒgƒ}ƒbƒvƒCƒ“ƒtƒH\‘¢‘Ì‚Ìæ“¾
-	 * @return ƒrƒbƒgƒ}ƒbƒv\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ³ãƒ•ã‚©æ§‹é€ ä½“ã®å–å¾—
+	 * @return ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	BITMAPINFO* getBitmapInfo()
 	{
@@ -668,8 +668,8 @@ public:
 	}
 
 	/**
-	 * DIB‚Ìƒnƒ“ƒhƒ‹‚Ìæ“¾
-	 * @return DIB‚Ìƒrƒbƒgƒ}ƒbƒvƒnƒ“ƒhƒ‹
+	 * DIBã®ãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
+	 * @return DIBã®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HBITMAP getBitmapHandle() const throw()
 	{
@@ -677,8 +677,8 @@ public:
 	}
 
 	/**
-	 * ƒtƒ@ƒCƒ‹‚©‚çDIB‚ğƒ[ƒh‚µADIBitmap‚ğì¬
-	 * @param filename ƒrƒbƒgƒ}ƒbƒvƒŠƒ\[ƒX‚Ö‚Ìƒtƒ‹ƒpƒX
+	 * ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰DIBã‚’ãƒ­ãƒ¼ãƒ‰ã—ã€DIBitmapã‚’ä½œæˆ
+	 * @param filename ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ãƒªã‚½ãƒ¼ã‚¹ã¸ã®ãƒ•ãƒ«ãƒ‘ã‚¹
 	 */
 	bool loadFile(const TCHAR* filename)
 	{
@@ -734,8 +734,8 @@ public:
 	}
 
 	/**
-	 * “à•”•\Œ»ƒrƒbƒgƒ}ƒbƒv‚Ì•Û‘¶
-	 * @todo 24bppˆË‘¶‚¾EEE32bpp‚Æ‚©‚É‚à‘Î‰‚Å‚«‚é‚æ‚¤‚É‚µ‚Æ‚©‚È‚¢‚ÆEEE
+	 * å†…éƒ¨è¡¨ç¾ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã®ä¿å­˜
+	 * @todo 24bppä¾å­˜ã ãƒ»ãƒ»ãƒ»32bppã¨ã‹ã«ã‚‚å¯¾å¿œã§ãã‚‹ã‚ˆã†ã«ã—ã¨ã‹ãªã„ã¨ãƒ»ãƒ»ãƒ»
 	 */
 	bool saveFile(const TCHAR* filename)
 	{
@@ -792,11 +792,11 @@ public:
 };
 
 /**
- * ‹éŒ`ƒrƒbƒgƒ}ƒbƒv“]‘—ƒtƒ@ƒ“ƒNƒ^
- * @param sourceType “]‘—Œ³‚Ìƒrƒbƒgƒ}ƒbƒvƒCƒeƒŒ[ƒ^Œ^
- * @param destinationType “]‘—æ‚Ìƒrƒbƒgƒ}ƒbƒvƒCƒeƒŒ[ƒ^Œ^
- * “¯Œ^‚Ìê‡AC++‚ÌƒCƒ“ƒ‰ƒCƒ““WŠJ‚ÆÅ“K‰»‚É‚æ‚è‚‘¬‚ÈƒRƒs[‚ª‚Å‚«‚Ü‚·B
- * Œ^‚ªˆá‚¤ê‡‚Å‚à³‚µ‚¢ƒRƒs[‚Í‚Å‚«‚Ü‚·‚ªA‘¬“x‚Í—‚¿‚Ü‚·B
+ * çŸ©å½¢ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—è»¢é€ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
+ * @param sourceType è»¢é€å…ƒã®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿å‹
+ * @param destinationType è»¢é€å…ˆã®ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿å‹
+ * åŒå‹ã®å ´åˆã€C++ã®ã‚¤ãƒ³ãƒ©ã‚¤ãƒ³å±•é–‹ã¨æœ€é©åŒ–ã«ã‚ˆã‚Šé«˜é€Ÿãªã‚³ãƒ”ãƒ¼ãŒã§ãã¾ã™ã€‚
+ * å‹ãŒé•ã†å ´åˆã§ã‚‚æ­£ã—ã„ã‚³ãƒ”ãƒ¼ã¯ã§ãã¾ã™ãŒã€é€Ÿåº¦ã¯è½ã¡ã¾ã™ã€‚
  */
 template <typename sourceType, typename destinationType>
 class BlockTransfer
@@ -875,7 +875,7 @@ public:
 };
 
 /**
- * “§‰ßF•tƒrƒbƒgƒ}ƒbƒv“]‘—
+ * é€éè‰²ä»˜ãƒ“ãƒƒãƒˆãƒãƒƒãƒ—è»¢é€
  */
 template <class sourceType, class destinationType>
 class TransparencyTransfer
@@ -960,12 +960,12 @@ public:
 };
 
 /**
- * ”r‘¼“I˜_—˜a“]‘—
- * @todo MMX‚âMMX2‚È‚Ç‚ğg‚Á‚½blitter‚ÌÀ‘•B
- * ‚»‚Ì‚½‚ß‚ÉƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Æ“]‘—ŠÖ”•ª‚¯‚½‚ñ‚¾‚µEEE
- * ‚ ‚ÆŠeí˜_—‰‰ZŒn“]‘—‚Æ‚©B
- * “]‘—”ÍˆÍŒvZ‚ğ•Êƒ|ƒŠƒV[‚Æ‚µ‚Ä•ªŠ„‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚©‚àB
- * ‚»‚¤‚·‚ê‚Î‚·‚Á‚«‚è‚·‚é‚µADirtyArea‚Æ‚©‚Æ‚ÌŒ“‚Ë‡‚¢‚à‚¤‚Ü‚­‚¢‚­‚©‚àB
+ * æ’ä»–çš„è«–ç†å’Œè»¢é€
+ * @todo MMXã‚„MMX2ãªã©ã‚’ä½¿ã£ãŸblitterã®å®Ÿè£…ã€‚
+ * ãã®ãŸã‚ã«ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨è»¢é€é–¢æ•°åˆ†ã‘ãŸã‚“ã ã—ãƒ»ãƒ»ãƒ»
+ * ã‚ã¨å„ç¨®è«–ç†æ¼”ç®—ç³»è»¢é€ã¨ã‹ã€‚
+ * è»¢é€ç¯„å›²è¨ˆç®—ã‚’åˆ¥ãƒãƒªã‚·ãƒ¼ã¨ã—ã¦åˆ†å‰²ã—ãŸã»ã†ãŒã„ã„ã‹ã‚‚ã€‚
+ * ãã†ã™ã‚Œã°ã™ã£ãã‚Šã™ã‚‹ã—ã€DirtyAreaã¨ã‹ã¨ã®å…¼ã­åˆã„ã‚‚ã†ã¾ãã„ãã‹ã‚‚ã€‚
  */
 template <class sourceType, class destinationType>
 class ExclusiveOrTransfer
@@ -975,22 +975,22 @@ private:
 	typedef destinationType DestinationType;
 
 	/**
-	 * “]‘—Œ³
+	 * è»¢é€å…ƒ
 	 */
 	const SourceType& source;
 
 	/**
-	 * “]‘—æ
+	 * è»¢é€å…ˆ
 	 */
 	DestinationType& destination;
 	
 	/**
-	 * ƒ}ƒXƒNƒJƒ‰[
+	 * ãƒã‚¹ã‚¯ã‚«ãƒ©ãƒ¼
 	 */
 	const Color exclusiveColor;
 
 	/**
-	 * ˆê—ñ•ª‚Ì“]‘—
+	 * ä¸€åˆ—åˆ†ã®è»¢é€
 	 */
 	template <typename SrcIterator,
 		typename DestIterator>
@@ -1005,10 +1005,10 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param src “]‘—Œ³
-	 * @param dest “]‘—æ
-	 * @param color ƒ}ƒXƒNƒJƒ‰[
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param src è»¢é€å…ƒ
+	 * @param dest è»¢é€å…ˆ
+	 * @param color ãƒã‚¹ã‚¯ã‚«ãƒ©ãƒ¼
 	 */
 	ExclusiveOrTransfer(const sourceType& src,
 						 destinationType& dest,
@@ -1017,15 +1017,15 @@ public:
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~ExclusiveOrTransfer() throw()
 	{}
 
 	/**
-	 * “]‘—ŠÖ”
-	 * @param sourceRect “]‘—Œ³‹éŒ`”ÍˆÍ
-	 * @param destPoint “]‘—æ¶ãˆÊ’u
+	 * è»¢é€é–¢æ•°
+	 * @param sourceRect è»¢é€å…ƒçŸ©å½¢ç¯„å›²
+	 * @param destPoint è»¢é€å…ˆå·¦ä¸Šä½ç½®
 	 */
 	template <typename pointType> 
 	void transfer(

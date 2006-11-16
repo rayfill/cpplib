@@ -8,7 +8,7 @@
 #include <ostream>
 
 /**
- * ŒöŠJŒ®ˆÃ†‚Ìƒvƒ‰ƒCƒx[ƒgŒ®
+ * å…¬é–‹éµæš—å·ã®ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆéµ
  */
 class PrivateKey
 {
@@ -17,13 +17,13 @@ private:
 	MPInteger modulus;
 	MPInteger primeP;
 	MPInteger primeQ;
-	MPInteger crtP; // p^(q-1) mod n (’†‘lè—]’è——p)
-	MPInteger crtQ; // q^(p-1) mod n (’†‘lè—]’è——p)
+	MPInteger crtP; // p^(q-1) mod n (ä¸­å›½äººå‰°ä½™å®šç†ç”¨)
+	MPInteger crtQ; // q^(p-1) mod n (ä¸­å›½äººå‰°ä½™å®šç†ç”¨)
 
 public:
 	/**
-	 * ’†‘lè—]’è—‚ğg‚Á‚½‚‘¬‰»‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚é‚©‚Ì”»’è
-	 * @return true: ƒTƒ|[ƒg‚µ‚Ä‚¢‚é false:–¢ƒTƒ|[ƒg
+	 * ä¸­å›½äººå‰°ä½™å®šç†ã‚’ä½¿ã£ãŸé«˜é€ŸåŒ–ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã‚‹ã‹ã®åˆ¤å®š
+	 * @return true: ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã‚‹ false:æœªã‚µãƒãƒ¼ãƒˆ
 	 */
 	bool isCRTSupport() const
 	{
@@ -31,13 +31,13 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param decryptExponent_ •œ†—p‚×‚«æ”
-	 * @param modulus_ œ”
-	 * @param primeP_ Œ®‚ÌŒ³‚É‚È‚é‘f”‚»‚Ì1
-	 * @param primeQ_ Œ®‚ÌŒ³‚É‚È‚é‘f”‚»‚Ì2
-	 * @param crtP_ ’†‘lè—]’è—‚Ég—p‚·‚éƒpƒ‰ƒ[ƒ^1
-	 * @param crtQ_ ’†‘lè—]’è—‚Ég—p‚·‚éƒpƒ‰ƒ[ƒ^2
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param decryptExponent_ å¾©å·ç”¨ã¹ãä¹—æ•°
+	 * @param modulus_ é™¤æ•°
+	 * @param primeP_ éµã®å…ƒã«ãªã‚‹ç´ æ•°ãã®1
+	 * @param primeQ_ éµã®å…ƒã«ãªã‚‹ç´ æ•°ãã®2
+	 * @param crtP_ ä¸­å›½äººå‰°ä½™å®šç†ã«ä½¿ç”¨ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿1
+	 * @param crtQ_ ä¸­å›½äººå‰°ä½™å®šç†ã«ä½¿ç”¨ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿2
 	 */
 	PrivateKey(const MPInteger& decryptExponent_ = 0U,
 			   const MPInteger& modulus_ = 0U,
@@ -81,7 +81,7 @@ public:
 	}
 
 	/**
-	 * ƒXƒgƒŠ[ƒ€o—Í—p
+	 * ã‚¹ãƒˆãƒªãƒ¼ãƒ å‡ºåŠ›ç”¨
 	 */
 	friend std::ostream& operator<<(std::ostream& out, const PrivateKey& key)
 	{
@@ -104,7 +104,7 @@ public:
 };
 
 /**
- * ŒöŠJŒ®ˆÃ†‚ÌŒöŠJŒ®
+ * å…¬é–‹éµæš—å·ã®å…¬é–‹éµ
  */
 class PublicKey
 {
@@ -114,9 +114,9 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * encryptExponent_ ˆÃ†—p‚×‚«æ”
-	 * modulus_ œ”
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * encryptExponent_ æš—å·ç”¨ã¹ãä¹—æ•°
+	 * modulus_ é™¤æ•°
 	 */
 	PublicKey(const MPInteger& encryptExponent_ = 0U,
 			  const MPInteger& modulus_ = 0U) throw()
@@ -147,7 +147,7 @@ public:
 };
 
 /**
- * ŒöŠJŒ®Aƒvƒ‰ƒCƒx[ƒgŒ®‚ÌƒyƒA
+ * å…¬é–‹éµã€ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆéµã®ãƒšã‚¢
  */
 class KeyPair
 {
@@ -162,11 +162,11 @@ private:
 public:
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param p Œ®‚ÌŒ³‚Æ‚È‚é‘f”1
-	 * @param q Œ®‚ÌŒ³‚Æ‚È‚é‘f”2
-	 * @param e ˆÃ†‰»ˆ—‚Ì‚×‚«æ”
-	 * @param isPrimeCheck —^‚¦‚ç‚ê‚½ˆø”p, q ‚Ì‘f”«ƒ`ƒFƒbƒN‚ğ‚·‚é‚©‚Ç‚¤‚©
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param p éµã®å…ƒã¨ãªã‚‹ç´ æ•°1
+	 * @param q éµã®å…ƒã¨ãªã‚‹ç´ æ•°2
+	 * @param e æš—å·åŒ–å‡¦ç†æ™‚ã®ã¹ãä¹—æ•°
+	 * @param isPrimeCheck ä¸ãˆã‚‰ã‚ŒãŸå¼•æ•°p, q ã®ç´ æ•°æ€§ãƒã‚§ãƒƒã‚¯ã‚’ã™ã‚‹ã‹ã©ã†ã‹
 	 */
 	KeyPair(const MPInteger& p,
 			const MPInteger& q,
@@ -186,7 +186,7 @@ public:
 			for (int checkCount = 0; checkCount < 4; ++checkCount)
 			{
 				if (RabinPrimeTest(p, MPInteger(2U)) == false)
-					throw std::invalid_argument("p ‚Í‘f”‚Å‚Í‚ ‚è‚Ü‚¹‚ñ. " +
+					throw std::invalid_argument("p ã¯ç´ æ•°ã§ã¯ã‚ã‚Šã¾ã›ã‚“. " +
 												p.toString());
 			}
 
@@ -194,7 +194,7 @@ public:
 			for (int checkCount = 0; checkCount < 4; ++checkCount)
 			{
 				if (RabinPrimeTest(q, MPInteger(2U)) == false)
-					throw std::invalid_argument("q ‚Í‘f”‚Å‚Í‚ ‚è‚Ü‚¹‚ñ. " +
+					throw std::invalid_argument("q ã¯ç´ æ•°ã§ã¯ã‚ã‚Šã¾ã›ã‚“. " +
 						q.toString());
 			}
 		}
@@ -202,7 +202,7 @@ public:
 		modulus = p * q;
 		decryptExponent = modulusInvert(e, lcm(p-1U, q-1U));
 		if (decryptExponent.isZero())
-			throw std::invalid_argument("‹tŒ³‚ªŒvZ‚Å‚«‚Ü‚¹‚ñ.");
+			throw std::invalid_argument("é€†å…ƒãŒè¨ˆç®—ã§ãã¾ã›ã‚“.");
 		
 		encryptExponent.adjust();
 		decryptExponent.adjust();

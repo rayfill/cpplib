@@ -5,41 +5,41 @@
 #include <map>
 
 /**
- * ƒXƒŒƒbƒhƒ}ƒl[ƒWƒƒ
+ * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£
  */
 class ThreadGroup
 {
 private:
 	/**
-	 * ƒXƒŒƒbƒhƒ}ƒbƒp[Œ^
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒƒãƒ‘ãƒ¼å‹
 	 */
 	typedef std::map<Thread::thread_id_t, Thread*> ThreadMap;
 
 	/**
-	 * ƒXƒŒƒbƒhƒ}ƒbƒsƒ“ƒO—pƒ}ƒbƒv•Ï”
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒƒãƒ”ãƒ³ã‚°ç”¨ãƒãƒƒãƒ—å¤‰æ•°
 	 */ 
 	ThreadMap threadMapper;
 
 	/**
-	 * ‚±‚ÌƒIƒuƒWƒFƒNƒg‚ÌƒI[ƒi[‚ÌThread ID
+	 * ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚ªãƒ¼ãƒŠãƒ¼ã®Thread ID
 	 */
 	const Thread::thread_id_t ownerId;
 
 	/**
-	 * ƒRƒs[•s‰Â”\‚Ì‚½‚ß‚Ìƒvƒ‰ƒCƒx[ƒgƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ”ãƒ¼ä¸å¯èƒ½ã®ãŸã‚ã®ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	ThreadGroup(const ThreadGroup&) throw():
 		threadMapper(), ownerId(0) {}
 
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	ThreadGroup() throw():
 		threadMapper(), ownerId(::GetCurrentThreadId()) {}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~ThreadGroup() throw()
 	{
@@ -51,10 +51,10 @@ public:
 	}
 
 	/**
-	 * V‚µ‚¢ƒXƒŒƒbƒh‚Ì“o˜^
-	 * @param thread “o˜^‚·‚é Thread ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
-	 * @exception ThreadException ˆø”‚Ìthread‚ª•sŠ®‘S‚ÈƒXƒŒƒbƒh‚Ìê‡
-	 * ”­s‚³‚ê‚é
+	 * æ–°ã—ã„ã‚¹ãƒ¬ãƒƒãƒ‰ã®ç™»éŒ²
+	 * @param thread ç™»éŒ²ã™ã‚‹ Thread ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @exception ThreadException å¼•æ•°ã®threadãŒä¸å®Œå…¨ãªã‚¹ãƒ¬ãƒƒãƒ‰ã®å ´åˆ
+	 * ç™ºè¡Œã•ã‚Œã‚‹
 	 */
 	virtual void attach(Thread* thread) throw(ThreadException)
 	{
@@ -67,9 +67,9 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚Ì“o˜^‰ğœ
-	 * @param id “o˜^‰ğœ‚·‚éƒXƒŒƒbƒh‚ÌThreadID
-	 * @return “o˜^‰ğœ‚³‚ê‚½ Thread ƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®ç™»éŒ²è§£é™¤
+	 * @param id ç™»éŒ²è§£é™¤ã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã®ThreadID
+	 * @return ç™»éŒ²è§£é™¤ã•ã‚ŒãŸ Thread ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	virtual Thread* detach(const Thread::thread_id_t id) throw()
 	{
@@ -83,10 +83,10 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚ÌÀsI—¹‘Ò‹@
-	 * @param id ‘Ò‹@‚·‚éƒXƒŒƒbƒh¯•Êq
-	 * @exception ThreadException ‘Ò‹@‚·‚éƒXƒŒƒbƒh‚ª—áŠO‚ğ“Š‚°‚ÄI—¹‚µ
-	 * ‚½ê‡
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œçµ‚äº†å¾…æ©Ÿ
+	 * @param id å¾…æ©Ÿã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰è­˜åˆ¥å­
+	 * @exception ThreadException å¾…æ©Ÿã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ãŒä¾‹å¤–ã‚’æŠ•ã’ã¦çµ‚äº†ã—
+	 * ãŸå ´åˆ
 	 */
 	void join(const Thread::thread_id_t id) throw(ThreadException)
 	{
@@ -112,8 +112,8 @@ public:
 	}
 
 	/**
-	 * ŠÇ—‚µ‚Ä‚¢‚éƒXƒŒƒbƒh‚ÌŒÂ”‚Ìæ“¾
-	 * @return ŠÇ—‚µ‚Ä‚¢‚éƒXƒŒƒbƒh‚ÌŒÂ”
+	 * ç®¡ç†ã—ã¦ã„ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã®å€‹æ•°ã®å–å¾—
+	 * @return ç®¡ç†ã—ã¦ã„ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã®å€‹æ•°
 	 */
 	const size_t count() const throw()
 	{
@@ -121,9 +121,9 @@ public:
 	}
 
 	/**
-	 * ŠÇ—‚µ‚Ä‚¢‚éƒXƒŒƒbƒh‚Ìæ“¾
-	 * @param index ƒXƒŒƒbƒhƒOƒ‹[ƒv‚ÌƒCƒ“ƒfƒbƒNƒX”Ô†
-	 * @exception std::range_error ˆø”‚ª”ÍˆÍŠO‚¾‚Á‚½ê‡
+	 * ç®¡ç†ã—ã¦ã„ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã®å–å¾—
+	 * @param index ã‚¹ãƒ¬ãƒƒãƒ‰ã‚°ãƒ«ãƒ¼ãƒ—ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç•ªå·
+	 * @exception std::range_error å¼•æ•°ãŒç¯„å›²å¤–ã ã£ãŸå ´åˆ
 	 */
 	Thread* operator[](size_t index) throw(std::range_error)
 	{
@@ -140,7 +140,7 @@ public:
 	}
 
 	/**
-	 * ŠÇ—‚µ‚Ä‚¢‚é‚·‚×‚Ä‚ÌƒXƒŒƒbƒh‚ÌÀsŠJn
+	 * ç®¡ç†ã—ã¦ã„ã‚‹ã™ã¹ã¦ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œé–‹å§‹
 	 */
 	void start_all() throw()
 	{
@@ -154,8 +154,8 @@ public:
 	}
 
 	/**
-	 * ‚·‚×‚Ä‚ÌƒXƒŒƒbƒh‚ÌI—¹‘Ò‹@
-	 * @return ‚·‚×‚Ä‚ÌƒXƒŒƒbƒh‚ªÀsI—¹‚µ‚½ê‡: true, ‚»‚êˆÈŠO: false. 
+	 * ã™ã¹ã¦ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ‚äº†å¾…æ©Ÿ
+	 * @return ã™ã¹ã¦ã®ã‚¹ãƒ¬ãƒƒãƒ‰ãŒå®Ÿè¡Œçµ‚äº†ã—ãŸå ´åˆ: true, ãã‚Œä»¥å¤–: false. 
 	 * @see WinThread::join()
 	 */
 	bool join_all(DWORD waitTime = INFINITE) throw()
@@ -182,8 +182,8 @@ public:
 	}
 	
 	/**
-	 * ‹­§“I‚ÈƒXƒŒƒbƒh‚ÌÀsI—¹‘Ò‹@. I—¹‚µ‚Ä‚¢‚È‚¢ê‡‹­§“I‚ÉI—¹
-	 * ‚³‚¹‚é. ‚±‚Ìê‡AˆÈ~‚ÌÀsó‘Ô‚Í•ÛØ‚³‚ê‚È‚¢.
+	 * å¼·åˆ¶çš„ãªã‚¹ãƒ¬ãƒƒãƒ‰ã®å®Ÿè¡Œçµ‚äº†å¾…æ©Ÿ. çµ‚äº†ã—ã¦ã„ãªã„å ´åˆå¼·åˆ¶çš„ã«çµ‚äº†
+	 * ã•ã›ã‚‹. ã“ã®å ´åˆã€ä»¥é™ã®å®Ÿè¡ŒçŠ¶æ…‹ã¯ä¿è¨¼ã•ã‚Œãªã„.
 	 * @see MSDN::Win32::TerminateThread()
 	 */
 	void force_join_all() throw()

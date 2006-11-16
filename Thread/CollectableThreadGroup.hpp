@@ -7,7 +7,7 @@
 #include <util/Notification.hpp>
 
 /**
- * I—¹Thread‚Ì‰ñû‰Â”\‚ÈThreadGroupƒNƒ‰ƒX
+ * çµ‚äº†Threadã®å›åå¯èƒ½ãªThreadGroupã‚¯ãƒ©ã‚¹
  */
 class CollectableThreadGroup :
 	public ThreadGroup, public Observer
@@ -16,12 +16,12 @@ private:
 	typedef std::set<Thread::thread_id_t> CollectableThreadIds;
 
 	/**
-	 * ‰ñû‰Â”\‚Æ‚È‚Á‚½Thread ID ‚ğ•Û‚·‚éƒRƒ“ƒeƒi
+	 * å›åå¯èƒ½ã¨ãªã£ãŸThread ID ã‚’ä¿æŒã™ã‚‹ã‚³ãƒ³ãƒ†ãƒŠ
 	 */
 	CollectableThreadIds collectable;
 
 	/**
-	 * ’Ê’mƒnƒ“ƒhƒ‰
+	 * é€šçŸ¥ãƒãƒ³ãƒ‰ãƒ©
 	 * @see Observable
 	 */
 	virtual void notify(Observable* notifier)
@@ -34,21 +34,21 @@ private:
 	
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	CollectableThreadGroup() throw()
 		: ThreadGroup(), Observer(), collectable()
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~CollectableThreadGroup() throw()
 	{}
 
 	/**
-	 * ‰ñû‰Â”\‚ÈThread‚Ì‚İ‚ğ‰ñû
-	 * @exception ThreadException join()‚µ‚½Thread‚ª—áŠOI—¹‚µ‚½ê‡
+	 * å›åå¯èƒ½ãªThreadã®ã¿ã‚’å›å
+	 * @exception ThreadException join()ã—ãŸThreadãŒä¾‹å¤–çµ‚äº†ã—ãŸå ´åˆ
 	 */
 	void join_recollectable() throw(ThreadException)
 	{
@@ -62,16 +62,16 @@ public:
 				thread->join();
 				delete thread;
 			} catch(TimeoutException& /*e*/) {
-				assert(false); // TimeoutException —áŠO‚Í”­¶‚µ‚È‚¢
+				assert(false); // TimeoutException ä¾‹å¤–ã¯ç™ºç”Ÿã—ãªã„
 			}
 		}
 	}
 
 	/**
-	 * V‚µ‚¢ƒXƒŒƒbƒh‚Ì“o˜^
-	 * @param thread “o˜^‚·‚é Thread ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
-	 * @exception ThreadException ˆø”‚Ìthread‚ª•sŠ®‘S‚ÈƒXƒŒƒbƒh‚Ìê‡
-	 * ”­s‚³‚ê‚é
+	 * æ–°ã—ã„ã‚¹ãƒ¬ãƒƒãƒ‰ã®ç™»éŒ²
+	 * @param thread ç™»éŒ²ã™ã‚‹ Thread ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @exception ThreadException å¼•æ•°ã®threadãŒä¸å®Œå…¨ãªã‚¹ãƒ¬ãƒƒãƒ‰ã®å ´åˆ
+	 * ç™ºè¡Œã•ã‚Œã‚‹
 	 */
 	virtual void attach(Thread* thread) throw(ThreadException)
 	{
@@ -85,9 +85,9 @@ public:
 	}
 
 	/**
-	 * ƒXƒŒƒbƒh‚Ì“o˜^‰ğœ
-	 * @param id “o˜^‰ğœ‚·‚éƒXƒŒƒbƒh‚ÌThreadID
-	 * @return “o˜^‰ğœ‚³‚ê‚½ Thread ƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+	 * ã‚¹ãƒ¬ãƒƒãƒ‰ã®ç™»éŒ²è§£é™¤
+	 * @param id ç™»éŒ²è§£é™¤ã™ã‚‹ã‚¹ãƒ¬ãƒƒãƒ‰ã®ThreadID
+	 * @return ç™»éŒ²è§£é™¤ã•ã‚ŒãŸ Thread ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	virtual Thread* detach(const Thread::thread_id_t id) throw()
 	{
@@ -105,8 +105,8 @@ public:
 };
 
 /**
- * ‰ñû‰Â”\‚ÈƒXƒŒƒbƒh‚Ìƒeƒ“ƒvƒŒ[ƒgBƒ[ƒJ[ƒƒ\ƒbƒh(run())‚ğƒI[ƒo[
- * ƒ‰ƒCƒh‚µ‚½ƒNƒ‰ƒX‚ğˆø”‚É‚µ‚ÄÀ‘Ì‰»‚µA—˜—p‚·‚éB
+ * å›åå¯èƒ½ãªã‚¹ãƒ¬ãƒƒãƒ‰ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã€‚ãƒ¯ãƒ¼ã‚«ãƒ¼ãƒ¡ã‚½ãƒƒãƒ‰(run())ã‚’ã‚ªãƒ¼ãƒãƒ¼
+ * ãƒ©ã‚¤ãƒ‰ã—ãŸã‚¯ãƒ©ã‚¹ã‚’å¼•æ•°ã«ã—ã¦å®Ÿä½“åŒ–ã—ã€åˆ©ç”¨ã™ã‚‹ã€‚
  */
 template <typename BaseThreadClass>
 class CollectableThread
@@ -114,7 +114,7 @@ class CollectableThread
 {
 protected:
 	/**
-	 * Œãn––(finalCü‚È‚Ì‚ÅŒp³‚µ‚È‚¢‚Å‚Ë)
+	 * å¾Œå§‹æœ«(finalä¿®é£¾ãªã®ã§ç¶™æ‰¿ã—ãªã„ã§ã­)
 	 */ 
 	virtual void dispose() throw()
 	{
@@ -124,9 +124,9 @@ protected:
 public:
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * ƒRƒŒƒNƒ^(CollectableThreadGroup)‚É“o˜^‚µ‚È‚¢‚Ü‚ÜI—¹‚·‚é‰Â
-	 * ”\«‚ª‚ ‚é‚½‚ßAì¬‚Æ“¯‚ÉÀs‚Í‚Å‚«‚È‚¢
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * ã‚³ãƒ¬ã‚¯ã‚¿(CollectableThreadGroup)ã«ç™»éŒ²ã—ãªã„ã¾ã¾çµ‚äº†ã™ã‚‹å¯
+	 * èƒ½æ€§ãŒã‚ã‚‹ãŸã‚ã€ä½œæˆã¨åŒæ™‚ã«å®Ÿè¡Œã¯ã§ããªã„
 	 */
 	CollectableThread() throw():
 		BaseThreadClass(false)
@@ -134,7 +134,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~CollectableThread() throw()
 	{

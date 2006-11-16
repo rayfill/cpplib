@@ -2,8 +2,8 @@
 #define PRIMELIST_HPP_
 
 /**
- * 16bitˆÈ‰º‚Ì‘f”•\
- * ¡‚ÍSieveƒNƒ‰ƒX‚Å“®“I¶¬‚·‚é‚Ì‚Å‚¢‚ç‚È‚¢
+ * 16bitä»¥ä¸‹ã®ç´ æ•°è¡¨
+ * ä»Šã¯Sieveã‚¯ãƒ©ã‚¹ã§å‹•çš„ç”Ÿæˆã™ã‚‹ã®ã§ã„ã‚‰ãªã„
  */
 static unsigned int primes[] = 
 {

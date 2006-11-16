@@ -8,34 +8,34 @@
 #include <stdexcept>
 
 /**
- * \•¶‰ğÍ—áŠO
+ * æ§‹æ–‡è§£æä¾‹å¤–
  */
 class ParseException : public std::runtime_error
 {
 private:
 	/**
-	 * —áŠOˆÊ’u‚Ìs”
+	 * ä¾‹å¤–ä½ç½®ã®è¡Œæ•°
 	 */
 
 	int line;
 	/**
-	 * —áŠOˆÊ’u‚ÌƒJƒ‰ƒ€”
+	 * ä¾‹å¤–ä½ç½®ã®ã‚«ãƒ©ãƒ æ•°
 	 */
 	int column;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param reason —áŠO——R
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param reason ä¾‹å¤–ç†ç”±
 	 */
 	ParseException(const char* reason = "parsing exception."):
 		std::runtime_error(reason), line(-1), column(-1)
 	{}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param line_ s”
-	 * @param column_ —ñ”
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param line_ è¡Œæ•°
+	 * @param column_ åˆ—æ•°
 	 */
 	ParseException(const unsigned int line_, const unsigned int column_):
 			std::runtime_error("parsing exception"),
@@ -43,14 +43,14 @@ public:
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~ParseException() throw()
 	{}
 
 	/**
-	 * s‚Ìæ“¾
-	 * @return —áŠOˆÊ’u‚Ìs”
+	 * è¡Œã®å–å¾—
+	 * @return ä¾‹å¤–ä½ç½®ã®è¡Œæ•°
 	 */
 	int getLine() const
 	{
@@ -58,8 +58,8 @@ public:
 	}
 
 	/**
-	 * —ñ‚Ìæ“¾
-	 * @return —áŠOˆÊ’u‚Ì—ñ”
+	 * åˆ—ã®å–å¾—
+	 * @return ä¾‹å¤–ä½ç½®ã®åˆ—æ•°
 	 */
 	int getColumn() const
 	{
@@ -68,10 +68,10 @@ public:
 };
 
 /**
- * ”Ä—pƒg[ƒNƒ“ƒNƒ‰ƒX
- * @param CharType •¶šŒ^
- * @param CharTrait •¶š—ñ“Á’¥ƒNƒ‰ƒX
- * @todo ”Ä—p‚É‚·‚é‚É‚Í‚à‚¤­‚µİŒv‚¢‚¶‚ç‚È‚¢‚Æƒ_ƒ‚©¥¥¥
+ * æ±ç”¨ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
+ * @param CharType æ–‡å­—å‹
+ * @param CharTrait æ–‡å­—åˆ—ç‰¹å¾´ã‚¯ãƒ©ã‚¹
+ * @todo æ±ç”¨ã«ã™ã‚‹ã«ã¯ã‚‚ã†å°‘ã—è¨­è¨ˆã„ã˜ã‚‰ãªã„ã¨ãƒ€ãƒ¡ã‹ï½¥ï½¥ï½¥
  */
 template <
 	typename CharType,
@@ -141,20 +141,20 @@ public:
 	} TokenType;
 private:
 	/**
-	 * ƒg[ƒNƒ“•¶š—ñ
+	 * ãƒˆãƒ¼ã‚¯ãƒ³æ–‡å­—åˆ—
 	 */
 	std::basic_string<CharType> token;
 
 	/**
-	 * ƒg[ƒNƒ“¯•Êq
+	 * ãƒˆãƒ¼ã‚¯ãƒ³è­˜åˆ¥å­
 	 */
 	TokenType typeId;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param typeId ƒg[ƒNƒ“¯•Êq 
-	 * @param token_ ƒg[ƒNƒ“•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param typeId ãƒˆãƒ¼ã‚¯ãƒ³è­˜åˆ¥å­ 
+	 * @param token_ ãƒˆãƒ¼ã‚¯ãƒ³æ–‡å­—åˆ—
 	 */
 	Token(const TokenType& typeId_,
 		  const std::basic_string<CharType>& token_ =
@@ -163,8 +163,8 @@ public:
 	{}
 
 	/**
-	 * ƒg[ƒNƒ“•¶š—ñ‚Ìæ“¾
-	 * @return ƒg[ƒNƒ“•¶š—ñ
+	 * ãƒˆãƒ¼ã‚¯ãƒ³æ–‡å­—åˆ—ã®å–å¾—
+	 * @return ãƒˆãƒ¼ã‚¯ãƒ³æ–‡å­—åˆ—
 	 */
 	std::basic_string<CharType> getToken()
 	{
@@ -172,8 +172,8 @@ public:
 	}
 
 	/**
-	 * ƒg[ƒNƒ“¯•Êq‚Ìæ“¾
-	 * @return ƒg[ƒNƒ“¯•Êq
+	 * ãƒˆãƒ¼ã‚¯ãƒ³è­˜åˆ¥å­ã®å–å¾—
+	 * @return ãƒˆãƒ¼ã‚¯ãƒ³è­˜åˆ¥å­
 	 */
 	const TokenType getId()
 	{
@@ -181,9 +181,9 @@ public:
 	}
 
 	/**
-	 * ƒg[ƒNƒ““™‰¿”äŠr
-	 * @param type ”äŠr‘ÎÛƒg[ƒNƒ“
-	 * @return ˆê’v‚µ‚Ä‚¢‚é‚È‚çtrue
+	 * ãƒˆãƒ¼ã‚¯ãƒ³ç­‰ä¾¡æ¯”è¼ƒ
+	 * @param type æ¯”è¼ƒå¯¾è±¡ãƒˆãƒ¼ã‚¯ãƒ³
+	 * @return ä¸€è‡´ã—ã¦ã„ã‚‹ãªã‚‰true
 	 */
 	bool operator==(const TokenType type)
 	{
@@ -191,9 +191,9 @@ public:
 	}
 
 	/**
-	 * ƒg[ƒNƒ““™‰¿”äŠr
-	 * @param type ”äŠr‘ÎÛƒg[ƒNƒ“
-	 * @return ˆê’v‚µ‚Ä‚¢‚È‚¢‚È‚çtrue
+	 * ãƒˆãƒ¼ã‚¯ãƒ³ç­‰ä¾¡æ¯”è¼ƒ
+	 * @param type æ¯”è¼ƒå¯¾è±¡ãƒˆãƒ¼ã‚¯ãƒ³
+	 * @return ä¸€è‡´ã—ã¦ã„ãªã„ãªã‚‰true
 	 */
 	bool operator!=(const TokenType type)
 	{
@@ -202,9 +202,9 @@ public:
 };
 
 /**
- * ƒXƒLƒƒƒiƒNƒ‰ƒX
- * @todo ‰ğÍ—pFSM\’z‚Ì‚½‚ß‚Ì\•¶‚Æ‚»‚Ìƒp[ƒTƒ‹[ƒ`ƒ“‚Ìì¬B
- * ³‹K•\Œ»ƒNƒ‰ƒXŠ®¬‚³‚¹‚ÄNFA->DFA•ÏŠ·ì‚ê‚Î‰½‚Æ‚©‚È‚é‚©H
+ * ã‚¹ã‚­ãƒ£ãƒŠã‚¯ãƒ©ã‚¹
+ * @todo è§£æç”¨FSMæ§‹ç¯‰ã®ãŸã‚ã®æ§‹æ–‡ã¨ãã®ãƒ‘ãƒ¼ã‚µãƒ«ãƒ¼ãƒãƒ³ã®ä½œæˆã€‚
+ * æ­£è¦è¡¨ç¾ã‚¯ãƒ©ã‚¹å®Œæˆã•ã›ã¦NFA->DFAå¤‰æ›ä½œã‚Œã°ä½•ã¨ã‹ãªã‚‹ã‹ï¼Ÿ
  */
 template <
 	typename CharType,

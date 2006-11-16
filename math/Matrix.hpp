@@ -4,12 +4,12 @@
 #include <cassert>
 
 /**
- * s—ñƒNƒ‰ƒX
- * @param width s—ñ‚Ì•
- * @param height s—ñ‚Ì‚‚³
- * @param ElementType —v‘f‚ÌŒ^
- * @todo ì¬“r’†‚à‚¢‚¢‚Æ‚±‚È‚ñ‚Å3D—p“r‚Ş‚¯‚È‚Ç‚È‚ç 
- * http://rayfill.dyndns.org:2481/opengl_lib/ ‚Ì‚Ù‚¤‚ğg‚Á‚Ä‚­‚¾‚³‚¢
+ * è¡Œåˆ—ã‚¯ãƒ©ã‚¹
+ * @param width è¡Œåˆ—ã®å¹…
+ * @param height è¡Œåˆ—ã®é«˜ã•
+ * @param ElementType è¦ç´ ã®å‹
+ * @todo ä½œæˆé€”ä¸­ã‚‚ã„ã„ã¨ã“ãªã‚“ã§3Dç”¨é€”ã‚€ã‘ãªã©ãªã‚‰ 
+ * http://rayfill.dyndns.org:2481/opengl_lib/ ã®ã»ã†ã‚’ä½¿ã£ã¦ãã ã•ã„
  * @see http://rayfill.dyndns.org:2481/opengl_lib/GL/Geometry.hpp
  */
 template <size_t width, size_t height, typename ElementType = float>

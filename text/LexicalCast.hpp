@@ -160,8 +160,8 @@ CastType hexLexicalCast(const std::basic_string<char>& source)
 }
 
 /**
- * ‚Æ‚è‚ ‚¦‚¸À”Œ^‚Í–³‹‚ÌŒ`‚ÅEEE
- * STLPort‚ÌstringstreamŒn‚ª‰ö‚µ‚¢‚Ì‚Å”rœ‚·‚éŒ`‚É‘‚«Š·‚¦
+ * ã¨ã‚Šã‚ãˆãšå®Ÿæ•°å‹ã¯ç„¡è¦–ã®å½¢ã§ãƒ»ãƒ»ãƒ»
+ * STLPortã®stringstreamç³»ãŒæ€ªã—ã„ã®ã§æ’é™¤ã™ã‚‹å½¢ã«æ›¸ãæ›ãˆ
  */
 template <typename CastType>
 std::basic_string<char> stringCast(const CastType& source)

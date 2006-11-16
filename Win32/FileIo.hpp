@@ -6,62 +6,62 @@
 #include <stdexcept>
 
 /**
- * ƒtƒ@ƒCƒ‹“üo—Í—áŠO
+ * ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›ä¾‹å¤–
  */
 class FileIoException : public std::runtime_error
 {
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	FileIoException(): std::runtime_error("file I/O exception") {}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param reason —áŠO——R
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param reason ä¾‹å¤–ç†ç”±
 	 */
 	FileIoException(const std::string& reason): std::runtime_error(reason) {}
 
-	/// ƒfƒXƒgƒ‰ƒNƒ^
+	/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~FileIoException() throw() {}
 };
 
 /**
- * ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“—áŠO
+ * ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³æ™‚ä¾‹å¤–
  */
 class FileOpenException : public FileOpenException
 {
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	FileOpenException(): FileIoException("can not open file.") {}
 };
 
 
 /**
- * ƒtƒ@ƒCƒ‹“üo—Í‚ÉŠÖ‚·‚éŠî’êƒNƒ‰ƒX
+ * ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›ã«é–¢ã™ã‚‹åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class FileIo
 {
 private:
-	/// Win32 ƒtƒ@ƒCƒ‹ƒnƒ“ƒhƒ‹
+	/// Win32 ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ³ãƒ‰ãƒ«
 	HANDLE hFile;
 	
-	/// Œ»İ‚Ìƒtƒ@ƒCƒ‹ˆÊ’u
+	/// ç¾åœ¨ã®ãƒ•ã‚¡ã‚¤ãƒ«ä½ç½®
 	size_t currentPoint;
 
-	/// ƒtƒ@ƒCƒ‹‚ª‘‚«‚İ‰Â”\‚©‚ğ•\‚·ƒtƒ‰ƒO
+	/// ãƒ•ã‚¡ã‚¤ãƒ«ãŒæ›¸ãè¾¼ã¿å¯èƒ½ã‹ã‚’è¡¨ã™ãƒ•ãƒ©ã‚°
 	bool writable;
 	
-	/// ƒtƒ@ƒCƒ‹‚ª“Ç‚İ‚İ‰Â”\‚©‚ğ•\‚·ƒtƒ‰ƒO
+	/// ãƒ•ã‚¡ã‚¤ãƒ«ãŒèª­ã¿è¾¼ã¿å¯èƒ½ã‹ã‚’è¡¨ã™ãƒ•ãƒ©ã‚°
 	bool readable;
 	
 public:
 
-	/// ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	FileIo()
 		: hFile(), currentPoint(),
 		  writable(), readable()
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
-	 * ŠJ‚¢‚Ä‚¢‚½ƒtƒ@ƒCƒ‹‚Í©“®‚ÅƒNƒ[ƒY‚³‚ê‚Ü‚·
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * é–‹ã„ã¦ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«ã¯è‡ªå‹•ã§ã‚¯ãƒ­ãƒ¼ã‚ºã•ã‚Œã¾ã™
 	 */
 	virtual ~FileIo()
 	{
@@ -69,8 +69,8 @@ public:
 	}
 
 	/**
-	 * “Ç‚İ‚İ‰Â”\‚©‚ğ•Ô‚·
-	 * @return “Ç‚İ‚İ‰Â”\‚©‚ğ•Ô‚·ƒtƒ‰ƒO
+	 * èª­ã¿è¾¼ã¿å¯èƒ½ã‹ã‚’è¿”ã™
+	 * @return èª­ã¿è¾¼ã¿å¯èƒ½ã‹ã‚’è¿”ã™ãƒ•ãƒ©ã‚°
 	 */
 	bool isReadable() const throw()
 	{
@@ -78,8 +78,8 @@ public:
 	}
 
 	/**
-	 * ‘‚«‚İ‰Â”\‚©‚ğ•Ô‚·
-	 * @return ‘‚«‚İ‰Â”\‚©‚ğ•Ô‚·ƒtƒ‰ƒO
+	 * æ›¸ãè¾¼ã¿å¯èƒ½ã‹ã‚’è¿”ã™
+	 * @return æ›¸ãè¾¼ã¿å¯èƒ½ã‹ã‚’è¿”ã™ãƒ•ãƒ©ã‚°
 	 */
 	bool isWritable() const throw()
 	{
@@ -87,14 +87,14 @@ public:
 	}
 
 	/**
-	 * ƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“
-	 * @param openFilename ŠJ‚­ƒtƒ@ƒCƒ‹–¼
-	 * @param accessMode ŠJ‚­ƒ‚[ƒh ƒfƒtƒHƒ‹ƒg‚Å“Ç‚İ‚İB‘‚«‚İ‚Ìê
-	 * ‡‚Í GENERIC_WRITE ‚ğw’èB“Ç‚İ‘‚«—¼•û‚Ìê‡‚Í GENERIC_READ |
-	 * GENERIC_WRITE ‚Æw’è‚·‚é
-	 * @param fileAttributes ƒtƒ@ƒCƒ‹‚ÌŠî–{‘®«
-	 * @param createDisposition ‘‚«‚İƒI[ƒvƒ“Aƒtƒ@ƒCƒ‹‚ª‚È‚©‚Á‚½
-	 * ê‡‚ÌƒAƒNƒVƒ‡ƒ“
+	 * ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚ªãƒ¼ãƒ—ãƒ³
+	 * @param openFilename é–‹ããƒ•ã‚¡ã‚¤ãƒ«å
+	 * @param accessMode é–‹ããƒ¢ãƒ¼ãƒ‰ ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§èª­ã¿è¾¼ã¿ã€‚æ›¸ãè¾¼ã¿ã®å ´
+	 * åˆã¯ GENERIC_WRITE ã‚’æŒ‡å®šã€‚èª­ã¿æ›¸ãä¸¡æ–¹ã®å ´åˆã¯ GENERIC_READ |
+	 * GENERIC_WRITE ã¨æŒ‡å®šã™ã‚‹
+	 * @param fileAttributes ãƒ•ã‚¡ã‚¤ãƒ«ã®åŸºæœ¬å±æ€§
+	 * @param createDisposition æ›¸ãè¾¼ã¿ã‚ªãƒ¼ãƒ—ãƒ³æ™‚ã€ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã‹ã£ãŸ
+	 * å ´åˆã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 	 * @see CreateFile API
 	 */
 	virtual void open(const std::string& openFilename,
@@ -123,7 +123,7 @@ public:
 	}
 
 	/**
-	 * ƒtƒ@ƒCƒ‹‚ÌƒNƒ[ƒY
+	 * ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¯ãƒ­ãƒ¼ã‚º
 	 */
 	virtual void close() throw()
 	{
@@ -135,8 +135,8 @@ public:
 	}
 
 	/**
-	 * ƒtƒ@ƒCƒ‹‚ÌŒ»İ‚Ì’·‚³‚ğ•Ô‚·
-	 * @return ƒtƒ@ƒCƒ‹‚ÌŒ»İ‚Ì’·‚³
+	 * ãƒ•ã‚¡ã‚¤ãƒ«ã®ç¾åœ¨ã®é•·ã•ã‚’è¿”ã™
+	 * @return ãƒ•ã‚¡ã‚¤ãƒ«ã®ç¾åœ¨ã®é•·ã•
 	 */
 	size_t getLength() const throw()
 	{

@@ -80,8 +80,8 @@ private:
 	}
 
 	/**
-	 * @todo SocketŠî’ê‚Ìread/write‚©‚çˆ—ƒoƒCƒg”‚ğ‚Æ‚èAØ’f—áŠO‚ğ
-	 * ˆ—A‚¨‚æ‚Ñó‘Ô‚Æ‚µ‚Ä•Û‚µ‚Ä–{ŠÖ”“à‚ÅÄÚ‘±‚Ìs‚ª•K—v
+	 * @todo SocketåŸºåº•ã®read/writeã‹ã‚‰å‡¦ç†ãƒã‚¤ãƒˆæ•°ã‚’ã¨ã‚Šã€åˆ‡æ–­ä¾‹å¤–ã‚’
+	 * å‡¦ç†ã€ãŠã‚ˆã³çŠ¶æ…‹ã¨ã—ã¦ä¿æŒã—ã¦æœ¬é–¢æ•°å†…ã§å†æ¥ç¶šã®è©¦è¡ŒãŒå¿…è¦
 	 */
 	void connectTarget(const URL& url)
 	{
@@ -161,8 +161,8 @@ public:
 	}
 
 	/**
-	 * @todo ƒ\ƒPƒbƒgƒNƒ[ƒY‚ÌƒXƒ}[ƒg‰»BHTTPResult‚Ì•û‚ÉˆÚ‚µ‚Ä
-	 * HTTP header‚ÌConection: close‚ğŒ©‚é‚æ‚¤‚É‚·‚éB
+	 * @todo ã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ­ãƒ¼ã‚ºã®ã‚¹ãƒãƒ¼ãƒˆåŒ–ã€‚HTTPResultã®æ–¹ã«ç§»ã—ã¦
+	 * HTTP headerã®Conection: closeã‚’è¦‹ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚
 	 */
 	HTTPResult<> getHeaderResponse(const URL& url)
 	{
@@ -181,8 +181,8 @@ public:
 	}
 
 	/**
-	 * @todo ƒ\ƒPƒbƒgƒNƒ[ƒY‚ÌƒXƒ}[ƒg‰»BHTTPResult‚Ì•û‚ÉˆÚ‚µ‚Ä
-	 * HTTP header‚ÌConection: close‚ğŒ©‚é‚æ‚¤‚É‚·‚éB
+	 * @todo ã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ­ãƒ¼ã‚ºã®ã‚¹ãƒãƒ¼ãƒˆåŒ–ã€‚HTTPResultã®æ–¹ã«ç§»ã—ã¦
+	 * HTTP headerã®Conection: closeã‚’è¦‹ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚
 	 */
 	HTTPResult<> getResource(const URL& url)
 	{

@@ -7,8 +7,8 @@
 #include <cassert>
 
 /**
- * —L—”ƒNƒ‰ƒX
- * @param numberType —L—”‚ÌŒ³
+ * æœ‰ç†æ•°ã‚¯ãƒ©ã‚¹
+ * @param numberType æœ‰ç†æ•°ã®å…ƒ
  */
 template<typename numberType>
 class Rational
@@ -19,15 +19,15 @@ public:
 	typedef numberType NumberType;
 
 private:
-	/// •ªq
+	/// åˆ†å­
 	NumberType numerator;
-	/// •ª•ê
+	/// åˆ†æ¯
 	NumberType denominator;
 
 	/**
-	 * ’Ê•ª—pÅ¬Œö”{”‚Ìæ“¾
-	 * @param ’Ê•ª‘ÎÛ‚Ì—L—”
-	 * @return •ª•ê“¯m‚ÌÅ¬Œö”{”
+	 * é€šåˆ†ç”¨æœ€å°å…¬å€æ•°ã®å–å¾—
+	 * @param é€šåˆ†å¯¾è±¡ã®æœ‰ç†æ•°
+	 * @return åˆ†æ¯åŒå£«ã®æœ€å°å…¬å€æ•°
 	 */
 	NumberType getCommonDenominator(const Rational& rhs) const throw()
 	{
@@ -35,9 +35,9 @@ private:
 	}
 
 	/**
-	 * ’Ê•ª—p‚ÉŠg‘å
-	 * @param rhs ’Ê•ª‘ÎÛ‚Ì—L—”
-	 * @return ’Ê•ª—p‚ÉŠg‘å‚³‚ê‚½—L—”
+	 * é€šåˆ†ç”¨ã«æ‹¡å¤§
+	 * @param rhs é€šåˆ†å¯¾è±¡ã®æœ‰ç†æ•°
+	 * @return é€šåˆ†ç”¨ã«æ‹¡å¤§ã•ã‚ŒãŸæœ‰ç†æ•°
 	 */
 	Rational getCommonDenominatorValue(const Rational& rhs) const throw()
 	{
@@ -50,9 +50,9 @@ private:
 	}
 
 	/**
-	 * •„†³‹K‰»
-	 *  •ª•ê‚ªƒ}ƒCƒiƒX‚Ì’l‚ğ‚Âê‡A•ªqA•ª•ê‚Æ‚à‚É-1‚ğ
-	 * Š|‚¯‚Ä•„†‚ğ•ªq‘¤‚ÉˆÚ‚·
+	 * ç¬¦å·æ­£è¦åŒ–
+	 *  åˆ†æ¯ãŒãƒã‚¤ãƒŠã‚¹ã®å€¤ã‚’æŒã¤å ´åˆã€åˆ†å­ã€åˆ†æ¯ã¨ã‚‚ã«-1ã‚’
+	 * æ›ã‘ã¦ç¬¦å·ã‚’åˆ†å­å´ã«ç§»ã™
 	 */
 	void normalize()
 	{
@@ -65,18 +65,18 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * ƒfƒtƒHƒ‹ƒg‚Å‚Íƒ[ƒŒ³‚É‚ ‚í‚¹‚ç‚ê‚é
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯ã‚¼ãƒ­å…ƒã«ã‚ã‚ã›ã‚‰ã‚Œã‚‹
 	 */
 	Rational() throw()
 		: numerator(), denominator(1)
 	{}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param numerator_ •ªq‚Ì’l
-	 * @param denominator_ •ª•ê‚Ì’l
-	 * \’zŒã‚Í•„†³‹K‰»Ï‚İ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param numerator_ åˆ†å­ã®å€¤
+	 * @param denominator_ åˆ†æ¯ã®å€¤
+	 * æ§‹ç¯‰å¾Œã¯ç¬¦å·æ­£è¦åŒ–æ¸ˆã¿
 	 */
 	Rational(const NumberType& numerator_,
 			 const NumberType& denominator_) throw()
@@ -88,16 +88,16 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param numerator_ •ªq‚Ì’l
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param numerator_ åˆ†å­ã®å€¤
 	 */
 	Rational(const NumberType& numerator_) throw()
 		: numerator(numerator_), denominator(1)
 	{}
 
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param source ƒRƒs[Œ³ƒIƒuƒWƒFƒNƒg
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param source ã‚³ãƒ”ãƒ¼å…ƒã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	Rational(const Rational& source) throw()
 		: numerator(source.numerator),
@@ -107,14 +107,14 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~Rational() throw()
 	{}
 
 	/**
-	 * —L—”‚©‚çÀ”‚Ö‚Ì•ÏŠ·
-	 * @return À”‰»‚³‚ê‚½’lB•ª•ê‚ª0‚Ìê‡–³ŒÀ‘å‚ğ‚Æ‚éB
+	 * æœ‰ç†æ•°ã‹ã‚‰å®Ÿæ•°ã¸ã®å¤‰æ›
+	 * @return å®Ÿæ•°åŒ–ã•ã‚ŒãŸå€¤ã€‚åˆ†æ¯ãŒ0ã®å ´åˆç„¡é™å¤§ã‚’ã¨ã‚‹ã€‚
 	 */
 	double toReal() const throw()
 	{
@@ -125,8 +125,8 @@ public:
 	}
 
 	/**
-	 * —L—”‚©‚ç®”‚Ö‚Ì•ÏŠ·
-	 * @return ®”‰»‚³‚ê‚½’lB®œ‚Å‚«‚È‚¢ê‡A¬”“_ˆÈ‰º‚ÍØ‚èÌ‚Ä‚ç‚ê‚éB
+	 * æœ‰ç†æ•°ã‹ã‚‰æ•´æ•°ã¸ã®å¤‰æ›
+	 * @return æ•´æ•°åŒ–ã•ã‚ŒãŸå€¤ã€‚æ•´é™¤ã§ããªã„å ´åˆã€å°æ•°ç‚¹ä»¥ä¸‹ã¯åˆ‡ã‚Šæ¨ã¦ã‚‰ã‚Œã‚‹ã€‚
 	 */
 	NumberType toInteger() const throw()
 	{
@@ -135,8 +135,8 @@ public:
 	}
 
 	/**
-	 * ‹tŒ³‚Ìæ“¾
-	 * @return ‹tŒ³‚Ì—L—”
+	 * é€†å…ƒã®å–å¾—
+	 * @return é€†å…ƒã®æœ‰ç†æ•°
 	 */
 	Rational invert() const throw()
 	{
@@ -147,7 +147,7 @@ public:
 	}
 
 	/**
-	 * ‰ÁZ‘ã“ü
+	 * åŠ ç®—ä»£å…¥
 	 */
 	Rational& operator+=(const Rational& rhs) throw()
 	{
@@ -163,7 +163,7 @@ public:
 	}
 
 	/**
-	 * ‰ÁZ
+	 * åŠ ç®—
 	 */
 	Rational operator+(const Rational& rhs) const throw()
 	{
@@ -171,7 +171,7 @@ public:
 	}
 
 	/**
-	 * Œ¸Z‘ã“ü
+	 * æ¸›ç®—ä»£å…¥
 	 */
 	Rational& operator-=(const Rational& rhs) throw()
 	{
@@ -186,7 +186,7 @@ public:
 	}
 
 	/**
-	 * Œ¸Z
+	 * æ¸›ç®—
 	 */
 	Rational operator-(const Rational& rhs) const throw()
 	{
@@ -194,7 +194,7 @@ public:
 	}
 
 	/**
-	 * æZ‘ã“ü
+	 * ä¹—ç®—ä»£å…¥
 	 */
 	Rational& operator*=(const Rational& rhs) throw()
 	{
@@ -205,7 +205,7 @@ public:
 	}
 
 	/**
-	 * æZ
+	 * ä¹—ç®—
 	 */
 	Rational operator*(const Rational& rhs) const throw()
 	{
@@ -213,7 +213,7 @@ public:
 	}
 
 	/**
-	 * œZ‘ã“ü
+	 * é™¤ç®—ä»£å…¥
 	 */
 	Rational& operator/=(const Rational& rhs) throw()
 	{
@@ -224,7 +224,7 @@ public:
 	}
 
 	/**
-	 * œZ
+	 * é™¤ç®—
 	 */
 	Rational operator/(const Rational& rhs) const throw()
 	{
@@ -232,7 +232,7 @@ public:
 	}
 
 	/**
-	 * LessThan”äŠr
+	 * LessThanæ¯”è¼ƒ
 	 */
 	bool operator<(const Rational& rhs) const throw()
 	{
@@ -242,7 +242,7 @@ public:
 	}
 
 	/**
-	 * GreaterEqual”äŠr
+	 * GreaterEqualæ¯”è¼ƒ
 	 */
 	bool operator>=(const Rational& rhs) const throw()
 	{
@@ -250,7 +250,7 @@ public:
 	}
 
 	/**
-	 * GreaterThan”äŠr
+	 * GreaterThanæ¯”è¼ƒ
 	 */
 	bool operator>(const Rational& rhs) const throw()
 	{
@@ -260,7 +260,7 @@ public:
 	}
 
 	/**
-	 * LessEqual”äŠr
+	 * LessEqualæ¯”è¼ƒ
 	 */
 	bool operator<=(const Rational& rhs) const throw()
 	{
@@ -268,7 +268,7 @@ public:
 	}
 
 	/**
-	 * Equal”äŠr
+	 * Equalæ¯”è¼ƒ
 	 */
 	bool operator==(const Rational& rhs) const throw()
 	{
@@ -278,7 +278,7 @@ public:
 	}
 
 	/**
-	 * not equal”äŠr
+	 * not equalæ¯”è¼ƒ
 	 */
 	bool operator!=(const Rational& rhs) const throw()
 	{
@@ -286,7 +286,7 @@ public:
 	}
 
 	/**
-	 * ostream ƒIƒyƒŒ[ƒ^
+	 * ostream ã‚ªãƒšãƒ¬ãƒ¼ã‚¿
 	 */
 	friend std::ostream& operator<<(std::ostream& out, const Rational& target)
 	{

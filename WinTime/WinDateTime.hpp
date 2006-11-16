@@ -6,7 +6,7 @@ class WinTime
 {
 private:
 	/**
-	 * Œ»ÝŽž‚ð•Û‘¶‚·‚é\‘¢‘Ì(¢ŠE‹¦’èŽž‚Å•Û‘¶)
+	 * ç¾åœ¨æ™‚åˆ»ã‚’ä¿å­˜ã™ã‚‹æ§‹é€ ä½“(ä¸–ç•Œå”å®šæ™‚ã§ä¿å­˜)
 	 */
 	SYSTEMTIME systemTime;
 

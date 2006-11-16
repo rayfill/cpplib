@@ -6,34 +6,34 @@
 #include <string>
 
 /**
- * Thread ƒNƒ‰ƒXƒCƒ“ƒXƒ^ƒ“ƒXÀs’†‚É”­¶‚·‚é—áŠO
+ * Thread ã‚¯ãƒ©ã‚¹ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å®Ÿè¡Œä¸­ã«ç™ºç”Ÿã™ã‚‹ä¾‹å¤–
  */
 class ThreadException : public std::runtime_error
 {
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */ 
 	ThreadException() throw()
 		: std::runtime_error("thread exception.")
 	{}
 	
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~ThreadException() throw() {}
 	
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param te ƒRƒs[Œ³ƒIƒuƒWƒFƒNƒg
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param te ã‚³ãƒ”ãƒ¼å…ƒã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	ThreadException(const ThreadException& te) throw()
 		: std::runtime_error(te.what())
 	{}
 	
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param reason —áŠO”­¶——R‚ğ¦‚·•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param reason ä¾‹å¤–ç™ºç”Ÿç†ç”±ã‚’ç¤ºã™æ–‡å­—åˆ—
 	 */
 	ThreadException(const char* reason) throw()
 		: std::runtime_error(reason)
@@ -46,7 +46,7 @@ public:
 };
 
 /**
- * Thread‚Ì‘€ì‚ÉŠ„‚è‚ñ‚Å‹N‚±‚é—áŠO
+ * Threadã®æ“ä½œã«å‰²ã‚Šè¾¼ã‚“ã§èµ·ã“ã‚‹ä¾‹å¤–
  */
 class InterruptedException : public ThreadException
 {
@@ -73,26 +73,26 @@ public:
 };
 
 /**
- * ‘€ì‚ªƒ^ƒCƒ€ƒAƒEƒg‚µ‚½‚±‚Æ‚ğˆÓ–¡‚·‚é—áŠO
+ * æ“ä½œãŒã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã—ãŸã“ã¨ã‚’æ„å‘³ã™ã‚‹ä¾‹å¤–
  */
 class TimeoutException : public std::runtime_error
 {
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	TimeoutException() throw()
 		: std::runtime_error("timeout exception.")
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~TimeoutException() throw() {}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param reason —áŠO”­¶——R‚ğ¦‚·•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param reason ä¾‹å¤–ç™ºç”Ÿç†ç”±ã‚’ç¤ºã™æ–‡å­—åˆ—
 	 */
 	TimeoutException(const char* reason) throw()
 		: std::runtime_error(reason)

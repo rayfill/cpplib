@@ -13,7 +13,7 @@
 #endif
 
 /**
- * メルセンヌツイスタ乱数クラス
+ * 繝｡繝ｫ繧ｻ繝ｳ繝後ヤ繧､繧ｹ繧ｿ荵ｱ謨ｰ繧ｯ繝ｩ繧ｹ
  * @see http://ja.wikipedia.org/wiki/%E3%83%A1%E3%83%AB%E3%82%BB%E3%83%B3%E3%83%8C%E3%83%BB%E3%83%84%E3%82%A4%E3%82%B9%E3%82%BF
  */
 class MersenneTwister

@@ -6,9 +6,9 @@
 #include <cassert>
 
 /**
- * base64 ƒGƒ“/ƒfƒR[ƒ_
+ * base64 ã‚¨ãƒ³/ãƒ‡ã‚³ãƒ¼ãƒ€
  * @see http://www.ietf.org/rfc/rfc3548.txt
- * @todo ƒXƒgƒŠ[ƒ€‘Î‰”ÅAtemplateƒx[ƒX‚ÌƒCƒeƒŒ[ƒ^”Å‚Ìƒƒ\ƒbƒh‚Ì—pˆÓ
+ * @todo ã‚¹ãƒˆãƒªãƒ¼ãƒ å¯¾å¿œç‰ˆã€templateãƒ™ãƒ¼ã‚¹ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ç‰ˆã®ãƒ¡ã‚½ãƒƒãƒ‰ã®ç”¨æ„
  */
 class Base64
 {
@@ -16,11 +16,11 @@ class Base64
 
 private:
 	/**
-	 * •ÏŠ·ƒe[ƒuƒ‹•¶š—ñæ“¾
-	 * @return •ÏŠ·ƒe[ƒuƒ‹•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^B
-	 * Ã“I‚É‘¶İ‚·‚é‚Ì‚ÅƒRƒs[‚ğ‚Æ‚é•K—v‚Í‚È‚¢B
-	 * @note '=' ‚ª65”Ô–Ú‚É‚¢‚é‚Ì‚Ímodulo64‚Å0‚Æ“™’l‚É‚È‚é‚Ì‚ğ—˜—p‚µ‚Ä
-	 * ƒfƒR[ƒh‚É“Á•Êˆ—‚ğ‚µ‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ßB
+	 * å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«æ–‡å­—åˆ—å–å¾—
+	 * @return å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+	 * é™çš„ã«å­˜åœ¨ã™ã‚‹ã®ã§ã‚³ãƒ”ãƒ¼ã‚’ã¨ã‚‹å¿…è¦ã¯ãªã„ã€‚
+	 * @note '=' ãŒ65ç•ªç›®ã«ã„ã‚‹ã®ã¯modulo64ã§0ã¨ç­‰å€¤ã«ãªã‚‹ã®ã‚’åˆ©ç”¨ã—ã¦
+	 * ãƒ‡ã‚³ãƒ¼ãƒ‰æ™‚ã«ç‰¹åˆ¥å‡¦ç†ã‚’ã—ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã€‚
 	 */
 	static const char* getBase64Table()
 	{
@@ -35,7 +35,7 @@ private:
 
 	static const char* getFromBase64Table()
 	{
-		// ƒfƒoƒbƒO‚ğ—eˆÕ‚É‚·‚é‚½‚ß–¢Š„‚è“–‚Ä‚Í0xcc‚Éƒ}ƒbƒv‚µ‚Ä‚¢‚é
+		// ãƒ‡ãƒãƒƒã‚°ã‚’å®¹æ˜“ã«ã™ã‚‹ãŸã‚æœªå‰²ã‚Šå½“ã¦ã¯0xccã«ãƒãƒƒãƒ—ã—ã¦ã„ã‚‹
 		static const char fromBase64Table[] = {
 			// 0x00
 			0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 
@@ -68,9 +68,9 @@ private:
 
 public:
 	/**
-	 * ƒGƒ“ƒR[ƒh
-	 * @param data •ÏŠ·Œ³‚Æ‚È‚éƒf[ƒ^
-	 * @return •ÏŠ·Œã‚Ì•¶š—ñ
+	 * ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰
+	 * @param data å¤‰æ›å…ƒã¨ãªã‚‹ãƒ‡ãƒ¼ã‚¿
+	 * @return å¤‰æ›å¾Œã®æ–‡å­—åˆ—
 	 */
 	static std::string encode(const std::vector<char>& data)
 	{
@@ -78,9 +78,9 @@ public:
 
 		const char* table = getBase64Table();
 
-		// •ÏŠ·Œ³ƒf[ƒ^‚Ì’·‚³
+		// å¤‰æ›å…ƒãƒ‡ãƒ¼ã‚¿ã®é•·ã•
 		const size_type length = data.size();
-		// •ÏŠ·æ•¶š—ñ‚Ì’·‚³
+		// å¤‰æ›å…ˆæ–‡å­—åˆ—ã®é•·ã•
 		const size_type resultLength = (data.size() + 2 & ~3) / 3 * 4;
 
 		std::string result;
@@ -88,10 +88,10 @@ public:
 
 		for (size_type offset = 0; offset < length; ++offset)
 		{
-			// 3ƒoƒCƒg’PˆÊ‚Éƒ‰ƒbƒvƒAƒ‰ƒEƒ“ƒh‚·‚é
+			// 3ãƒã‚¤ãƒˆå˜ä½ã«ãƒ©ãƒƒãƒ—ã‚¢ãƒ©ã‚¦ãƒ³ãƒ‰ã™ã‚‹
 			switch (offset % 3)
 			{
-				// 0ƒoƒCƒg–Ú
+				// 0ãƒã‚¤ãƒˆç›®
 				case 0:
 				{
 					// xxxxxxoo|oooooooo|oooooooo
@@ -102,7 +102,7 @@ public:
 				}
 				break;
 
-				// 1ƒoƒCƒg–Ú
+				// 1ãƒã‚¤ãƒˆç›®
 				case 1:
 				{
 					// ......xx|xxxxoooo|oooooooo
@@ -113,7 +113,7 @@ public:
 				}
 				break;
 
-				// 2ƒoƒCƒg–Ú
+				// 2ãƒã‚¤ãƒˆç›®
 				case 2:
 				{
 					// ........|....xxxx|xxoooooo
@@ -124,13 +124,13 @@ public:
 				}
 				break;
 
-				// ƒnƒ“ƒhƒŠƒ“ƒOƒ`ƒFƒbƒN—p
+				// ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ãƒã‚§ãƒƒã‚¯ç”¨
 				default:
 					assert(false); // unreached case.
 			}
 		}
 
-		// ƒpƒfƒBƒ“ƒO•¶š‚Ì–„‚ß‚İ
+		// ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°æ–‡å­—ã®åŸ‹ã‚è¾¼ã¿
 		while (result.length() < resultLength)
 			result.push_back('=');
 
@@ -138,9 +138,9 @@ public:
 	}
 
 	/**
-	 * ƒfƒR[ƒh
-	 * @param base64String base64•ÏŠ·‚³‚ê‚½•¶š—ñ
-	 * @return •œ†Œã‚Ìƒf[ƒ^
+	 * ãƒ‡ã‚³ãƒ¼ãƒ‰
+	 * @param base64String base64å¤‰æ›ã•ã‚ŒãŸæ–‡å­—åˆ—
+	 * @return å¾©å·å¾Œã®ãƒ‡ãƒ¼ã‚¿
 	 */
 	static std::vector<char> decode(const std::string& base64String)
 	{

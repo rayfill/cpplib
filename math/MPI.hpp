@@ -20,11 +20,11 @@
 #include <limits>
 
 /**
- * ‘½”{’·®”ƒNƒ‰ƒX
- * @param BaseUnit_ Šî”‚Æ‚È‚éŒ^
- * @param CalcBase_ ŒvZŠî”‚Æ‚È‚éŒ^B
- * sizeof(BaseUnit_) < sizeof(CalcUnit_)‚ª•K{ğŒ
- * @param Allocator ƒJƒXƒ^ƒ€ƒƒ‚ƒŠŠÇ—ƒNƒ‰ƒXBSTL‚ÌƒAƒƒP[ƒ^ŒİŠ·‚ª•K{ğŒ
+ * å¤šå€é•·æ•´æ•°ã‚¯ãƒ©ã‚¹
+ * @param BaseUnit_ åŸºæ•°ã¨ãªã‚‹å‹
+ * @param CalcBase_ è¨ˆç®—åŸºæ•°ã¨ãªã‚‹å‹ã€‚
+ * sizeof(BaseUnit_) < sizeof(CalcUnit_)ãŒå¿…é ˆæ¡ä»¶
+ * @param Allocator ã‚«ã‚¹ã‚¿ãƒ ãƒ¡ãƒ¢ãƒªç®¡ç†ã‚¯ãƒ©ã‚¹ã€‚STLã®ã‚¢ãƒ­ã‚±ãƒ¼ã‚¿äº’æ›ãŒå¿…é ˆæ¡ä»¶
  */
 template <
 	typename BaseUnit_ = unsigned int,
@@ -41,14 +41,14 @@ public:
 private:
 	friend class MPITest;
 
-	/// ƒf[ƒ^‚Ì“à•”•\Œ»
+	/// ãƒ‡ãƒ¼ã‚¿ã®å†…éƒ¨è¡¨ç¾
 	MPVector value;
 
-	/// •„†Bture‚Åƒ}ƒCƒiƒX
+	/// ç¬¦å·ã€‚tureã§ãƒã‚¤ãƒŠã‚¹
 	bool isMinusSign;
 
 	/**
-	 * value‚Ì³‹K‰»—pƒwƒ‹ƒpƒtƒ@ƒ“ƒNƒ^
+	 * valueã®æ­£è¦åŒ–ç”¨ãƒ˜ãƒ«ãƒ‘ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
 	 */
 	struct findFunc
 	{
@@ -74,8 +74,8 @@ private:
 // 	}
 
 	/**
-	 * Œ…ã‚ª‚è‚Ìƒ}ƒXƒN’l‚Ìæ“¾
-	 * @todo ƒeƒ“ƒvƒŒ[ƒg‚Åenumg‚Á‚ÄƒRƒ“ƒpƒCƒ‹ŒvZ‚É‚Å‚«‚é‚©H
+	 * æ¡ä¸ŠãŒã‚Šã®ãƒã‚¹ã‚¯å€¤ã®å–å¾—
+	 * @todo ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§enumä½¿ã£ã¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚è¨ˆç®—ã«ã§ãã‚‹ã‹ï¼Ÿ
 	 */
 	const static CalcBase getCarryValue()
 	{
@@ -83,7 +83,7 @@ private:
 	}
 
 	/**
-	 * Šî”‚ÌÅ‘å’l‚Ìæ“¾
+	 * åŸºæ•°ã®æœ€å¤§å€¤ã®å–å¾—
 	 */
 	const static CalcBase getMaxBaseUnit()
 	{
@@ -91,8 +91,8 @@ private:
 	}
 
 	/**
-	 * \˜Zi•\Œ»•¶š—ñ‚©‚ç‚Ì•ÏŠ·
-	 * @param str •ÏŠ·Œ³•¶š—ñ
+	 * åå…­é€²è¡¨ç¾æ–‡å­—åˆ—ã‹ã‚‰ã®å¤‰æ›
+	 * @param str å¤‰æ›å…ƒæ–‡å­—åˆ—
 	 */
 	void parseString(std::string str)
 	{
@@ -146,9 +146,9 @@ private:
 	}
 
 	/**
-	 * ’l‚ÌŒğŠ·
-	 * @return ŒğŠ·Œã‚Ì’l
-	 * @param ŒğŠ·‘ÎÛ‚ÌƒIƒuƒWƒFƒNƒg
+	 * å€¤ã®äº¤æ›
+	 * @return äº¤æ›å¾Œã®å€¤
+	 * @param äº¤æ›å¯¾è±¡ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	MultiPrecisionInteger& swap(MultiPrecisionInteger target) throw()
 	{
@@ -163,9 +163,9 @@ private:
 	}
 
 	/**
-	 * ƒrƒbƒg’l‚Ìæ“¾
-	 * @return ƒrƒbƒg’l
-	 * @param offset LSB‚©‚ç‚Ì‹——£(MAX‚ÍMSB-LSBAMIN‚ÍLSB)
+	 * ãƒ“ãƒƒãƒˆå€¤ã®å–å¾—
+	 * @return ãƒ“ãƒƒãƒˆå€¤
+	 * @param offset LSBã‹ã‚‰ã®è·é›¢(MAXã¯MSB-LSBã€MINã¯LSB)
 	 */
 	bool getBit(size_t offset) const
 	{
@@ -176,13 +176,13 @@ private:
 	}
 
 	/**
-	 * ƒ‚ƒ“ƒSƒƒŠæZ
-	 * @return æZŒã‚Ì’l
-	 * @param a Š|‚¯‚é”
-	 * @param b Š|‚¯‚ç‚ê‚é”
-	 * @param r ‚×‚«”
-	 * @param n „‰ñŒQ‚Ìè—]Œ³
-	 * @param n_ n‚Ì‹tŒ³
+	 * ãƒ¢ãƒ³ã‚´ãƒ¡ãƒªä¹—ç®—
+	 * @return ä¹—ç®—å¾Œã®å€¤
+	 * @param a æ›ã‘ã‚‹æ•°
+	 * @param b æ›ã‘ã‚‰ã‚Œã‚‹æ•°
+	 * @param r ã¹ãæ•°
+	 * @param n å·¡å›ç¾¤ã®å‰°ä½™å…ƒ
+	 * @param n_ nã®é€†å…ƒ
 	 */
 	MultiPrecisionInteger
 	montgomeryProduct(const MultiPrecisionInteger& a,
@@ -209,9 +209,9 @@ private:
 	}
 
 	/**
-	 * è—]ŒvZ
-	 * @return BaseUnti —]‚è
-	 * @param divisor Š„‚é”
+	 * å‰°ä½™è¨ˆç®—
+	 * @return BaseUnti ä½™ã‚Š
+	 * @param divisor å‰²ã‚‹æ•°
 	 */
 	BaseUnit modulus(const BaseUnit divisor) const
 	{
@@ -226,10 +226,10 @@ private:
 	}
 
 	/**
-	 * œZ
-	 * @return ¤
-	 * @param src Š„‚é”
-	 * @param modulo —]‚è(o—Í’l)
+	 * é™¤ç®—
+	 * @return å•†
+	 * @param src å‰²ã‚‹æ•°
+	 * @param modulo ä½™ã‚Š(å‡ºåŠ›å€¤)
 	 */
 	MultiPrecisionInteger&
 	divide(const MultiPrecisionInteger& src,
@@ -326,8 +326,8 @@ private:
 public:
 		
 	/**
-	 * ©g‚Ì•„†”½“]
-	 * @return ©g‚Ö‚ÌQÆ
+	 * è‡ªèº«ã®ç¬¦å·åè»¢
+	 * @return è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger& negate()
 	{
@@ -336,8 +336,8 @@ public:
 	}
 
 	/**
-	 * •„†”½“]
-	 * @return ”½“]‚µ‚½’l‚ğ‚ÂˆêƒIƒuƒWƒFƒNƒg
+	 * ç¬¦å·åè»¢
+	 * @return åè»¢ã—ãŸå€¤ã‚’æŒã¤ä¸€æ™‚ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	MultiPrecisionInteger getNegateValue() const
 	{
@@ -345,16 +345,16 @@ public:
 	}
 
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	MultiPrecisionInteger()
 		: value(), isMinusSign(false)
 	{}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * Šî””ÍˆÍ‚Ì’l‚Å‚Ì‰Šú‰»
-	 * @param value_ Šî”Œ^‚Å‚Ì”’l
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * åŸºæ•°ç¯„å›²ã®å€¤ã§ã®åˆæœŸåŒ–
+	 * @param value_ åŸºæ•°å‹ã§ã®æ•°å€¤
 	 */
 	MultiPrecisionInteger(
 		const BaseUnit value_)
@@ -364,9 +364,9 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * ŒvZ”’l”ÍˆÍ‚Ì’l‚Å‚Ì‰Šú‰»
-	 * @param value_ ŒvZ”’lŒ^‚Å‚Ì”’l
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * è¨ˆç®—æ•°å€¤ç¯„å›²ã®å€¤ã§ã®åˆæœŸåŒ–
+	 * @param value_ è¨ˆç®—æ•°å€¤å‹ã§ã®æ•°å€¤
 	 */
 	MultiPrecisionInteger(
 		CalcBase value_)
@@ -387,9 +387,9 @@ public:
 	}
 
 	/**
-	 * ƒIƒuƒWƒFƒNƒg‚©‚çŠî”Œ^‚Å‚Ì•\Œ»‚Ö‚Ì•ÏŠ·
-	 * @return •ÏŠ·‚³‚ê‚½”’l
-	 * @exception std::overflow_error “à•”•\Œ»’l‚ªŠî”Œ^‚É“ü‚ç‚È‚©‚Á‚½ê‡
+	 * ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰åŸºæ•°å‹ã§ã®è¡¨ç¾ã¸ã®å¤‰æ›
+	 * @return å¤‰æ›ã•ã‚ŒãŸæ•°å€¤
+	 * @exception std::overflow_error å†…éƒ¨è¡¨ç¾å€¤ãŒåŸºæ•°å‹ã«å…¥ã‚‰ãªã‹ã£ãŸå ´åˆ
 	 */
 	BaseUnit toBaseUnit() const
 	{
@@ -400,10 +400,10 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * “à•”’l‚ğ“¯’l‚ª˜A‘±‚µ‚½‚à‚Ì‚Å–„‚ß‚Ä‰Šú‰»
-	 * @param fillValue –„‚ß‚é’l
-	 * @param fillLength –„‚ß‚éŒÂ”
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * å†…éƒ¨å€¤ã‚’åŒå€¤ãŒé€£ç¶šã—ãŸã‚‚ã®ã§åŸ‹ã‚ã¦åˆæœŸåŒ–
+	 * @param fillValue åŸ‹ã‚ã‚‹å€¤
+	 * @param fillLength åŸ‹ã‚ã‚‹å€‹æ•°
 	 */
 	MultiPrecisionInteger(
 		const BaseUnit fillValue,
@@ -414,11 +414,11 @@ public:
 	}
 	
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * Šî”Œ^”z—ñ‚©‚ç‚Ì‰Šú‰»
-	 * @param first ”z—ñ‚Ì‰Šúƒ|ƒCƒ“ƒ^
-	 * @param last I’[—v‘f‚ÌŸ‚ÌˆÊ’u‚ğ•\‚·ƒ|ƒCƒ“ƒ^
-	 * @param isMinus •„†ƒtƒ‰ƒO(true‚Åƒ}ƒCƒiƒX)
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * åŸºæ•°å‹é…åˆ—ã‹ã‚‰ã®åˆæœŸåŒ–
+	 * @param first é…åˆ—ã®åˆæœŸãƒã‚¤ãƒ³ã‚¿
+	 * @param last çµ‚ç«¯è¦ç´ ã®æ¬¡ã®ä½ç½®ã‚’è¡¨ã™ãƒã‚¤ãƒ³ã‚¿
+	 * @param isMinus ç¬¦å·ãƒ•ãƒ©ã‚°(trueã§ãƒã‚¤ãƒŠã‚¹)
 	 */
 	MultiPrecisionInteger(
 		const BaseUnit* first,
@@ -429,9 +429,9 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * \˜Zi•\Œ»•¶š—ñ‚©‚ç‚Ì‰Šú‰»
-	 * @param cstr \˜Zi•\Œ»‚Å‘‚©‚ê‚½•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * åå…­é€²è¡¨ç¾æ–‡å­—åˆ—ã‹ã‚‰ã®åˆæœŸåŒ–
+	 * @param cstr åå…­é€²è¡¨ç¾ã§æ›¸ã‹ã‚ŒãŸæ–‡å­—åˆ—
 	 */
 	MultiPrecisionInteger(
 		const char* cstr)
@@ -442,9 +442,9 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * \˜Zi•\Œ»•¶š—ñ‚©‚ç‚Ì‰Šú‰»
-	 * @param str \˜Zi•\Œ»‚Å‘‚©‚ê‚½•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * åå…­é€²è¡¨ç¾æ–‡å­—åˆ—ã‹ã‚‰ã®åˆæœŸåŒ–
+	 * @param str åå…­é€²è¡¨ç¾ã§æ›¸ã‹ã‚ŒãŸæ–‡å­—åˆ—
 	 */
 	MultiPrecisionInteger(
 		const std::string& str)
@@ -454,8 +454,8 @@ public:
 	}
 
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param src ƒRƒs[Œ³‚ÌƒIƒuƒWƒFƒNƒg
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param src ã‚³ãƒ”ãƒ¼å…ƒã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	MultiPrecisionInteger(
 		const MultiPrecisionInteger& src)
@@ -464,16 +464,16 @@ public:
 	{}
 
 	/**
-	 * ƒrƒbƒg”•ÛØ‚Ì‘½”{’·”’lì¬
-	 * @param head Œ³‚Æ‚È‚é”’lƒ|ƒCƒ“ƒ^‚Ìæ“ª
-	 * @param last Œ³‚Æ‚È‚é”’lƒ|ƒCƒ“ƒ^‚ÌÅI—v‘f‚ÌŸ
-	 * ˆø”ƒf[ƒ^‚Í”j‰ó‚³‚ê‚é‚Ì‚Å’ˆÓ
+	 * ãƒ“ãƒƒãƒˆæ•°ä¿è¨¼ã®å¤šå€é•·æ•°å€¤ä½œæˆ
+	 * @param head å…ƒã¨ãªã‚‹æ•°å€¤ãƒã‚¤ãƒ³ã‚¿ã®å…ˆé ­
+	 * @param last å…ƒã¨ãªã‚‹æ•°å€¤ãƒã‚¤ãƒ³ã‚¿ã®æœ€çµ‚è¦ç´ ã®æ¬¡
+	 * å¼•æ•°ãƒ‡ãƒ¼ã‚¿ã¯ç ´å£Šã•ã‚Œã‚‹ã®ã§æ³¨æ„
 	 */
 	static MultiPrecisionInteger 
 	makeNumberOfBitSafe(BaseUnit* head, BaseUnit* last)
 	{
-		*head |= 0x01; // ‘f”‚Í(2ˆÈŠO‚Í)Šï‘f”‚È‚Ì‚Å
-		// MSB‚ğ1‚É‚·‚é‚±‚Æ‚Åƒrƒbƒg”‚ğ•ÛØ
+		*head |= 0x01; // ç´ æ•°ã¯(2ä»¥å¤–ã¯)å¥‡ç´ æ•°ãªã®ã§
+		// MSBã‚’1ã«ã™ã‚‹ã“ã¨ã§ãƒ“ãƒƒãƒˆæ•°ã‚’ä¿è¨¼
 		*(last-1) |= 
 			(((CalcBase)std::numeric_limits<BaseUnit>::max() + 1) >> 1);
 
@@ -481,8 +481,8 @@ public:
 	}
 	
 	/**
-	 * ƒrƒbƒg”•ÛØ‚Ì‘½”{’·”’lì¬
-	 * @param Œ³‚Æ‚È‚é”’l‚Ìstd::vector
+	 * ãƒ“ãƒƒãƒˆæ•°ä¿è¨¼ã®å¤šå€é•·æ•°å€¤ä½œæˆ
+	 * @param å…ƒã¨ãªã‚‹æ•°å€¤ã®std::vector
 	 */
 	static MultiPrecisionInteger 
 	makeNumberOfBitSafe(std::vector<BaseUnit>& src)
@@ -491,8 +491,8 @@ public:
 	}
 
 	/**
-	 * ‘½”{’·®”‚Ì“à•”•\Œ»‚ğstd::vector<BaseUnit_>‚Å•Ô‚·
-	 * @return Šî”‚Ìstd::vector
+	 * å¤šå€é•·æ•´æ•°ã®å†…éƒ¨è¡¨ç¾ã‚’std::vector<BaseUnit_>ã§è¿”ã™
+	 * @return åŸºæ•°ã®std::vector
 	 */
 	std::vector<BaseUnit> toVector() const
 	{
@@ -501,10 +501,10 @@ public:
 	}
 
 	/**
-	 * ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚Å‚Ì“à•”•\Œ»‚Ìæ“¾
-	 * result[result.size() -1] ‚ªãˆÊŒ…Aresult[0]‚ªÅ‰ºˆÊŒ…
-	 * @return ƒoƒCƒg”z—ñ‚Æ‚µ‚Ä‚Ì‘½”{’·®”
-	 * @param roundSize ÅãˆÊŒ…‚ğ‰½ƒoƒCƒg‚ÅŠÛ‚ß‚Äˆ—‚·‚é‚©
+	 * ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã§ã®å†…éƒ¨è¡¨ç¾ã®å–å¾—
+	 * result[result.size() -1] ãŒä¸Šä½æ¡ã€result[0]ãŒæœ€ä¸‹ä½æ¡
+	 * @return ãƒã‚¤ãƒˆé…åˆ—ã¨ã—ã¦ã®å¤šå€é•·æ•´æ•°
+	 * @param roundSize æœ€ä¸Šä½æ¡ã‚’ä½•ãƒã‚¤ãƒˆã§ä¸¸ã‚ã¦å‡¦ç†ã™ã‚‹ã‹
 	 */
 	std::vector<unsigned char>
 	toBigEndianMemory(const size_t roundSize = 4) const
@@ -532,10 +532,10 @@ public:
 	}
 
 	/**
-	 * ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“ƒoƒCƒg”z—ñ‚©‚ç‚Ì‘½”{’·®”\’z
-	 * \’zÏ‚İƒIƒuƒWƒFƒNƒg‚Ì’l‚ğ‘‚«Š·‚¦‚é‚±‚Æ‚É‚æ‚Á‚Ä¶¬‚µ‚Ü‚·
-	 * @return ©g‚Ö‚ÌQÆ
-	 * @param source Œ³‚Æ‚È‚éƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“ƒoƒCƒgstd::vector
+	 * ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒã‚¤ãƒˆé…åˆ—ã‹ã‚‰ã®å¤šå€é•·æ•´æ•°æ§‹ç¯‰
+	 * æ§‹ç¯‰æ¸ˆã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å€¤ã‚’æ›¸ãæ›ãˆã‚‹ã“ã¨ã«ã‚ˆã£ã¦ç”Ÿæˆã—ã¾ã™
+	 * @return è‡ªèº«ã¸ã®å‚ç…§
+	 * @param source å…ƒã¨ãªã‚‹ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒã‚¤ãƒˆstd::vector
 	 */
 	MultiPrecisionInteger&
 	fromBigEndianMemory(std::vector<unsigned char> source)
@@ -562,14 +562,14 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~MultiPrecisionInteger()
 	{}
 
 	/**
-	 * \˜Zi•\Œ»•¶š—ñ‚Ö‚Ì•ÏŠ·
-	 * @return \˜Zi•\Œ»‚Ì•¶š—ñ
+	 * åå…­é€²è¡¨ç¾æ–‡å­—åˆ—ã¸ã®å¤‰æ›
+	 * @return åå…­é€²è¡¨ç¾ã®æ–‡å­—åˆ—
 	 */
 	std::string toString() const
 	{
@@ -611,8 +611,8 @@ public:
 	}
 
 	/**
-	 * “à•”•\Œ»‚ª0‚©‚Ç‚¤‚©
-	 * @return 0‚È‚çtrue
+	 * å†…éƒ¨è¡¨ç¾ãŒ0ã‹ã©ã†ã‹
+	 * @return 0ãªã‚‰true
 	 */
 	bool isZero() const
 	{
@@ -627,8 +627,8 @@ public:
 	}
 
 	/**
-	 * “à•”•\Œ»‚ª‹ô”‚©‚Ç‚¤‚©
-	 * @return ‹ô”‚È‚çtrue
+	 * å†…éƒ¨è¡¨ç¾ãŒå¶æ•°ã‹ã©ã†ã‹
+	 * @return å¶æ•°ãªã‚‰true
 	 */
 	bool isEven() const
 	{
@@ -639,11 +639,11 @@ public:
 	}
 
 	/**
-	 * ‚×‚«æŒvZ
-	 * @param powerValue_ ‚×‚«æ”
-	 * @return ‚×‚«æ‚³‚ê‚½”
-	 * @todo ”ñŒø—¦‚ÈÀ‘•‚È‚Ì‚Å©g‚ğ‚×‚«æ‚·‚é‚æ‚¤‚É‘‚«Š·‚¦‚Ä
-	 * const”Å‚àì‚é‚æ‚¤‚É•ÏX‚·‚é‚×‚«
+	 * ã¹ãä¹—è¨ˆç®—
+	 * @param powerValue_ ã¹ãä¹—æ•°
+	 * @return ã¹ãä¹—ã•ã‚ŒãŸæ•°
+	 * @todo éåŠ¹ç‡ãªå®Ÿè£…ãªã®ã§è‡ªèº«ã‚’ã¹ãä¹—ã™ã‚‹ã‚ˆã†ã«æ›¸ãæ›ãˆã¦
+	 * constç‰ˆã‚‚ä½œã‚‹ã‚ˆã†ã«å¤‰æ›´ã™ã‚‹ã¹ã
 	 */
 	MultiPrecisionInteger
 	power(const MultiPrecisionInteger& powerValue_) const
@@ -675,10 +675,10 @@ public:
 	}
 
 	/**
-	 * ƒ‚ƒ“ƒSƒƒŠè—]‰‰ZB’Êí‚Ì‚×‚«è—]‰‰Z‚æ‚è2”{’ö“x‚‘¬‚É‚È‚è‚Ü‚·
-	 * @param e ‚×‚«æ”
-	 * @param n è—]”
-	 * @return ©g‚Ö‚ÌQÆ
+	 * ãƒ¢ãƒ³ã‚´ãƒ¡ãƒªå‰°ä½™æ¼”ç®—ã€‚é€šå¸¸ã®ã¹ãå‰°ä½™æ¼”ç®—ã‚ˆã‚Š2å€ç¨‹åº¦é«˜é€Ÿã«ãªã‚Šã¾ã™
+	 * @param e ã¹ãä¹—æ•°
+	 * @param n å‰°ä½™æ•°
+	 * @return è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger&
 	montgomeryModulusExponential(const MultiPrecisionInteger& e,
@@ -708,8 +708,8 @@ public:
 	}
 
 	/**
-	 * ”’l‚ğ•\Œ»‚·‚é‚Ì‚É‰½ƒrƒbƒg•ª•K—v‚©‚ğæ“¾
-	 * @return •\Œ»‚·‚é‚Ì‚É•K—v‚Èbit”
+	 * æ•°å€¤ã‚’è¡¨ç¾ã™ã‚‹ã®ã«ä½•ãƒ“ãƒƒãƒˆåˆ†å¿…è¦ã‹ã‚’å–å¾—
+	 * @return è¡¨ç¾ã™ã‚‹ã®ã«å¿…è¦ãªbitæ•°
 	 */
 	size_t getBitLength() const
 	{
@@ -742,8 +742,8 @@ public:
 	}
 
 	/**
-	 * ”’l‚ğ•\Œ»‚·‚é‚Ì‚ÉŠî”‚Ì”z—ñ‚Å‰½ƒJƒ‰ƒ€•K—v‚©‚ğæ“¾
-	 * @return •\Œ»‚É•K—v‚ÈƒJƒ‰ƒ€”
+	 * æ•°å€¤ã‚’è¡¨ç¾ã™ã‚‹ã®ã«åŸºæ•°ã®é…åˆ—ã§ä½•ã‚«ãƒ©ãƒ å¿…è¦ã‹ã‚’å–å¾—
+	 * @return è¡¨ç¾ã«å¿…è¦ãªã‚«ãƒ©ãƒ æ•°
 	 */
 	const size_t getMaxColumn() const
 	{
@@ -757,8 +757,8 @@ public:
 	}
 
 	/**
-	 * “à•”•\Œ»‚Ì“ª‚É‚Â‚¢‚½0ƒpƒfƒBƒ“ƒO‚Ìíœ
-	 * @return ©g‚Ö‚ÌQÆ
+	 * å†…éƒ¨è¡¨ç¾ã®é ­ã«ã¤ã„ãŸ0ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°ã®å‰Šé™¤
+	 * @return è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger& adjust()
 	{
@@ -774,9 +774,9 @@ public:
 public:
 
 	/**
-	 * ‘ã“ü‰‰Zq
-	 * @param rhs ‘ã“üŒ³
-	 * @return ‘ã“üŒã‚Ì©g‚Ö‚ÌQÆ
+	 * ä»£å…¥æ¼”ç®—å­
+	 * @param rhs ä»£å…¥å…ƒ
+	 * @return ä»£å…¥å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger&
 	operator=(const MultiPrecisionInteger& rhs)
@@ -790,9 +790,9 @@ public:
 	}
 
 	/**
-	 * ‰ÁZ
-	 * @param ‰E•Ó’l
-	 * @return ‰ÁZŒ‹‰Ê
+	 * åŠ ç®—
+	 * @param å³è¾ºå€¤
+	 * @return åŠ ç®—çµæœ
 	 */
 	MultiPrecisionInteger
 	operator+(const MultiPrecisionInteger& rhs) const
@@ -801,9 +801,9 @@ public:
 	}
 
 	/**
-	 * Œ¸Z
-	 * @param ‰E•Ó’l
-	 * @return Œ¸ZŒ‹‰Ê
+	 * æ¸›ç®—
+	 * @param å³è¾ºå€¤
+	 * @return æ¸›ç®—çµæœ
 	 */
 	MultiPrecisionInteger
 	operator-(const MultiPrecisionInteger& rhs) const
@@ -812,9 +812,9 @@ public:
 	}
 
 	/**
-	 * æZ
-	 * @param æ”
-	 * @return æZŒ‹‰Ê
+	 * ä¹—ç®—
+	 * @param ä¹—æ•°
+	 * @return ä¹—ç®—çµæœ
 	 */
 	MultiPrecisionInteger
 	operator*(const MultiPrecisionInteger& rhs) const
@@ -823,9 +823,9 @@ public:
 	}
 
 	/**
-	 * œZ
-	 * @param œ”
-	 * @return œZŒ‹‰Ê
+	 * é™¤ç®—
+	 * @param é™¤æ•°
+	 * @return é™¤ç®—çµæœ
 	 */
 	MultiPrecisionInteger
 	operator/(const MultiPrecisionInteger& rhs) const
@@ -835,9 +835,9 @@ public:
 	}
 
 	/**
-	 * è—]ŒvZ
-	 * @param œ”
-	 * @return —]‚è
+	 * å‰°ä½™è¨ˆç®—
+	 * @param é™¤æ•°
+	 * @return ä½™ã‚Š
 	 */
 	MultiPrecisionInteger
 	operator%(const MultiPrecisionInteger& rhs) const
@@ -848,11 +848,11 @@ public:
 	}
 
 	/**
-	 * è—]ŒvZ
-	 * œ”‚ªŠî”‚Åû‚Ü‚éê‡‚Í‚±‚¿‚ç‚ğg‚Á‚Ä‚­‚¾‚³‚¢B
-	 * ˆê”Êƒo[ƒWƒ‡ƒ“‚Æ”ä‚×‚Ä‚Í‚é‚©‚É‚‘¬‚ÉÀs‚Å‚«‚Ü‚·B
-	 * @param œ”(‚½‚¾‚µŒ^‚ÍŠî”)
-	 * @return —]‚è
+	 * å‰°ä½™è¨ˆç®—
+	 * é™¤æ•°ãŒåŸºæ•°ã§åã¾ã‚‹å ´åˆã¯ã“ã¡ã‚‰ã‚’ä½¿ã£ã¦ãã ã•ã„ã€‚
+	 * ä¸€èˆ¬ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã¨æ¯”ã¹ã¦ã¯ã‚‹ã‹ã«é«˜é€Ÿã«å®Ÿè¡Œã§ãã¾ã™ã€‚
+	 * @param é™¤æ•°(ãŸã ã—å‹ã¯åŸºæ•°)
+	 * @return ä½™ã‚Š
 	 */
 	BaseUnit operator%(const BaseUnit& rhs) const
 	{
@@ -860,9 +860,9 @@ public:
 	}
 
 	/**
-	 * ‰ÁZ‘ã“ü
-	 * @param rhs ‰E•Ó’l
-	 * @return ‰ÁZŒã‚Ì©g‚Ö‚ÌQÆ
+	 * åŠ ç®—ä»£å…¥
+	 * @param rhs å³è¾ºå€¤
+	 * @return åŠ ç®—å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger&
 	operator+=(const MultiPrecisionInteger& rhs)
@@ -912,9 +912,9 @@ public:
 	}
 
 	/**
-	 * Œ¸Z‘ã“ü
-	 * @param rhs ‰E•Ó’l
-	 * @return Œ¸ZŒã‚Ì©g‚Ö‚ÌQÆ
+	 * æ¸›ç®—ä»£å…¥
+	 * @param rhs å³è¾ºå€¤
+	 * @return æ¸›ç®—å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger&
 	operator-=(const MultiPrecisionInteger& rhs)
@@ -996,9 +996,9 @@ public:
 	}
 	
 	/**
-	 * æZ‘ã“ü
-	 * @param rhs æ”
-	 * @return æZŒã‚Ì©g‚Ö‚ÌQÆ
+	 * ä¹—ç®—ä»£å…¥
+	 * @param rhs ä¹—æ•°
+	 * @return ä¹—ç®—å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger&
 	operator*=(const MultiPrecisionInteger& rhs)
@@ -1050,9 +1050,9 @@ public:
 	}
 
 	/**
-	 * œZ‘ã“ü
-	 * @param rhs œ”
-	 * @return Š„‚ç‚ê‚½”
+	 * é™¤ç®—ä»£å…¥
+	 * @param rhs é™¤æ•°
+	 * @return å‰²ã‚‰ã‚ŒãŸæ•°
 	 */
 	MultiPrecisionInteger&
 	operator/=(const MultiPrecisionInteger& rhs)
@@ -1062,9 +1062,9 @@ public:
 	}
 
 	/**
-	 * è—]‘ã“ü
-	 * @param rhs œ”
-	 * @return —]‚è‚ğ‘ã“ü‚µ‚½©g‚Ö‚ÌQÆ
+	 * å‰°ä½™ä»£å…¥
+	 * @param rhs é™¤æ•°
+	 * @return ä½™ã‚Šã‚’ä»£å…¥ã—ãŸè‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger&
 	operator%=(const MultiPrecisionInteger& rhs)
@@ -1076,8 +1076,8 @@ public:
 	}
 	
 	/**
-	 * ‘O’uƒCƒ“ƒNƒŠƒƒ“ƒg
-	 * @return ƒCƒ“ƒNƒŠƒƒ“ƒgŒã‚Ì©g‚Ö‚ÌQÆ
+	 * å‰ç½®ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+	 * @return ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆå¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger& operator++()
 	{
@@ -1093,9 +1093,9 @@ public:
 	}
 
 	/**
-	 * Œã’uƒCƒ“ƒNƒŠƒƒ“ƒg
-	 * @return ƒCƒ“ƒNƒŠƒƒ“ƒg‘O‚Ì’l
-	 * @todo ‘O’uƒCƒ“ƒNƒŠƒƒ“ƒg‚ÖˆÏ÷‚·‚éÀ‘•‚Ö‚Ì•ÏX
+	 * å¾Œç½®ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+	 * @return ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆå‰ã®å€¤
+	 * @todo å‰ç½®ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã¸å§”è­²ã™ã‚‹å®Ÿè£…ã¸ã®å¤‰æ›´
 	 */
 	MultiPrecisionInteger operator++(int)
 	{
@@ -1112,8 +1112,8 @@ public:
 	}
 
 	/**
-	 * ‘O’uƒfƒNƒŠƒƒ“ƒg
-	 * @return ƒfƒNƒŠƒƒ“ƒgŒã‚Ì©g‚Ö‚ÌQÆ
+	 * å‰ç½®ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+	 * @return ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆå¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger& operator--()
 	{
@@ -1129,9 +1129,9 @@ public:
 	}
 
 	/**
-	 * Œã’uƒfƒNƒŠƒƒ“ƒg
-	 * @return ƒfƒNƒŠƒƒ“ƒg‘O‚Ì’l
-	 * @todo ‘O’uƒfƒNƒŠƒƒ“ƒg‚Ö‚ÌˆÏ÷‚ğg‚Á‚½À‘•‚Ö‚Ì•ÏX
+	 * å¾Œç½®ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
+	 * @return ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆå‰ã®å€¤
+	 * @todo å‰ç½®ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã¸ã®å§”è­²ã‚’ä½¿ã£ãŸå®Ÿè£…ã¸ã®å¤‰æ›´
 	 */
 	MultiPrecisionInteger operator--(int)
 	{
@@ -1148,9 +1148,9 @@ public:
 	}
 
 	/**
-	 * ¶ƒVƒtƒg
-	 * @param ƒVƒtƒg‚·‚éƒrƒbƒg”
-	 * @return n ƒVƒtƒgŒã‚ÌƒIƒuƒWƒFƒNƒg
+	 * å·¦ã‚·ãƒ•ãƒˆ
+	 * @param ã‚·ãƒ•ãƒˆã™ã‚‹ãƒ“ãƒƒãƒˆæ•°
+	 * @return n ã‚·ãƒ•ãƒˆå¾Œã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	MultiPrecisionInteger operator<<(int n) const
 	{
@@ -1158,9 +1158,9 @@ public:
 	}
 
 	/**
-	 * ¶ƒVƒtƒg
-	 * @param ƒVƒtƒg‚·‚éƒrƒbƒg”
-	 * @return n ƒVƒtƒgŒã‚Ì©g‚Ö‚ÌQÆ
+	 * å·¦ã‚·ãƒ•ãƒˆ
+	 * @param ã‚·ãƒ•ãƒˆã™ã‚‹ãƒ“ãƒƒãƒˆæ•°
+	 * @return n ã‚·ãƒ•ãƒˆå¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger& operator<<=(int n)
 	{
@@ -1185,9 +1185,9 @@ public:
 	}
 
 	/**
-	 * ¶ƒVƒtƒg
-	 * @param n ƒVƒtƒg‚·‚éƒrƒbƒg”
-	 * @return ƒVƒtƒgŒã‚Ì’l
+	 * å·¦ã‚·ãƒ•ãƒˆ
+	 * @param n ã‚·ãƒ•ãƒˆã™ã‚‹ãƒ“ãƒƒãƒˆæ•°
+	 * @return ã‚·ãƒ•ãƒˆå¾Œã®å€¤
 	 */
 	MultiPrecisionInteger operator>>(int n) const
 	{
@@ -1195,9 +1195,9 @@ public:
 	}
 
 	/**
-	 * ¶ƒVƒtƒg
-	 * @param n ƒVƒtƒg‚·‚éƒrƒbƒg”
-	 * @return ƒVƒtƒgŒã‚Ì©g‚Ö‚ÌQÆ
+	 * å·¦ã‚·ãƒ•ãƒˆ
+	 * @param n ã‚·ãƒ•ãƒˆã™ã‚‹ãƒ“ãƒƒãƒˆæ•°
+	 * @return ã‚·ãƒ•ãƒˆå¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	MultiPrecisionInteger& operator>>=(int n)
 	{
@@ -1240,9 +1240,9 @@ public:
 	}
 
 	/** 
-	 * “™†‰‰Zq
-	 * @return “¯‚¶’l‚È‚çtrue
-	 * @param rhs ”äŠr‘ÎÛ
+	 * ç­‰å·æ¼”ç®—å­
+	 * @return åŒã˜å€¤ãªã‚‰true
+	 * @param rhs æ¯”è¼ƒå¯¾è±¡
 	 */
 	bool operator==(const MultiPrecisionInteger& rhs) const
 	{
@@ -1267,9 +1267,9 @@ public:
 	}
 
 	/**
-	 * ”Û’è‰‰Zq
-	 * @param rhs ”äŠr‘ÎÛ
-	 * @return ˆá‚¤’l‚ğ‚Á‚Ä‚¢‚ê‚Îtrue
+	 * å¦å®šæ¼”ç®—å­
+	 * @param rhs æ¯”è¼ƒå¯¾è±¡
+	 * @return é•ã†å€¤ã‚’æŒã£ã¦ã„ã‚Œã°true
 	 */
 	bool operator!=(const MultiPrecisionInteger& rhs) const
 	{
@@ -1277,9 +1277,9 @@ public:
 	}
 
 	/**
-	 * LessThan”äŠr‰‰Zq
-	 * @param rhs ”äŠr‘ÎÛ
-	 * @return ”äŠr‘ÎÛ‚æ‚è¬‚³‚¯‚ê‚Îtrue
+	 * LessThanæ¯”è¼ƒæ¼”ç®—å­
+	 * @param rhs æ¯”è¼ƒå¯¾è±¡
+	 * @return æ¯”è¼ƒå¯¾è±¡ã‚ˆã‚Šå°ã•ã‘ã‚Œã°true
 	 */
 	bool operator<(const MultiPrecisionInteger& rhs) const
 	{
@@ -1306,9 +1306,9 @@ public:
 	}
 
 	/**
-	 * GreaterEqual”äŠr‰‰Zq
-	 * @param rhs ”äŠr‘ÎÛ
-	 * @return ‘ÎÛ‚Æ“™‚µ‚¢‚Ü‚½‚Í‚æ‚è‘å‚«‚¯‚ê‚Îtrue
+	 * GreaterEqualæ¯”è¼ƒæ¼”ç®—å­
+	 * @param rhs æ¯”è¼ƒå¯¾è±¡
+	 * @return å¯¾è±¡ã¨ç­‰ã—ã„ã¾ãŸã¯ã‚ˆã‚Šå¤§ãã‘ã‚Œã°true
 	 */
 	bool operator>=(const MultiPrecisionInteger& rhs) const
 	{
@@ -1316,9 +1316,9 @@ public:
 	}
 
 	/**
-	 * GreaterThan”äŠr‰‰Zq
-	 * @param rhs ”äŠr‘ÎÛ
-	 * @return ‘ÎÛ‚æ‚è‘å‚«‚¯‚ê‚Îtrue
+	 * GreaterThanæ¯”è¼ƒæ¼”ç®—å­
+	 * @param rhs æ¯”è¼ƒå¯¾è±¡
+	 * @return å¯¾è±¡ã‚ˆã‚Šå¤§ãã‘ã‚Œã°true
 	 */
 	bool operator>(const MultiPrecisionInteger& rhs) const
 	{
@@ -1345,9 +1345,9 @@ public:
 	}
 
 	/**
-	 * LessThan”äŠr‰‰Zq
-	 * @param rhs ”äŠr‘ÎÛ
-	 * @return ‘ÎÛ‚Æ“¯‚¶‚©‚æ‚è¬‚³‚¯‚ê‚Îtrue
+	 * LessThanæ¯”è¼ƒæ¼”ç®—å­
+	 * @param rhs æ¯”è¼ƒå¯¾è±¡
+	 * @return å¯¾è±¡ã¨åŒã˜ã‹ã‚ˆã‚Šå°ã•ã‘ã‚Œã°true
 	 */
 	bool operator<=(const MultiPrecisionInteger& rhs) const
 	{
@@ -1355,12 +1355,12 @@ public:
 	}
 
 	/**
-	 * ‹^‘f”‚Ì¶¬
-	 * @param bitToLength ¶¬‚·‚é‹^‘f”‚Ìƒrƒbƒg”
-	 * @param random RandomƒCƒ“ƒ^ƒtƒF[ƒX‚ğ‚Â‹[——”ƒIƒuƒWƒFƒNƒg
-	 * @param checkDepth ƒ‰ƒrƒ“-ƒ~ƒ‰[–@‚É‚æ‚éƒ`ƒFƒbƒNƒpƒX
-	 * @return Œ©‚Â‚©‚Á‚½‹^‘f”
-	 * @todo cehckDepth‚ğ‚¹‚ß‚Ä4‚­‚ç‚¢‚É‚Í‚µ‚Æ‚±‚¤EEE
+	 * ç–‘ç´ æ•°ã®ç”Ÿæˆ
+	 * @param bitToLength ç”Ÿæˆã™ã‚‹ç–‘ç´ æ•°ã®ãƒ“ãƒƒãƒˆæ•°
+	 * @param random Randomã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’æŒã¤æ“¬ä¼¼ä¹±æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @param checkDepth ãƒ©ãƒ“ãƒ³-ãƒŸãƒ©ãƒ¼æ³•ã«ã‚ˆã‚‹ãƒã‚§ãƒƒã‚¯ãƒ‘ã‚¹
+	 * @return è¦‹ã¤ã‹ã£ãŸç–‘ç´ æ•°
+	 * @todo cehckDepthã‚’ã›ã‚ã¦4ãã‚‰ã„ã«ã¯ã—ã¨ã“ã†ãƒ»ãƒ»ãƒ»
 	 */
 	static MultiPrecisionInteger
 	getProbablePrime(const size_t bitToLength,
@@ -1388,7 +1388,7 @@ public:
 				if (sieve.isCompositeNumber(offset))
 					continue;
 
-				// ‘f”•\‚ª‚È‚­‚È‚Á‚½or‚·‚×‚Ä‚Ì‘f”‚ğö‚è”²‚¯‚½
+				// ç´ æ•°è¡¨ãŒãªããªã£ãŸorã™ã¹ã¦ã®ç´ æ•°ã‚’æ½œã‚ŠæŠœã‘ãŸ
 
 				for (unsigned int primeCheckDepth = 0;
 					 primeCheckDepth < checkDepth;
@@ -1403,7 +1403,7 @@ public:
 					}
 					else
 					{
-						// Ø‹’”‚Ìì¬
+						// è¨¼æ‹ æ•°ã®ä½œæˆ
 						if (RabinPrimeTest(
 								baseNumber + offset,
 								MultiPrecisionInteger(primeCheckDepth + 2U))
@@ -1417,7 +1417,7 @@ public:
 					}
 				}
 			}
-			// â¿‚Ì”ÍˆÍŒÀŠE‚ğ’´‚¦‚½‚½‚ßAŠî€’l‚ğ‚¸‚ç‚µ‚ÄÄs
+			// ç¯©ã®ç¯„å›²é™ç•Œã‚’è¶…ãˆãŸãŸã‚ã€åŸºæº–å€¤ã‚’ãšã‚‰ã—ã¦å†è©¦è¡Œ
 			baseNumber += (BaseUnit)sieve.size();
 		}
 	}

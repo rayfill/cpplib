@@ -5,47 +5,47 @@
 #include <math/Geometry.hpp>
 
 /**
- * Win32 ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒIƒuƒWƒFƒNƒgƒNƒ‰ƒX
- * @param íœ•û–@‚ª‚¢‚Ü‚¢‚¿‚È‚Ì‚Å’x‰„ŠÖ”ŒÄ‚Ño‚µ‚Æ‚©Žg‚Á‚Ä
- * Šm•ÛŽž‚ÉŠJ•ú•û–@Ý’è‚Å‚«‚é‚æ‚¤‚É‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à
- * ‚»‚¤‚·‚ê‚ÎƒTƒuƒNƒ‰ƒX‚Å‚à‚¢‚ë‚¢‚ë‚Å‚«‚é‚µB
+ * Win32 ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚¯ãƒ©ã‚¹
+ * @param å‰Šé™¤æ–¹æ³•ãŒã„ã¾ã„ã¡ãªã®ã§é…å»¶é–¢æ•°å‘¼ã³å‡ºã—ã¨ã‹ä½¿ã£ã¦
+ * ç¢ºä¿æ™‚ã«é–‹æ”¾æ–¹æ³•è¨­å®šã§ãã‚‹ã‚ˆã†ã«ã—ãŸã»ã†ãŒã„ã„ã‹ã‚‚
+ * ãã†ã™ã‚Œã°ã‚µãƒ–ã‚¯ãƒ©ã‚¹ã§ã‚‚ã„ã‚ã„ã‚ã§ãã‚‹ã—ã€‚
  */
 class DeviceContext
 {
 private:
 	/**
-	 * ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚Ìƒ\[ƒX‚Æ‚È‚éHWNDƒnƒ“ƒhƒ‹
+	 * ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ã‚½ãƒ¼ã‚¹ã¨ãªã‚‹HWNDãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HWND deviceSource;
 
 	/**
-	 * ‰ŠúÝ’è‚³‚ê‚Ä‚¢‚éstock Bitmapƒnƒ“ƒhƒ‹
+	 * åˆæœŸè¨­å®šã•ã‚Œã¦ã„ã‚‹stock Bitmapãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HBITMAP stockBitmap;
 
 	/**
-	 * ‰ŠúÝ’è‚³‚ê‚Ä‚¢‚éstock brushƒnƒ“ƒhƒ‹
+	 * åˆæœŸè¨­å®šã•ã‚Œã¦ã„ã‚‹stock brushãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HBRUSH stockBrush;
 
 	/**
-	 * ‰ŠúÝ’è‚³‚ê‚Ä‚¢‚éstock Fontƒnƒ“ƒhƒ‹
+	 * åˆæœŸè¨­å®šã•ã‚Œã¦ã„ã‚‹stock Fontãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HFONT stockFont;
 
 	/**
-	 * ‰ŠúÝ’è‚³‚ê‚Ä‚¢‚éstock Penƒnƒ“ƒhƒ‹
+	 * åˆæœŸè¨­å®šã•ã‚Œã¦ã„ã‚‹stock Penãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HPEN stockPen;
 
 	/**
-	 * ‰ŠúÝ’è‚³‚ê‚Ä‚¢‚éstock Regionƒnƒ“ƒhƒ‹
+	 * åˆæœŸè¨­å®šã•ã‚Œã¦ã„ã‚‹stock Regionãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HRGN stockRegion;
 
 	/**
-	 * StockƒIƒuƒWƒFƒNƒg‚ÌÄÝ’è
-	 * ƒfƒXƒgƒ‰ƒNƒVƒ‡ƒ“Žž‚ÉŽg‚¤
+	 * Stockã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å†è¨­å®š
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚·ãƒ§ãƒ³æ™‚ã«ä½¿ã†
 	 */
 	void restoreStockObjects()
 	{
@@ -81,7 +81,7 @@ private:
 	}
 
 	/**
-	 * ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚ÌŠJ•ú
+	 * ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®é–‹æ”¾
 	 */
 	void release()
 	{
@@ -98,15 +98,15 @@ private:
 
 protected:
 	/**
-	 * ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹
+	 * ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HDC deviceContext;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param source ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgŽæ“¾Œ³‚É‚È‚éHWNDƒnƒ“ƒhƒ‹
-	 * @exception std::invalid_argument source‚ª•s³‚ÈƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹‚Ìê‡
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param source ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆå–å¾—å…ƒã«ãªã‚‹HWNDãƒãƒ³ãƒ‰ãƒ«
+	 * @exception std::invalid_argument sourceãŒä¸æ­£ãªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ã®å ´åˆ
 	 */
 	DeviceContext(HWND source) throw(std::invalid_argument)
 		: deviceContext(NULL),
@@ -123,10 +123,10 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * ŒÝŠ·«‚ðŽ‚Á‚½ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚ðì¬‚·‚é
-	 * @param source Œ³‚É‚È‚éƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹
-	 * @exception source ‚ª•s³‚ÈƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹‚Ìê‡
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * äº’æ›æ€§ã‚’æŒã£ãŸãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚’ä½œæˆã™ã‚‹
+	 * @param source å…ƒã«ãªã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«
+	 * @exception source ãŒä¸æ­£ãªãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®å ´åˆ
 	 */
 	DeviceContext(HDC source = NULL) throw(std::invalid_argument)
 		: deviceContext(NULL),
@@ -144,8 +144,8 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
-	 * ƒŠƒ\[ƒX‚ÍŽ©“®‚ÅŠJ•ú‚³‚ê‚é
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * ãƒªã‚½ãƒ¼ã‚¹ã¯è‡ªå‹•ã§é–‹æ”¾ã•ã‚Œã‚‹
 	 */
 	virtual ~DeviceContext()
 	{
@@ -154,9 +154,9 @@ public:
 	}
 
 	/**
-	 * ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹‚ÌŠ„‚è“–‚Ä
-	 * @param deviceContext_ Š„‚è“–‚Ä‚éƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹
-	 * @todo ‚Â‚©‚ñ‚¾‚Ü‚Ürelease()‚³‚ê‚é‚Æ•Ï‚È“®‚«‚·‚é‚©‚àEEE
+	 * ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®å‰²ã‚Šå½“ã¦
+	 * @param deviceContext_ å‰²ã‚Šå½“ã¦ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«
+	 * @todo ã¤ã‹ã‚“ã ã¾ã¾release()ã•ã‚Œã‚‹ã¨å¤‰ãªå‹•ãã™ã‚‹ã‹ã‚‚ãƒ»ãƒ»ãƒ»
 	 */
 	void attach(HDC deviceContext_)
 	{
@@ -167,9 +167,9 @@ public:
 	}
 
 	/**
-	 * Š„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚ÌŠJ•ú
-	 * ƒoƒCƒ“ƒh‚³‚ê‚Ä‚¢‚éGDIƒIƒuƒWƒFƒNƒg‚Í‚»‚Ì‚Ü‚Ü‚È‚Ì‚ÅŠJ•úŽž‚Í’ˆÓ
-	 * @return Š„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚½ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚Ìƒnƒ“ƒhƒ‹
+	 * å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®é–‹æ”¾
+	 * ãƒã‚¤ãƒ³ãƒ‰ã•ã‚Œã¦ã„ã‚‹GDIã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ãã®ã¾ã¾ãªã®ã§é–‹æ”¾æ™‚ã¯æ³¨æ„
+	 * @return å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãŸãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HDC detach()
 	{
@@ -180,8 +180,8 @@ public:
 	}
 
 	/**
-	 * ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹‚ÌŽæ“¾BŽå‚ÉWin32API‚Ö‚ÌƒuƒŠƒbƒW—p
-	 * @return ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹
+	 * ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—ã€‚ä¸»ã«Win32APIã¸ã®ãƒ–ãƒªãƒƒã‚¸ç”¨
+	 * @return ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HDC getDeviceContext() const throw()
 	{
@@ -189,10 +189,10 @@ public:
 	}
 
 	/**
-	 * ‰æ‘œ‚ÌƒuƒƒbƒN“]‘—
-	 * @param dest “]‘—æ‚ÌƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒIƒuƒWƒFƒNƒg
-	 * @param sourcePosition “]‘—Œ³‚Ì‹éŒ`”ÍˆÍ
-	 * @param destPosition “]‘—æ‚Ì‹éŒ`”ÍˆÍ
+	 * ç”»åƒã®ãƒ–ãƒ­ãƒƒã‚¯è»¢é€
+	 * @param dest è»¢é€å…ˆã®ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @param sourcePosition è»¢é€å…ƒã®çŸ©å½¢ç¯„å›²
+	 * @param destPosition è»¢é€å…ˆã®çŸ©å½¢ç¯„å›²
 	 */
 	bool blockTransfer(const DeviceContext& dest,
 					   const geometry::Rectangle<int>& sourcePosition,
@@ -210,8 +210,8 @@ public:
 	}
 
 	/**
-	 * ƒrƒbƒgƒ}ƒbƒvƒnƒ“ƒhƒ‹‚ÌƒoƒCƒ“ƒh
-	 * @param bitmap ƒoƒCƒ“ƒh‚·‚éƒrƒbƒgƒ}ƒbƒvƒnƒ“ƒhƒ‹
+	 * ãƒ“ãƒƒãƒˆãƒžãƒƒãƒ—ãƒãƒ³ãƒ‰ãƒ«ã®ãƒã‚¤ãƒ³ãƒ‰
+	 * @param bitmap ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ãƒ“ãƒƒãƒˆãƒžãƒƒãƒ—ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	void setBitmap(HBITMAP bitmap) throw()
 	{
@@ -223,8 +223,8 @@ public:
 	}
 
 	/**
-	 * ƒuƒ‰ƒVƒnƒ“ƒhƒ‹‚ÌƒoƒCƒ“ƒh
-	 * @param brush ƒoƒCƒ“ƒh‚·‚éƒuƒ‰ƒVƒnƒ“ƒhƒ‹
+	 * ãƒ–ãƒ©ã‚·ãƒãƒ³ãƒ‰ãƒ«ã®ãƒã‚¤ãƒ³ãƒ‰
+	 * @param brush ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ãƒ–ãƒ©ã‚·ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	void setBrush(HBRUSH brush) throw()
 	{
@@ -236,8 +236,8 @@ public:
 	}
 
 	/**
-	 * ƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹‚ÌƒoƒCƒ“ƒh
-	 * @param font ƒoƒCƒ“ƒh‚·‚éƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹
+	 * ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®ãƒã‚¤ãƒ³ãƒ‰
+	 * @param font ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	 */
 	void setFont(HFONT font) throw()
 	{
@@ -249,8 +249,8 @@ public:
 	}
 
 	/**
-	 * ƒyƒ“ƒnƒ“ƒhƒ‹‚ÌƒoƒCƒ“ƒh
-	 * @param pen ƒoƒCƒ“ƒh‚·‚éƒyƒ“ƒnƒ“ƒhƒ‹
+	 * ãƒšãƒ³ãƒãƒ³ãƒ‰ãƒ«ã®ãƒã‚¤ãƒ³ãƒ‰
+	 * @param pen ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ãƒšãƒ³ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	void setPen(HPEN pen) throw()
 	{
@@ -262,8 +262,8 @@ public:
 	}
 
 	/**
-	 * ƒŠ[ƒWƒ‡ƒ“ƒnƒ“ƒhƒ‹‚ÌƒoƒCƒ“ƒh
-	 * @param pen ƒoƒCƒ“ƒh‚·‚éƒŠ[ƒWƒ‡ƒ“ƒnƒ“ƒhƒ‹
+	 * ãƒªãƒ¼ã‚¸ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«ã®ãƒã‚¤ãƒ³ãƒ‰
+	 * @param pen ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ãƒªãƒ¼ã‚¸ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	void setRegion(HRGN region) throw()
 	{
@@ -277,24 +277,24 @@ public:
 };
 
 /**
- * WM_PAINT•`‰æ—p‚ÌƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒIƒuƒWƒFƒNƒg
+ * WM_PAINTæç”»ç”¨ã®ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
  */
 class PaintDeviceContext : public DeviceContext
 {
 private:
 	/**
-	 * ƒX[ƒp[ƒNƒ‰ƒX‚ÌƒoƒbƒNƒAƒbƒv—p
-	 * @todo protected‚È–¢‰Šú‰»ƒRƒ“ƒXƒgƒ‰ƒNƒ^—pˆÓ‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à
+	 * ã‚¹ãƒ¼ãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ç”¨
+	 * @todo protectedãªæœªåˆæœŸåŒ–ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ç”¨æ„ã—ãŸã»ã†ãŒã„ã„ã‹ã‚‚
 	 */
 	HDC backupDeviceContext;
 
 	/**
-	 * •`‰æ‘ÎÛ‚ÌƒEƒBƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	 * æç”»å¯¾è±¡ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	HWND targetWindow;
 
 	/**
-	 * PAINTSTRUCT\‘¢‘Ì‚ÌƒRƒs[
+	 * PAINTSTRUCTæ§‹é€ ä½“ã®ã‚³ãƒ”ãƒ¼
 	 * @see PAINTSTRUCT
 	 */
 	PAINTSTRUCT paintStruct;
@@ -305,8 +305,8 @@ private:
 public:
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param target •`‰æ‘ÎÛ‚ÌƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param target æç”»å¯¾è±¡ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 	 */
 	PaintDeviceContext(HWND target):
 		DeviceContext(),
@@ -320,7 +320,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~PaintDeviceContext() throw()
 	{
@@ -329,8 +329,8 @@ public:
 	}
 
 	/**
-	 * –³Œø—Ìˆæ‚ÌŽæ“¾
-	 * @return –³Œø—Ìˆæ‚ð‚ ‚ç‚í‚·‹éŒ`ƒIƒuƒWƒFƒNƒg
+	 * ç„¡åŠ¹é ˜åŸŸã®å–å¾—
+	 * @return ç„¡åŠ¹é ˜åŸŸã‚’ã‚ã‚‰ã‚ã™çŸ©å½¢ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 * @see geometry::Rectangle
 	 */
 	geometry::Rectangle<int> getInvalidateRectangle() const throw()

@@ -1,11 +1,11 @@
-#ifndef RJINDAEL_HPP_
-#define RJINDAEL_HPP_
+#ifndef RIJNDAEL_HPP_
+#define RIJNDAEL_HPP_
 
 #include <vector>
 
 /**
- * ƒ‰ƒCƒ“ƒ_[ƒ‹ˆÃ†
- * @todo ‚Ü‚¾À‘•‚ªŠ®‘S‚Å‚Í‚ ‚è‚Ü‚¹‚ñ
+ * ãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æš—å·
+ * @todo ã¾ã å®Ÿè£…ãŒå®Œå…¨ã§ã¯ã‚ã‚Šã¾ã›ã‚“
  */
 template <size_t cipherBitsSize = 128, size_t keyBitsSize = 128>
 class Rijndael
@@ -17,8 +17,8 @@ private:
 	const int numberOfBlock;
 
 	/**
-	 * ƒ‰ƒCƒ“ƒ_[ƒ‹‘ã”
-	 * ƒ‰ƒCƒ“ƒ_[ƒ‹ˆÃ†‚Ìƒx[ƒX‚É‚È‚è‚Ü‚·
+	 * ãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«ä»£æ•°
+	 * ãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æš—å·ã®ãƒ™ãƒ¼ã‚¹ã«ãªã‚Šã¾ã™
 	 */
 	class RijndaelNumber
 	{
@@ -68,7 +68,7 @@ private:
 					return RijndaelNumber(static_cast<unsigned char>(i));
 			}
 
-			throw std::logic_error("‹tŒ³‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBƒƒWƒbƒNƒGƒ‰[");
+			throw std::logic_error("é€†å…ƒãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚ãƒ­ã‚¸ãƒƒã‚¯ã‚¨ãƒ©ãƒ¼");
 		}
 
 		RijndaelNumber& operator+=(const RijndaelNumber& rhs)
@@ -171,7 +171,7 @@ private:
 	};
 
 	/**
-	 * ˆÃ†ˆ—‚Ìƒ‰ƒEƒ“ƒh”æ“¾
+	 * æš—å·å‡¦ç†ã®ãƒ©ã‚¦ãƒ³ãƒ‰æ•°å–å¾—
 	 */
 	const int getNumberOfRounds() const
 	{
@@ -182,9 +182,9 @@ private:
 	}
 
 	/**
-	 * SBoxˆ—‚ğ{‚µ‚½ƒ‰ƒCƒ“ƒ_[ƒ‹”‚Ìæ“¾
-	 * @param value ˆ—‚·‚éƒ‰ƒCƒ“ƒ_[ƒ‹”
-	 * @return ˆ—‚³‚ê‚½ƒ‰ƒCƒ“ƒ_[ƒ‹”
+	 * SBoxå‡¦ç†ã‚’æ–½ã—ãŸãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æ•°ã®å–å¾—
+	 * @param value å‡¦ç†ã™ã‚‹ãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æ•°
+	 * @return å‡¦ç†ã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æ•°
 	 */
 	const RijndaelNumber
 	getSBoxValue(const RijndaelNumber& value) const
@@ -207,8 +207,8 @@ private:
 	}
 
 	/**
-	 * SBoxˆ—‚³‚ê‚½ƒ‰ƒCƒ“ƒ_[ƒ‹”‚©‚çŒ³‚Ìƒ‰ƒCƒ“ƒ_[ƒ‹”‚ğ‹‚ß‚é
-	 * @todo –¢À‘•
+	 * SBoxå‡¦ç†ã•ã‚ŒãŸãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æ•°ã‹ã‚‰å…ƒã®ãƒ©ã‚¤ãƒ³ãƒ€ãƒ¼ãƒ«æ•°ã‚’æ±‚ã‚ã‚‹
+	 * @todo æœªå®Ÿè£…
 	 */
 	const RijndaelNumber
 	getInvertSBoxValue(const RijndaelNumber& value) const
@@ -217,7 +217,7 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	Rijndael() throw()
 		: numberOfKey(keyBitsSize / 8),
@@ -226,17 +226,17 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~Rijndael()
 	{
 	}
 
 	/**
-	 * ˆÃ†‰»ˆ—
-	 * @param plaintext •½•¶ƒoƒCƒg—ñ
-	 * @param key ˆÃ†Œ®
-	 * @return ˆÃ†ˆ—‚ª{‚³‚ê‚½ƒoƒCƒg—ñ
+	 * æš—å·åŒ–å‡¦ç†
+	 * @param plaintext å¹³æ–‡ãƒã‚¤ãƒˆåˆ—
+	 * @param key æš—å·éµ
+	 * @return æš—å·å‡¦ç†ãŒæ–½ã•ã‚ŒãŸãƒã‚¤ãƒˆåˆ—
 	 */
 	std::vector<unsigned char>
 	encrypt(const std::vector<unsigned char>& plaintext,

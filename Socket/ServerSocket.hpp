@@ -5,7 +5,7 @@
 #include <Thread/CollectableThreadGroup.hpp>
 
 /**
- * ƒT[ƒoƒTƒCƒhƒ\ƒPƒbƒg—pƒ[ƒJ[ƒXƒŒƒbƒhƒNƒ‰ƒX
+ * ã‚µãƒ¼ãƒã‚µã‚¤ãƒ‰ã‚½ã‚±ãƒƒãƒˆç”¨ãƒ¯ãƒ¼ã‚«ãƒ¼ã‚¹ãƒ¬ãƒƒãƒ‰ã‚¯ãƒ©ã‚¹
  * @see PosixThread
  * @see WinThread
  * @see Socket
@@ -31,7 +31,7 @@ public:
 };
 
 /**
- * ƒT[ƒoƒ\ƒPƒbƒgƒNƒ‰ƒX
+ * ã‚µãƒ¼ãƒã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹
  * @see Socket
  * @see ClientSocket
  */
@@ -41,24 +41,24 @@ class ServerSocket :
 {
 protected:
 	/**
-	 * ‰ñû‰Â”\‚ÈƒXƒŒƒbƒhƒ}ƒl[ƒWƒƒ
+	 * å›åå¯èƒ½ãªã‚¹ãƒ¬ãƒƒãƒ‰ãƒãƒãƒ¼ã‚¸ãƒ£
 	 */
 	CollectableThreadGroup threadManager;
 
 	/**
-	 * ƒT[ƒoƒ\ƒPƒbƒgƒNƒ‰ƒX©g‚ÌI—¹‰Â”\ƒtƒ‰ƒO
+	 * ã‚µãƒ¼ãƒã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹è‡ªèº«ã®çµ‚äº†å¯èƒ½ãƒ•ãƒ©ã‚°
 	 */
 	bool isEndable;
 
 protected:
 
 	/**
-	 * V‚½‚Èƒ[ƒJ[ƒXƒŒƒbƒhì¬‚Ì‚½‚ß‚Ìƒtƒ@ƒNƒgƒŠƒƒ\ƒbƒh
-	 * @param handle ƒT[ƒo‚©‚çó‚¯æ‚éAƒNƒ‰ƒCƒAƒ“ƒg‚Æ‚Â‚È‚ª‚Á‚½ƒ\ƒPƒb
-	 * ƒgƒnƒ“ƒhƒ‹
-	 * @param info ƒNƒ‰ƒCƒAƒ“ƒg‚Ö‚ÌÚ‘±î•ñ
-	 * @exception std::bad_alloc ƒtƒ@ƒNƒgƒŠ‚ªƒNƒ‰ƒX‚Ì¶¬‚É¸”s‚µ‚½
-	 * @excpetion ThreadExcpetion ‚»‚Ì‘¼
+	 * æ–°ãŸãªãƒ¯ãƒ¼ã‚«ãƒ¼ã‚¹ãƒ¬ãƒƒãƒ‰ä½œæˆã®ãŸã‚ã®ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¡ã‚½ãƒƒãƒ‰
+	 * @param handle ã‚µãƒ¼ãƒã‹ã‚‰å—ã‘å–ã‚‹ã€ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¨ã¤ãªãŒã£ãŸã‚½ã‚±ãƒƒ
+	 * ãƒˆãƒãƒ³ãƒ‰ãƒ«
+	 * @param info ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¸ã®æ¥ç¶šæƒ…å ±
+	 * @exception std::bad_alloc ãƒ•ã‚¡ã‚¯ãƒˆãƒªãŒã‚¯ãƒ©ã‚¹ã®ç”Ÿæˆã«å¤±æ•—ã—ãŸ
+	 * @excpetion ThreadExcpetion ãã®ä»–
 	 */ 
 	virtual void createNewWorker(SocketHandle handle,
 								 IP /*info*/)
@@ -70,9 +70,9 @@ protected:
 	}
 
 	/**
-	 * I—¹ƒXƒŒƒbƒh‚Ì‰ñû
-	 * @exception ThreadException ‰ñû‚µ‚½ƒXƒŒƒbƒh‚ª—áŠOI—¹‚µ‚Ä‚¢‚½ê
-	 * ‡
+	 * çµ‚äº†ã‚¹ãƒ¬ãƒƒãƒ‰ã®å›å
+	 * @exception ThreadException å›åã—ãŸã‚¹ãƒ¬ãƒƒãƒ‰ãŒä¾‹å¤–çµ‚äº†ã—ã¦ã„ãŸå ´
+	 * åˆ
 	 */
 	virtual void endThreadCollect() throw(ThreadException)
 	{
@@ -81,7 +81,7 @@ protected:
 	}
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	ServerSocket() throw()
 		: Socket(),
@@ -91,7 +91,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~ServerSocket() throw()
 	{
@@ -99,9 +99,9 @@ public:
 	}
 
 	/**
-	 * ƒT[ƒo‚ÌÚ‘±‚Ì‚½‚ß‚Ì‘O€”õ
-	 * @param ti ƒT[ƒoƒ\ƒPƒbƒgƒoƒCƒ“ƒh‚Ì‚½‚ß‚Ìî•ñ
-	 * @return ³í: true, ˆÙí: false
+	 * ã‚µãƒ¼ãƒã®æ¥ç¶šã®ãŸã‚ã®å‰æº–å‚™
+	 * @param ti ã‚µãƒ¼ãƒã‚½ã‚±ãƒƒãƒˆãƒã‚¤ãƒ³ãƒ‰ã®ãŸã‚ã®æƒ…å ±
+	 * @return æ­£å¸¸æ™‚: true, ç•°å¸¸æ™‚: false
 	 */
 	bool prepare(const IP& ti)
 	{
@@ -118,7 +118,7 @@ public:
 	}
 
 	/**
-	 * I—¹ƒtƒ‰ƒO‚Ìæ“¾
+	 * çµ‚äº†ãƒ•ãƒ©ã‚°ã®å–å¾—
 	 */
 	bool isFinalize() const throw()
 	{
@@ -127,7 +127,7 @@ public:
 	}
 	
 	/**
-	 * I—¹ƒtƒ‰ƒO‚ÌƒZƒbƒg
+	 * çµ‚äº†ãƒ•ãƒ©ã‚°ã®ã‚»ãƒƒãƒˆ
 	 */
 	void setFinalize() throw()
 	{
@@ -136,8 +136,8 @@ public:
 	}
 
 	/**
-	 * ƒT[ƒoƒ\ƒPƒbƒg‚Ìó•tŠJn(ƒuƒƒbƒN‚³‚ê‚é)
-	 * I—¹‚É‚Í setFinalize() ‚ğg—p‚·‚éB
+	 * ã‚µãƒ¼ãƒã‚½ã‚±ãƒƒãƒˆã®å—ä»˜é–‹å§‹(ãƒ–ãƒ­ãƒƒã‚¯ã•ã‚Œã‚‹)
+	 * çµ‚äº†ã«ã¯ setFinalize() ã‚’ä½¿ç”¨ã™ã‚‹ã€‚
 	 * @see ServerSocket::setFinalize()
 	 */
 	void accept() 

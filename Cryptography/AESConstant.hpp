@@ -4,7 +4,7 @@
 namespace AESConstant
 {
 	/**
-	 * AES æZƒe[ƒuƒ‹
+	 * AES ä¹—ç®—ãƒ†ãƒ¼ãƒ–ãƒ«
 	 */
 	static const unsigned char productTable[] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -8202,7 +8202,7 @@ namespace AESConstant
 	};
 
 	/**
-	 * AES ‹tS-BOX
+	 * AES é€†S-BOX
 	 */
 	static const unsigned char invertSBox[] = {
 		0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,

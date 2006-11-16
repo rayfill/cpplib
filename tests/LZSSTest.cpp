@@ -154,13 +154,13 @@ public:
 		CPPUNIT_ASSERT(defVector.size() == 2);
 		CPPUNIT_ASSERT(largeVector.size() == 4);
 
-		/// MSB ‚©‚ç12bit•ª
+		/// MSB ã‹ã‚‰12bitåˆ†
 		/// 0x08c5(2245) << 4 = 0x8c45
 		defVector[0] = 0x8c;
 		defVector[1] = 0x51;
 		CPPUNIT_ASSERT(DefaultPolicy::getPosition(defVector) == 2245);
 		
-		/// MSB ‚©‚ç24bit•ª
+		/// MSB ã‹ã‚‰24bitåˆ†
 		/// 0xe4e1c0(15000000) << 8 = 0xe4e1c000
 		largeVector[0] = 0xe4;
 		largeVector[1] = 0xe1;

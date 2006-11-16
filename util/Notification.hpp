@@ -8,7 +8,7 @@
 class Observable;
 
 /**
- * ObservableƒNƒ‰ƒX‚©‚ç‚Ì’Ê’m‚ğó‚¯æ‚é‚±‚Æ‚ğéŒ¾‚·‚éƒCƒ“ƒ^ƒtƒF[ƒX
+ * Observableã‚¯ãƒ©ã‚¹ã‹ã‚‰ã®é€šçŸ¥ã‚’å—ã‘å–ã‚‹ã“ã¨ã‚’å®£è¨€ã™ã‚‹ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
  */
 class Observer
 {
@@ -16,20 +16,20 @@ class Observer
 protected:
 public:
 	/**
-	 * ’Ê’mó‚¯æ‚è‚Ì‚½‚ß‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-	 * @param notifier ’Ê’mŒ³ Observable ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
+	 * é€šçŸ¥å—ã‘å–ã‚Šã®ãŸã‚ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+	 * @param notifier é€šçŸ¥å…ƒ Observable ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	virtual void notify(Observable* notifier) = 0;
 
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~Observer() {}
 
 };
 
 /**
- * Observable ƒNƒ‰ƒX‚É’Ê’m‚ğ‚·‚éƒNƒ‰ƒX‚ªÀ‘•‚·‚éƒCƒ“ƒ^ƒtƒF[ƒX
+ * Observable ã‚¯ãƒ©ã‚¹ã«é€šçŸ¥ã‚’ã™ã‚‹ã‚¯ãƒ©ã‚¹ãŒå®Ÿè£…ã™ã‚‹ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
  */
 class Observable
 {
@@ -37,37 +37,37 @@ private:
 	typedef std::list<Observer*> ServerList;
 
 	/**
-	 * ’Ê’m‚ğó‚¯æ‚é Observer ƒNƒ‰ƒX‚ÌƒŠƒXƒg
+	 * é€šçŸ¥ã‚’å—ã‘å–ã‚‹ Observer ã‚¯ãƒ©ã‚¹ã®ãƒªã‚¹ãƒˆ
 	 */
 	ServerList servers;
 
 protected:
 	/**
-	 * “à•”‚Åg—p‚·‚éŒŸõ—pƒtƒ@ƒ“ƒNƒ^
+	 * å†…éƒ¨ã§ä½¿ç”¨ã™ã‚‹æ¤œç´¢ç”¨ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
 	 */
 	class Finder : public std::unary_function<Observer*, bool>
 	{
 	private:
 		/**
-		 * ŒŸõ‘ÎÛ‚Ì Observer ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
+		 * æ¤œç´¢å¯¾è±¡ã® Observer ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
 		 */
 		const Observer* server;
 
 		/**
-		 * ¶¬•s‰Â”\‚Ì‚½‚ß‚Ìƒvƒ‰ƒCƒx[ƒgƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * ç”Ÿæˆä¸å¯èƒ½ã®ãŸã‚ã®ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		Finder() throw() {}
 
 	protected:
 		/**
-		 * “à•”g—p‚Ì‚½‚ß‚ÌƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		 * å†…éƒ¨ä½¿ç”¨ã®ãŸã‚ã®ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		 */
 		Finder(const Observer* server_) throw(): server(server_) {}
 
 	public:
 		/**
-		 * ƒtƒ@ƒNƒgƒŠƒƒ\ƒbƒh
-		 * @param ŒŸõ‘ÎÛ‚Æ‚È‚é Observer ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
+		 * ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¡ã‚½ãƒƒãƒ‰
+		 * @param æ¤œç´¢å¯¾è±¡ã¨ãªã‚‹ Observer ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
 		 */
 		static Finder create(Observer* server_) throw()
 		{
@@ -76,9 +76,9 @@ protected:
 		}
 
 		/**
-		 * ƒtƒ@ƒ“ƒNƒ^ƒƒ\ƒbƒh
-		 * @param target ”äŠr‘ÎÛ‚Æ‚È‚é Observer ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
-		 * @return ”äŠrŒ‹‰Ê. “™‚µ‚¢ê‡:true, ‚»‚êˆÈŠO:false
+		 * ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿ãƒ¡ã‚½ãƒƒãƒ‰
+		 * @param target æ¯”è¼ƒå¯¾è±¡ã¨ãªã‚‹ Observer ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
+		 * @return æ¯”è¼ƒçµæœ. ç­‰ã—ã„å ´åˆ:true, ãã‚Œä»¥å¤–:false
 		 */
 		bool operator()(Observer* target) throw()
 		{
@@ -88,7 +88,7 @@ protected:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	Observable() throw():
 		servers()
@@ -96,12 +96,12 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~Observable() {}
 
 	/**
-	 * ’Ê’m‚ÌÀs
+	 * é€šçŸ¥ã®å®Ÿè¡Œ
 	 */
 	void update()
 	{
@@ -114,9 +114,9 @@ public:
 	}
 
 	/**
-	 * Observer ‚ÌƒAƒ^ƒbƒ`
-	 * @param server Ú‘±‚·‚é Observer ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
-	 * @exception std::bad_alloc() ƒƒ‚ƒŠ‚ª‘«‚è‚È‚©‚Á‚½ê‡
+	 * Observer ã®ã‚¢ã‚¿ãƒƒãƒ
+	 * @param server æ¥ç¶šã™ã‚‹ Observer ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @exception std::bad_alloc() ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šãªã‹ã£ãŸå ´åˆ
 	 */
 	void attachObserver(Observer* server) throw(std::bad_alloc)
 	{
@@ -124,8 +124,8 @@ public:
 	}
 
 	/**
-	 * ƒIƒuƒU[ƒo‚ÌØ’f
-	 * @param detachServer Ø’f‚·‚é Observer ƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^
+	 * ã‚ªãƒ–ã‚¶ãƒ¼ãƒã®åˆ‡æ–­
+	 * @param detachServer åˆ‡æ–­ã™ã‚‹ Observer ã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	void detachObserver(Observer* detachServer) throw()
 	{
@@ -133,7 +133,7 @@ public:
 	}
 
 	/**
-	 * Ú‘±‚³‚ê‚Ä‚¢‚éƒT[ƒo‚Ì”‚Ìæ“¾
+	 * æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ã‚µãƒ¼ãƒã®æ•°ã®å–å¾—
 	 */
 	const size_t serverCount() throw()
 	{

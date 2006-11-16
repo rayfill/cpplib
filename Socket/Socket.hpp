@@ -7,21 +7,21 @@
 #include <Thread/ThreadException.hpp>
 
 /**
- * ‚³‚Ü‚´‚Ü‚ÈSocket‚ÌŠî’êƒNƒ‰ƒX
+ * ã•ã¾ã–ã¾ãªSocketã®åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class Socket
 {
 protected:
-	SocketHandle socket; ///< ¶‚Ìƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
-	timeval defaultTimeout; ///< send() ‚â recv() ‚ğ”ñƒuƒƒbƒN‚ÅŒÄ‚Ño
-							///‚µ‚½ê‡‚Ìƒ^ƒCƒ€ƒAƒEƒgŠÔ
-	bool isClosed; /// ƒ\ƒPƒbƒg‚ª•Â‚¶‚ç‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	SocketHandle socket; ///< ç”Ÿã®ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
+	timeval defaultTimeout; ///< send() ã‚„ recv() ã‚’éãƒ–ãƒ­ãƒƒã‚¯ã§å‘¼ã³å‡º
+							///ã—ãŸå ´åˆã®ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“
+	bool isClosed; /// ã‚½ã‚±ãƒƒãƒˆãŒé–‰ã˜ã‚‰ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
 
 	/**
-	 * ƒ\ƒPƒbƒg‚Ì“Ç‚İ‚İ‰Â”\ŒŸ¸
-	 * @param sock ŒŸ¸‘ÎÛ‚Æ‚È‚é¶‚Ìƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
-	 * @param timeout ƒ^ƒCƒ€ƒAƒEƒgŠÔ(ƒfƒtƒHƒ‹ƒg‚ÅdefaultTimeout)
-	 * @return ŒŸ¸Œ‹‰Ê. true: “Ç‚İ‚İ‰Â”\, false: “Ç‚İ‚İ•s‰Â”\
+	 * ã‚½ã‚±ãƒƒãƒˆã®èª­ã¿è¾¼ã¿å¯èƒ½æ¤œæŸ»
+	 * @param sock æ¤œæŸ»å¯¾è±¡ã¨ãªã‚‹ç”Ÿã®ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
+	 * @param timeout ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“(ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§defaultTimeout)
+	 * @return æ¤œæŸ»çµæœ. true: èª­ã¿è¾¼ã¿å¯èƒ½, false: èª­ã¿è¾¼ã¿ä¸å¯èƒ½
 	 */
 	bool isReadable(const SocketHandle sock,
 					timeval& timeout) const throw()
@@ -38,10 +38,10 @@ protected:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒg‚Ì‘‚«‚İ‰Â”\ŒŸ¸
-	 * @param sock ŒŸ¸‘ÎÛ‚Æ‚È‚é¶‚Ìƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
-	 * @param timeout ƒ^ƒCƒ€ƒAƒEƒgŠÔ(ƒfƒtƒHƒ‹ƒg‚ÅdefaultTimeout)
-	 * @return ŒŸ¸Œ‹‰Ê. true: ‘‚«‚İ‰Â”\, false: ‘‚«‚İ•s‰Â”\
+	 * ã‚½ã‚±ãƒƒãƒˆã®æ›¸ãè¾¼ã¿å¯èƒ½æ¤œæŸ»
+	 * @param sock æ¤œæŸ»å¯¾è±¡ã¨ãªã‚‹ç”Ÿã®ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
+	 * @param timeout ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“(ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§defaultTimeout)
+	 * @return æ¤œæŸ»çµæœ. true: æ›¸ãè¾¼ã¿å¯èƒ½, false: æ›¸ãè¾¼ã¿ä¸å¯èƒ½
 	 */
 	bool isWritable(const SocketHandle sock,
 					timeval& timeout) const throw()
@@ -57,8 +57,8 @@ protected:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param timedout V‚µ‚¢ƒfƒtƒHƒ‹ƒgƒ^ƒCƒ€ƒAƒEƒgŠÔ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param timedout æ–°ã—ã„ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“
 	 */
 	Socket(const timeval& timedout):
 		socket(), defaultTimeout(timedout), isClosed(true)
@@ -67,7 +67,7 @@ protected:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚Ìì¬
+	 * ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã®ä½œæˆ
 	 */
 	void open() throw(SocketException)
 	{
@@ -81,7 +81,7 @@ protected:
 
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	Socket() throw()
 		: socket(), defaultTimeout(), isClosed(true)
@@ -92,7 +92,7 @@ public:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚©‚ç‚ÌƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‹ã‚‰ã®ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	Socket(const SocketHandle& inheritHandle)
 		: socket(inheritHandle), defaultTimeout(), isClosed(false)
@@ -102,7 +102,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~Socket() throw()
 	{
@@ -144,11 +144,11 @@ public:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒg‚©‚ç‚Ìƒf[ƒ^‚Ìæ“¾
-	 * @param buffer “Ç‚İ‚ñ‚¾ƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param readSize “Ç‚İ‚İ‰Â”\‚ÈÅ‘åƒTƒCƒY
-	 * @return ÀÛ‚É“Ç‚İ‚Ü‚ê‚½ƒf[ƒ^ƒTƒCƒY
-	 * @todo winsock‚Ì‚Ú‚¯‚¥IIrecv‚Ì–ß‚è’l‚ªsize_t‚¶‚á‚È‚¢‚È‚ñ‚ÄEEE
+	 * ã‚½ã‚±ãƒƒãƒˆã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿ã®å–å¾—
+	 * @param buffer èª­ã¿è¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param readSize èª­ã¿è¾¼ã¿å¯èƒ½ãªæœ€å¤§ã‚µã‚¤ã‚º
+	 * @return å®Ÿéš›ã«èª­ã¿è¾¼ã¾ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º
+	 * @todo winsockã®ã¼ã‘ã‡ï¼ï¼recvã®æˆ»ã‚Šå€¤ãŒsize_tã˜ã‚ƒãªã„ãªã‚“ã¦ãƒ»ãƒ»ãƒ»
 	 */
 	size_t read(void* buffer, const size_t readSize) 
 	{
@@ -165,13 +165,13 @@ public:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒg‚©‚ç‚Ìƒf[ƒ^‚Ìæ“¾(ƒ^ƒCƒ€ƒAƒEƒg‚ ‚è)
-	 * @param buffer “Ç‚İ‚ñ‚¾ƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param readSize “Ç‚İ‚İ‰Â”\‚ÈÅ‘åƒTƒCƒY
-	 * @return ÀÛ‚É“Ç‚İ‚Ü‚ê‚½ƒf[ƒ^ƒTƒCƒYB0‚ª•Ô‚Á‚½ê‡A‘Šèæƒ\
-	 * ƒPƒbƒg‚ªƒNƒ[ƒY‚³‚ê‚½B
-	 * @exception TimeoutException ‘Ò‹@ŠÔ“à‚Éƒ\ƒPƒbƒg‚É“Ç‚İæ‚è‰Â”\
-	 * ‚Èƒf[ƒ^‚ª“ü‚Á‚Ä‚±‚È‚©‚Á‚½ê‡
+	 * ã‚½ã‚±ãƒƒãƒˆã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿ã®å–å¾—(ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã‚ã‚Š)
+	 * @param buffer èª­ã¿è¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param readSize èª­ã¿è¾¼ã¿å¯èƒ½ãªæœ€å¤§ã‚µã‚¤ã‚º
+	 * @return å®Ÿéš›ã«èª­ã¿è¾¼ã¾ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºã€‚0ãŒè¿”ã£ãŸå ´åˆã€ç›¸æ‰‹å…ˆã‚½
+	 * ã‚±ãƒƒãƒˆãŒã‚¯ãƒ­ãƒ¼ã‚ºã•ã‚ŒãŸã€‚
+	 * @exception TimeoutException å¾…æ©Ÿæ™‚é–“å†…ã«ã‚½ã‚±ãƒƒãƒˆã«èª­ã¿å–ã‚Šå¯èƒ½
+	 * ãªãƒ‡ãƒ¼ã‚¿ãŒå…¥ã£ã¦ã“ãªã‹ã£ãŸå ´åˆ
 	 */
 	size_t readAsync(void* buffer, const size_t readSize)
 		throw(TimeoutException, ConnectionClosedException)
@@ -183,10 +183,10 @@ public:
 	}  
 
 	/**
-	 * ƒ\ƒPƒbƒg‚Ö‚Ìƒf[ƒ^‘‚«‚İ
-	 * @param buffer ‘‚«‚Şƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param writeSize ‘‚«‚Şƒf[ƒ^‚ÌƒTƒCƒY
-	 * @return ÀÛ‚É‘‚«‚Ü‚ê‚½ƒf[ƒ^‚ÌƒTƒCƒY
+	 * ã‚½ã‚±ãƒƒãƒˆã¸ã®ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿
+	 * @param buffer æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param writeSize æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
+	 * @return å®Ÿéš›ã«æ›¸ãè¾¼ã¾ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 	 * @throw ConnectionClosedException 
 	 */
 	size_t write(const void* buffer, const size_t writeSize) 
@@ -205,13 +205,13 @@ public:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒg‚Ö‚Ìƒf[ƒ^‘‚«‚İ(ƒ^ƒCƒ€ƒAƒEƒg‚ ‚è)
-	 * @param buffer ‘‚«‚Şƒf[ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @param writeSize ‘‚«‚Şƒf[ƒ^‚ÌƒTƒCƒY
-	 * @return ÀÛ‚É‘‚«‚Ü‚ê‚½ƒf[ƒ^‚ÌƒTƒCƒYB0‚ª•Ô‚Á‚½ê‡A‘Šèæ
-	 * ƒ\ƒPƒbƒg‚ªƒNƒ[ƒY‚³‚ê‚½
-	 * @exception TimeoutException ‘Ò‹@ŠÔ’†‚Éƒ\ƒPƒbƒg‚ª‘‚«‚İ‰Â”\
-	 * ‚É‚È‚ç‚È‚©‚Á‚½ê‡
+	 * ã‚½ã‚±ãƒƒãƒˆã¸ã®ãƒ‡ãƒ¼ã‚¿æ›¸ãè¾¼ã¿(ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã‚ã‚Š)
+	 * @param buffer æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @param writeSize æ›¸ãè¾¼ã‚€ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
+	 * @return å®Ÿéš›ã«æ›¸ãè¾¼ã¾ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚ºã€‚0ãŒè¿”ã£ãŸå ´åˆã€ç›¸æ‰‹å…ˆ
+	 * ã‚½ã‚±ãƒƒãƒˆãŒã‚¯ãƒ­ãƒ¼ã‚ºã•ã‚ŒãŸ
+	 * @exception TimeoutException å¾…æ©Ÿæ™‚é–“ä¸­ã«ã‚½ã‚±ãƒƒãƒˆãŒæ›¸ãè¾¼ã¿å¯èƒ½
+	 * ã«ãªã‚‰ãªã‹ã£ãŸå ´åˆ
 	 */
 	size_t writeAsync(const void* buffer, const size_t writeSize) 
 		throw(TimeoutException, ConnectionClosedException)
@@ -223,7 +223,7 @@ public:
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ÌŠJ•ú
+	 * ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã®é–‹æ”¾
 	 */
 	void close() throw() 
 	{

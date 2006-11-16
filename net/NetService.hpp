@@ -30,7 +30,7 @@ public:
 	}
 
 	/**
-	 * Œ»İ‚ÌŒ‹‰Ê‚ªŸ‚Ìó‘Ô‚Éi‚ñ‚Å‚à—Ç‚¢‚à‚Ì‚©‚Ì”»’è
+	 * ç¾åœ¨ã®çµæœãŒæ¬¡ã®çŠ¶æ…‹ã«é€²ã‚“ã§ã‚‚è‰¯ã„ã‚‚ã®ã‹ã®åˆ¤å®š
 	 * @return bool 
 	 */
 	virtual bool isAccepted() const throw() = 0;
@@ -40,7 +40,7 @@ class NetService
 {
 private:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒ|[ƒg•Û
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ¼ãƒˆä¿æŒ
 	 */
 	const unsigned short defaultServicePort;
 
@@ -48,16 +48,16 @@ private:
 
 protected:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param servicePort ƒT[ƒrƒX‚Ì’ñ‹Ÿ‚³‚ê‚Ä‚¢‚éƒfƒtƒHƒ‹ƒg‚Ìƒ|[ƒg”Ô†
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param servicePort ã‚µãƒ¼ãƒ“ã‚¹ã®æä¾›ã•ã‚Œã¦ã„ã‚‹ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒãƒ¼ãƒˆç•ªå·
 	 */
 	NetService(const unsigned short servicePort) throw():
 		defaultServicePort(servicePort)
 	{}
 
 	/**
-	 * ƒfƒtƒHƒ‹ƒg‚ÌƒT[ƒrƒXƒ|[ƒg”Ô†‚Ìæ“¾
-	 * @return ƒT[ƒrƒX‚ÌƒfƒtƒHƒ‹ƒgƒ|[ƒg”Ô†
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚µãƒ¼ãƒ“ã‚¹ãƒãƒ¼ãƒˆç•ªå·ã®å–å¾—
+	 * @return ã‚µãƒ¼ãƒ“ã‚¹ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ¼ãƒˆç•ªå·
 	 */
 	unsigned short getDefaultServicePort() const throw()
 	{
@@ -66,16 +66,16 @@ protected:
 
 public:
 	/**
-	 * ƒT[ƒrƒX‚Ö‚ÌÚ‘±
-	 * @param serverName_ Ú‘±ƒT[ƒo‚Ì–¼‘O
-	 * @param servicePort_ ƒT[ƒrƒX‚Ì’ñ‹Ÿ‚³‚ê‚Ä‚¢‚éƒ|[ƒg
-	 * @return ServiceResult Ú‘±‚ÌŒ‹‰Ê‚ğ¦‚·ƒIƒuƒWƒFƒNƒg
+	 * ã‚µãƒ¼ãƒ“ã‚¹ã¸ã®æ¥ç¶š
+	 * @param serverName_ æ¥ç¶šã‚µãƒ¼ãƒã®åå‰
+	 * @param servicePort_ ã‚µãƒ¼ãƒ“ã‚¹ã®æä¾›ã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒˆ
+	 * @return ServiceResult æ¥ç¶šã®çµæœã‚’ç¤ºã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	virtual ServiceResult* connectService(
 		std::string serverName_, servicePort_) = 0;
 
 	/**
-	 * ƒT[ƒrƒX‚Ö‚ÌÚ‘±
+	 * ã‚µãƒ¼ãƒ“ã‚¹ã¸ã®æ¥ç¶š
 	 */
 	virtual ServiceResult* connectService(
 		std::string serviceName_) = 0;

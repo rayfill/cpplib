@@ -8,7 +8,7 @@
 #include <iterator>
 
 /**
- * ”r‘¼“I˜_—˜aƒtƒ@ƒ“ƒNƒ^
+ * æ’ä»–çš„è«–ç†å’Œãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
  */
 struct ExclusiveOr
 {
@@ -17,10 +17,10 @@ public:
 	{}
 
 	/**
-	 * ”r‘¼“I˜_—˜aƒtƒ@ƒ“ƒNƒ^
-	 * @param lhs ¶•Ó’l
-	 * @param rhs ‰E•Ó’l
-	 * @param —¼•Ó‚Ì”r‘¼“I˜_—˜a
+	 * æ’ä»–çš„è«–ç†å’Œãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
+	 * @param lhs å·¦è¾ºå€¤
+	 * @param rhs å³è¾ºå€¤
+	 * @param ä¸¡è¾ºã®æ’ä»–çš„è«–ç†å’Œ
 	 */
 	unsigned char operator()(unsigned char lhs, unsigned char rhs)
 	{
@@ -29,9 +29,9 @@ public:
 };
 
 /**
- * ˆÃ†ƒuƒƒbƒN˜A½
- * ˆÃ†‰»ƒAƒ‹ƒSƒŠƒYƒ€‚ğg‚Á‚ÄƒuƒƒbƒNƒTƒCƒY‚²‚Æ‚ÉˆÃ†ƒuƒƒbƒN˜A½ˆ—‚ğ{‚·
- * @param ChiperAlgorithm ˆÃ†‰»ƒAƒ‹ƒSƒŠƒYƒ€
+ * æš—å·ãƒ–ãƒ­ãƒƒã‚¯é€£é–
+ * æš—å·åŒ–ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’ä½¿ã£ã¦ãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚ºã”ã¨ã«æš—å·ãƒ–ãƒ­ãƒƒã‚¯é€£é–å‡¦ç†ã‚’æ–½ã™
+ * @param ChiperAlgorithm æš—å·åŒ–ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ 
  */
 template <class CipherAlgorithm>
 class CipherBlockChain
@@ -40,11 +40,11 @@ class CipherBlockChain
 
 public:
 	/**
-	 * ˆÃ†‰»ˆ—
-	 * @param plaintext •½•¶
-	 * @param Œ®
-	 * @param initialVector ‰ŠúˆÃ†‰»ƒuƒƒbƒN—ñ
-	 * @return ˆÃ†ƒuƒƒbƒN˜A½‚ğ—p‚¢‚Äˆ—‚³‚ê‚½ˆÃ†•¶
+	 * æš—å·åŒ–å‡¦ç†
+	 * @param plaintext å¹³æ–‡
+	 * @param éµ
+	 * @param initialVector åˆæœŸæš—å·åŒ–ãƒ–ãƒ­ãƒƒã‚¯åˆ—
+	 * @return æš—å·ãƒ–ãƒ­ãƒƒã‚¯é€£é–ã‚’ç”¨ã„ã¦å‡¦ç†ã•ã‚ŒãŸæš—å·æ–‡
 	 */
 	static std::vector<unsigned char>
 	encrypt(const std::vector<unsigned char>& plaintext,
@@ -93,11 +93,11 @@ public:
 	}
 
 	/**
-	 * •œ†‰»ˆ—
-	 * @param ciphertext ˆÃ†•¶
-	 * @param Œ®
-	 * @param initialVector ‰ŠúˆÃ†‰»ƒuƒƒbƒN—ñ
-	 * @return ˆÃ†ƒuƒƒbƒN˜A½‚ğ—p‚¢‚Äˆ—‚³‚ê‚½•½•¶
+	 * å¾©å·åŒ–å‡¦ç†
+	 * @param ciphertext æš—å·æ–‡
+	 * @param éµ
+	 * @param initialVector åˆæœŸæš—å·åŒ–ãƒ–ãƒ­ãƒƒã‚¯åˆ—
+	 * @return æš—å·ãƒ–ãƒ­ãƒƒã‚¯é€£é–ã‚’ç”¨ã„ã¦å‡¦ç†ã•ã‚ŒãŸå¹³æ–‡
 	 */
 	static std::vector<unsigned char>
 	decrypt(const std::vector<unsigned char>& ciphertext,

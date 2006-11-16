@@ -5,16 +5,16 @@
 #include <stdexcept>
 
 /**
- * SmartPointer—pƒ|ƒCƒ“ƒ^íœ“®ìƒ|ƒŠƒV[
- * @param Container ƒRƒ“ƒeƒiŒ^
+ * SmartPointerç”¨ãƒã‚¤ãƒ³ã‚¿å‰Šé™¤æ™‚å‹•ä½œãƒãƒªã‚·ãƒ¼
+ * @param Container ã‚³ãƒ³ãƒ†ãƒŠå‹
  */
 template <typename Container>
 class DefaultRemover
 {
 public:
 	/**
-	 * íœƒnƒ“ƒhƒ‰
-	 * @param pointer íœƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+	 * å‰Šé™¤ãƒãƒ³ãƒ‰ãƒ©
+	 * @param pointer å‰Šé™¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	static void remove(Container* pointer)
 	{
@@ -23,16 +23,16 @@ public:
 };
 
 /**
- * ”z—ñíœƒ|ƒŠƒV[
- * @param Container íœ‚·‚é”z—ñ‚Ì—v‘f‚ÌŒ^
+ * é…åˆ—å‰Šé™¤ãƒãƒªã‚·ãƒ¼
+ * @param Container å‰Šé™¤ã™ã‚‹é…åˆ—ã®è¦ç´ ã®å‹
  */
 template <typename Container>
 class ArrayRemover
 {
 public:
 	/**
-	 * íœƒnƒ“ƒhƒ‰
-	 * @param pointer íœƒIƒuƒWƒFƒNƒg”z—ñ‚Ìæ“ªƒ|ƒCƒ“ƒ^
+	 * å‰Šé™¤ãƒãƒ³ãƒ‰ãƒ©
+	 * @param pointer å‰Šé™¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé…åˆ—ã®å…ˆé ­ãƒã‚¤ãƒ³ã‚¿
 	 */
 	static void remove(Container* pointer)
 	{
@@ -41,7 +41,7 @@ public:
 };
 
 /**
- * QÆƒJƒEƒ“ƒ^
+ * å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿
  */
 struct ReferenceCounter
 {
@@ -49,25 +49,25 @@ private:
 	friend class SmartPointerTest;
 
 	/**
-	 * QÆƒJƒEƒ“ƒg•Ï”
+	 * å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆå¤‰æ•°
 	 */
 	int reference;
 
 	/**
-	 * QÆƒJƒEƒ“ƒgæ“¾
-	 * @return Œ»İ‚ÌQÆƒJƒEƒ“ƒg
+	 * å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆå–å¾—
+	 * @return ç¾åœ¨ã®å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆ
 	 */
 	int getReferenceCount() const throw()
 	{
 		return reference;
 	}
 
-	/// ƒRƒs[–h~—p
+	/// ã‚³ãƒ”ãƒ¼é˜²æ­¢ç”¨
 	ReferenceCounter(const ReferenceCounter&);
 	ReferenceCounter operator=(const ReferenceCounter&);
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	ReferenceCounter()
 		: reference(0)
@@ -76,8 +76,8 @@ public:
 	}
 
 	/**
-	 * QÆƒJƒEƒ“ƒg‚Ì‰ÁZ
-	 * @return ‘‰ÁŒã‚ÌQÆƒJƒEƒ“ƒg”
+	 * å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆã®åŠ ç®—
+	 * @return å¢—åŠ å¾Œã®å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆæ•°
 	 */
 	int addReference()
 	{
@@ -85,8 +85,8 @@ public:
 	}
 		
 	/**
-	 * QÆƒJƒEƒ“ƒg‚ÌŒ¸Z
-	 * @return Œ¸ZŒã‚ÌQÆƒJƒEƒ“ƒg”
+	 * å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆã®æ¸›ç®—
+	 * @return æ¸›ç®—å¾Œã®å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆæ•°
 	 */
 	int release()
 	{
@@ -96,10 +96,10 @@ public:
 };
 
 /**
- * ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^ƒNƒ‰ƒX
- * @param Container ƒRƒ“ƒeƒi‰»‚·‚éƒNƒ‰ƒX
- * @param RemovePolicy íœ‚Ìƒnƒ“ƒhƒŠƒ“ƒOƒ|ƒŠƒV[
- * @todo MultiThreadŠÂ‹«‚Ì‚½‚ß‚ÌƒƒbƒNƒ|ƒŠƒV[‚Æ‚©‚à•K—v‚©‚à
+ * ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã‚¯ãƒ©ã‚¹
+ * @param Container ã‚³ãƒ³ãƒ†ãƒŠåŒ–ã™ã‚‹ã‚¯ãƒ©ã‚¹
+ * @param RemovePolicy å‰Šé™¤æ™‚ã®ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ãƒãƒªã‚·ãƒ¼
+ * @todo MultiThreadç’°å¢ƒã®ãŸã‚ã®ãƒ­ãƒƒã‚¯ãƒãƒªã‚·ãƒ¼ã¨ã‹ã‚‚å¿…è¦ã‹ã‚‚
  */
 template <typename Container,
 	class RemovePolicy = DefaultRemover<Container> >
@@ -112,7 +112,7 @@ private:
 	friend class SmartPointerTest;
 
 	/**
-	 * Š—LŒ ‚Ì”jŠü
+	 * æ‰€æœ‰æ¨©ã®ç ´æ£„
 	 */
 	void release()
 	{
@@ -124,19 +124,19 @@ private:
 	}
 
 	/**
-	 * ŠÇ—‘ÎÛƒ|ƒCƒ“ƒ^
+	 * ç®¡ç†å¯¾è±¡ãƒã‚¤ãƒ³ã‚¿
 	 */
 	Pointer pointer;
 
 	/**
-	 * QÆƒJƒEƒ“ƒgƒzƒ‹ƒ_
+	 * å‚ç…§ã‚«ã‚¦ãƒ³ãƒˆãƒ›ãƒ«ãƒ€
 	 */
 	ReferenceCounter* refCount;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param pointer_ ŠÇ—‘ÎÛ‚Æ‚È‚éƒ|ƒCƒ“ƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param pointer_ ç®¡ç†å¯¾è±¡ã¨ãªã‚‹ãƒã‚¤ãƒ³ã‚¿
 	 */
 	SmartPointer(Pointer pointer_)
 		throw(std::bad_alloc, std::invalid_argument) :
@@ -153,8 +153,8 @@ public:
 	}
 
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param src ƒRƒs[Œ³ƒIƒuƒWƒFƒNƒg
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param src ã‚³ãƒ”ãƒ¼å…ƒã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	SmartPointer(const SmartPointer& src)
 		throw() :
@@ -165,7 +165,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~SmartPointer()
 	{
@@ -173,7 +173,7 @@ public:
 	}
 
 	/**
-	 * ƒ|ƒCƒ“ƒ^‚Ìæ“¾
+	 * ãƒã‚¤ãƒ³ã‚¿ã®å–å¾—
 	 */
 	Pointer get() const throw()
 	{
@@ -181,8 +181,8 @@ public:
 	}
 
 	/**
-	 * ”äŠr‰‰Z
-	 * @return “™’l‚Èƒ|ƒCƒ“ƒ^‚ğ‚Âê‡Atrue
+	 * æ¯”è¼ƒæ¼”ç®—
+	 * @return ç­‰å€¤ãªãƒã‚¤ãƒ³ã‚¿ã‚’æŒã¤å ´åˆã€true
 	 */
 	bool operator==(const SmartPointer& src) const throw()
 	{
@@ -193,9 +193,9 @@ public:
 	}
 
 	/**
-	 * ‘ã“ü‰‰Z
-	 * @param src ƒRƒs[Œ³
-	 * @return ƒRƒs[Œã‚Ì©g‚Ö‚ÌQÆ
+	 * ä»£å…¥æ¼”ç®—
+	 * @param src ã‚³ãƒ”ãƒ¼å…ƒ
+	 * @return ã‚³ãƒ”ãƒ¼å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	SmartPointer& operator=(const SmartPointer& src) throw()
 	{
@@ -212,7 +212,7 @@ public:
 	}
 
 	/**
-	 * ƒƒ“ƒoŒÄ‚Ño‚µ
+	 * ãƒ¡ãƒ³ãƒå‘¼ã³å‡ºã—
 	 */
 	Pointer operator->() const throw()
 	{
@@ -221,10 +221,10 @@ public:
 };
 
 /**
- * ƒXƒ}[ƒg”z—ñ
- * @param Container —v‘f‚ÌŒ^
- * @RemovePolicy ƒƒ‚ƒŠŠJ•úƒ|ƒŠƒV[
- * —v‘f‚ÌƒfƒXƒgƒ‰ƒNƒ^‚Í—áŠO‚ğ“Š‚°‚È‚¢‚±‚Æ
+ * ã‚¹ãƒãƒ¼ãƒˆé…åˆ—
+ * @param Container è¦ç´ ã®å‹
+ * @RemovePolicy ãƒ¡ãƒ¢ãƒªé–‹æ”¾ãƒãƒªã‚·ãƒ¼
+ * è¦ç´ ã®ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¯ä¾‹å¤–ã‚’æŠ•ã’ãªã„ã“ã¨
  */
 template <typename Container,
 	class RemovePolicy = ArrayRemover<Container> >
@@ -238,8 +238,8 @@ public:
 
 private:
 	/**
-	 * ŠJ•úˆ—
-	 * ‚½‚¾‚µÀÛ‚ÉŠJ•ú‚³‚ê‚é‚Ì‚ÍQÆ‚ª‚È‚­‚È‚Á‚½‚Ì‚İ
+	 * é–‹æ”¾å‡¦ç†
+	 * ãŸã ã—å®Ÿéš›ã«é–‹æ”¾ã•ã‚Œã‚‹ã®ã¯å‚ç…§ãŒãªããªã£ãŸæ™‚ã®ã¿
 	 */
 	void release()
 	{
@@ -251,19 +251,19 @@ private:
 	}
 
 	/**
-	 * —v‘f”z—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * è¦ç´ é…åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	Pointer pointer;
 
 	/**
-	 * QÆƒJƒEƒ“ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	ReferenceCounter* refCount;
 	
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param pointer_ ŠÇ—‘ÎÛ‚Ì¶ƒ|ƒCƒ“ƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param pointer_ ç®¡ç†å¯¾è±¡ã®ç”Ÿãƒã‚¤ãƒ³ã‚¿
 	 */
 	SmartArray(Pointer pointer_)
 		throw(std::bad_alloc, std::invalid_argument) :
@@ -280,8 +280,8 @@ public:
 	}
 
 	/**
-	 * ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param src ƒRƒs[Œ³ƒXƒ}[ƒg”z—ñ
+	 * ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param src ã‚³ãƒ”ãƒ¼å…ƒã‚¹ãƒãƒ¼ãƒˆé…åˆ—
 	 */
 	SmartArray(const SmartArray& src)
 		throw() :
@@ -292,7 +292,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~SmartArray()
 	{
@@ -300,7 +300,7 @@ public:
 	}
 
 	/**
-	 * ¶ƒ|ƒCƒ“ƒ^‚Ìæ“¾
+	 * ç”Ÿãƒã‚¤ãƒ³ã‚¿ã®å–å¾—
 	 */
 	Pointer get() const throw()
 	{
@@ -308,8 +308,8 @@ public:
 	}
 
 	/**
-	 * —v‘f‚Ö‚Ìindexƒx[ƒXƒAƒNƒZƒX
-	 * @param index —v‘f‚Ö‚ÌƒIƒtƒZƒbƒg’l(ƒ[ƒƒIƒŠƒWƒ“ƒx[ƒX‚Å‚·)
+	 * è¦ç´ ã¸ã®indexãƒ™ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹
+	 * @param index è¦ç´ ã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤(ã‚¼ãƒ­ã‚ªãƒªã‚¸ãƒ³ãƒ™ãƒ¼ã‚¹ã§ã™)
 	 */
 	Reference operator[](int index)
 	{
@@ -317,8 +317,8 @@ public:
 	}
 
 	/**
-	 * “™‰¿”äŠr‰‰Zq
-	 * @return •Û‚µ‚Ä‚¢‚éƒ|ƒCƒ“ƒ^‚ª“¯‚¶‚à‚Ì‚È‚ç true
+	 * ç­‰ä¾¡æ¯”è¼ƒæ¼”ç®—å­
+	 * @return ä¿æŒã—ã¦ã„ã‚‹ãƒã‚¤ãƒ³ã‚¿ãŒåŒã˜ã‚‚ã®ãªã‚‰ true
 	 */
 	bool operator==(const SmartArray& src) const throw()
 	{
@@ -329,9 +329,9 @@ public:
 	}
 
 	/**
-	 * ‘ã“ü‰‰Zq
-	 * @param src ƒRƒs[Œ³
-	 * @return SmartArray ƒRƒs[Œã‚ÌQÆ
+	 * ä»£å…¥æ¼”ç®—å­
+	 * @param src ã‚³ãƒ”ãƒ¼å…ƒ
+	 * @return SmartArray ã‚³ãƒ”ãƒ¼å¾Œã®å‚ç…§
 	 */
 	SmartArray& operator=(const SmartArray& src) throw()
 	{
@@ -349,10 +349,10 @@ public:
 };
 
 /**
- * ƒXƒR[ƒvƒhƒ|ƒCƒ“ƒ^ƒNƒ‰ƒX
- * @param Container ƒRƒ“ƒeƒi‰»‚·‚éƒNƒ‰ƒX
- * @param RemovePolicy íœ‚Ìƒnƒ“ƒhƒŠƒ“ƒOƒ|ƒŠƒV[
- * @todo MultiThreadŠÂ‹«‚Ì‚½‚ß‚ÌƒƒbƒNƒ|ƒŠƒV[‚Æ‚©‚à•K—v‚©‚à
+ * ã‚¹ã‚³ãƒ¼ãƒ—ãƒ‰ãƒã‚¤ãƒ³ã‚¿ã‚¯ãƒ©ã‚¹
+ * @param Container ã‚³ãƒ³ãƒ†ãƒŠåŒ–ã™ã‚‹ã‚¯ãƒ©ã‚¹
+ * @param RemovePolicy å‰Šé™¤æ™‚ã®ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ãƒãƒªã‚·ãƒ¼
+ * @todo MultiThreadç’°å¢ƒã®ãŸã‚ã®ãƒ­ãƒƒã‚¯ãƒãƒªã‚·ãƒ¼ã¨ã‹ã‚‚å¿…è¦ã‹ã‚‚
  */
 template <typename Container,
 	class RemovePolicy = DefaultRemover<Container> >

@@ -10,7 +10,7 @@
 #include <text/transcode/Unicode.hpp>
 
 /**
- * XMLƒm[ƒhƒNƒ‰ƒX
+ * XMLãƒãƒ¼ãƒ‰ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType, typename NodeType>
 class XMLNode
@@ -25,19 +25,19 @@ public:
 
 protected:
 	/**
-	 * eƒm[ƒh‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * è¦ªãƒãƒ¼ãƒ‰ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	node_t* parent;
 
 	/**
-	 * qƒm[ƒh‚ÌƒRƒŒƒNƒVƒ‡ƒ“
+	 * å­ãƒãƒ¼ãƒ‰ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
 	 */
 	nodes_t children;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param parent eƒNƒ‰ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param parent è¦ªã‚¯ãƒ©ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	XMLNode(node_t* parent = NULL):
 		parent(NULL),
@@ -45,7 +45,7 @@ public:
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~XMLNode() throw()
 	{
@@ -56,8 +56,8 @@ public:
 	}
 
 	/**
-	 * Ÿ‚ÌŒZ’íƒŒƒxƒ‹‚Ìƒm[ƒh‚Ì’Tõ
-	 * @return Œ©‚Â‚©‚Á‚½Ÿ‚ÌŒZ’íƒm[ƒh‚Ìƒ|ƒCƒ“ƒ^BŸ‚ª–³‚¢ê‡‚ÍNULL‚ª‚©‚¦‚é
+	 * æ¬¡ã®å…„å¼Ÿãƒ¬ãƒ™ãƒ«ã®ãƒãƒ¼ãƒ‰ã®æ¢ç´¢
+	 * @return è¦‹ã¤ã‹ã£ãŸæ¬¡ã®å…„å¼Ÿãƒãƒ¼ãƒ‰ã®ãƒã‚¤ãƒ³ã‚¿ã€‚æ¬¡ãŒç„¡ã„å ´åˆã¯NULLãŒã‹ãˆã‚‹
 	 */
 	node_t* getNextSibling() const throw(std::logic_error)
 	{
@@ -79,8 +79,8 @@ public:
 	}
 
 	/**
-	 * ‘O‚ÌŒZ’íƒŒƒxƒ‹‚Ìƒm[ƒh‚Ì’Tõ
-	 * @return ‘O‚ÌŒZ’íƒŒƒxƒ‹ƒm[ƒh
+	 * å‰ã®å…„å¼Ÿãƒ¬ãƒ™ãƒ«ã®ãƒãƒ¼ãƒ‰ã®æ¢ç´¢
+	 * @return å‰ã®å…„å¼Ÿãƒ¬ãƒ™ãƒ«ãƒãƒ¼ãƒ‰
 	 */
 	node_t* getPrevSibling() const throw(std::logic_error)
 	{
@@ -102,8 +102,8 @@ public:
 	}
 
 	/**
-	 * qƒm[ƒh‚Ì’Ç‰Á
-	 * @param newChild V‚µ‚¢q‹Ÿƒm[ƒh
+	 * å­ãƒãƒ¼ãƒ‰ã®è¿½åŠ 
+	 * @param newChild æ–°ã—ã„å­ä¾›ãƒãƒ¼ãƒ‰
 	 */
 	void addChild(node_t* newChild)
 	{
@@ -112,9 +112,9 @@ public:
 	}
 
 	/**
-	 * qƒm[ƒh‚Ìíœ
-	 * @param child íœ‚·‚éq‹Ÿƒm[ƒh
-	 * ƒm[ƒh‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡A‰½‚à‚µ‚Ü‚¹‚ñ
+	 * å­ãƒãƒ¼ãƒ‰ã®å‰Šé™¤
+	 * @param child å‰Šé™¤ã™ã‚‹å­ä¾›ãƒãƒ¼ãƒ‰
+	 * ãƒãƒ¼ãƒ‰ãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã€ä½•ã‚‚ã—ã¾ã›ã‚“
 	 */
 	void removeChild(node_t* child)
 	{
@@ -129,10 +129,10 @@ public:
 	}
 
 	/**
-	 * eƒm[ƒh‚Ö‚ÌÚ‡
-	 * @param newParent eƒm[ƒh
-	 * @todo ƒXƒR[ƒvprivate‚É‚µ‚Äe‚©‚ç‚ÌÚ‡‚µ‚©‚Å‚«‚È‚¢‚æ‚¤‚É
-	 * ‚µ‚½•û‚ª‚¢‚¢‚©‚àB
+	 * è¦ªãƒãƒ¼ãƒ‰ã¸ã®æ¥åˆ
+	 * @param newParent è¦ªãƒãƒ¼ãƒ‰
+	 * @todo ã‚¹ã‚³ãƒ¼ãƒ—privateã«ã—ã¦è¦ªã‹ã‚‰ã®æ¥åˆã—ã‹ã§ããªã„ã‚ˆã†ã«
+	 * ã—ãŸæ–¹ãŒã„ã„ã‹ã‚‚ã€‚
 	 */
 	void setParent(node_t* newParent) throw()
 	{
@@ -140,8 +140,8 @@ public:
 	}
 
 	/**
-	 * eƒm[ƒh‚Ìæ“¾
-	 * @return eƒm[ƒh
+	 * è¦ªãƒãƒ¼ãƒ‰ã®å–å¾—
+	 * @return è¦ªãƒãƒ¼ãƒ‰
 	 */
 	node_t* getParent() const throw()
 	{
@@ -149,9 +149,9 @@ public:
 	}
 
 	/**
-	 * qƒm[ƒh‚Ìæ“¾
-	 * @param index 0ƒx[ƒXƒCƒ“ƒfƒbƒNƒX‚Æ‚µ‚½q‹Ÿƒm[ƒh‚ÌˆÊ’uB
-	 * ƒCƒ“ƒfƒbƒNƒX‚ª–³Œø‚Èê‡NULL‚ğ•Ô‚·B
+	 * å­ãƒãƒ¼ãƒ‰ã®å–å¾—
+	 * @param index 0ãƒ™ãƒ¼ã‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¨ã—ãŸå­ä¾›ãƒãƒ¼ãƒ‰ã®ä½ç½®ã€‚
+	 * ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãŒç„¡åŠ¹ãªå ´åˆNULLã‚’è¿”ã™ã€‚
 	 */
 	node_t* getChild(const size_t index) const throw()
 	{
@@ -162,8 +162,8 @@ public:
 	}
 
 	/**
-	 * qƒm[ƒh’B‚Ìæ“¾
-	 * @return ‚·‚×‚Ä‚Ìqƒm[ƒh
+	 * å­ãƒãƒ¼ãƒ‰é”ã®å–å¾—
+	 * @return ã™ã¹ã¦ã®å­ãƒãƒ¼ãƒ‰
 	 */
 	std::vector<node_t*> getChildren() const throw()
 	{
@@ -171,18 +171,18 @@ public:
 	}
 
 	/**
-	 * •¶š—ñ•ÏŠ·
-	 * @param indentLevel ƒvƒŠƒeƒBƒvƒŠƒ“ƒg—pƒCƒ“ƒfƒ“ƒgƒŒƒxƒ‹
-	 * @return —v‘f‚Ì•¶š—ñ•\Œ»
+	 * æ–‡å­—åˆ—å¤‰æ›
+	 * @param indentLevel ãƒ—ãƒªãƒ†ã‚£ãƒ—ãƒªãƒ³ãƒˆç”¨ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆãƒ¬ãƒ™ãƒ«
+	 * @return è¦ç´ ã®æ–‡å­—åˆ—è¡¨ç¾
 	 */
 	virtual string_t toString(const size_t indentLevel = 0) const throw() = 0;
 };
 
 /**
- * ƒm[ƒh–¼‚©‚çDOMƒm[ƒh‚ğŒ©‚Â‚¯‚é‚½‚ß‚Ìƒtƒ@ƒ“ƒNƒ^
- * @param BaseType Šî’êƒm[ƒhŒ^
- * @param DeriverdType Œ©‚Â‚¯‚éƒm[ƒhŒ^
- * @todo ‚±‚ê‚ğƒRƒ}ƒ“ƒhƒpƒ^[ƒ“‚É•ÏX‚µ‚ÄXPath‚ÌƒTƒ|[ƒgqŒê‚ÌŠg‘å‚ğEEE
+ * ãƒãƒ¼ãƒ‰åã‹ã‚‰DOMãƒãƒ¼ãƒ‰ã‚’è¦‹ã¤ã‘ã‚‹ãŸã‚ã®ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
+ * @param BaseType åŸºåº•ãƒãƒ¼ãƒ‰å‹
+ * @param DeriverdType è¦‹ã¤ã‘ã‚‹ãƒãƒ¼ãƒ‰å‹
+ * @todo ã“ã‚Œã‚’ã‚³ãƒãƒ³ãƒ‰ãƒ‘ã‚¿ãƒ¼ãƒ³ã«å¤‰æ›´ã—ã¦XPathã®ã‚µãƒãƒ¼ãƒˆè¿°èªã®æ‹¡å¤§ã‚’ãƒ»ãƒ»ãƒ»
  */
 template <typename BaseType, typename DeriverdType, typename CharType>
 class FindNamePredicate
@@ -194,29 +194,29 @@ public:
 
 private:
 	/**
-	 * Œ©‚Â‚¯‚éƒm[ƒh–¼
+	 * è¦‹ã¤ã‘ã‚‹ãƒãƒ¼ãƒ‰å
 	 */
 	string_t findName;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param name Œ©‚Â‚¯‚éƒm[ƒh–¼
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param name è¦‹ã¤ã‘ã‚‹ãƒãƒ¼ãƒ‰å
 	 */
 	FindNamePredicate(const string_t& name)
 		: findName(name)
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~FindNamePredicate() throw()
 	{}
 
 	/**
-	 * ƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
-	 * @param child ƒm[ƒh‚Ìƒ|ƒCƒ“ƒ^
-	 * @return –¼‘O‚ª“¯‚¶‚È‚çtrue ˆá‚¤‚È‚çfalse
+	 * ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+	 * @param child ãƒãƒ¼ãƒ‰ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @return åå‰ãŒåŒã˜ãªã‚‰true é•ã†ãªã‚‰false
 	 */
 	bool operator()(BaseType* child) const throw()
 	{
@@ -232,7 +232,7 @@ public:
 template <typename CharType> class TagElement;
 
 /**
- * XML—v‘fƒNƒ‰ƒX
+ * XMLè¦ç´ ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class Element : public XMLNode<CharType, Element<CharType> >
@@ -250,21 +250,21 @@ public:
 	typedef TagElement<char_t> tag_element_t;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	Element() throw()
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~Element() throw()
 	{}
 
 	/**
-	 * –¼‘O‚Åw’è‚µ‚½q—v‘f‚Ìæ“¾
-	 * @param name ƒ^ƒO‚Ì–¼‘O
-	 * @return Œ©‚Â‚©‚Á‚½XML—v‘f‚Ìƒ|ƒCƒ“ƒ^BŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍNULL
+	 * åå‰ã§æŒ‡å®šã—ãŸå­è¦ç´ ã®å–å¾—
+	 * @param name ã‚¿ã‚°ã®åå‰
+	 * @return è¦‹ã¤ã‹ã£ãŸXMLè¦ç´ ã®ãƒã‚¤ãƒ³ã‚¿ã€‚è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯NULL
 	 */
 	virtual Element* getChildElement(const string_t& name)
 	{
@@ -280,10 +280,10 @@ public:
 	}
 
 	/**
-	 * –¼‘O‚Åw’è‚µ‚½q—v‘f‚Ìæ“¾
-	 * @param name ƒ^ƒO‚Ì–¼‘O
-	 * @return Œ©‚Â‚©‚Á‚½XML—v‘f‚ÌƒRƒŒƒNƒVƒ‡ƒ“B
-	 * Œ©‚Â‚©‚ç‚È‚¢ê‡‚Í‹ó‚ÌƒRƒŒƒNƒVƒ‡ƒ“B
+	 * åå‰ã§æŒ‡å®šã—ãŸå­è¦ç´ ã®å–å¾—
+	 * @param name ã‚¿ã‚°ã®åå‰
+	 * @return è¦‹ã¤ã‹ã£ãŸXMLè¦ç´ ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã€‚
+	 * è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯ç©ºã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã€‚
 	 */
 	virtual std::vector<Element*> getChildrenElements(const string_t& name)
 	{
@@ -303,7 +303,7 @@ public:
 };
 
 /**
- * XMLƒ^ƒO—v‘f
+ * XMLã‚¿ã‚°è¦ç´ 
  */
 template <typename CharType>
 class TagElement : public Element<CharType>
@@ -320,12 +320,12 @@ public:
 
 protected:
 	/**
-	 * ƒ^ƒO‚Ì–¼‘O
+	 * ã‚¿ã‚°ã®åå‰
 	 */
 	string_t tagName;
 
 	/**
-	 * ƒ^ƒO‚Ì‘®«
+	 * ã‚¿ã‚°ã®å±æ€§
 	 */
 	std::map<string_t, string_t> attributes;
 
@@ -335,9 +335,9 @@ protected:
 	{}
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param tagName_ ƒ^ƒO‚Ì–¼‘O
-	 * @param attrubutes_ ƒ^ƒO‚Ì‘®«
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param tagName_ ã‚¿ã‚°ã®åå‰
+	 * @param attrubutes_ ã‚¿ã‚°ã®å±æ€§
 	 */
 	TagElement(const string_t& tagName_,
 			   const std::map<string_t, string_t>& attributes_)
@@ -346,8 +346,8 @@ public:
 	{}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param token ƒ^ƒO–¼‚ğŠÜ‚ñ‚¾ƒp[ƒXŒ‹‰Ê•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param token ã‚¿ã‚°åã‚’å«ã‚“ã ãƒ‘ãƒ¼ã‚¹çµæœæ–‡å­—åˆ—
 	 */
 	TagElement(const string_t& token) throw(InvalidTagException)
 		:tagName(token.substr(0, token.find(' '))),
@@ -404,7 +404,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~TagElement() throw()
 	{}
@@ -462,8 +462,8 @@ public:
 	}
 
 	/**
-	 * ƒ^ƒO–¼‚Ìæ“¾
-	 * @return ƒ^ƒO–¼
+	 * ã‚¿ã‚°åã®å–å¾—
+	 * @return ã‚¿ã‚°å
 	 */
 	string_t getTagName() const throw()
 	{
@@ -471,8 +471,8 @@ public:
 	}
 
 	/**
-	 * ‘®«ƒZƒbƒg‚Ìæ“¾
-	 * @return ‘®«‚ÌƒRƒŒƒNƒVƒ‡ƒ“
+	 * å±æ€§ã‚»ãƒƒãƒˆã®å–å¾—
+	 * @return å±æ€§ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
 	 */
 	std::map<string_t, string_t> getAttributes() const throw()
 	{
@@ -480,8 +480,8 @@ public:
 	}
 
 	/**
-	 * ‘®«ƒZƒbƒg‚Ìİ’è
-	 * @param newAttributes V‚µ‚¢‘®«‚ÌƒRƒŒƒNƒVƒ‡ƒ“
+	 * å±æ€§ã‚»ãƒƒãƒˆã®è¨­å®š
+	 * @param newAttributes æ–°ã—ã„å±æ€§ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
 	 */
 	void setAttributes(const std::map<string_t, string_t>& newAttributes)
 		throw()
@@ -490,9 +490,9 @@ public:
 	}
 
 	/**
-	 * ‘®«‚Ìæ“¾
-	 * @param attributeName ‘®«‚Ì–¼‘O
-	 * @return ‘®«‚Ì’l
+	 * å±æ€§ã®å–å¾—
+	 * @param attributeName å±æ€§ã®åå‰
+	 * @return å±æ€§ã®å€¤
 	 */
 	string_t getAttribute(const string_t& attributeName) const throw()
 	{
@@ -506,9 +506,9 @@ public:
 	}
 
 	/**
-	 * ‘®«‚Ìİ’è
-	 * @param name ‘®«‚Ì–¼‘O
-	 * @param value ‘®«‚Ì’l
+	 * å±æ€§ã®è¨­å®š
+	 * @param name å±æ€§ã®åå‰
+	 * @param value å±æ€§ã®å€¤
 	 */
 	void setAttribute(const string_t& name, const string_t& value) throw()
 	{
@@ -517,7 +517,7 @@ public:
 };
 
 /**
- * ƒRƒƒ“ƒg‚ğ•\‚·—v‘f
+ * ã‚³ãƒ¡ãƒ³ãƒˆã‚’è¡¨ã™è¦ç´ 
  */
 template <typename CharType>
 class CommentElement : public TagElement<CharType>
@@ -531,14 +531,14 @@ public:
 
 private:
 	/**
-	 * ƒRƒƒ“ƒg
+	 * ã‚³ãƒ¡ãƒ³ãƒˆ
 	 */
 	string_t value;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param value_ ƒRƒƒ“ƒg•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param value_ ã‚³ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—
 	 */
 	CommentElement(const string_t& value_):
 			TagElement<char_t>(), value(value_)
@@ -554,7 +554,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~CommentElement() throw()
 	{}
@@ -579,8 +579,8 @@ public:
 	}
 
 	/**
-	 * ƒRƒƒ“ƒg•¶š—ñ‚Ìæ“¾
-	 * @return ƒRƒƒ“ƒg•¶š—ñ
+	 * ã‚³ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—ã®å–å¾—
+	 * @return ã‚³ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—
 	 */
 	string_t getComment() const throw()
 	{
@@ -588,8 +588,8 @@ public:
 	}
 
 	/**
-	 * ƒRƒƒ“ƒg•¶š—ñ‚Ìİ’è
-	 * @param comment V‚µ‚¢ƒRƒƒ“ƒg•¶š—ñ
+	 * ã‚³ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—ã®è¨­å®š
+	 * @param comment æ–°ã—ã„ã‚³ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—
 	 */
 	void setComment(const string_t& comment) throw()
 	{
@@ -598,8 +598,8 @@ public:
 };
 
 /**
- * CDATA•¶š—ñ—v‘f
- * @note ‘OŒã‚Ì‹ó”’•¶š‚ğchop‚·‚éƒwƒ‹ƒp‚ª‚ ‚Á‚Ä‚à‚¢‚¢‚©‚à
+ * CDATAæ–‡å­—åˆ—è¦ç´ 
+ * @note å‰å¾Œã®ç©ºç™½æ–‡å­—ã‚’chopã™ã‚‹ãƒ˜ãƒ«ãƒ‘ãŒã‚ã£ã¦ã‚‚ã„ã„ã‹ã‚‚
  */
 template <typename CharType>
 class StringElement : public TagElement<CharType>
@@ -613,14 +613,14 @@ public:
 
 private:
 	/**
-	 * •¶š—ñ
+	 * æ–‡å­—åˆ—
 	 */
 	string_t value;
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param value_ CDATA•¶š—ñ
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param value_ CDATAæ–‡å­—åˆ—
 	 */
 	StringElement(const string_t& value_):
 			TagElement<char_t>(),  value(value_)
@@ -633,7 +633,7 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~StringElement() throw()
 	{}
@@ -647,8 +647,8 @@ public:
 	}
 	
 	/**
-	 * CDATA•¶š—ñ‚Ìæ“¾
-	 * @return •¶š—ñ
+	 * CDATAæ–‡å­—åˆ—ã®å–å¾—
+	 * @return æ–‡å­—åˆ—
 	 */
 	string_t getString() const throw()
 	{
@@ -656,9 +656,9 @@ public:
 	}
 
 	/**
-	 * CDATA•¶š—ñ‚Ìİ’è
+	 * CDATAæ–‡å­—åˆ—ã®è¨­å®š
 	 * @param newString
-	 * V‚µ‚¢CDATA•¶š—ñ
+	 * æ–°ã—ã„CDATAæ–‡å­—åˆ—
 	 */
 	void setString(const string_t& newString) throw()
 	{
@@ -668,7 +668,7 @@ public:
 };
 
 /**
- * METAƒ^ƒO—v‘f
+ * METAã‚¿ã‚°è¦ç´ 
  */
 template <typename CharType>
 class MetaElement : public TagElement<CharType>
@@ -683,15 +683,15 @@ public:
 	typedef TagElement<char_t> tag_element_t;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * param token METAƒ^ƒO–¼
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * param token METAã‚¿ã‚°å
 	 */
 	MetaElement(const string_t& token):
 		TagElement<CharType>(token)
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~MetaElement() throw()
 	{}
@@ -726,7 +726,7 @@ public:
 };
 
 /**
- * XMLƒhƒLƒ…ƒƒ“ƒgƒNƒ‰ƒX
+ * XMLãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class XMLDocument : public Element<CharType>
@@ -754,20 +754,20 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	XMLDocument() throw()
 	{}
 	
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~XMLDocument() throw()
 	{}
 };
 
 /**
- * XMLPathƒp[ƒT
+ * XMLPathãƒ‘ãƒ¼ã‚µ
  */
 template <typename CharType>
 class XMLPath
@@ -785,14 +785,14 @@ public:
 
 private:
 	/**
-	 * ŒŸõƒpƒX
+	 * æ¤œç´¢ãƒ‘ã‚¹
 	 */
 	string_t path;
 
 	/**
-	 * •¶š—ñ‚©‚ç®”’l‚Ö‚Ì•ÏŠ·ƒwƒ‹ƒp
-	 * @param value •¶š—ñ
-	 * @return ®”’l
+	 * æ–‡å­—åˆ—ã‹ã‚‰æ•´æ•°å€¤ã¸ã®å¤‰æ›ãƒ˜ãƒ«ãƒ‘
+	 * @param value æ–‡å­—åˆ—
+	 * @return æ•´æ•°å€¤
 	 */
 	int strToInt(const string_t& value)	const
 	{
@@ -814,12 +814,12 @@ private:
 	}
 
 	/**
-	 * ƒCƒ“ƒfƒbƒNƒXƒIƒtƒZƒbƒg‚ÌŒvZ
-	 * @param param XPathƒg[ƒNƒ“
-	 * @return ƒCƒ“ƒfƒbƒNƒXƒIƒtƒZƒbƒg
-	 * @todo ƒuƒ‰ƒPƒbƒg“à‚ªexpression‚¾‚Á‚½ê‡‚Ì‘Î‰B
-	 * XPathExpression‚Æ‚©Œ¾‚¤ƒNƒ‰ƒX‚Å‚àì‚Á‚Ä•]‰¿®‚ğƒIƒuƒWƒFƒNƒg‰»‚µ‚Ä
-	 * Commandƒpƒ^[ƒ“g‚Á‚Äƒgƒ‰ƒo[ƒX‚³‚¹‚é‚Æ‚©‚©‚È‚ŸEEE
+	 * ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚ªãƒ•ã‚»ãƒƒãƒˆã®è¨ˆç®—
+	 * @param param XPathãƒˆãƒ¼ã‚¯ãƒ³
+	 * @return ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+	 * @todo ãƒ–ãƒ©ã‚±ãƒƒãƒˆå†…ãŒexpressionã ã£ãŸå ´åˆã®å¯¾å¿œã€‚
+	 * XPathExpressionã¨ã‹è¨€ã†ã‚¯ãƒ©ã‚¹ã§ã‚‚ä½œã£ã¦è©•ä¾¡å¼ã‚’ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåŒ–ã—ã¦
+	 * Commandãƒ‘ã‚¿ãƒ¼ãƒ³ä½¿ã£ã¦ãƒˆãƒ©ãƒãƒ¼ã‚¹ã•ã›ã‚‹ã¨ã‹ã‹ãªããƒ»ãƒ»ãƒ»
 	 */
 	int getIndexOf(const string_t& param)
 		const throw(std::invalid_argument)
@@ -845,8 +845,8 @@ private:
 		if ((offset2 - offset1) > 1)
 		{
 			/**
-			 * @todo expression‚ª‚Í‚¢‚Á‚½ê‡‚Ì‘Î‰‚Æ‚©B
-			 * ‚Ü‚ŸA‚»‚Ìê‡‚ÍŠî–{•”•ª‚ÌŒ©’¼‚µ‚ª•K—v‚¾‚ë‚¤‚¯‚ÇEEE
+			 * @todo expressionãŒã¯ã„ã£ãŸå ´åˆã®å¯¾å¿œã¨ã‹ã€‚
+			 * ã¾ãã€ãã®å ´åˆã¯åŸºæœ¬éƒ¨åˆ†ã®è¦‹ç›´ã—ãŒå¿…è¦ã ã‚ã†ã‘ã©ãƒ»ãƒ»ãƒ»
 			 */
 			return
 				strToInt(string_t(&param[offset1+1],
@@ -857,10 +857,10 @@ private:
 	}
 
 	/**
-	 * DOMƒcƒŠ[‚Ìƒgƒ‰ƒo[ƒX
-	 * @param element DOM—v‘f‚Ì’T¸Œ³
-	 * @param nameList XPath‚©‚çƒm[ƒh—v‘f‚²‚Æ‚É•ª‰ğ‚³‚ê‚½•¶š—ñƒŠƒXƒg
-	 * @reutrn Œ©‚Â‚©‚Á‚½—v‘f‚ÌƒRƒŒƒNƒVƒ‡ƒ“
+	 * DOMãƒ„ãƒªãƒ¼ã®ãƒˆãƒ©ãƒãƒ¼ã‚¹
+	 * @param element DOMè¦ç´ ã®æ¢æŸ»å…ƒ
+	 * @param nameList XPathã‹ã‚‰ãƒãƒ¼ãƒ‰è¦ç´ ã”ã¨ã«åˆ†è§£ã•ã‚ŒãŸæ–‡å­—åˆ—ãƒªã‚¹ãƒˆ
+	 * @reutrn è¦‹ã¤ã‹ã£ãŸè¦ç´ ã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
 	 */
 	std::vector<Element<char_t>*> traverse(Element<char_t>* element,
 										   std::vector<string_t> nameList)
@@ -932,8 +932,8 @@ private:
 	}
 
 	/**
-	 * XPath‚Ìƒg[ƒNƒ“•ªŠ„
-	 * @return •ªŠ„‚³‚ê‚½XPathƒg[ƒNƒ“
+	 * XPathã®ãƒˆãƒ¼ã‚¯ãƒ³åˆ†å‰²
+	 * @return åˆ†å‰²ã•ã‚ŒãŸXPathãƒˆãƒ¼ã‚¯ãƒ³
 	 */
 	std::vector<string_t> tokenize() const
 	{
@@ -960,7 +960,7 @@ private:
 public:
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 * @param path_ XPath
 	 */
 	XMLPath(const string_t& path_)
@@ -995,16 +995,16 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~XMLPath() throw()
 	{}
 
 	/**
-	 * XPath‚Ì•]‰¿
-	 * @param element •]‰¿‘ÎÛ‚Æ‚È‚éTagElement
-	 * @return •]‰¿Œ‹‰Ê‚Æ‚È‚éTagElement‚ÌƒRƒŒƒNƒVƒ‡ƒ“
-	 * @todo documentRootˆÈŠO‚àó‚¯•t‚¯‚é‚æ‚¤‚É•ÏX
+	 * XPathã®è©•ä¾¡
+	 * @param element è©•ä¾¡å¯¾è±¡ã¨ãªã‚‹TagElement
+	 * @return è©•ä¾¡çµæœã¨ãªã‚‹TagElementã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³
+	 * @todo documentRootä»¥å¤–ã‚‚å—ã‘ä»˜ã‘ã‚‹ã‚ˆã†ã«å¤‰æ›´
 	 */
 	std::vector<element_t*> evaluate(element_t* element)
 	{
@@ -1038,8 +1038,8 @@ public:
 };
 
 /**
- * XMLƒp[ƒT
- * @todo ‘Ã“–«ŒŸØ‹@”\‚Æ‚©B
+ * XMLãƒ‘ãƒ¼ã‚µ
+ * @todo å¦¥å½“æ€§æ¤œè¨¼æ©Ÿèƒ½ã¨ã‹ã€‚
  */
 template <typename CharType>
 class XMLParser
@@ -1055,31 +1055,31 @@ public:
 
 private:
 	/**
-	 * ƒg[ƒNƒiƒCƒU
+	 * ãƒˆãƒ¼ã‚¯ãƒŠã‚¤ã‚¶
 	 */
 	class Tokenizer
 	{
 		friend class XMLParserTest;
 	private:
 		/**
-		 * ƒg[ƒNƒ“‚Ìæ“ªˆÊ’u
+		 * ãƒˆãƒ¼ã‚¯ãƒ³ã®å…ˆé ­ä½ç½®
 		 */
 		const char_t* head;
 
 		/**
-		 * ƒg[ƒNƒ“‚ÌI’[ˆÊ’u
+		 * ãƒˆãƒ¼ã‚¯ãƒ³ã®çµ‚ç«¯ä½ç½®
 		 */
 		const char_t* const tail;
 
 		/**
-		 * ƒzƒƒCƒgƒXƒy[ƒX‚Ì–³‹ƒtƒ‰ƒO
+		 * ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ã®ç„¡è¦–ãƒ•ãƒ©ã‚°
 		 */
 		bool ignoreWhiteString;
 
 	public:
 		/**
-		 * ƒzƒƒCƒgƒXƒy[ƒX–³‹ó‘Ô‚Ìæ“¾
-		 * @return ƒzƒƒCƒgƒXƒy[ƒX‚ğ–³‹‚·‚é‚©
+		 * ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ç„¡è¦–çŠ¶æ…‹ã®å–å¾—
+		 * @return ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ã‚’ç„¡è¦–ã™ã‚‹ã‹
 		 */
 		bool getIgnoreWhiteSpace() const throw()
 		{
@@ -1087,8 +1087,8 @@ private:
 		}
 
 		/**
-		 * ƒzƒƒCƒgƒXƒy[ƒX–³‹ó‘Ô‚Ìİ’è
-		 * @param flag ƒzƒƒCƒgƒXƒy[ƒX–³‹‚Ìİ’è’l
+		 * ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ç„¡è¦–çŠ¶æ…‹ã®è¨­å®š
+		 * @param flag ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ç„¡è¦–ã®è¨­å®šå€¤
 		 */
 		void setIgnoreWhiteSpace(const bool flag) throw()
 		{
@@ -1096,9 +1096,9 @@ private:
 		}
 
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * @param head_ ƒg[ƒNƒiƒCƒY‚·‚é•¶š—ñ‚Ìæ“ª
-		 * @param tail_ ƒg[ƒNƒiƒCƒY‚·‚é•¶š—ñ‚ÌI’[
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * @param head_ ãƒˆãƒ¼ã‚¯ãƒŠã‚¤ã‚ºã™ã‚‹æ–‡å­—åˆ—ã®å…ˆé ­
+		 * @param tail_ ãƒˆãƒ¼ã‚¯ãƒŠã‚¤ã‚ºã™ã‚‹æ–‡å­—åˆ—ã®çµ‚ç«¯
 		 */
 		Tokenizer(const char_t* head_, const char_t* const tail_):
 			head(head_), tail(tail_), ignoreWhiteString(false)
@@ -1107,8 +1107,8 @@ private:
 		}
 
 		/**
-		 * ƒg[ƒNƒ“‚Ìæ“¾
-		 * @return ƒg[ƒNƒ“‚Ì•¶š—ñ•\Œ»
+		 * ãƒˆãƒ¼ã‚¯ãƒ³ã®å–å¾—
+		 * @return ãƒˆãƒ¼ã‚¯ãƒ³ã®æ–‡å­—åˆ—è¡¨ç¾
 		 */
 		string_t getToken() throw (WellformedException)
 		{
@@ -1153,8 +1153,8 @@ private:
 		}
 
 		/**
-		 * ƒXƒgƒŠ[ƒ€‚ªI’[‚É’B‚µ‚Ä‚¢‚é‚©‚Ì”»’è
-		 * @return I’[‚É’B‚µ‚½ê‡true
+		 * ã‚¹ãƒˆãƒªãƒ¼ãƒ ãŒçµ‚ç«¯ã«é”ã—ã¦ã„ã‚‹ã‹ã®åˆ¤å®š
+		 * @return çµ‚ç«¯ã«é”ã—ãŸå ´åˆtrue
 		 */
 		bool isEof() const
 		{
@@ -1164,12 +1164,12 @@ private:
 	};
 
 	/**
-	 * ƒg[ƒNƒiƒCƒU‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * ãƒˆãƒ¼ã‚¯ãƒŠã‚¤ã‚¶ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	Tokenizer* tokenizer;
 
 	/**
-	 * ƒg[ƒNƒ“í•Ê
+	 * ãƒˆãƒ¼ã‚¯ãƒ³ç¨®åˆ¥
 	 */
 	enum TokenType 
 	{
@@ -1182,9 +1182,9 @@ private:
 	};
 
 	/**
-	 * ƒg[ƒNƒ“‚Ì¯•Ê
-	 * @param token Ø‚èo‚³‚ê‚½ƒg[ƒNƒ“
-	 * @return ¯•Ê‚³‚ê‚½ƒg[ƒNƒ“í•Ê
+	 * ãƒˆãƒ¼ã‚¯ãƒ³ã®è­˜åˆ¥
+	 * @param token åˆ‡ã‚Šå‡ºã•ã‚ŒãŸãƒˆãƒ¼ã‚¯ãƒ³
+	 * @return è­˜åˆ¥ã•ã‚ŒãŸãƒˆãƒ¼ã‚¯ãƒ³ç¨®åˆ¥
 	 */
 	TokenType getTokenType(const string_t& token)
 		throw (InvalidTagException)
@@ -1230,9 +1230,9 @@ private:
 	}
 
 	/**
-	 * ƒ^ƒO–¼g—p•¶š”»’è
-	 * @param character ƒ^ƒO–¼‚ÌÅ‰‚Ìˆê•¶š
-	 * @return g—p‰Â”\•¶š‚È‚çtrue
+	 * ã‚¿ã‚°åä½¿ç”¨æ–‡å­—åˆ¤å®š
+	 * @param character ã‚¿ã‚°åã®æœ€åˆã®ä¸€æ–‡å­—
+	 * @return ä½¿ç”¨å¯èƒ½æ–‡å­—ãªã‚‰true
 	 */
 	bool isFirstChar(const wchar_t character) const
 	{
@@ -1254,9 +1254,9 @@ private:
 	}
 
 	/**
-	 * ƒ^ƒO–¼g—p•¶š”»’è
-	 * @param character ƒ^ƒO–¼‚Ì“ñ•¶š–ÚˆÈ~
-	 * @return g—p‰Â”\•¶š‚È‚çtrue
+	 * ã‚¿ã‚°åä½¿ç”¨æ–‡å­—åˆ¤å®š
+	 * @param character ã‚¿ã‚°åã®äºŒæ–‡å­—ç›®ä»¥é™
+	 * @return ä½¿ç”¨å¯èƒ½æ–‡å­—ãªã‚‰true
 	 */
 	bool isSecondAfterChar(const wchar_t character) const
 	{
@@ -1281,9 +1281,9 @@ private:
 	}
 
 	/**
-	 * ƒ^ƒO–¼‚Ì‘Ã“–«ŒŸ¸
-	 * @param tagName ƒ^ƒO‚Ì–¼Ì
-	 * @return ƒ^ƒO–¼‚Æ‚µ‚Ä‘Ã“–‚È‚çtrue
+	 * ã‚¿ã‚°åã®å¦¥å½“æ€§æ¤œæŸ»
+	 * @param tagName ã‚¿ã‚°ã®åç§°
+	 * @return ã‚¿ã‚°åã¨ã—ã¦å¦¥å½“ãªã‚‰true
 	 */
 	bool isValidTagName(const string_t& tagName) const
 	{
@@ -1312,9 +1312,9 @@ private:
 	}
 
 	/**
-	 * XML—v‘f‚Ìì¬
-	 * @param parent e‚Æ‚È‚éXML—v‘f‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	 * @return V‹K‚Éì¬‚³‚ê‚½—v‘f‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * XMLè¦ç´ ã®ä½œæˆ
+	 * @param parent è¦ªã¨ãªã‚‹XMLè¦ç´ ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	 * @return æ–°è¦ã«ä½œæˆã•ã‚ŒãŸè¦ç´ ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	element_t* createElement(element_t* parent)
 	{
@@ -1383,14 +1383,14 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	XMLParser() throw():
 		tokenizer(NULL)
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~XMLParser() throw()
 	{
@@ -1398,10 +1398,10 @@ public:
 	}
 
 	/**
-	 * \•¶‰ğÍ
-	 * @param document XMLƒhƒLƒ…ƒƒ“ƒg•¶š—ñ
-	 * @param ignoreFlag ‰ğÍ‚ÉÛ‚µ‚ÄƒzƒƒCƒgƒXƒy[ƒX‚ğ–³‹‚·‚é‚©‚Ç‚¤‚©
-	 * @return ‰ğÍŒ‹‰Ê‚Æ‚µ‚Ä\’z‚³‚ê‚½DOMƒcƒŠ[‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * æ§‹æ–‡è§£æ
+	 * @param document XMLãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—
+	 * @param ignoreFlag è§£æã«éš›ã—ã¦ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ã‚’ç„¡è¦–ã™ã‚‹ã‹ã©ã†ã‹
+	 * @return è§£æçµæœã¨ã—ã¦æ§‹ç¯‰ã•ã‚ŒãŸDOMãƒ„ãƒªãƒ¼ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	XMLDocument<char_t>* parse(const string_t& document,
 							   const bool ignoreFlag = false)
@@ -1412,11 +1412,11 @@ public:
 	}
 
 	/**
-	 * \•¶‰ğÍ
-	 * @param head XMLƒhƒLƒ…ƒƒ“ƒg•¶š—ñæ“ª
-	 * @param head XMLƒhƒLƒ…ƒƒ“ƒg•¶š—ñI’[
-	 * @param ignoreFlag ‰ğÍ‚ÉÛ‚µ‚ÄƒzƒƒCƒgƒXƒy[ƒX‚ğ–³‹‚·‚é‚©‚Ç‚¤‚©
-	 * @return ‰ğÍŒ‹‰Ê‚Æ‚µ‚Ä\’z‚³‚ê‚½DOMƒcƒŠ[‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	 * æ§‹æ–‡è§£æ
+	 * @param head XMLãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—å…ˆé ­
+	 * @param head XMLãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆæ–‡å­—åˆ—çµ‚ç«¯
+	 * @param ignoreFlag è§£æã«éš›ã—ã¦ãƒ›ãƒ¯ã‚¤ãƒˆã‚¹ãƒšãƒ¼ã‚¹ã‚’ç„¡è¦–ã™ã‚‹ã‹ã©ã†ã‹
+	 * @return è§£æçµæœã¨ã—ã¦æ§‹ç¯‰ã•ã‚ŒãŸDOMãƒ„ãƒªãƒ¼ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	XMLDocument<char_t>* parse(const char_t* head,
 							   const char_t* tail,

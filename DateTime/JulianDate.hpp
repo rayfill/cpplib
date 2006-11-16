@@ -4,10 +4,10 @@
 #include <cassert>
 
 /**
- * C³ƒ†ƒŠƒEƒX’Ê“úƒNƒ‰ƒX
+ * ä¿®æ­£ãƒ¦ãƒªã‚¦ã‚¹é€šæ—¥ã‚¯ãƒ©ã‚¹
  * @see http://ja.wikipedia.org/wiki/%E3%83%A6%E3%83%AA%E3%82%A6%E3%82%B9%E9%80%9A%E6%97%A5
  * @see http://64.233.179.104/search?q=cache:pkzGhrOFHTIJ:kwi.cocolog-nifty.com/blog/delphi/index.html+%E3%83%95%E3%83%AA%E3%83%BC%E3%82%B2%E3%83%AB%E3%81%AE%E5%85%AC%E5%BC%8F&hl=ja&gl=jp&ct=clnk&cd=7
- * @todo ƒ†ƒŠƒEƒX—ï‚ÆŠ¨ˆá‚¢‚³‚ê‚»‚¤‚ÈƒNƒ‰ƒX–¼‚¾‚ÈEEE‰ü–¼‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚È
+ * @todo ãƒ¦ãƒªã‚¦ã‚¹æš¦ã¨å‹˜é•ã„ã•ã‚Œãã†ãªã‚¯ãƒ©ã‚¹åã ãªãƒ»ãƒ»ãƒ»æ”¹åã—ãŸã»ã†ãŒã„ã„ãª
  */
 class JulianDate
 {
@@ -15,18 +15,18 @@ class JulianDate
 
 private:
 	/**
-	 * C³ƒ†ƒEƒŠƒX’Ê“ú
+	 * ä¿®æ­£ãƒ¦ã‚¦ãƒªã‚¹é€šæ—¥
 	 */
 	int julianDay;
 
 	/**
-	 * “ú•t‚©‚çC³ƒ†ƒŠƒEƒX“ú‚ğæ“¾
-	 * @param year ”NA‹IŒ³‘O‚Íà–¾‚ğQÆ
-	 * @param month ŒA1ƒIƒtƒZƒbƒg‚Ån‚Ü‚é
-	 * @param day “ú
-	 * @note ‹IŒ³‘O‚Í1”N‚ğ0A2”N‚ğ-1‚Æ‚µ‚ÄˆÈ‰ºA3”N=-2...‚Æ‚·‚éB
-	 * epoch‚Í1878/11/17‚É‚È‚é
-	 * @see ƒtƒŠ[ƒQƒ‹‚ÌŒö®
+	 * æ—¥ä»˜ã‹ã‚‰ä¿®æ­£ãƒ¦ãƒªã‚¦ã‚¹æ—¥ã‚’å–å¾—
+	 * @param year å¹´ã€ç´€å…ƒå‰ã¯èª¬æ˜ã‚’å‚ç…§
+	 * @param month æœˆã€1ã‚ªãƒ•ã‚»ãƒƒãƒˆã§å§‹ã¾ã‚‹
+	 * @param day æ—¥
+	 * @note ç´€å…ƒå‰ã¯1å¹´ã‚’0ã€2å¹´ã‚’-1ã¨ã—ã¦ä»¥ä¸‹ã€3å¹´=-2...ã¨ã™ã‚‹ã€‚
+	 * epochã¯1878/11/17ã«ãªã‚‹
+	 * @see ãƒ•ãƒªãƒ¼ã‚²ãƒ«ã®å…¬å¼
 	 */
 	static int toJulian(int year,
 								 int month,
@@ -49,10 +49,10 @@ private:
 	}
 
 	/**
-	 * ƒKƒEƒX‚Ì°ŠÖ”
-	 * ³‚Ì”‚Ìê‡A­”‚ÌØÌ‚ÄB•‰‚Ì”‚Ìê‡ƒ}ƒCƒiƒX–³ŒÀ‘å•ûŒü‚ÉØ‚èã‚°B
-	 * @param value ‘ÎÛ‚Æ‚È‚é”
-	 * @return ˆ—Œ‹‰Ê
+	 * ã‚¬ã‚¦ã‚¹ã®åºŠé–¢æ•°
+	 * æ­£ã®æ•°ã®å ´åˆã€å°‘æ•°ã®åˆ‡æ¨ã¦ã€‚è² ã®æ•°ã®å ´åˆãƒã‚¤ãƒŠã‚¹ç„¡é™å¤§æ–¹å‘ã«åˆ‡ã‚Šä¸Šã’ã€‚
+	 * @param value å¯¾è±¡ã¨ãªã‚‹æ•°
+	 * @return å‡¦ç†çµæœ
 	 */
 	static int floor(const double value)
 	{
@@ -63,11 +63,11 @@ private:
 	}
 
 	/**
-	 * C³ƒ†ƒŠƒEƒX“ú‚©‚çƒOƒŒƒSƒŠƒI“ú•t‚Ö‚Ì•ÏŠ·
-	 * @param julianDay C³ƒ†ƒŠƒEƒX“ú
-	 * @param year o—Í‚³‚ê‚é”N
-	 * @param month o—Í‚³‚ê‚éŒ
-	 * @param day o—Í‚³‚ê‚é“ú
+	 * ä¿®æ­£ãƒ¦ãƒªã‚¦ã‚¹æ—¥ã‹ã‚‰ã‚°ãƒ¬ã‚´ãƒªã‚ªæ—¥ä»˜ã¸ã®å¤‰æ›
+	 * @param julianDay ä¿®æ­£ãƒ¦ãƒªã‚¦ã‚¹æ—¥
+	 * @param year å‡ºåŠ›ã•ã‚Œã‚‹å¹´
+	 * @param month å‡ºåŠ›ã•ã‚Œã‚‹æœˆ
+	 * @param day å‡ºåŠ›ã•ã‚Œã‚‹æ—¥
 	 */
 	static void toGregorian(const int julianDay,
 							int& year,
@@ -128,8 +128,8 @@ public:
 	}
 
 	/**
-	 * “à•”ƒf[ƒ^‚Ì”N‚ğ•Ô‚·
-	 * @return ”N
+	 * å†…éƒ¨ãƒ‡ãƒ¼ã‚¿ã®å¹´ã‚’è¿”ã™
+	 * @return å¹´
 	 */
 	int getYear() const
 	{
@@ -139,8 +139,8 @@ public:
 	}
 
 	/**
-	 * ”N‚Ìİ’è
-	 * @param newYear V‚½‚Éİ’è‚·‚é”N
+	 * å¹´ã®è¨­å®š
+	 * @param newYear æ–°ãŸã«è¨­å®šã™ã‚‹å¹´
 	 */
 	void setYear(const int newYear)
 	{
@@ -150,8 +150,8 @@ public:
 	}
 
 	/**
-	 * ”N‚Ì‰ÁZ
-	 * @param yearDiff ‰ÁZ‚·‚é”N”
+	 * å¹´ã®åŠ ç®—
+	 * @param yearDiff åŠ ç®—ã™ã‚‹å¹´æ•°
 	 */
 	void addYear(const int yearDiff)
 	{
@@ -161,8 +161,8 @@ public:
 	}
 
 	/**
-	 * “à•”ƒf[ƒ^‚ÌŒ‚ğ•Ô‚·
-	 * @return Œ
+	 * å†…éƒ¨ãƒ‡ãƒ¼ã‚¿ã®æœˆã‚’è¿”ã™
+	 * @return æœˆ
 	 */
 	int getMonth() const
 	{
@@ -172,8 +172,8 @@ public:
 	}
 
 	/**
-	 * Œ‚Ìİ’è
-	 * @param newMonth V‚½‚Éİ’è‚·‚éŒ
+	 * æœˆã®è¨­å®š
+	 * @param newMonth æ–°ãŸã«è¨­å®šã™ã‚‹æœˆ
 	 */
 	void setMonth(const int newMonth)
 	{
@@ -183,8 +183,8 @@ public:
 	}
 
 	/**
-	 * Œ‚Ì‰ÁZ
-	 * @param monthDiff ‰ÁZ‚·‚éŒ”
+	 * æœˆã®åŠ ç®—
+	 * @param monthDiff åŠ ç®—ã™ã‚‹æœˆæ•°
 	 */
 	void addMonth(const int monthDiff)
 	{
@@ -194,8 +194,8 @@ public:
 	}
 
 	/**
-	 * “à•”ƒf[ƒ^‚Ì“ú‚ğ•Ô‚·
-	 * @return “ú
+	 * å†…éƒ¨ãƒ‡ãƒ¼ã‚¿ã®æ—¥ã‚’è¿”ã™
+	 * @return æ—¥
 	 */
 	int getDay() const
 	{
@@ -205,8 +205,8 @@ public:
 	}
 
 	/**
-	 * “ú‚Ìİ’è
-	 * @param newDay V‚½‚Éİ’è‚·‚é“ú
+	 * æ—¥ã®è¨­å®š
+	 * @param newDay æ–°ãŸã«è¨­å®šã™ã‚‹æ—¥
 	 */
 	void setDay(const int newDay)
 	{
@@ -216,8 +216,8 @@ public:
 	}
 
 	/**
-	 * “ú‚Ì‰ÁZ
-	 * @param monthDiff ‰ÁZ‚·‚é“ú”
+	 * æ—¥ã®åŠ ç®—
+	 * @param monthDiff åŠ ç®—ã™ã‚‹æ—¥æ•°
 	 */
 	void addDay(const int dayDiff)
 	{
@@ -227,8 +227,8 @@ public:
 	}
 
 	/**
-	 * “ú•t‚Ì³“–«Šm”F
-	 * @return ‘¶İ‚·‚é“ú•t‚Å‚ ‚ê‚Îtrue
+	 * æ—¥ä»˜ã®æ­£å½“æ€§ç¢ºèª
+	 * @return å­˜åœ¨ã™ã‚‹æ—¥ä»˜ã§ã‚ã‚Œã°true
 	 */
 	static bool isValidate(const int year, const int month, const int day)
 	{
@@ -241,8 +241,8 @@ public:
 	}
 
 	/**
-	 * —j“ú‚Ìæ“¾
-	 * @return “ú—j‚ğ0ƒIƒtƒZƒbƒg‚Æ‚µ‚½—j“ú•\Œ»
+	 * æ›œæ—¥ã®å–å¾—
+	 * @return æ—¥æ›œã‚’0ã‚ªãƒ•ã‚»ãƒƒãƒˆã¨ã—ãŸæ›œæ—¥è¡¨ç¾
 	 */
 	int getWeekOfDay() const
 	{
@@ -250,9 +250,9 @@ public:
 	}
 
 	/**
-	 * “™‰¿ŒŸ¸
-	 * @param rhs ”äŠrJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return “™‚µ‚¢ê‡
+	 * ç­‰ä¾¡æ¤œæŸ»
+	 * @param rhs æ¯”è¼ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return ç­‰ã—ã„å ´åˆ
 	 */
 	bool operator==(const JulianDate& rhs) const throw()
 	{
@@ -260,9 +260,9 @@ public:
 	}
 
 	/**
-	 * ”ñ“™‰¿ŒŸ¸
-	 * @param rhs ”äŠrJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return “™‚µ‚­‚È‚¢ê‡
+	 * éç­‰ä¾¡æ¤œæŸ»
+	 * @param rhs æ¯”è¼ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return ç­‰ã—ããªã„å ´åˆ
 	 */
 	bool operator!=(const JulianDate& rhs) const throw()
 	{
@@ -270,9 +270,9 @@ public:
 	}
 
 	/**
-	 * ‘å¬ŒŸ¸
-	 * @param rhs ”äŠrJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return ¬‚³‚¢ê‡
+	 * å¤§å°æ¤œæŸ»
+	 * @param rhs æ¯”è¼ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return å°ã•ã„å ´åˆ
 	 */
 	bool operator<(const JulianDate& rhs) const throw()
 	{
@@ -280,9 +280,9 @@ public:
 	}
 
 	/**
-	 * ‘å¬ŒŸ¸
-	 * @param rhs ”äŠrJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return “™‚µ‚¢‚©¬‚³‚¢ê‡
+	 * å¤§å°æ¤œæŸ»
+	 * @param rhs æ¯”è¼ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return ç­‰ã—ã„ã‹å°ã•ã„å ´åˆ
 	 */
 	bool operator<=(const JulianDate& rhs) const throw()
 	{
@@ -290,9 +290,9 @@ public:
 	}
 
 	/**
-	 * ‘å¬ŒŸ¸
-	 * @param rhs ”äŠrJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return ‘å‚«‚¢ê‡
+	 * å¤§å°æ¤œæŸ»
+	 * @param rhs æ¯”è¼ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return å¤§ãã„å ´åˆ
 	 */
 	bool operator>(const JulianDate& rhs) const throw()
 	{
@@ -300,9 +300,9 @@ public:
 	}
 
 	/**
-	 * ‘å¬ŒŸ¸
-	 * @param rhs ”äŠrJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return “™‚µ‚¢‚©‘å‚«‚¢ê‡
+	 * å¤§å°æ¤œæŸ»
+	 * @param rhs æ¯”è¼ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return ç­‰ã—ã„ã‹å¤§ãã„å ´åˆ
 	 */
 	bool operator>=(const JulianDate& rhs) const throw()
 	{
@@ -310,9 +310,9 @@ public:
 	}
 
 	/**
-	 * ‘ã“ü
-	 * @param rhs ƒRƒs[Œ³JulianDateƒIƒuƒWƒFƒNƒg
-	 * @return ƒRƒs[Œã‚Ì©g‚Ö‚ÌQÆ
+	 * ä»£å…¥
+	 * @param rhs ã‚³ãƒ”ãƒ¼å…ƒJulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return ã‚³ãƒ”ãƒ¼å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	JulianDate& operator=(const JulianDate& rhs) throw()
 	{
@@ -323,9 +323,9 @@ public:
 	}
 
 	/**
-	 * ‰ÁZ
-	 * @param rhs ‰ÁZ‘ÎÛJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return ‰ÁZŒã‚Ì©g‚Ö‚ÌQÆ
+	 * åŠ ç®—
+	 * @param rhs åŠ ç®—å¯¾è±¡JulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return åŠ ç®—å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	JulianDate& operator+=(const JulianDate& rhs) throw()
 	{
@@ -334,9 +334,9 @@ public:
 	}
 
 	/**
-	 * ‰ÁZ
-	 * @param rhs ‰ÁZ‘ÎÛJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return ‰ÁZŒã‚ÌƒIƒuƒWƒFƒNƒg
+	 * åŠ ç®—
+	 * @param rhs åŠ ç®—å¯¾è±¡JulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return åŠ ç®—å¾Œã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	JulianDate operator+(const JulianDate& rhs) const throw()
 	{
@@ -344,9 +344,9 @@ public:
 	}
 
 	/**
-	 * Œ¸Z
-	 * @param rhs Œ¸Z‘ÎÛJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return Œ¸ZŒã‚Ì©g‚Ö‚ÌQÆ
+	 * æ¸›ç®—
+	 * @param rhs æ¸›ç®—å¯¾è±¡JulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return æ¸›ç®—å¾Œã®è‡ªèº«ã¸ã®å‚ç…§
 	 */
 	JulianDate& operator-=(const JulianDate& rhs) throw()
 	{
@@ -355,9 +355,9 @@ public:
 	}
 
 	/**
-	 * Œ¸Z
-	 * @param rhs Œ¸Z‘ÎÛJulianDateƒIƒuƒWƒFƒNƒg
-	 * @return Œ¸ZŒã‚ÌƒIƒuƒWƒFƒNƒg
+	 * æ¸›ç®—
+	 * @param rhs æ¸›ç®—å¯¾è±¡JulianDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @return æ¸›ç®—å¾Œã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	JulianDate operator-(const JulianDate& rhs) const throw()
 	{

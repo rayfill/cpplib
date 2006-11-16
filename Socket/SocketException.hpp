@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 /**
- * Socket‚ª”­¶‚³‚¹‚é—áŠOƒNƒ‰ƒX
+ * SocketãŒç™ºç”Ÿã•ã›ã‚‹ä¾‹å¤–ã‚¯ãƒ©ã‚¹
  */
 class SocketException : public std::runtime_error
 {
@@ -15,7 +15,7 @@ public:
 };
 
 /**
- * Ú‘±‚ª•Â‚¶‚ç‚ê‚Ä‚¢‚éê‡‚É”­¶‚·‚é—áŠO
+ * æ¥ç¶šãŒé–‰ã˜ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆã«ç™ºç”Ÿã™ã‚‹ä¾‹å¤–
  */
 class ConnectionClosedException : public SocketException
 {

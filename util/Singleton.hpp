@@ -8,7 +8,7 @@
 #include <map>
 
 /**
- * Ä“üƒ|ƒŠƒV[
+ * å†å…¥ãƒãƒªã‚·ãƒ¼
  */
 class SingleThreadPolicy
 {
@@ -20,7 +20,7 @@ public:
 };
 
 /**
- * ƒƒbƒN‘ÎÛ‚ª
+ * ãƒ­ãƒƒã‚¯å¯¾è±¡ãŒ
  */
 class MultiThreadPolicy
 {
@@ -40,7 +40,7 @@ public:
 };
 
 /**
- * ƒVƒ“ƒOƒ‹ƒgƒ“ƒIƒuƒWƒFƒNƒg
+ * ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
  */
 template <typename ResultClass,
 	typename Policy = SingleThreadPolicy>
@@ -52,13 +52,13 @@ private:
 public:
 
 	/**
-	 * ƒVƒ“ƒOƒ‹ƒgƒ“ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	 * ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	 */
 	static ResultClass* get()
 	{
 		/**
-		 * @todo ‚½‚µ‚©static•Ï”‚Ì‰Šú‰»‚ÉŠÖ‚·‚é
-		 * rase condition‚Ì‹K’è‚ÍgccˆÈŠO‚È‚©‚Á‚½‚ÈEEE
+		 * @todo ãŸã—ã‹staticå¤‰æ•°ã®åˆæœŸåŒ–ã«é–¢ã™ã‚‹
+		 * rase conditionã®è¦å®šã¯gccä»¥å¤–ãªã‹ã£ãŸãªãƒ»ãƒ»ãƒ»
 		 */
 		static Policy policy;
 
@@ -71,10 +71,10 @@ public:
 };
 
 /**
- * ƒL[’l‚Éƒ}ƒbƒsƒ“ƒO‚³‚ê‚½SingletonƒIƒuƒWƒFƒNƒg
- * @param KeyType ƒL[‚ÌŒ^
- * @param ResultClass ƒoƒCƒ“ƒh‚³‚ê‚½’l‚ÌŒ^
- * @param Policy ƒXƒŒƒbƒh”r‘¼ƒ|ƒŠƒV[
+ * ã‚­ãƒ¼å€¤ã«ãƒãƒƒãƒ”ãƒ³ã‚°ã•ã‚ŒãŸSingletonã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+ * @param KeyType ã‚­ãƒ¼ã®å‹
+ * @param ResultClass ãƒã‚¤ãƒ³ãƒ‰ã•ã‚ŒãŸå€¤ã®å‹
+ * @param Policy ã‚¹ãƒ¬ãƒƒãƒ‰æ’ä»–ãƒãƒªã‚·ãƒ¼
  */
 template <typename KeyType,
 		  typename  ResultClass,
@@ -90,8 +90,8 @@ private:
 	typedef std::map<KeyType, ResultClass> mapper_t;
 
 	/**
-	 * ƒ}ƒbƒvƒIƒuƒWƒFƒNƒg‚Ìæ“¾
-	 * @return ƒ}ƒbƒvƒIƒuƒWƒFƒNƒg‚ÌQÆ
+	 * ãƒãƒƒãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
+	 * @return ãƒãƒƒãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‚ç…§
 	 */
 	static ResultClass* getMappedObject(const KeyType& key)
 	{
@@ -102,9 +102,9 @@ private:
 
 public:
 	/**
-	 * ƒVƒ“ƒOƒ‹ƒgƒ“ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
-	 * @return ƒ}ƒbƒsƒ“ƒO‚³‚ê‚½ƒVƒ“ƒOƒ‹ƒgƒ“ƒIƒuƒWƒFƒNƒg
-	 * @param key ƒIƒuƒWƒFƒNƒg‚Éƒ}ƒbƒv‚µ‚½ƒL[‚Ì’l
+	 * ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
+	 * @return ãƒãƒƒãƒ”ãƒ³ã‚°ã•ã‚ŒãŸã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	 * @param key ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒãƒƒãƒ—ã—ãŸã‚­ãƒ¼ã®å€¤
 	 */ 
 	static ResultClass* get(const KeyType& key)
 	{

@@ -6,11 +6,11 @@
 #include <Cryptography/AESConstant.hpp>
 
 /**
- * AES(Advanced Encrypt Standard)À‘•
- * @note ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“CPUã‚µ‚©l—¶‚µ‚Ä‚Ü‚¹‚ñ
- * @todo AESConstant‚ª‚Å‚©‚·‚¬‚é‚Ì‚Å‘Î”•\‚ğg‚Á‚½•û–@‚Ö‚ÌØ‚è‘Ö‚¦
- * @param keyLength ƒL[‚Ì’·‚³(bit’·)
- * @param numberOfBlock ˆÃ†ˆ—‚Ìword’·(1word‚Í4bytes)B‚Á‚Ä–{—ˆAES‚ÍŒÅ’èB
+ * AES(Advanced Encrypt Standard)å®Ÿè£…
+ * @note ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³CPUä¸Šã—ã‹è€ƒæ…®ã—ã¦ã¾ã›ã‚“
+ * @todo AESConstantãŒã§ã‹ã™ãã‚‹ã®ã§å¯¾æ•°è¡¨ã‚’ä½¿ã£ãŸæ–¹æ³•ã¸ã®åˆ‡ã‚Šæ›¿ãˆ
+ * @param keyLength ã‚­ãƒ¼ã®é•·ã•(bité•·)
+ * @param numberOfBlock æš—å·å‡¦ç†ã®wordé•·(1wordã¯4bytes)ã€‚ã£ã¦æœ¬æ¥AESã¯å›ºå®šã€‚
  */
 template
 <size_t keyLength = 128,
@@ -27,7 +27,7 @@ private:
 
 	const int numberOfKey;
 
-	/// Œ®ƒXƒPƒWƒ…[ƒŠƒ“ƒOˆ—Œã‚ÌŒ®
+	/// éµã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒªãƒ³ã‚°å‡¦ç†å¾Œã®éµ
 	std::vector<word> scheduledKey;
 
 	byte modulus(const word source) const
@@ -82,18 +82,18 @@ private:
 	void invertShiftRow(std::vector<byte>& state)
 	{
 		byte exchangeTemp;
-		// 0, 4, 8, c –³•ÏŠ·
+		// 0, 4, 8, c ç„¡å¤‰æ›
 
-		// 1, 5, 9, d 1ƒVƒtƒg
-		// d, 1, 5, 9 Œ‹‰Ê
+		// 1, 5, 9, d 1ã‚·ãƒ•ãƒˆ
+		// d, 1, 5, 9 çµæœ
 		exchangeTemp = state[1];
 		state[1] = state[13];
 		state[13] = state[9];
 		state[9] = state[5];
 		state[5] = exchangeTemp;
 		
-		// 2, 6, a, e 2ƒVƒtƒg
-		// a, e, 2, 6 Œ‹‰Ê
+		// 2, 6, a, e 2ã‚·ãƒ•ãƒˆ
+		// a, e, 2, 6 çµæœ
 		exchangeTemp = state[2];
 		state[2] = state[10];
 		state[10] = exchangeTemp;
@@ -101,8 +101,8 @@ private:
 		state[14] = state[6];
 		state[6] = exchangeTemp;
 
-		// 3, 7, b, f 3ƒVƒtƒg
-		// 7, b, f, 3 Œ‹‰Ê
+		// 3, 7, b, f 3ã‚·ãƒ•ãƒˆ
+		// 7, b, f, 3 çµæœ
 		exchangeTemp = state[3];
 		state[3] = state[7];
 		state[7] = state[11];
@@ -113,18 +113,18 @@ private:
 	void shiftRow(std::vector<byte>& state)
 	{
 		byte exchangeTemp;
-		// 0, 4, 8, c –³•ÏŠ·
+		// 0, 4, 8, c ç„¡å¤‰æ›
 
-		// 1, 5, 9, d 1ƒVƒtƒg
-		// 5, 9, d, 1 Œ‹‰Ê
+		// 1, 5, 9, d 1ã‚·ãƒ•ãƒˆ
+		// 5, 9, d, 1 çµæœ
 		exchangeTemp = state[1];
 		state[1] = state[5];
 		state[5] = state[9];
 		state[9] = state[13];
 		state[13] = exchangeTemp;
 		
-		// 2, 6, a, e 2ƒVƒtƒg
-		// a, e, 2, 6 Œ‹‰Ê
+		// 2, 6, a, e 2ã‚·ãƒ•ãƒˆ
+		// a, e, 2, 6 çµæœ
 		exchangeTemp = state[2];
 		state[2] = state[10];
 		state[10] = exchangeTemp;
@@ -132,8 +132,8 @@ private:
 		state[14] = state[6];
 		state[6] = exchangeTemp;
 
-		// 3, 7, b, f 3ƒVƒtƒg
-		// f, 3, 7, b Œ‹‰Ê
+		// 3, 7, b, f 3ã‚·ãƒ•ãƒˆ
+		// f, 3, 7, b çµæœ
 		exchangeTemp = state[3];
 		state[3] = state[15];
 		state[15] = state[11];
@@ -294,8 +294,8 @@ public:
 	{}
 
 	/**
-	 * ˆÃ†ˆ—ƒuƒƒbƒNƒTƒCƒY‚Ìæ“¾
-	 * @return ˆ—ƒuƒƒbƒNƒTƒCƒY
+	 * æš—å·å‡¦ç†ãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚ºã®å–å¾—
+	 * @return å‡¦ç†ãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚º
 	 */
 	size_t getBlockSize() const
 	{
@@ -303,9 +303,9 @@ public:
 	}
 
 	/**
-	 * •œ†ˆ—
-	 * @param data ˆÃ†•¶
-	 * @return •œ†‚³‚ê‚½•¶
+	 * å¾©å·å‡¦ç†
+	 * @param data æš—å·æ–‡
+	 * @return å¾©å·ã•ã‚ŒãŸæ–‡
 	 */
 	std::vector<byte>
 	decrypt(const std::vector<byte>& data)
@@ -340,40 +340,40 @@ public:
 	}
 
 	/**
-	 * ˆÃ•œ†‚Ég—p‚·‚éŒ®‚Ì“o˜^
-	 * @param key ˆÃ•œ†‚Ég—p‚·‚éŒ®
+	 * æš—å¾©å·ã«ä½¿ç”¨ã™ã‚‹éµã®ç™»éŒ²
+	 * @param key æš—å¾©å·ã«ä½¿ç”¨ã™ã‚‹éµ
 	 */
 	void setKey(const std::vector<byte>& key)
 	{
 		if (static_cast<const int>(key.size() / 4) !=
 			numberOfKey)
 			throw std::runtime_error(
-				"Œ®ƒf[ƒ^’·‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
+				"éµãƒ‡ãƒ¼ã‚¿é•·ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 
-		// Œ®ƒXƒPƒWƒ…[ƒ‹ˆ—
+		// éµã‚¹ã‚±ã‚¸ãƒ¥ãƒ¼ãƒ«å‡¦ç†
 		scheduledKey = getScheduledKey(key);
 	}
 
 	/**
-	 * ˆÃ†‰»ˆ—
-	 * @param data •½•¶
-	 * @return ˆÃ†•¶
+	 * æš—å·åŒ–å‡¦ç†
+	 * @param data å¹³æ–‡
+	 * @return æš—å·æ–‡
 	 */
 	std::vector<byte>
 	encrypt(const std::vector<byte>& data)
 	{
 		if (data.size() != 16)
 			throw std::runtime_error(
-				"ˆø” data‚Ì’·‚³‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ\n"
-				"AES ‚Ì•½•¶ƒf[ƒ^’·‚Í4ƒ[ƒh(1ƒ[ƒh‚Í4ƒIƒNƒeƒbƒg)‚Å‚·.\n");
+				"å¼•æ•° dataã®é•·ã•ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“\n"
+				"AES ã®å¹³æ–‡ãƒ‡ãƒ¼ã‚¿é•·ã¯4ãƒ¯ãƒ¼ãƒ‰(1ãƒ¯ãƒ¼ãƒ‰ã¯4ã‚ªã‚¯ãƒ†ãƒƒãƒˆ)ã§ã™.\n");
 
-		// ƒf[ƒ^‚©‚çó‘Ô‚É•ÏŠ·
+		// ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰çŠ¶æ…‹ã«å¤‰æ›
 		std::vector<byte> state(data);
 
-		// ‘æˆêƒ‰ƒEƒ“ƒhˆ—
+		// ç¬¬ä¸€ãƒ©ã‚¦ãƒ³ãƒ‰å‡¦ç†
 		addRoundKey(state, scheduledKey, 0);
 		
-		// ‘æ2‚©‚çÅI‚Ğ‚Æ‚Âè‘O‚Ü‚Å‚Ìƒ‰ƒEƒ“ƒhˆ—
+		// ç¬¬2ã‹ã‚‰æœ€çµ‚ã²ã¨ã¤æ‰‹å‰ã¾ã§ã®ãƒ©ã‚¦ãƒ³ãƒ‰å‡¦ç†
 		for (int i = 1; i < getNumberOfRounds(); ++i)
 		{
 			byteSub(state);
@@ -382,7 +382,7 @@ public:
 			addRoundKey(state, scheduledKey, i);
 		}
 
-		// ÅIƒ‰ƒEƒ“ƒh
+		// æœ€çµ‚ãƒ©ã‚¦ãƒ³ãƒ‰
 		byteSub(state);
 		shiftRow(state);
 		addRoundKey(state, scheduledKey, getNumberOfRounds());

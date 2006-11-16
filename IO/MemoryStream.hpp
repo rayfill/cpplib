@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 
-// @todo �ǂݏ������Ή��ւ̎����̕ύX�B
-// buffer��deque�����ǂݏo��/�������݈ʒu�������o�Ƃ��Ď����E�E�E
+// @todo 読み書き両対応への実装の変更。
+// bufferのdeque化か読み出し/書き込み位置をメンバとして持つか・・・
 template <typename BaseType, typename Traits = std::char_traits<BaseType> >
 class BasicMemoryStreamBuf : public std::basic_streambuf<BaseType, Traits>
 {

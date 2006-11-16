@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 /**
- * XMLPath‚ª•s³‚Èê‡‚Ì—áŠO
+ * XMLPathãŒä¸æ­£ãªå ´åˆã®ä¾‹å¤–
  */
 class InvalidXMLPathException : public std::runtime_error
 {
@@ -20,7 +20,7 @@ public:
 };
 
 /**
- * •s³‚ÈXML•¶‘‚ğˆ—‚µ‚½ê‡‚Ì—áŠO
+ * ä¸æ­£ãªXMLæ–‡æ›¸ã‚’å‡¦ç†ã—ãŸå ´åˆã®ä¾‹å¤–
  */
 class WellformedException : public std::runtime_error
 {
@@ -35,7 +35,7 @@ public:
 };
 
 /**
- * ƒ^ƒO‚ª•s³‚Èê‡‚Ì—áŠO
+ * ã‚¿ã‚°ãŒä¸æ­£ãªå ´åˆã®ä¾‹å¤–
  */
 class InvalidTagException : public std::runtime_error
 {

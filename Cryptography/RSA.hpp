@@ -10,7 +10,7 @@
 #include <iterator>
 
 /**
- * RSAˆÃ†
+ * RSAæš—å·
  */
 class RSA
 {
@@ -32,12 +32,12 @@ private:
 
 		if (vectorLength % sizeof(MPInteger::BaseUnit) != 0)
 			throw std::invalid_argument(
-				"integerLength ‚ª ‘½”{’·®”ƒNƒ‰ƒX‚Ìƒpƒ‰ƒ[ƒ^A"
-				"BaseUnit‚Ì”{”‚Å‚Í‚ ‚è‚Ü‚¹‚ñ.");
+				"integerLength ãŒ å¤šå€é•·æ•´æ•°ã‚¯ãƒ©ã‚¹ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€"
+				"BaseUnitã®å€æ•°ã§ã¯ã‚ã‚Šã¾ã›ã‚“.");
 
 		std::vector<unsigned char> buffer(vectorLength);
 
-		// ƒ}ƒVƒ“‚ÌƒGƒ“ƒfƒBƒAƒ“‚©‚çƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚Ö•ÏŠ·
+		// ãƒã‚·ãƒ³ã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‹ã‚‰ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã¸å¤‰æ›
 		EndianConverter converter;
 		const size_t contentLength =
 			converter.toBig(static_cast<unsigned int>(length));
@@ -45,12 +45,12 @@ private:
 			buffer[count] =
 				reinterpret_cast<const unsigned char*>(&contentLength)[count];
 
-		// 0xff‚ÅƒpƒfƒBƒ“ƒO–„‚ß
+		// 0xffã§ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°åŸ‹ã‚
 		const size_t paddingSize = vectorLength - length - intSize;
 		for (size_t offset = 0; offset < paddingSize; ++offset)
 			buffer[intSize+offset] = 0xff;
 
-		// ƒf[ƒ^‚ÌƒRƒs[
+		// ãƒ‡ãƒ¼ã‚¿ã®ã‚³ãƒ”ãƒ¼
 		for (size_t offset = 0; offset < length; ++offset)
 			buffer[intSize+paddingSize+offset] =
 				reinterpret_cast<const unsigned char*>(pointer)[offset];
@@ -84,7 +84,7 @@ public:
 	{
 		if(plaintext >= publicKey.getModulus())
 			throw std::invalid_argument(
-				"•½•¶‚Ì’·‚³‚ªƒuƒƒbƒNƒTƒCƒY‚ğ’´‚¦‚Ä‚¢‚Ü‚·.");
+				"å¹³æ–‡ã®é•·ã•ãŒãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚ºã‚’è¶…ãˆã¦ã„ã¾ã™.");
 
 		return modulusExponential(
 			plaintext,
@@ -96,7 +96,7 @@ public:
 	{
 		if(ciphertext >= privateKey.getModulus())
 			throw std::invalid_argument(
-				"ˆÃ†•¶‚Ì’·‚³‚ªƒuƒƒbƒNƒTƒCƒY‚ğ’´‚¦‚Ä‚¢‚Ü‚·.");
+				"æš—å·æ–‡ã®é•·ã•ãŒãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚ºã‚’è¶…ãˆã¦ã„ã¾ã™.");
 
 		if (privateKey.isCRTSupport())
 			return crtModulusExponential(ciphertext,

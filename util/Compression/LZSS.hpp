@@ -7,34 +7,34 @@
 #include <cassert>
 
 /**
- * ‘‹ŠÖ”
- * ¶ƒƒ‚ƒŠ”z—ñ‚ğ”Šw“I‘‹ŠÖ”‚ğg‚Á‚Ä‹æØ‚Á‚Ä•\¦‚·‚é
- * @param RingSize ƒŠƒ“ƒOƒoƒbƒtƒ@‚ÌƒTƒCƒY
- * @todo Å¬ƒTƒCƒY0‚©‚ç‚ÌŠg’£‘‹®‚Ö‚Ì•ÏX
+ * çª“é–¢æ•°
+ * ç”Ÿãƒ¡ãƒ¢ãƒªé…åˆ—ã‚’æ•°å­¦çš„çª“é–¢æ•°ã‚’ä½¿ã£ã¦åŒºåˆ‡ã£ã¦è¡¨ç¤ºã™ã‚‹
+ * @param RingSize ãƒªãƒ³ã‚°ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
+ * @todo æœ€å°ã‚µã‚¤ã‚º0ã‹ã‚‰ã®æ‹¡å¼µçª“å¼ã¸ã®å¤‰æ›´
  */
 template <size_t WindowSize = 4096>
 class WindowFunction
 {
 private:
 	/**
-	 * ‘‹‚Ìæ“ªˆÊ’u
+	 * çª“ã®å…ˆé ­ä½ç½®
 	 */
 	const char* windowHead;
 	/**
-	 * ‘‹‚ÌI’[ˆÊ’u(ƒAƒNƒZƒX‰Â”\ˆÊ’u‚æ‚è‚Ğ‚Æ‚ÂŒã)
+	 * çª“ã®çµ‚ç«¯ä½ç½®(ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ä½ç½®ã‚ˆã‚Šã²ã¨ã¤å¾Œ)
 	 */
 	const char* windowTail;
 
 	/**
-	 * Œ³ƒƒ‚ƒŠ‚ÌI’[ˆÊ’u(ƒAƒNƒZƒX‰Â”\ˆÊ’u‚æ‚è‚Ğ‚Æ‚ÂŒã)
+	 * å…ƒãƒ¡ãƒ¢ãƒªã®çµ‚ç«¯ä½ç½®(ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ä½ç½®ã‚ˆã‚Šã²ã¨ã¤å¾Œ)
 	 */
 	const char* tail;
 
 	/**
-	 * ‘‹ƒTƒCƒY‚ÌŠg‘å
-	 * @param widenSize ‘‹‚ğŠg‘å‚·‚éƒTƒCƒY
-	 * @note Å‘å‘‹ƒTƒCƒY‚Ìê‡‚Í‰½‚à‚µ‚È‚¢
-	 * @return ‘‹‚ªŠg’£‚³‚ê‚½ê‡‚Ítrue
+	 * çª“ã‚µã‚¤ã‚ºã®æ‹¡å¤§
+	 * @param widenSize çª“ã‚’æ‹¡å¤§ã™ã‚‹ã‚µã‚¤ã‚º
+	 * @note æœ€å¤§çª“ã‚µã‚¤ã‚ºã®å ´åˆã¯ä½•ã‚‚ã—ãªã„
+	 * @return çª“ãŒæ‹¡å¼µã•ã‚ŒãŸå ´åˆã¯true
 	 */
 	bool widen(const size_t widenSize = 1)
 	{
@@ -50,9 +50,9 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param head_ ƒƒ‚ƒŠ‚ÌŠJnˆÊ’u
-	 * @param tail_ ƒƒ‚ƒŠ‚ÌI’[ˆÊ’u
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param head_ ãƒ¡ãƒ¢ãƒªã®é–‹å§‹ä½ç½®
+	 * @param tail_ ãƒ¡ãƒ¢ãƒªã®çµ‚ç«¯ä½ç½®
 	 */
 	WindowFunction(const char* head_, const char* tail_):
 		windowHead(head_),
@@ -63,9 +63,9 @@ public:
 	}
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param head_ ƒƒ‚ƒŠ‚ÌŠJnˆÊ’u
-	 * @param length ƒƒ‚ƒŠ—Ìˆæ‚ÌƒTƒCƒY
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param head_ ãƒ¡ãƒ¢ãƒªã®é–‹å§‹ä½ç½®
+	 * @param length ãƒ¡ãƒ¢ãƒªé ˜åŸŸã®ã‚µã‚¤ã‚º
 	 */
 	WindowFunction(const char* head, const size_t length):
 		windowHead(head),
@@ -74,8 +74,8 @@ public:
 	{}
 
 	/**
-	 * Œ»İ‚Ì‘‹ƒTƒCƒY‚Ìæ“¾
-	 * @return Œ»İ‚Ì‘‹ƒTƒCƒY
+	 * ç¾åœ¨ã®çª“ã‚µã‚¤ã‚ºã®å–å¾—
+	 * @return ç¾åœ¨ã®çª“ã‚µã‚¤ã‚º
 	 */
 	size_t getCurrentWindowSize() const
 	{
@@ -83,8 +83,8 @@ public:
 	}
 
 	/**
-	 * Å‘å‘‹ƒTƒCƒY‚ğæ“¾
-	 * @return Å‘å‘‹ƒTƒCƒY
+	 * æœ€å¤§çª“ã‚µã‚¤ã‚ºã‚’å–å¾—
+	 * @return æœ€å¤§çª“ã‚µã‚¤ã‚º
 	 */
 	size_t getMaxWindowSize() const
 	{
@@ -92,8 +92,8 @@ public:
 	}
 
 	/**
-	 * ‘‹‚ğ1ƒoƒCƒgƒXƒ‰ƒCƒh
-	 * @exception std::out_of_range ƒXƒ‰ƒCƒh”ÍˆÍ‚ğ’´‚¦‚Ä‚¢‚½ê‡
+	 * çª“ã‚’1ãƒã‚¤ãƒˆã‚¹ãƒ©ã‚¤ãƒ‰
+	 * @exception std::out_of_range ã‚¹ãƒ©ã‚¤ãƒ‰ç¯„å›²ã‚’è¶…ãˆã¦ã„ãŸå ´åˆ
 	 */
 	void slide() throw(std::out_of_range)
 	{
@@ -101,14 +101,14 @@ public:
 	}
 
 	/**
-	 * ‘‹‚ÌƒXƒ‰ƒCƒh
-	 * @param slideSize ‘‹ƒXƒ‰ƒCƒh‚·‚éƒoƒCƒg”
-	 * @exception std::out_of_range ƒXƒ‰ƒCƒh”ÍˆÍ‚ğ’´‚¦‚Ä‚¢‚½ê‡
+	 * çª“ã®ã‚¹ãƒ©ã‚¤ãƒ‰
+	 * @param slideSize çª“ã‚¹ãƒ©ã‚¤ãƒ‰ã™ã‚‹ãƒã‚¤ãƒˆæ•°
+	 * @exception std::out_of_range ã‚¹ãƒ©ã‚¤ãƒ‰ç¯„å›²ã‚’è¶…ãˆã¦ã„ãŸå ´åˆ
 	 */
 	void slide(const size_t slideSize) throw(std::out_of_range)
 	{
 		if (!isSlidable(slideSize))
-			throw std::out_of_range("”ÍˆÍŠO‚ÌƒAƒNƒZƒX‚Å‚·");
+			throw std::out_of_range("ç¯„å›²å¤–ã®ã‚¢ã‚¯ã‚»ã‚¹ã§ã™");
 
 		if (!widen(slideSize))
 		{
@@ -120,8 +120,8 @@ public:
 	}
 
 	/**
-	 * ‰½ƒoƒCƒgƒXƒ‰ƒCƒh‚Å‚«‚é‚©
-	 * @return ƒXƒ‰ƒCƒh‰Â”\ƒoƒCƒg”
+	 * ä½•ãƒã‚¤ãƒˆã‚¹ãƒ©ã‚¤ãƒ‰ã§ãã‚‹ã‹
+	 * @return ã‚¹ãƒ©ã‚¤ãƒ‰å¯èƒ½ãƒã‚¤ãƒˆæ•°
 	 */
 	size_t getSlidableSize() const
 	{
@@ -129,8 +129,8 @@ public:
 	}
 
 	/**
-	 * ‚Ü‚¾ƒXƒ‰ƒCƒh‰Â”\‚©‚Ç‚¤‚©
-	 * @return ƒXƒ‰ƒCƒh‰Â”\‚È‚çtrue
+	 * ã¾ã ã‚¹ãƒ©ã‚¤ãƒ‰å¯èƒ½ã‹ã©ã†ã‹
+	 * @return ã‚¹ãƒ©ã‚¤ãƒ‰å¯èƒ½ãªã‚‰true
 	 */
 	bool isSlidable() const
 	{
@@ -138,9 +138,9 @@ public:
 	}
 	
 	/**
-	 * ‚Ü‚¾ƒXƒ‰ƒCƒh‰Â”\‚©‚Ç‚¤‚©
-	 * @param ƒXƒ‰ƒCƒh‚³‚¹‚éƒoƒCƒg”
-	 * @return ƒXƒ‰ƒCƒh‰Â”\‚È‚çtrue
+	 * ã¾ã ã‚¹ãƒ©ã‚¤ãƒ‰å¯èƒ½ã‹ã©ã†ã‹
+	 * @param ã‚¹ãƒ©ã‚¤ãƒ‰ã•ã›ã‚‹ãƒã‚¤ãƒˆæ•°
+	 * @return ã‚¹ãƒ©ã‚¤ãƒ‰å¯èƒ½ãªã‚‰true
 	 */
 	bool isSlidable(const size_t slideSize) const
 	{
@@ -148,10 +148,10 @@ public:
 	}
 
 	/**
-	 * ‘‹—Ìˆæ‚Ìƒf[ƒ^‚Ìæ“¾
+	 * çª“é ˜åŸŸã®ãƒ‡ãƒ¼ã‚¿ã®å–å¾—
 	 * @param offset
-	 * @return ƒIƒtƒZƒbƒgˆÊ’u‚ÌƒoƒCƒgƒf[ƒ^
-	 * @exception std::out_of_range —ÌˆæŠO‚ÖƒAƒNƒZƒX‚µ‚½ê‡
+	 * @return ã‚ªãƒ•ã‚»ãƒƒãƒˆä½ç½®ã®ãƒã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿
+	 * @exception std::out_of_range é ˜åŸŸå¤–ã¸ã‚¢ã‚¯ã‚»ã‚¹ã—ãŸå ´åˆ
 	 */
 	char getCharacter(const size_t offset) const throw(std::out_of_range)
 	{
@@ -164,9 +164,9 @@ public:
 
 
 /**
- * ƒg[ƒNƒ“‚ÌŠeíƒ|ƒŠƒV[‹y‚Ñƒwƒ‹ƒpŠÖ”
- * @param positionSize ˆÊ’u‚ğ•\‚·ƒf[ƒ^‚ªè‚ß‚éƒrƒbƒg”
- * @param lengthSize ’·‚³‚ğ‚ ‚ç‚í‚·ƒf[ƒ^‚ªè‚ß‚éƒrƒbƒg”
+ * ãƒˆãƒ¼ã‚¯ãƒ³ã®å„ç¨®ãƒãƒªã‚·ãƒ¼åŠã³ãƒ˜ãƒ«ãƒ‘é–¢æ•°
+ * @param positionSize ä½ç½®ã‚’è¡¨ã™ãƒ‡ãƒ¼ã‚¿ãŒå ã‚ã‚‹ãƒ“ãƒƒãƒˆæ•°
+ * @param lengthSize é•·ã•ã‚’ã‚ã‚‰ã‚ã™ãƒ‡ãƒ¼ã‚¿ãŒå ã‚ã‚‹ãƒ“ãƒƒãƒˆæ•°
  */
 template <size_t positionSize = 12,
 		  size_t lengthSize = 4>
@@ -175,14 +175,14 @@ class TokenPolicy
 	friend class TokenPolicyTest;
 
 public:
-	/// ƒg[ƒNƒ“ƒf[ƒ^‚ÌŒ^
+	/// ãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã®å‹
 	typedef std::vector<char>  token_data_t;
 
 private:
 	/**
-	 * ƒg[ƒNƒ“ƒf[ƒ^‚©‚çƒrƒbƒg•\Œ»‚Ö‚Ì•ÏŠ·
-	 * @param token ƒg[ƒNƒ“ƒf[ƒ^
-	 * @return ƒrƒbƒg•\Œ»‚Å‚Ì’l
+	 * ãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ãƒ“ãƒƒãƒˆè¡¨ç¾ã¸ã®å¤‰æ›
+	 * @param token ãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿
+	 * @return ãƒ“ãƒƒãƒˆè¡¨ç¾ã§ã®å€¤
 	 */
 	static unsigned int tokenToBitReps(const token_data_t& token)
 	{
@@ -204,22 +204,22 @@ private:
 
 public:
 	enum {
-		/// ˆÊ’uî•ñ‚Ìè‚ß‚éƒrƒbƒg”
+		/// ä½ç½®æƒ…å ±ã®å ã‚ã‚‹ãƒ“ãƒƒãƒˆæ•°
 		PositionSize = positionSize,
 		
-		/// ’·‚³î•ñ‚Ìè‚ß‚éƒrƒbƒg”
+		/// é•·ã•æƒ…å ±ã®å ã‚ã‚‹ãƒ“ãƒƒãƒˆæ•°
 		LengthSize = lengthSize,
 
-		/// ƒg[ƒNƒ“‚Ì’·‚³‚ÌƒoƒCƒg”
+		/// ãƒˆãƒ¼ã‚¯ãƒ³ã®é•·ã•ã®ãƒã‚¤ãƒˆæ•°
 		TokenLength = (PositionSize + LengthSize) / 8
 	};
 
 	/**
-	 * ”ñƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^‚Ìì¬
-	 * @param ch •¶š
-	 * @return ”ñƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^
-	 * @note <MSB>[ch][length=0]<LSB>‚ÅBigEndian‚Æ‚µ‚Ä
-	 * ƒf[ƒ^‚ª“ü‚Á‚Ä‚Ü‚·B
+	 * éãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã®ä½œæˆ
+	 * @param ch æ–‡å­—
+	 * @return éãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿
+	 * @note <MSB>[ch][length=0]<LSB>ã§BigEndianã¨ã—ã¦
+	 * ãƒ‡ãƒ¼ã‚¿ãŒå…¥ã£ã¦ã¾ã™ã€‚
 	 */
 	static token_data_t buildNoMatchToken(const char ch)
 	{
@@ -240,12 +240,12 @@ public:
 	}
 
 	/**
-	 * ƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^‚Ìì¬
-	 * @param position ƒ}ƒbƒ`ˆÊ’u
-	 * @param length ƒ}ƒbƒ`’·
-	 * @return ƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^
-	 * @note <MSB>[position][length]<LSB>‚ÅBigEndian‚Æ‚µ‚Ä
-	 * ƒf[ƒ^‚ª“ü‚Á‚Ä‚Ü‚·B
+	 * ãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã®ä½œæˆ
+	 * @param position ãƒãƒƒãƒä½ç½®
+	 * @param length ãƒãƒƒãƒé•·
+	 * @return ãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿
+	 * @note <MSB>[position][length]<LSB>ã§BigEndianã¨ã—ã¦
+	 * ãƒ‡ãƒ¼ã‚¿ãŒå…¥ã£ã¦ã¾ã™ã€‚
 	 */
 	static token_data_t buildMatchToken(const size_t position,
 										const size_t length)
@@ -262,9 +262,9 @@ public:
 	}
 
 	/**
-	 * ƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^‚©‚çˆÊ’uƒf[ƒ^‚Ìæ‚èo‚µ
-	 * @param token ƒg[ƒNƒ“ƒf[ƒ^
-	 * @return ˆÊ’uƒf[ƒ^‚Ì’l
+	 * ãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ä½ç½®ãƒ‡ãƒ¼ã‚¿ã®å–ã‚Šå‡ºã—
+	 * @param token ãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿
+	 * @return ä½ç½®ãƒ‡ãƒ¼ã‚¿ã®å€¤
 	 */
 	static size_t getPosition(const token_data_t& token)
 	{
@@ -278,9 +278,9 @@ public:
 	}
 
 	/**
-	 * ƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^‚©‚çƒ}ƒbƒ`’·ƒf[ƒ^‚Ìæ‚èo‚µ
-	 * @param token ƒg[ƒNƒ“ƒf[ƒ^
-	 * @return ƒ}ƒbƒ`’·ƒf[ƒ^‚Ì’l
+	 * ãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ãƒãƒƒãƒé•·ãƒ‡ãƒ¼ã‚¿ã®å–ã‚Šå‡ºã—
+	 * @param token ãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿
+	 * @return ãƒãƒƒãƒé•·ãƒ‡ãƒ¼ã‚¿ã®å€¤
 	 */
 	static size_t getLength(const token_data_t& token)
 	{
@@ -291,9 +291,9 @@ public:
 	}
 
 	/**
-	 * ”ñƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^‚©‚ç•¶š‚Ìæ‚èo‚µ
-	 * @param token ”ñƒ}ƒbƒ`ƒg[ƒNƒ“ƒf[ƒ^
-	 * @return ƒg[ƒNƒ“’†‚Ì•¶š
+	 * éãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰æ–‡å­—ã®å–ã‚Šå‡ºã—
+	 * @param token éãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ãƒ‡ãƒ¼ã‚¿
+	 * @return ãƒˆãƒ¼ã‚¯ãƒ³ä¸­ã®æ–‡å­—
 	 */
 	static char getCharacter(const token_data_t& token)
 	{
@@ -306,9 +306,9 @@ public:
 };
 
 /**
- * ŒŸõŒ‹‰Ê‚Æ‚µ‚Ä•Ô‚·ƒg[ƒNƒ“‚ÌŠî’êB
- * @param positionSize ˆÊ’u‚ğ•\‚·ƒf[ƒ^‚ªè‚ß‚éƒrƒbƒg”
- * @param lengthSize ’·‚³‚ğ‚ ‚ç‚í‚·ƒf[ƒ^‚ªè‚ß‚éƒrƒbƒg”
+ * æ¤œç´¢çµæœã¨ã—ã¦è¿”ã™ãƒˆãƒ¼ã‚¯ãƒ³ã®åŸºåº•ã€‚
+ * @param positionSize ä½ç½®ã‚’è¡¨ã™ãƒ‡ãƒ¼ã‚¿ãŒå ã‚ã‚‹ãƒ“ãƒƒãƒˆæ•°
+ * @param lengthSize é•·ã•ã‚’ã‚ã‚‰ã‚ã™ãƒ‡ãƒ¼ã‚¿ãŒå ã‚ã‚‹ãƒ“ãƒƒãƒˆæ•°
  */
 template <typename TokenPolicyType>
 class AbstructLZSSToken
@@ -318,19 +318,19 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	AbstructLZSSToken()
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~AbstructLZSSToken() throw()
 	{}
 
 	/**
-	 * ƒg[ƒNƒ“‚Ì’·‚³‚ğ•Ô‚·
+	 * ãƒˆãƒ¼ã‚¯ãƒ³ã®é•·ã•ã‚’è¿”ã™
 	 */
 	size_t getTokenLength() const
 	{
@@ -338,16 +338,16 @@ public:
 	}
 
 	/**
-	 * ƒoƒCƒg—ñ•\Œ»‚Æ‚µ‚Ä‚Ìƒg[ƒNƒ“‚Ìæ“¾
-	 * @return ƒoƒCƒg—ñ•\Œ»‚Æ‚µ‚Ä‚Ìƒg[ƒNƒ“
+	 * ãƒã‚¤ãƒˆåˆ—è¡¨ç¾ã¨ã—ã¦ã®ãƒˆãƒ¼ã‚¯ãƒ³ã®å–å¾—
+	 * @return ãƒã‚¤ãƒˆåˆ—è¡¨ç¾ã¨ã—ã¦ã®ãƒˆãƒ¼ã‚¯ãƒ³
 	 */
 	virtual typename TokenPolicyType::token_data_t
 	toByteReplesentation() const = 0;
 };
 
 /**
- * ‘O•ûQÆ‚Æ‚µ‚ÄŒ©‚Â‚©‚Á‚½ˆÊ’uA’·‚³‚ğƒƒ“ƒZƒbƒg‚Æ‚µ‚½ƒg[ƒNƒ“
- * @param TokenPolicyType ƒg[ƒNƒ“‚ÌŠeíƒ|ƒŠƒV[‚ğ‚Á‚½ƒ|ƒŠƒV[ƒNƒ‰ƒX
+ * å‰æ–¹å‚ç…§ã¨ã—ã¦è¦‹ã¤ã‹ã£ãŸä½ç½®ã€é•·ã•ã‚’ãƒ¯ãƒ³ã‚»ãƒƒãƒˆã¨ã—ãŸãƒˆãƒ¼ã‚¯ãƒ³
+ * @param TokenPolicyType ãƒˆãƒ¼ã‚¯ãƒ³ã®å„ç¨®ãƒãƒªã‚·ãƒ¼ã‚’æŒã£ãŸãƒãƒªã‚·ãƒ¼ã‚¯ãƒ©ã‚¹
  */
 template <typename TokenPolicyType>
 class ReferenceValueToken : public AbstructLZSSToken<TokenPolicyType>
@@ -356,12 +356,12 @@ private:
 	typedef TokenPolicyType token_policy_t;
 	
 	/**
-	 * Œ©‚Â‚©‚Á‚½ˆÊ’u
+	 * è¦‹ã¤ã‹ã£ãŸä½ç½®
 	 */
 	size_t position;
 
 	/**
-	 * ƒ}ƒbƒ`‚µ‚½’·‚³
+	 * ãƒãƒƒãƒã—ãŸé•·ã•
 	 */
 	size_t length;
 
@@ -381,8 +381,8 @@ public:
 };
 
 /**
- * Œ©‚Â‚©‚ç‚È‚©‚Á‚½•¶šƒg[ƒNƒ“
- * @param TokenPolicyType ƒg[ƒNƒ“‚ÌŠeíƒ|ƒŠƒV[‚ğ‚Á‚½ƒ|ƒŠƒV[ƒNƒ‰ƒX
+ * è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸæ–‡å­—ãƒˆãƒ¼ã‚¯ãƒ³
+ * @param TokenPolicyType ãƒˆãƒ¼ã‚¯ãƒ³ã®å„ç¨®ãƒãƒªã‚·ãƒ¼ã‚’æŒã£ãŸãƒãƒªã‚·ãƒ¼ã‚¯ãƒ©ã‚¹
  */
 template <typename TokenPolicyType>
 class RealValueToken : public AbstructLZSSToken<TokenPolicyType>
@@ -392,22 +392,22 @@ private:
 
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param ch •Û‚·‚é•¶š
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param ch ä¿æŒã™ã‚‹æ–‡å­—
 	 */
 	RealValueToken(const char ch):
 		character(ch)
 	{}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	~RealValueToken() throw()
 	{}
 
 	/**
-	 * •Û‚µ‚Ä‚¢‚é•¶š‚Ìæ“¾
-	 * @return •Û‚µ‚Ä‚¢‚é•¶š
+	 * ä¿æŒã—ã¦ã„ã‚‹æ–‡å­—ã®å–å¾—
+	 * @return ä¿æŒã—ã¦ã„ã‚‹æ–‡å­—
 	 */
 	char getCharacter() const
 	{
@@ -415,8 +415,8 @@ public:
 	}
 
 	/**
-	 * •Û‚µ‚Ä‚¢‚é•¶š‚Ì•ÏX
-	 * @param ch V‚½‚É•Û‚³‚¹‚é•¶š
+	 * ä¿æŒã—ã¦ã„ã‚‹æ–‡å­—ã®å¤‰æ›´
+	 * @param ch æ–°ãŸã«ä¿æŒã•ã›ã‚‹æ–‡å­—
 	 */
 	void setCharacter(const char ch)
 	{
@@ -431,11 +431,11 @@ public:
 };
 
 /**
- * LZSSˆ³kƒAƒ‹ƒSƒŠƒYƒ€
- * @param windowSize ƒXƒ‰ƒCƒh‘‹ƒTƒCƒY
- * @param tokenSizeOfBits ƒg[ƒNƒ“‚Ég—p‚Å‚«‚éƒrƒbƒgƒTƒCƒY
- * @todo Œ©‚Ä‚Ì’Ê‚è‘S‘RÀ‘•‚³‚ê‚Ä–³‚¢‚Å‚·B‚È‚Ì‚Å”ñŒø—¦‚Å‚à‚¢‚¢‚Ì‚ÅÀ‘•‚ÆƒeƒXƒgˆê®‚Ì
- * À‘•‚ğ—Dæ‚µ‚Ü‚µ‚å‚¤B
+ * LZSSåœ§ç¸®ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ 
+ * @param windowSize ã‚¹ãƒ©ã‚¤ãƒ‰çª“ã‚µã‚¤ã‚º
+ * @param tokenSizeOfBits ãƒˆãƒ¼ã‚¯ãƒ³ã«ä½¿ç”¨ã§ãã‚‹ãƒ“ãƒƒãƒˆã‚µã‚¤ã‚º
+ * @todo è¦‹ã¦ã®é€šã‚Šå…¨ç„¶å®Ÿè£…ã•ã‚Œã¦ç„¡ã„ã§ã™ã€‚ãªã®ã§éåŠ¹ç‡ã§ã‚‚ã„ã„ã®ã§å®Ÿè£…ã¨ãƒ†ã‚¹ãƒˆä¸€å¼ã®
+ * å®Ÿè£…ã‚’å„ªå…ˆã—ã¾ã—ã‚‡ã†ã€‚
  */
 template<size_t windowSize, size_t tokenSizeOfBits>
 class Lzss

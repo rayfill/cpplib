@@ -2,14 +2,14 @@
 #define PURERANDOM_HPP_
 
 /**
- * —”ƒCƒ“ƒ^[ƒtƒF[ƒX
+ * ä¹±æ•°ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
  */
 class PureRandom
 {
 public:
 	PureRandom() {}
 	virtual ~PureRandom() {}
-	/// ƒoƒCƒg—”‚Ìæ“¾
+	/// ãƒã‚¤ãƒˆä¹±æ•°ã®å–å¾—
 	virtual unsigned char getRandom() = 0;
 };
 

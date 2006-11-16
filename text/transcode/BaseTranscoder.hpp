@@ -2,7 +2,7 @@
 #define BASETRANSCODER_HPP_
 
 /**
- * ƒgƒ‰ƒ“ƒXƒR[ƒ_i•¶Žš•ÏŠ·‹@jŠî’êƒNƒ‰ƒX
+ * ãƒˆãƒ©ãƒ³ã‚¹ã‚³ãƒ¼ãƒ€ï¼ˆæ–‡å­—å¤‰æ›æ©Ÿï¼‰åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 class BaseTranscoder
 {
@@ -17,7 +17,7 @@ public:
 	virtual wchar_t toUnicodeChar(const int codePoint) = 0;
 
 	/**
-	 * ‘½ƒoƒCƒg•¶Žš‚©‚Ç‚¤‚©‚Ì”»•Ê
+	 * å¤šãƒã‚¤ãƒˆæ–‡å­—ã‹ã©ã†ã‹ã®åˆ¤åˆ¥
 	 */
 	virtual bool isLeadedChar(const char codePoint)
 	{

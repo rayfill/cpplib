@@ -15,7 +15,7 @@
 #include <cassert>
 
 /**
- * ƒRƒ“ƒpƒCƒ‹ƒGƒ‰[—áŠOƒIƒuƒWƒFƒNƒg
+ * ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼ä¾‹å¤–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
  */
 class CompileError : public std::runtime_error
 {
@@ -41,7 +41,7 @@ public:
 };
 
 /**
- * ³‹K•\Œ»ƒ}ƒbƒ`ƒXƒgƒŠ[ƒ€“ü—ÍƒNƒ‰ƒX
+ * æ­£è¦è¡¨ç¾ãƒãƒƒãƒã‚¹ãƒˆãƒªãƒ¼ãƒ å…¥åŠ›ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RegexScanner
@@ -128,7 +128,7 @@ public:
 };
 
 /**
- * ³‹K•\Œ»ƒ}ƒbƒ`Œ‹‰ÊƒNƒ‰ƒX
+ * æ­£è¦è¡¨ç¾ãƒãƒƒãƒçµæœã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RegexResult
@@ -288,7 +288,7 @@ public:
 };
 
 /**
- * isAcceptƒƒ\ƒbƒh‚ğŒy—Ê‰»‚·‚é‚½‚ß‚Ìƒwƒ‹ƒp\‘¢‘Ì
+ * isAcceptãƒ¡ã‚½ãƒƒãƒ‰ã‚’è»½é‡åŒ–ã™ã‚‹ãŸã‚ã®ãƒ˜ãƒ«ãƒ‘æ§‹é€ ä½“
  */
 template <typename CharType>
 struct AcceptArgument
@@ -330,7 +330,7 @@ public:
 };
 
 /**
- * —LŒÀƒI[ƒgƒ}ƒgƒ“Šî’êƒNƒ‰ƒX
+ * æœ‰é™ã‚ªãƒ¼ãƒˆãƒãƒˆãƒ³åŸºåº•ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RegexToken
@@ -451,7 +451,7 @@ public:
 };
 
 /**
- * ƒCƒvƒVƒƒ“‘JˆÚƒNƒ‰ƒX
+ * ã‚¤ãƒ—ã‚·ãƒ­ãƒ³é·ç§»ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class EpsilonToken : public RegexToken<CharType>
@@ -496,8 +496,8 @@ public:
 	typedef RegexResult<char_t> result_t;
 
 	/**
-	 * ƒCƒvƒVƒƒ“‘JˆÚ‚È‚Ì‚Åó‘ø/‹‘”Û‚Æ‚à‚ÉƒXƒLƒƒƒi‚Í‘€ì‚µ‚È‚¢B
-	 * ƒŠƒUƒ‹ƒg‚à‘€ì‚µ‚È‚¢
+	 * ã‚¤ãƒ—ã‚·ãƒ­ãƒ³é·ç§»ãªã®ã§å—è«¾/æ‹’å¦ã¨ã‚‚ã«ã‚¹ã‚­ãƒ£ãƒŠã¯æ“ä½œã—ãªã„ã€‚
+	 * ãƒªã‚¶ãƒ«ãƒˆã‚‚æ“ä½œã—ãªã„
 	 */
 	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
@@ -512,7 +512,7 @@ public:
 };
 
 /**
- * ƒOƒ‹[ƒv—pƒwƒbƒhƒg[ƒNƒ“ƒNƒ‰ƒX
+ * ã‚°ãƒ«ãƒ¼ãƒ—ç”¨ãƒ˜ãƒƒãƒ‰ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class GroupHeadToken : public EpsilonToken<CharType>
@@ -541,8 +541,8 @@ public:
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
 	/**
-	 * ŠJ‚«Š‡ŒÊ‘JˆÚ‚È‚Ì‚ÅƒXƒLƒƒƒi‚Í‘€ì‚µ‚È‚¢
-	 * ƒŠƒUƒ‹ƒg‚Íó‘ø‚Ì‚İŒ»İˆÊ’u‚Ì•Û‘¶‚ğs‚¤
+	 * é–‹ãæ‹¬å¼§é·ç§»ãªã®ã§ã‚¹ã‚­ãƒ£ãƒŠã¯æ“ä½œã—ãªã„
+	 * ãƒªã‚¶ãƒ«ãƒˆã¯å—è«¾æ™‚ã®ã¿ç¾åœ¨ä½ç½®ã®ä¿å­˜ã‚’è¡Œã†
 	 */
 	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
@@ -565,7 +565,7 @@ public:
 };
 
 /**
- * ƒOƒ‹[ƒv—pƒeƒCƒ‹ƒg[ƒNƒ“ƒNƒ‰ƒX
+ * ã‚°ãƒ«ãƒ¼ãƒ—ç”¨ãƒ†ã‚¤ãƒ«ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class GroupTailToken : public EpsilonToken<CharType>
@@ -595,8 +595,8 @@ public:
 	typedef RegexResult<char_t> result_t;
 
 	/**
-	 * ó‘øAƒŠƒUƒ‹ƒg‚ÉI’[ˆÊ’u‚ğ’Ç‰Á‚·‚éB
-	 * ‹‘”Û‚É‚Í‚»‚Ì‚Ü‚ÜƒXƒ‹[‚·‚éB
+	 * å—è«¾æ™‚ã€ãƒªã‚¶ãƒ«ãƒˆã«çµ‚ç«¯ä½ç½®ã‚’è¿½åŠ ã™ã‚‹ã€‚
+	 * æ‹’å¦æ™‚ã«ã¯ãã®ã¾ã¾ã‚¹ãƒ«ãƒ¼ã™ã‚‹ã€‚
 	 */
 	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
@@ -615,7 +615,7 @@ public:
 };
 
 /**
- * ³‹K•\Œ»ŠJnƒg[ƒNƒ“ƒNƒ‰ƒX
+ * æ­£è¦è¡¨ç¾é–‹å§‹ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RegexHead : public GroupHeadToken<CharType>
@@ -654,7 +654,7 @@ public:
 };
 
 /**
- * ³‹K•\Œ»I’[ƒg[ƒNƒ“ƒNƒ‰ƒX
+ * æ­£è¦è¡¨ç¾çµ‚ç«¯ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RegexTail : public GroupTailToken<CharType>
@@ -674,7 +674,7 @@ public:
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
 	/**
-	 * ƒŠƒUƒ‹ƒg‚ÉI’[ˆÊ’u‚ğ’Ç‰Á‚·‚éB
+	 * ãƒªã‚¶ãƒ«ãƒˆã«çµ‚ç«¯ä½ç½®ã‚’è¿½åŠ ã™ã‚‹ã€‚
 	 */
 	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
@@ -685,7 +685,7 @@ public:
 };
 
 /**
- * ƒLƒƒƒ‰ƒNƒ^ƒg[ƒNƒ“ƒNƒ‰ƒX
+ * ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class CharacterToken : public RegexToken<CharType>
@@ -732,7 +732,7 @@ public:
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
 	/**
-	 * scanner‚©‚çˆê•¶šæ‚èo‚µ‚Ä©ŒÈ‚Æ”äŠr
+	 * scannerã‹ã‚‰ä¸€æ–‡å­—å–ã‚Šå‡ºã—ã¦è‡ªå·±ã¨æ¯”è¼ƒ
 	 */
 	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
@@ -751,7 +751,7 @@ public:
 };
 
 /**
- * ‰üsˆÈŠOƒ}ƒbƒ`ƒg[ƒNƒ“ƒNƒ‰ƒX
+ * æ”¹è¡Œä»¥å¤–ãƒãƒƒãƒãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class AnyMatchToken : public RegexToken<CharType>
@@ -788,7 +788,7 @@ public:
 	typedef RegexScanner<char_t> scanner_t;
 	typedef RegexResult<char_t> result_t;
 	/**
-	 * scanner‚©‚çˆê•¶šæ‚èo‚µ‚ÄI’[‚Å‚È‚¯‚ê‚Îƒ}ƒbƒ`
+	 * scannerã‹ã‚‰ä¸€æ–‡å­—å–ã‚Šå‡ºã—ã¦çµ‚ç«¯ã§ãªã‘ã‚Œã°ãƒãƒƒãƒ
 	 */
 	virtual bool isAccept(AcceptArgument<char_t>& argument) const
 	{
@@ -808,7 +808,7 @@ public:
 };
 
 /**
- * ”ÍˆÍƒg[ƒNƒ“ƒNƒ‰ƒX
+ * ç¯„å›²ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RangeToken : public RegexToken<CharType>
@@ -869,7 +869,7 @@ public:
 };
 
 /**
- * •¡”•¶š‚ğŠÜ‚Şƒg[ƒNƒ“ƒNƒ‰ƒX
+ * è¤‡æ•°æ–‡å­—ã‚’å«ã‚€ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class SetToken : public RegexToken<CharType>
@@ -947,7 +947,7 @@ public:
 };
 
 /**
- * •¡”•¶š‚ğŠÜ‚Ü‚È‚¢ƒg[ƒNƒ“ƒNƒ‰ƒX
+ * è¤‡æ•°æ–‡å­—ã‚’å«ã¾ãªã„ãƒˆãƒ¼ã‚¯ãƒ³ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class NotSetToken : public RegexToken<CharType>
@@ -1025,7 +1025,7 @@ public:
 };
 
 /**
- * ³‹K•\Œ»ƒg[ƒNƒ“ŠÇ—ƒNƒ‰ƒX
+ * æ­£è¦è¡¨ç¾ãƒˆãƒ¼ã‚¯ãƒ³ç®¡ç†ã‚¯ãƒ©ã‚¹
  */
 template <typename CharType>
 class RegexAutomatonManager
@@ -1215,15 +1215,15 @@ public:
 
 
 /**
- * RegexMatch“à‚Ìhead‚ğíœ‚·‚é‚½‚ß‚Ìƒtƒ@ƒ“ƒNƒ^
+ * RegexMatchå†…ã®headã‚’å‰Šé™¤ã™ã‚‹ãŸã‚ã®ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿
  */
 template <typename CharType>
 class TokenRemover
 {
 public:
 	/**
-	 * íœƒnƒ“ƒhƒ‰
-	 * @param pointer íœƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+	 * å‰Šé™¤ãƒãƒ³ãƒ‰ãƒ©
+	 * @param pointer å‰Šé™¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	static void remove(RegexToken<CharType>* pointer)
 	{
@@ -1241,9 +1241,9 @@ public:
 };
 
 /**
- * ³‹K•\Œ»ƒ}ƒbƒ`ƒNƒ‰ƒX
- * @todo match‚µ‚½‚çƒ}ƒbƒ`ŒÂŠ‚ÌƒIƒuƒWƒFƒNƒgƒZƒbƒg‚ğ•Ô‚µ‚Ä
- * matchedString‚Æ‚©matchedReplace‚Æ‚©‚Í•Ê‚Éƒwƒ‹ƒp—pˆÓ‚µ‚½İŒv‚Ì•û‚ª©‘R‚©‚à
+ * æ­£è¦è¡¨ç¾ãƒãƒƒãƒã‚¯ãƒ©ã‚¹
+ * @todo matchã—ãŸã‚‰ãƒãƒƒãƒå€‹æ‰€ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚»ãƒƒãƒˆã‚’è¿”ã—ã¦
+ * matchedStringã¨ã‹matchedReplaceã¨ã‹ã¯åˆ¥ã«ãƒ˜ãƒ«ãƒ‘ç”¨æ„ã—ãŸè¨­è¨ˆã®æ–¹ãŒè‡ªç„¶ã‹ã‚‚
  */
 template <typename CharType>
 class RegexMatch
@@ -1357,8 +1357,8 @@ public:
 };
 
 /**
- * ³‹K•\Œ»ƒRƒ“ƒpƒCƒ‰
- * ³‹K•\Œ»‚©‚ç—LŒÀƒI[ƒgƒ}ƒgƒ“‚Ö‚ÌƒRƒ“ƒpƒCƒ‰
+ * æ­£è¦è¡¨ç¾ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©
+ * æ­£è¦è¡¨ç¾ã‹ã‚‰æœ‰é™ã‚ªãƒ¼ãƒˆãƒãƒˆãƒ³ã¸ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©
  */
 template <typename CharType>
 class RegexCompiler : public RegexAutomatonManager<CharType>
@@ -1538,7 +1538,7 @@ private:
 	}
 
 	/**
-	 * @todo ƒoƒbƒNƒXƒ‰ƒbƒVƒ…‚É‚æ‚éƒGƒXƒP[ƒv
+	 * @todo ãƒãƒƒã‚¯ã‚¹ãƒ©ãƒƒã‚·ãƒ¥ã«ã‚ˆã‚‹ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—
 	 */
 	token_pair_t subCompile(scanner_t& scanner)
 	{

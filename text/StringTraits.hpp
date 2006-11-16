@@ -6,13 +6,13 @@
 #include <algorithm>
 
 /**
- * Multibyte<->WideCharƒR[ƒh•ÏŠ·Ší
- * @param DestType o—Í•¶ší
- * @param SourceType “ü—Í•¶ší
- * ‚±‚ê©g‚ÍƒvƒŒ[ƒXƒzƒ‹ƒ_‚Å‚·BÀ‘Ì‚Íƒeƒ“ƒvƒŒ[ƒg“Áê‰»‚³‚ê‚½‚à‚Ì‚Ì‚Ù‚¤‚Å‚·B
- * @todo •ÏŠ·ˆ—‚ğWin32API‚ÉˆÏ÷‚µ‚Ä‚¢‚é‚¾‚¯‚È‚Ì‚Åƒvƒ‰ƒbƒgƒz[ƒ€“Æ—§‚É‚·‚é‚½‚ß‚É
- * http://www.unicode.org/Public/MAPPINGS/ ˆÈ‰º‚Ìƒe[ƒuƒ‹‚©‚ç‚Ì•ÏŠ·Ší‚Ìì¬B
- * ‚»‚¤‚µ‚½ê‡AƒfƒtƒHƒ‹ƒgƒR[ƒhƒy[ƒW‚ª‚È‚­‚È‚é‚Ì‚Å‚»‚Ìw’è•û–@‚Ì’Ç‰ÁB
+ * Multibyte<->WideCharã‚³ãƒ¼ãƒ‰å¤‰æ›å™¨
+ * @param DestType å‡ºåŠ›æ–‡å­—ç¨®
+ * @param SourceType å…¥åŠ›æ–‡å­—ç¨®
+ * ã“ã‚Œè‡ªèº«ã¯ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ›ãƒ«ãƒ€ã§ã™ã€‚å®Ÿä½“ã¯ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰¹æ®ŠåŒ–ã•ã‚ŒãŸã‚‚ã®ã®ã»ã†ã§ã™ã€‚
+ * @todo å¤‰æ›å‡¦ç†ã‚’Win32APIã«å§”è­²ã—ã¦ã„ã‚‹ã ã‘ãªã®ã§ãƒ—ãƒ©ãƒƒãƒˆãƒ›ãƒ¼ãƒ ç‹¬ç«‹ã«ã™ã‚‹ãŸã‚ã«
+ * http://www.unicode.org/Public/MAPPINGS/ ä»¥ä¸‹ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰ã®å¤‰æ›å™¨ã®ä½œæˆã€‚
+ * ãã†ã—ãŸå ´åˆã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ¼ãƒ‰ãƒšãƒ¼ã‚¸ãŒãªããªã‚‹ã®ã§ãã®æŒ‡å®šæ–¹æ³•ã®è¿½åŠ ã€‚
  */
 template <typename DestType, typename SourceType>
 class CodeConvert
@@ -25,16 +25,16 @@ public:
 };
 
 /**
- * MultiByte -> WideChar ƒR[ƒh•ÏŠ·Ší“Áê‰»
+ * MultiByte -> WideChar ã‚³ãƒ¼ãƒ‰å¤‰æ›å™¨ç‰¹æ®ŠåŒ–
  */
 template <>
 class CodeConvert<std::basic_string<wchar_t>, std::string>
 {
 public:
 	/**
-	 * ƒR[ƒh•ÏŠ·ˆ—
-	 * @param str ƒ}ƒ‹ƒ`ƒoƒCƒg•¶š—ñ
-	 * @return •ÏŠ·‚³‚ê‚½WideChar•¶š—ñ
+	 * ã‚³ãƒ¼ãƒ‰å¤‰æ›å‡¦ç†
+	 * @param str ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—åˆ—
+	 * @return å¤‰æ›ã•ã‚ŒãŸWideCharæ–‡å­—åˆ—
 	 */
 	std::basic_string<wchar_t> codeConvert(const std::string& str)
 	{
@@ -54,16 +54,16 @@ public:
 
 
 /**
- * WideChar -> MultiByte ƒR[ƒh•ÏŠ·Ší“Áê‰»
+ * WideChar -> MultiByte ã‚³ãƒ¼ãƒ‰å¤‰æ›å™¨ç‰¹æ®ŠåŒ–
  */
 template <>
 class CodeConvert<std::string, std::basic_string<wchar_t> >
 {
 public:
 	/**
-	 * ƒR[ƒh•ÏŠ·ˆ—
-	 * @param str WideChar•¶š—ñ
-	 * @return •ÏŠ·‚³‚ê‚½MultiByte•¶š—ñ
+	 * ã‚³ãƒ¼ãƒ‰å¤‰æ›å‡¦ç†
+	 * @param str WideCharæ–‡å­—åˆ—
+	 * @return å¤‰æ›ã•ã‚ŒãŸMultiByteæ–‡å­—åˆ—
 	 */
 	std::string codeConvert(const std::basic_string<wchar_t>& str)
 	{
@@ -82,18 +82,18 @@ public:
 };
 
 /**
- * •ÏŠ·Šíƒwƒ‹ƒp
- * @param CharType o—ÍƒLƒƒƒ‰ƒNƒ^í
- * À‘Ì‚Í“Áê‰»‚É‚æ‚Á‚Ä’è‹`‚³‚ê‚Ü‚·
- * @todo WideChar -> MultiByte”Å‚ª–³‚¢‚Ì‚Åƒ\ƒŒ‚Ì’Ç‰Á
+ * å¤‰æ›å™¨ãƒ˜ãƒ«ãƒ‘
+ * @param CharType å‡ºåŠ›ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ç¨®
+ * å®Ÿä½“ã¯ç‰¹æ®ŠåŒ–ã«ã‚ˆã£ã¦å®šç¾©ã•ã‚Œã¾ã™
+ * @todo WideChar -> MultiByteç‰ˆãŒç„¡ã„ã®ã§ã‚½ãƒ¬ã®è¿½åŠ 
  */
 template <typename CharType>
 class StringTraits
 {
 public:
 	/**
-	 * •ÏŠ·ŠÖ”
-	 * @param str •ÏŠ·Œ³•¶š—ñ
+	 * å¤‰æ›é–¢æ•°
+	 * @param str å¤‰æ›å…ƒæ–‡å­—åˆ—
 	 */
 	std::basic_string<CharType> stringTraits(const std::string& str)
 	{
@@ -102,8 +102,8 @@ public:
 };
 
 /**
- * •ÏŠ·Šíƒwƒ‹ƒp
- * MultiByte -> MultiByte (–³•ÏŠ·)
+ * å¤‰æ›å™¨ãƒ˜ãƒ«ãƒ‘
+ * MultiByte -> MultiByte (ç„¡å¤‰æ›)
  */
 template <>
 class StringTraits<char>
@@ -116,8 +116,8 @@ public:
 };
 
 /**
- * •ÏŠ·Šíƒwƒ‹ƒp
- * MultiByte -> MultiByte (Wide•¶š•ÏŠ·)
+ * å¤‰æ›å™¨ãƒ˜ãƒ«ãƒ‘
+ * MultiByte -> MultiByte (Wideæ–‡å­—å¤‰æ›)
  */
 template <>
 class StringTraits<wchar_t>
