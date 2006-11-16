@@ -12,6 +12,7 @@
 #include <Thread/ThreadException.hpp>
 #include <Thread/CriticalSection.hpp>
 #include <Thread/Runnable.hpp>
+#include <Thread/SyncOperator.hpp>
 
 /**
  * Win32ベーススレッドクラス
@@ -77,6 +78,11 @@ private:
 	 * 処理例外伝達用ポインタ
 	 */
 	ThreadException* transporter;
+
+	/**
+	 * 状態変更ロック
+	 */
+	CriticalSection section;
 
 	/**
 	 * 停止用フラグ
@@ -151,7 +157,8 @@ protected:
 			this->runningTarget = this;
 
 		{
-			CriticalSection atomicOp(true);
+			ScopedLock<CriticalSection> lock(section);
+
 			this->runningTarget->prepare();
 			this->status = running;
 		}
@@ -177,7 +184,7 @@ protected:
 		}
 
 		{
-			CriticalSection atomicOp(true);
+			ScopedLock<CriticalSection> lock(section);
 			this->runningTarget->dispose();
 			this->status = stop;
 		}
@@ -194,7 +201,7 @@ protected:
 	 */
 	void create(bool createOnRun) throw(ThreadException)
 	{
-		CriticalSection atomicOp(true);
+		ScopedLock<CriticalSection> lock(section);
 
 		this->threadHandle = (HANDLE)_beginthreadex(
 			NULL,
@@ -227,7 +234,7 @@ public:
 	 */
 	WinThread(bool createOnRun = false) throw (ThreadException)
 		: runningTarget(), status(), threadHandle(),
-		  ThreadId(), transporter(NULL), isAborting(false)
+		  ThreadId(), transporter(NULL), section(), isAborting(false)
 	{
 		runningTarget = this;
 		create(createOnRun);
@@ -241,7 +248,7 @@ public:
 	WinThread(Runnable* runnable_,
 			  bool createOnRun = false) throw (ThreadException)
 		: runningTarget(runnable_), status(), threadHandle(),
-		  ThreadId(), transporter(NULL), isAborting(false)
+		  ThreadId(), transporter(NULL), section(), isAborting(false)
 	{
 		assert(runnable_ != NULL);
 		create(createOnRun);
@@ -274,7 +281,7 @@ public:
 	{
 		assert(this->threadHandle);
 
-		CriticalSection atomicOp(true);
+		ScopedLock<CriticalSection> lock(section);
 		assert(status == created ||
 			status == suspend);
 
@@ -294,7 +301,7 @@ public:
 	{
 		assert(this->threadHandle);
 
-		CriticalSection atomicOp(true);
+		ScopedLock<CriticalSection> lock(section);
 		this->setRunningTarget(entryPoint);
 
 		return start();
@@ -306,7 +313,7 @@ public:
 	 */
 	bool isRunning() throw()
 	{
-		CriticalSection atomicOp(true);
+		ScopedLock<CriticalSection> lock(section);
 		if (status == running || 
 			status == suspend)
 			return true;
@@ -347,7 +354,7 @@ public:
 	{
 		assert(this->threadHandle != NULL);
 
-		CriticalSection atmicOp(true);
+		ScopedLock<CriticalSection> lock(section);
 		isAborting = true;
 	}
 

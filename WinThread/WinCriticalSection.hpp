@@ -50,21 +50,16 @@ private:
 	} section;
 	
 	/**
-	 * セクションロック判別
-	 */
-	bool isLocked;
-
-	/**
 	 * non copyable
 	 */
 	WinCriticalSection(const WinCriticalSection&);
-	WinCriticalsection& operator=(const WinCriticalSection&);
+	WinCriticalSection& operator=(const WinCriticalSection&);
 public:
 	/**
 	 * コンストラクタ
 	 */
 	WinCriticalSection() throw()
-		: isLocked(false)
+	: section()
 	{}
 	
 	/**
@@ -78,10 +73,7 @@ public:
 	 */
 	void lock() throw()
 	{
-		assert(isLocked == false);
-
 		EnterCriticalSection(section.get());
-		isLocked = true;
 	}
 	
 	/**
@@ -89,9 +81,6 @@ public:
 	 */
 	void unlock() throw()
 	{
-		assert(isLocked != false);
-
-		isLocked = false;
 		LeaveCriticalSection(section.get());
 	}
 
@@ -104,25 +93,13 @@ public:
 	 */
 	bool tryLock() throw()
 	{
-		assert(isLocked == false);
-
 		BOOL result =
 			::TryEnterCriticalSection(section.get());
 
 		if (result == FALSE)
 			return false;
 
-		isLocked = true;
 		return true;
-	}
-
-	/**
-	 * セクション内にいるかの判定
-	 * @return セクション内にいるならtrue, でなければfalse.
-	 */
-	bool isLock() const throw()
-	{
-		return isLocked;
 	}
 };
 
