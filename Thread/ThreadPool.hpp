@@ -45,7 +45,8 @@ public:
 		/**
 		 * 実行状態制御用
 		 */
-		Event starter;
+		Event parent;
+		Event child;
 
 		/**
 		 * 実行状態変更の排他制御用
@@ -86,8 +87,12 @@ public:
 		bool isQuitAndBlock()
 		{
 			{
-				starter.lock(); // parent thread ownership release wait.
-				starter.unlock(); // release ownership.
+				ScopedLock<Mutex> lock(stateLock);
+				state = ended;
+				syncLock.lock();
+			}
+
+			{
 			}
 			ScopedLock<Mutex> lock(stateLock);
 			state = started;
@@ -102,9 +107,7 @@ public:
 				replace(entryPoint);
 			}
 			
-			starter.unlock();
 			ScopedLock<Mutex> lock(stateLock);
-			while (!starter.tryLock());
 
 
 			return 0;
@@ -128,7 +131,8 @@ public:
 		RerunnableThread()
 				: Thread(this, false),
 				  runnablePoint(),
-				  starter(),
+				  parent(),
+				  child(),
 				  stateLock(),
 				  state(none)
 		{
@@ -281,7 +285,7 @@ public:
 	{
 		assert(false && !"not impremented yet.");
 
-		for (int index = 0; index < managementThreads; ++ index)
+<		for (int index = 0; index < managementThreads; ++ index)
 		{
 //			if (threads[index])
 				

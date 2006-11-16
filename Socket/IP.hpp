@@ -9,41 +9,41 @@
 #include <text/LexicalCast.hpp>
 
 /**
- * ƒAƒhƒŒƒX‰ğŒˆ¸”s—áŠOƒNƒ‰ƒX
+ * ã‚¢ãƒ‰ãƒ¬ã‚¹è§£æ±ºå¤±æ•—ä¾‹å¤–ã‚¯ãƒ©ã‚¹
  */
-class  NotAddressResolvException : public std::runtime_error
+class  NotAddressResolveException : public std::runtime_error
 {
 public:
-	NotAddressResolvException(const char* reason = "address resonv failed."):
+	NotAddressResolveException(const char* reason = "address resonv failed."):
 		std::runtime_error(reason)
 	{}
 	
 };
 
 /**
- * Ú‘±‘ÎÛî•ñ–”‚ÍƒT[ƒo‚Ìƒ\ƒPƒbƒg‘©”›
+ * æ¥ç¶šå¯¾è±¡æƒ…å ±åˆã¯ã‚µãƒ¼ãƒã®ã‚½ã‚±ãƒƒãƒˆæŸç¸›
  */
 class IP
 {
 private:
 
-	unsigned long internalRepresentIP; ///< ƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[ƒ_IP
-									   ///ƒAƒhƒŒƒX
-	unsigned short internalRepresentPort; ///< ƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[
-										  ///ƒ_Portƒiƒ“ƒo[
+	unsigned long internalRepresentIP; ///< ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€IP
+									   ///ã‚¢ãƒ‰ãƒ¬ã‚¹
+	unsigned short internalRepresentPort; ///< ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼
+										  ///ãƒ€PortãƒŠãƒ³ãƒãƒ¼
 
 	/**
-	 *  ƒzƒXƒg–¼–”‚ÍIPƒAƒhƒŒƒX(•¶š—ñƒx[ƒX)‚©‚çƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[
-	 * ƒ_IPƒAƒhƒŒƒX‚Ö‚Ì•ÏŠ·
-	 * @param ipAddress •ÏŠ·Œ³‚ÌIPƒAƒhƒŒƒX–”‚ÍƒzƒXƒg–¼
-	 * @exception NotAddressResolvException IPƒAƒhƒŒƒX‚É•ÏŠ·‚Å‚«‚È‚©‚Á‚½ê‡
-	 * @return •ÏŠ·‚³‚ê‚½ƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[ƒ_IPƒAƒhƒŒƒX
+	 *  ãƒ›ã‚¹ãƒˆååˆã¯IPã‚¢ãƒ‰ãƒ¬ã‚¹(æ–‡å­—åˆ—ãƒ™ãƒ¼ã‚¹)ã‹ã‚‰ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼
+	 * ãƒ€IPã‚¢ãƒ‰ãƒ¬ã‚¹ã¸ã®å¤‰æ›
+	 * @param ipAddress å¤‰æ›å…ƒã®IPã‚¢ãƒ‰ãƒ¬ã‚¹åˆã¯ãƒ›ã‚¹ãƒˆå
+	 * @exception NotAddressResolveException IPã‚¢ãƒ‰ãƒ¬ã‚¹ã«å¤‰æ›ã§ããªã‹ã£ãŸå ´åˆ
+	 * @return å¤‰æ›ã•ã‚ŒãŸãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€IPã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	unsigned long translateIp(const char* ipAddress) const
 	{
 		HostEnt* hostEntry = gethostbyname(ipAddress);
 		if (hostEntry == NULL)
-			throw NotAddressResolvException((std::string("servername not "
+			throw NotAddressResolveException((std::string("servername not "
 														 "found: ") +
 											 ipAddress).c_str());
 
@@ -53,10 +53,10 @@ private:
 	}
 
 	/**
-	 * ƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[ƒ_IPƒAƒhƒŒƒX‚©‚çFQDN–¼‚Ö‚Ì•ÏŠ·
-	 * @param ipAddress ƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[ƒ_IPƒAƒhƒŒƒX
-	 * @return FQDN–¼
-	 * @exception NotAddressResolvException ƒzƒXƒg–¼‚É•ÏŠ·‚Å‚«‚È‚©‚Á‚½ê‡
+	 * ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€IPã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰FQDNåã¸ã®å¤‰æ›
+	 * @param ipAddress ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€IPã‚¢ãƒ‰ãƒ¬ã‚¹
+	 * @return FQDNå
+	 * @exception NotAddressResolveException ãƒ›ã‚¹ãƒˆåã«å¤‰æ›ã§ããªã‹ã£ãŸå ´åˆ
 	 */
 	std::string translateIp(const unsigned long ipAddress) const
 	{
@@ -65,7 +65,7 @@ private:
 						  sizeof(ipAddress), AF_INET);
 
 		if (hostEntry == NULL)
-			throw NotAddressResolvException((std::string("address server "
+			throw NotAddressResolveException((std::string("address server "
 														"not found: ") +
 											 getIpString(ipAddress)).c_str());
 
@@ -74,7 +74,7 @@ private:
   
 public:
 	/**
-	 * ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	IP() throw() :
 		internalRepresentIP(), internalRepresentPort()
@@ -82,13 +82,13 @@ public:
 	}
 
 	/**
-	 * ‰Šúî•ñƒZƒbƒg•tƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param ipAddress ƒ}ƒVƒ“–¼
-	 * @param port ƒ|[ƒg”Ô†
-	 * @exception NotAddressResolvException ƒ}ƒVƒ“–¼‚ª‰ğŒˆ‚Å‚«‚È‚©‚Á‚½ê‡
+	 * åˆæœŸæƒ…å ±ã‚»ãƒƒãƒˆä»˜ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param ipAddress ãƒã‚·ãƒ³å
+	 * @param port ãƒãƒ¼ãƒˆç•ªå·
+	 * @exception NotAddressResolveException ãƒã‚·ãƒ³åãŒè§£æ±ºã§ããªã‹ã£ãŸå ´åˆ
 	 */
 	IP(const char* ipAddress, const short port)
-		throw(NotAddressResolvException):
+		throw(NotAddressResolveException):
 		internalRepresentIP(), internalRepresentPort()
 	{
 		internalRepresentIP = translateIp(ipAddress);
@@ -96,13 +96,13 @@ public:
 	}
 
 	/**
-	 * ‰Šúî•ñƒZƒbƒg•tƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param ipAddress IPƒAƒhƒŒƒX(ƒlƒbƒgƒ[ƒNƒoƒCƒgƒI[ƒ_)
-	 * @param port ƒ|[ƒg”Ô†(ƒzƒXƒgƒoƒCƒgƒI[ƒ_)
-	 * @exception NotAddressResolvException ƒ}ƒVƒ“–¼‚ª‰ğŒˆ‚Å‚«‚È‚©‚Á‚½ê‡
+	 * åˆæœŸæƒ…å ±ã‚»ãƒƒãƒˆä»˜ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param ipAddress IPã‚¢ãƒ‰ãƒ¬ã‚¹(ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€)
+	 * @param port ãƒãƒ¼ãƒˆç•ªå·(ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€)
+	 * @exception NotAddressResolveException ãƒã‚·ãƒ³åãŒè§£æ±ºã§ããªã‹ã£ãŸå ´åˆ
 	 */
 	IP(unsigned long ipAddress, const short port)
-		throw(NotAddressResolvException):
+		throw(NotAddressResolveException):
 		internalRepresentIP(), internalRepresentPort() 
 	{
 		internalRepresentIP = ipAddress;
@@ -110,8 +110,8 @@ public:
 	}
 
 	/**
-	 * ‰Šúî•ñƒZƒbƒg•tƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param addrInfo sockaddr_in\‘¢‘Ì
+	 * åˆæœŸæƒ…å ±ã‚»ãƒƒãƒˆä»˜ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param addrInfo sockaddr_inæ§‹é€ ä½“
 	 */
 	IP(const sockaddr_in& addrInfo) throw()
 	{
@@ -120,15 +120,15 @@ public:
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~IP() throw()
 	{
 	}
 
 	/**
-	 * sockaddr_in \‘¢‘Ì‚ğ•Ô‚·
-	 * @return “à•”î•ñ‚©‚çì¬‚³‚ê‚½ sockaddr_in \‘¢‘ÌB
+	 * sockaddr_in æ§‹é€ ä½“ã‚’è¿”ã™
+	 * @return å†…éƒ¨æƒ…å ±ã‹ã‚‰ä½œæˆã•ã‚ŒãŸ sockaddr_in æ§‹é€ ä½“ã€‚
 	 */
 	sockaddr_in getInetInfo() const throw()
 	{
@@ -144,8 +144,8 @@ public:
 	}
 
 	/**
-	 * ƒzƒXƒgƒoƒCƒgƒI[ƒ_IPƒAƒhƒŒƒXæ“¾
-	 * @return ƒzƒXƒgƒoƒCƒgƒI[ƒ_ipƒAƒhƒŒƒX
+	 * ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€IPã‚¢ãƒ‰ãƒ¬ã‚¹å–å¾—
+	 * @return ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€ipã‚¢ãƒ‰ãƒ¬ã‚¹
 	 */
 	unsigned long getIp() throw()
 	{
@@ -153,9 +153,9 @@ public:
 	}
 
 	/**
-	 * IPƒAƒhƒŒƒX‚©‚ç•¶š—ñ‚Ö‚Ì•ÏŠ·
-	 * @param ƒzƒXƒgƒoƒCƒgƒI[ƒ_IPƒAƒhƒŒƒX’l @see getIp()
-	 * @return •ÏŠ·‚³‚ê‚½•¶š—ñƒIƒuƒWƒFƒNƒg
+	 * IPã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰æ–‡å­—åˆ—ã¸ã®å¤‰æ›
+	 * @param ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€IPã‚¢ãƒ‰ãƒ¬ã‚¹å€¤ @see getIp()
+	 * @return å¤‰æ›ã•ã‚ŒãŸæ–‡å­—åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	static std::string getIpString(unsigned long hostSideIpReps) throw()
 	{
@@ -174,28 +174,28 @@ public:
 	}
 
 	/**
-	 * ƒzƒXƒg–¼æ“¾
-	 * @return ƒzƒXƒg–¼
-	 * @exception NotAddressResolvException ƒzƒXƒg–¼‚ª‰ğŒˆ‚Å‚«‚È‚©‚Á‚½ê‡
+	 * ãƒ›ã‚¹ãƒˆåå–å¾—
+	 * @return ãƒ›ã‚¹ãƒˆå
+	 * @exception NotAddressResolveException ãƒ›ã‚¹ãƒˆåãŒè§£æ±ºã§ããªã‹ã£ãŸå ´åˆ
 	 */
-	std::string getHostname() const throw(NotAddressResolvException)
+	std::string getHostname() const throw(NotAddressResolveException)
 	{
 		return translateIp(this->internalRepresentIP);
 	}
 
 	/**
-	 * “à•”IPƒAƒhƒŒƒX‚Ìİ’è
-	 * @param IPƒAƒhƒŒƒX–”‚Íƒ}ƒVƒ“–¼
-	 * @exception NotAddressResolvException ƒzƒXƒg–¼‚ª‰ğŒˆ‚Å‚«‚È‚©‚Á‚½ê‡
+	 * å†…éƒ¨IPã‚¢ãƒ‰ãƒ¬ã‚¹ã®è¨­å®š
+	 * @param IPã‚¢ãƒ‰ãƒ¬ã‚¹åˆã¯ãƒã‚·ãƒ³å
+	 * @exception NotAddressResolveException ãƒ›ã‚¹ãƒˆåãŒè§£æ±ºã§ããªã‹ã£ãŸå ´åˆ
 	 */
-	void setIp(const char* address) throw (NotAddressResolvException)
+	void setIp(const char* address) throw (NotAddressResolveException)
 	{
 		this->internalRepresentIP = translateIp(address);
 	}
 
 	/**
-	 * ƒ|[ƒg”Ô†‚Ìæ“¾(ƒzƒXƒgƒoƒCƒgƒI[ƒ_)
-	 * @return ƒzƒXƒgƒoƒCƒgƒI[ƒ_Port”Ô†
+	 * ãƒãƒ¼ãƒˆç•ªå·ã®å–å¾—(ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€)
+	 * @return ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€Portç•ªå·
 	 */
 	unsigned short getPort() throw()
 	{
@@ -203,8 +203,8 @@ public:
 	}
 
 	/**
-	 * “à•”ƒ|[ƒg”Ô†‚Ìİ’è
-	 * @param Port”Ô†(ƒzƒXƒgƒoƒCƒgƒI[ƒ_)
+	 * å†…éƒ¨ãƒãƒ¼ãƒˆç•ªå·ã®è¨­å®š
+	 * @param Portç•ªå·(ãƒ›ã‚¹ãƒˆãƒã‚¤ãƒˆã‚ªãƒ¼ãƒ€)
 	 */
 	void setPort(const unsigned short port) throw()
 	{

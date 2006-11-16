@@ -9,6 +9,7 @@
 #include <Thread/Runnable.hpp>
 #include <PosixThread/PosixMutex.hpp>
 
+
 class PosixThread : public Runnable
 {
 public:
@@ -62,21 +63,23 @@ private:
 	static void* CallbackDispatcher(void* DispatchKey)
 	{
 		PosixThread* This = reinterpret_cast<PosixThread*>(DispatchKey);
-		assert(This != NULL);
+		assert(dynamic_cast<PosixThread*>(This) != NULL);
 
 		// wait for start signal.
 		ScopedLock<PosixMutex> lock(This->starter);
 
 		int retValue = 0;
-		do
+
 		{
 			ScopedLock<PosixMutex> atomicOp(This->statusSync);
-			reinterpret_cast<PosixThread*>(DispatchKey)->isRun = true;
-		} while (false);
+			This->isRun = true;
+		}
 
 		try 
 		{
+			This->getRunningTarget()->prepare();
 			retValue = This->getRunningTarget()->run();
+			This->getRunningTarget()->dispose();
 		}
 		catch (ThreadException& e)
 		{
@@ -142,7 +145,7 @@ public:
 	 * @exception InterruptedException スレッドインスタンスから
 	 * abort()が呼ばれていた場合
 	 */
-	void yield()
+	static void yield()
 	{
 		PosixThread::sleep(0);
 	}

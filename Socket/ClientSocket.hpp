@@ -5,7 +5,7 @@
 #include <Thread/ThreadException.hpp>
 
 /**
- * ƒNƒ‰ƒCƒAƒ“ƒg—pƒ\ƒPƒbƒgƒNƒ‰ƒX
+ * ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç”¨ã‚½ã‚±ãƒƒãƒˆã‚¯ãƒ©ã‚¹
  *		  @see Socket
  *		  @see ServerSocket
  */
@@ -13,25 +13,25 @@ class ClientSocket : public Socket
 {
 public:
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	ClientSocket() : Socket()
 	{
 	}
 
 	/**
-	 * ƒfƒXƒgƒ‰ƒNƒ^
+	 * ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	virtual ~ClientSocket() throw()
 	{
 	}
 
 	/**
-	 * ƒ\ƒPƒbƒg‚ÌÚ‘±
-	 * @param ip Ú‘±æ‚ÌInternet Protocolî•ñ
-	 * @exception SocketException ‘Šèæ‚ÉÚ‘±‚Å‚«‚È‚©‚Á‚½ê‡
-	 * @exception NotAddressResolvException Ú‘±æ‚Ìî•ñ‚ª‰ğŒˆ‚Å‚«‚È‚©‚Á
-	 * ‚½ê‡
+	 * ã‚½ã‚±ãƒƒãƒˆã®æ¥ç¶š
+	 * @param ip æ¥ç¶šå…ˆã®Internet Protocolæƒ…å ±
+	 * @exception SocketException ç›¸æ‰‹å…ˆã«æ¥ç¶šã§ããªã‹ã£ãŸå ´åˆ
+	 * @exception NotAddressResolveException æ¥ç¶šå…ˆã®æƒ…å ±ãŒè§£æ±ºã§ããªã‹ã£
+	 * ãŸå ´åˆ
 	 * @see IP
 	 */
 	void connect(const IP& ip)

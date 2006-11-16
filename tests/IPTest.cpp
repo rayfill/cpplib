@@ -7,11 +7,11 @@ class IPTest : public CppUnit::TestFixture
 {
 private:
 	CPPUNIT_TEST_SUITE(IPTest);
-	CPPUNIT_TEST(resolvIPAddress);
-	CPPUNIT_TEST(resolvMachineName);
+	CPPUNIT_TEST(resolveIPAddress);
+	CPPUNIT_TEST(resolveMachineName);
 	CPPUNIT_TEST(PortCheck);
-	CPPUNIT_TEST(unresolvIpToName);
-	CPPUNIT_TEST(unresolvNameToIp);
+	CPPUNIT_TEST(unresolveIpToName);
+	CPPUNIT_TEST(unresolveNameToIp);
 	CPPUNIT_TEST_SUITE_END();
 
 	IP ip;
@@ -19,14 +19,14 @@ private:
 	SocketModule Module;
 public:
 
-	void resolvIPAddress()
+	void resolveIPAddress()
 	{
 		ip.setIp("www.nic.ad.jp");
 		CPPUNIT_ASSERT(IP::getIpString(ip.getIp())
 					   == "202.12.30.115");
 	}
 
-	void resolvMachineName()
+	void resolveMachineName()
 	{	
 		try
 		{
@@ -46,17 +46,17 @@ public:
 		CPPUNIT_ASSERT(ip.getPort() == 5432);
 	}
 
-	void unresolvNameToIp()
+	void unresolveNameToIp()
 	{
 		CPPUNIT_ASSERT_THROW(ip.setIp("hogehoge"),
-							 NotAddressResolvException);
+							 NotAddressResolveException);
 	}
 
-	void unresolvIpToName()
+	void unresolveIpToName()
 	{
 		ip.setIp("133.0.0.1");
 		CPPUNIT_ASSERT_THROW(ip.getHostname(),
-							 NotAddressResolvException);
+							 NotAddressResolveException);
 	}
 };
 

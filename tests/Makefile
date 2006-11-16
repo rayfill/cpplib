@@ -6,7 +6,9 @@ CXXFLAGS += -g -Wall -Wno-sign-compare -Wno-unused -Wno-uninitialized \
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
 TARGET= UnitTest
+
 OBJS= TestMain.o \
+	TwinLockTest.o \
 	CommandLineTest.o \
 	ScannerTest.o \
 	LexicalCastTest.o \
