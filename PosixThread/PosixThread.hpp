@@ -4,12 +4,16 @@
 #include <time.h>
 #include <cassert>
 #include <string>
+#include <limits>
 #include <Thread/ThreadException.hpp>
 #include <Thread/ScopedLock.hpp>
 #include <Thread/Runnable.hpp>
 #include <PosixThread/PosixMutex.hpp>
 
-
+/**
+ * Thread (Posix実装)
+ * @todo 作って何もせずにデストラクタが動いた場合にこけるのでなんとかする
+ */
 class PosixThread : public Runnable
 {
 public:
@@ -71,15 +75,16 @@ private:
 		int retValue = 0;
 
 		{
-			ScopedLock<PosixMutex> atomicOp(This->statusSync);
+			ScopedLock<PosixMutex> lock(This->statusSync);
 			This->isRun = true;
 		}
 
 		try 
 		{
-			This->getRunningTarget()->prepare();
-			retValue = This->getRunningTarget()->run();
-			This->getRunningTarget()->dispose();
+			Runnable* entry = This->getRunningTarget();
+			entry->prepare();
+			retValue = entry->run();
+			entry->dispose();
 		}
 		catch (ThreadException& e)
 		{
@@ -94,7 +99,7 @@ private:
 
 		do
 		{
-			ScopedLock<PosixMutex> atomicOp(This->statusSync);
+			ScopedLock<PosixMutex> lock(This->statusSync);
 			reinterpret_cast<PosixThread*>(DispatchKey)->isRun = false;
 		} while (false);
 
@@ -109,7 +114,11 @@ private:
 	PosixThread(PosixThread&);
 
 protected:
-	void create(bool createOnRun) throw(ThreadException)
+	/**
+	 * crete thread helper.
+	 * @todo remove for paremeter createOnRun
+	 */
+	void create(bool /*createOnRun*/) throw(ThreadException)
 	{
 		/// @Todo 例外処理機構の追加
 		pthread_create(&this->threadId, NULL,
@@ -121,7 +130,7 @@ protected:
 	/// ワーカー用エントリポイント。オーバーライドして使用する。
 	virtual unsigned int run() throw(ThreadException)
 	{
-		return 0;
+		return std::numeric_limits<unsigned int>::max();
 	}
 
 public:
@@ -129,8 +138,20 @@ public:
 	 * デフォルトコンストラクタ
 	 * @param createOnRun 作成と同時に実行開始するかのフラグ
 	 */
-	PosixThread(bool createOnRun = false) throw (ThreadException)
+	explicit PosixThread(bool createOnRun = false) throw (ThreadException)
 		: threadId(), transporter(NULL), runningTarget(), isRun(false),
+		  starter(), statusSync()
+	{
+		starter.lock();
+		create(createOnRun);
+
+		if (createOnRun == true)
+			start();
+	}
+
+	explicit PosixThread(Runnable* target, 
+						 bool createOnRun = false) throw (ThreadException)
+		: threadId(), transporter(NULL), runningTarget(target), isRun(false),
 		  starter(), statusSync()
 	{
 		starter.lock();
@@ -168,7 +189,8 @@ public:
 	 */
 	virtual ~PosixThread()
 	{
-		assert(!isRunning());
+		if (!isRunning())
+			assert(!isRunning());
 
 		if (this->threadId != 0)
 		{
@@ -191,7 +213,7 @@ public:
 
 	bool isRunning()
 	{
-		ScopedLock<PosixMutex> atomicOp(statusSync);
+		ScopedLock<PosixMutex> lock(statusSync);
 		return this->isRun;
 	}
 
@@ -226,15 +248,15 @@ public:
 	virtual void start(Runnable* target) throw()
 	{
 		setRunningTarget(target);
-		start();
+		PosixThread::start();
 	}
 
-	int join()
+	virtual unsigned int join()
 	{
-		int retValue;
+		unsigned int retValue;
 		pthread_join(this->threadId,
 					 reinterpret_cast<void**>(&retValue));
-		ScopedLock<PosixMutex> atomicOp(statusSync);
+		ScopedLock<PosixMutex> lock(statusSync);
 		isRun = false;
 		return retValue;
 	}

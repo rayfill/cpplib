@@ -8,8 +8,6 @@
 #include <iostream>
 
 Mutex writer;
-std::vector<Thread::thread_id_t> result;
-
 class LockingChild : public Runnable
 {
 private:
@@ -59,6 +57,8 @@ public:
 	{
 		isQuitable = true;
 	}
+
+	std::vector<Thread::thread_id_t> result;
 };
 
 class TwinLockTest : public CppUnit::TestFixture
@@ -78,7 +78,7 @@ public:
 
 		{
 			ScopedLock<Mutex> lock(writer);
-			CPPUNIT_ASSERT(result.size() == 0);
+			CPPUNIT_ASSERT(lc.result.size() == 0);
 		}
 		
 		lc.waitFromParent();
@@ -88,10 +88,10 @@ public:
 		for (;;)
 		{
 			ScopedLock<Mutex> lock(writer);
-			if (result.size() != 0)
+			if (lc.result.size() != 0)
 			{
-				CPPUNIT_ASSERT(result.size() == 1);
-				CPPUNIT_ASSERT(result[0] == t.getThreadId());
+				CPPUNIT_ASSERT(lc.result.size() == 1);
+				CPPUNIT_ASSERT(lc.result[0] == t.getThreadId());
 				break;
 			}
 		}

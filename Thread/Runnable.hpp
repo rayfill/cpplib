@@ -2,7 +2,7 @@
 #define RUNNABLE_HPP_
 
 #include <Thread/ThreadException.hpp>
-
+#include <cassert>
 /**
  * 実行エントリポイントインタフェース
  */

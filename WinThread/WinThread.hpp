@@ -20,10 +20,6 @@
  * 継承し、仮想関数 run()をオーバーライドするか、
  * Runnableインタフェースを実装したクラスを用意して
  * コンストラクタに食わせてください。
- * @todo 各ロック処理のポリシー化。thisポインタロックにしたほうが効率よさげ
- * @todo 状態検査とシグナルチックな中断処理への変更
- * @todo RunnableホルダーもテンプレートにしとけばSmartPointerとか
- * AutoPtrとか使えるなぁ・・・
  */
 class WinThread : public Runnable
 {
@@ -33,6 +29,7 @@ public:
 	enum {
 		/// 例外により停止をあらわす定数
 		abort_by_exception = 0xffffffff,
+
 		/// 親からのリクエストにより中断を表す定数
 		abort_by_parent = 0xfffffffe
 	};
@@ -44,25 +41,9 @@ public:
 
 private:
 	/**
-	 * 状態定数
-	 */
-	enum RunningStatus
-	{
-		created,
-		running,
-		suspend,
-		stop
-	};
-
-	/**
 	 * 実行対象
 	 */
 	Runnable* runningTarget;
-
-	/**
-	 * スレッド状態
-	 */
-	volatile RunningStatus status;
 
 	/**
 	 * スレッドハンドル
@@ -160,7 +141,6 @@ protected:
 			ScopedLock<CriticalSection> lock(section);
 
 			this->runningTarget->prepare();
-			this->status = running;
 		}
 
 		try
@@ -186,7 +166,6 @@ protected:
 		{
 			ScopedLock<CriticalSection> lock(section);
 			this->runningTarget->dispose();
-			this->status = stop;
 		}
 
 		return retValue;
@@ -215,7 +194,6 @@ protected:
 			this->threadHandle == INVALID_HANDLE_VALUE)
 			throw ThreadException("Can not create thread.");
 
-		status = created;
 	}
 
 	/**
@@ -232,8 +210,8 @@ public:
 	 * デフォルトコンストラクタ
 	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
 	 */
-	WinThread(bool createOnRun = false) throw (ThreadException)
-		: runningTarget(), status(), threadHandle(),
+	explicit WinThread(bool createOnRun = false) throw (ThreadException)
+		: runningTarget(), threadHandle(),
 		  ThreadId(), transporter(NULL), section(), isAborting(false)
 	{
 		runningTarget = this;
@@ -245,9 +223,9 @@ public:
 	 * @param runnableObject 実行エントリポイントオブジェクト
 	 * @param createOnRun 作成と同時に実行開始するかを識別するフラグ
 	 */
-	WinThread(Runnable* runnable_,
+	explicit WinThread(Runnable* runnable_,
 			  bool createOnRun = false) throw (ThreadException)
-		: runningTarget(runnable_), status(), threadHandle(),
+		: runningTarget(runnable_), threadHandle(),
 		  ThreadId(), transporter(NULL), section(), isAborting(false)
 	{
 		assert(runnable_ != NULL);
@@ -259,12 +237,6 @@ public:
 	 */
 	virtual ~WinThread() throw(ThreadException)
 	{
-		if (!(status == stop || status == created))
-			throw ThreadException();
-
-		assert(status == stop ||
-			   status == created);
-
 		if ((HANDLE)(this->threadHandle) != INVALID_HANDLE_VALUE ||
 			this->threadHandle != 0)
 			CloseHandle((HANDLE)this->threadHandle);
@@ -275,50 +247,27 @@ public:
 
 	/**
 	 * スレッドの実行
-	 * @return レジュームレベル。0で実行開始、>0でサスペンド中
 	 */
-	virtual unsigned start() throw()
+	virtual void start() throw()
 	{
 		assert(this->threadHandle);
 
 		ScopedLock<CriticalSection> lock(section);
-		assert(status == created ||
-			status == suspend);
-
-		status = running;
-
-		DWORD resumeCount = ResumeThread((HANDLE)this->threadHandle);
+		DWORD resumeCount =
+			ResumeThread(this->threadHandle);
 		assert(resumeCount == 1 || resumeCount == 0);
-		return resumeCount;
 	}
 
 	/**
 	 * スレッドの実行
 	 * @param entryPoint 実行場所を持つオブジェクトのポインタ
-	 * @return レジュームレベル。0で実行開始、>0でサスペンド中
 	 */
-	virtual unsigned start(Runnable* entryPoint) throw()
+	virtual void start(Runnable* entryPoint) throw()
 	{
 		assert(this->threadHandle);
 
 		ScopedLock<CriticalSection> lock(section);
 		this->setRunningTarget(entryPoint);
-
-		return start();
-	}
-
-	/**
-	 * スレッドの実行状態の取得
-	 * @return true: 実行又はサスペンド中, false: 停止中
-	 */
-	bool isRunning() throw()
-	{
-		ScopedLock<CriticalSection> lock(section);
-		if (status == running || 
-			status == suspend)
-			return true;
-		else
-			return false;
 	}
 
 	/**
@@ -383,12 +332,12 @@ public:
 	 * なかった場合
 	 * @exception ThreadExcpetion 何らかの異常が発生した場合
 	 */
-	virtual unsigned join(DWORD waitTime = INFINITE)
+	virtual unsigned int join()
 		throw(ThreadException, TimeoutException)
 	{
 		assert(this->threadHandle != NULL);
 
-		DWORD result = WaitForSingleObject(this->threadHandle, waitTime);
+		DWORD result = WaitForSingleObject(this->threadHandle, INFINITE);
 		switch(result)
 		{
 		case WAIT_OBJECT_0:
@@ -413,8 +362,6 @@ public:
 	 */
 	std::string reason() const throw()
 	{
-		assert(status == stop);
-
 		if (transporter)
 			return transporter->what();
 		else
@@ -427,8 +374,6 @@ public:
 	 */
 	bool isAbnormalEnd() const throw()
 	{
-		assert(status == stop);
-
 		if (transporter)
 			return true;
 		return false;

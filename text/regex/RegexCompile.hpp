@@ -388,7 +388,7 @@ public:
 
 	virtual ~RegexToken() {}
 
-	pointer_t transit(char_t /*character*/, bool ignoreCase) const
+	pointer_t transit(char_t /*character*/, bool /*ignoreCase*/) const
 	{
 		return getInvalidPointer();
 	}
@@ -841,7 +841,7 @@ public:
 	virtual ~RangeToken()
 	{}
 
-	pointer_t transit(char_t input, bool ignoreCase) const
+	pointer_t transit(char_t input, bool /*ignoreCase*/) const
 	{
 		if (acceptMin <= input &&
 			acceptMax >= input)

@@ -40,7 +40,7 @@ public:
 	 * @param parent 親クラスへのポインタ
 	 */
 	XMLNode(node_t* parent = NULL):
-		parent(NULL),
+		parent(parent),
 		children()
 	{}
 

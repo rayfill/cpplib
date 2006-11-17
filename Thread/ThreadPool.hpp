@@ -4,7 +4,7 @@
 #include <Thread/Thread.hpp>
 #include <Thread/Event.hpp>
 #include <Thread/ThreadException.hpp>
-#include <Thread/SyncOperator.hpp>
+#include <Thread/TwinLock.hpp>
 
 /**
  * スレッドプール
@@ -45,8 +45,7 @@ public:
 		/**
 		 * 実行状態制御用
 		 */
-		Event parent;
-		Event child;
+		TwinLock blocker;
 
 		/**
 		 * 実行状態変更の排他制御用
@@ -55,29 +54,27 @@ public:
 
 		/**
 		 * スレッドの実行状態
+		 * @note 書き換えは全て子スレッド側で行う
 		 */
 		State state;
 
-
+		/**
+		 * 実行エントリの取得
+		 * @return 現在設定されている実行エントリ
+		 */
 		Runnable* getRunnable() const
 		{
 			return runnablePoint;
 		}
 
+		/**
+		 * 実行エントリの取得
+		 * @param newPoint 新しい実行エントリポイント
+		 */
 		void setRunnable(Runnable* newPoint)
 		{
 			ScopedLock<Mutex> lock(stateLock);
 			runnablePoint = newPoint;
-		}
-
-		/**
-		 * スレッドを停止しなければならない状態かの判定
-		 * @return 停止しなければならないときにtrue
-		 */
-		bool isQuit() throw()
-		{
-			ScopedLock<Mutex> lock(stateLock);
-			return state == quitable;
 		}
 
 		/**
@@ -87,32 +84,25 @@ public:
 		bool isQuitAndBlock()
 		{
 			{
+				/**
+				 * @todo reader writer lock もいるな・・・
+				 */
 				ScopedLock<Mutex> lock(stateLock);
+				if (state == quitable)
+					return true;
 				state = ended;
-				syncLock.lock();
 			}
+
+			// wait for parent's start signal.
+			blocker.waitFromChild();
 
 			{
+				ScopedLock<Mutex> lock(stateLock);
+				if (state == quitable)
+					return true;
+				state = started;
 			}
-			ScopedLock<Mutex> lock(stateLock);
-			state = started;
 		}
-
-		virtual unsigned start(Runnable* entryPoint) throw()
-		{
-			while (state == none)
-				Thread::yield();
-
-			{
-				replace(entryPoint);
-			}
-			
-			ScopedLock<Mutex> lock(stateLock);
-
-
-			return 0;
-		}
-
 
 		/**
 		 * Runnableインタフェースの置換
@@ -157,18 +147,22 @@ public:
 			return (state == non || state == ended);
 		}
 
-		virtual unsigned start(Runnable* entryPoint) throw()
+		virtual void start(Runnable* entryPoint) throw()
 		{
-			replace(entryPoint);
+			{
+				ScopedLock<Mutex> lock(stateLock);
+				if (entryPoint != NULL)
+					replace(entryPoint);
+			}
 
-			started.setEvent();
+			blocker.waitFromParent();
 
 			return 0;
 		}
 
-		virtual unsigned start() throw()
+		virtual void start() throw()
 		{
-			return start(this);
+			start(NULL);
 		}
 
 		virtual unsigned join(DWORD waitTime = INFINITE)
@@ -185,7 +179,11 @@ public:
 		 */
 		void quit() throw()
 		{
-			quitable.setEvent();
+			{
+				ScopedLock<Mutex> lock(statusLock);
+				state = qutable;
+			}
+			start(NULL);
 			Thread::join();
 		}
 
@@ -196,11 +194,11 @@ public:
 
 			for (;;)
 			{
-				if(isQuitAndBlock())
-					break;
-					
 				try
 				{
+					if(isQuitAndBlock())
+						break;
+					
 					Runnable* target = NULL;
 					{
 						ScopedLock<Mutex> lock(stateLock);
@@ -212,7 +210,7 @@ public:
 					target->run();
 					target->dispose();
 				}
-				catch (InterruptedException& /*e*/)
+				catch (ThreadException& /*e*/)
 				{
 					/// @todo ログクラスとか作ったらそのエントリを置くか・・・
 					;

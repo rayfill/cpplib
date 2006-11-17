@@ -14,12 +14,42 @@ private:
 	LockedObject parent;
 	LockedObject child;
 
+#ifndef NDEBUG
+public:
+	int hasParent;
+	int hasChild;
+
+	void setParentOwner(Thread::thread_id_t newParent)
+	{
+		hasParent = newParent;
+	}
+
+	Thread::thread_id_t getParentOwner()
+	{
+		return hasParent;
+	}
+
+	void setChildOwner(Thread::thread_id_t newChild)
+	{
+		hasChild = newChild;
+	}
+
+	Thread::thread_id_t getChildOwner()
+	{
+		return hasChild;
+	}
+private:
+#endif /* NDEBUG */
+
 	/**
 	 * 親ロックの取得
 	 */
 	void parentLock()
 	{
 		parent.lock();
+#ifndef NDEBUG
+		hasParent = Thread::self();
+#endif
 	}
 
 	/**
@@ -28,6 +58,9 @@ private:
 	void parentUnlock()
 	{
 		parent.unlock();
+#ifndef NDEBUG
+		hasParent = 0;
+#endif
 	}
 
 	/**
@@ -54,6 +87,9 @@ private:
 	void childLock()
 	{
 		child.lock();
+#ifndef NDEBUG
+		hasChild = Thread::self();
+#endif
 	}
 
 	/**
@@ -62,6 +98,9 @@ private:
 	void childUnlock()
 	{
 		child.unlock();
+#ifndef NDEBUG
+		hasChild = 0;
+#endif
 	}
 
 public:
@@ -71,8 +110,11 @@ public:
 	 */
 	TwinLock():
 		parent(), child()
+#ifndef NDEBUG
+		,hasParent(), hasChild()
+#endif
 	{
-		parent.lock();
+		parentLock();
 	}
 
 	/**

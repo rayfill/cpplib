@@ -40,6 +40,8 @@ protected:
 	{
 		Worker::run();
 		throw ThreadException("test exception throwing.");
+
+		return 1;
 	}
 };
 
@@ -59,12 +61,16 @@ public:
 		Thread thread(&worker);
 
 		thread.start();
-		
+		worker.start();
+
 		CPPUNIT_ASSERT(worker.isQuit() == false);
 		worker.quit();
-		thread.join();
+		const unsigned int result = thread.join();
+		CPPUNIT_ASSERT(result == 1);
+
 
 		CPPUNIT_ASSERT(worker.isQuit() == true);
+		worker.join();
 	}
 
 	void runningStateTest()
@@ -78,7 +84,7 @@ public:
 
 		worker.start();
 		worker.quit();
-		worker.join();
+		CPPUNIT_ASSERT(worker.join() == 1);
 		CPPUNIT_ASSERT(worker.isRunning() == false);
 	}
 

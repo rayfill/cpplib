@@ -5,8 +5,11 @@
 #include <Thread/Runnable.hpp>
 #include <Thread/Thread.hpp>
 
-Mutex vectorLock;
-Mutex serialLock;
+
+namespace {
+	Mutex vectorLock;
+	Mutex serialLock;
+};
 
 class Target : public Runnable
 {
@@ -18,7 +21,7 @@ private:
 public:
 	Target(const unsigned int waitMilliSeconds,
 		   std::vector<Thread::thread_id_t>& ref):
-		waitTime(waitMilliSeconds),	orderRef(ref)
+		waitTime(waitMilliSeconds),	orderRef(ref), isSerialize(false)
 	{}
 
 	void setSerialize()
@@ -102,3 +105,6 @@ public:
 
 	}
 };
+
+CPPUNIT_TEST_SUITE_REGISTRATION( LockOperationTest );
+
