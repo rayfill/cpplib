@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <vector>
 #include <Thread/Mutex.hpp>
-#include <Thread/SyncOperator.hpp>
+#include <Thread/ScopedLock.hpp>
 #include <Thread/Runnable.hpp>
 #include <Thread/Thread.hpp>
 

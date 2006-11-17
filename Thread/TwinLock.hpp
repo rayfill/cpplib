@@ -1,7 +1,9 @@
 #ifndef TWINLOCK_HPP_
 #define TWINLOCK_HPP_
 
+#include <Thread/LockCheck.hpp>
 #include <Thread/Thread.hpp>
+
 /**
  * Threadの親子で同期をとるためのゲートクラス
  */

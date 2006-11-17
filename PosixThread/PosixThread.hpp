@@ -5,7 +5,7 @@
 #include <cassert>
 #include <string>
 #include <Thread/ThreadException.hpp>
-#include <Thread/SyncOperator.hpp>
+#include <Thread/ScopedLock.hpp>
 #include <Thread/Runnable.hpp>
 #include <PosixThread/PosixMutex.hpp>
 

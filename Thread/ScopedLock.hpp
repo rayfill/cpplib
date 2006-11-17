@@ -1,5 +1,5 @@
-#ifndef SYNCOPERATOR_HPP_
-#define SYNCOPERATOR_HPP_
+#ifndef SCOPEDLOCK_HPP_
+#define SCOPEDLOCK_HPP_
 
 /**
  * スコープ束縛ロック
@@ -52,4 +52,4 @@ public:
 	}
 };
 
-#endif /* SYNCOPERATOR_HPP_ */
+#endif /* SCOPEDLOCK_HPP_ */

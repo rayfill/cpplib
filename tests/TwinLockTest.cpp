@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <Thread/SyncOperator.hpp>
+#include <Thread/ScopedLock.hpp>
 #include <Thread/Thread.hpp>
 #include <Thread/Runnable.hpp>
 #include <Thread/TwinLock.hpp>
