@@ -58,8 +58,7 @@ public:
 	/**
 	 * コンストラクタ
 	 */
-	WinCriticalSection() throw()
-	: section()
+	WinCriticalSection() throw(): section()
 	{}
 	
 	/**

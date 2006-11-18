@@ -67,9 +67,19 @@ public:
 	/**
 	 * 排他オブジェクトによるロック操作
 	 */
-	void lock(unsigned long waitTime = INFINITE) throw()
+	void lock() throw()
 	{
-		WaitForSingleObject(hMutex, waitTime);
+		WaitForSingleObject(hMutex, INFINITE);
+	}
+
+	/**
+	 * ロック取得テスト
+	 * @return ロックが取得できた場合、true
+	 */
+	bool tryLock() throw()
+	{
+		DWORD result = WaitForSingleObject(hMutex, 0);
+		return (result == WAIT_OBJECT_0);
 	}
 
 	/**

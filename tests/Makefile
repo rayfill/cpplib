@@ -2,40 +2,40 @@ INCLUDE_PATH += -Ic:/mingw/include/stlport
 LIBS += -lcppunit
 
 CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused \
-	-fno-default-inline -fmessage-length=78 $(INCLUDE_PATH) -I..
+	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
 TARGET= UnitTest
 
 OBJS= TestMain.o \
-	TwinLockTest.o \
-	CommandLineTest.o \
-	ScannerTest.o \
-	LexicalCastTest.o \
-	HTTPResultTest.o \
-	URLTest.o \
-	HTTPPropertyTest.o \
-	PropertyTest.o \
-	StateMachineTest.o \
-	FSMTest.o \
-	Base64Test.o \
-	StackableScannerTest.o \
-	RegexTest.o \
-	SmartPointerTest.o \
-	RationalTest.o \
-	TranscodeTest.o \
-	GeometryTest.o \
-	EndianTest.o \
-	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-	NotifyTest.o RangeTest.o \
-	LZSSTest.o \
-	CBCTest.o \
-	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-	IPTest.o \
-	XMLParserTest.o \
 	ThreadTest.o \
 	MutexTest.o \
-	RerunnableThreadTest.o \
+	TwinLockTest.o \
+# 	RerunnableThreadTest.o \
+# 	CommandLineTest.o \
+# 	ScannerTest.o \
+# 	LexicalCastTest.o \
+# 	HTTPResultTest.o \
+# 	URLTest.o \
+# 	HTTPPropertyTest.o \
+# 	PropertyTest.o \
+# 	StateMachineTest.o \
+# 	FSMTest.o \
+# 	Base64Test.o \
+# 	StackableScannerTest.o \
+# 	RegexTest.o \
+# 	SmartPointerTest.o \
+# 	RationalTest.o \
+# 	TranscodeTest.o \
+# 	GeometryTest.o \
+# 	EndianTest.o \
+# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+# 	NotifyTest.o RangeTest.o \
+# 	LZSSTest.o \
+# 	CBCTest.o \
+# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
+# 	IPTest.o \
+# 	XMLParserTest.o \
 #	NumberTheoryTest.o \
 #	AlgebraTheoryTest.o \
 #	SieveTest.o \

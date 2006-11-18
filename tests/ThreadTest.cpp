@@ -1,6 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <Thread/Thread.hpp>
 
+#include <iostream>
+
 class Worker : public Thread
 {
 private:
@@ -10,6 +12,7 @@ protected:
 
 	virtual unsigned run() throw(ThreadException)
 	{
+		prepared = true;
 		while(!isQuitable)
 		{
 			this->sleep(100);
@@ -20,7 +23,9 @@ protected:
 	}
 
 public:
-	Worker() : isQuitable(false) {}
+	bool prepared;
+
+	Worker() : Thread(), isQuitable(false), prepared(false) {}
 
 	bool isQuit() const throw()
 	{
@@ -80,9 +85,12 @@ public:
 		CPPUNIT_ASSERT(worker.isRunning() == false);
 
 		worker.start();
+
+		while (!worker.prepared)
+			Thread::yield();
+
 		CPPUNIT_ASSERT(worker.isRunning() == true);
 
-		worker.start();
 		worker.quit();
 		CPPUNIT_ASSERT(worker.join() == 1);
 		CPPUNIT_ASSERT(worker.isRunning() == false);

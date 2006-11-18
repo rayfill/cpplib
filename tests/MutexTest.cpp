@@ -5,6 +5,7 @@
 #include <Thread/Runnable.hpp>
 #include <Thread/Thread.hpp>
 
+#include <iostream>
 
 namespace {
 	Mutex vectorLock;

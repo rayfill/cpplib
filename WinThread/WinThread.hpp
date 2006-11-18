@@ -12,7 +12,7 @@
 #include <Thread/ThreadException.hpp>
 #include <Thread/CriticalSection.hpp>
 #include <Thread/Runnable.hpp>
-#include <Thread/SyncOperator.hpp>
+#include <Thread/ScopedLock.hpp>
 
 /**
  * Win32ベーススレッドクラス
@@ -27,10 +27,10 @@ class WinThread : public Runnable
 
 public:
 	enum {
-		/// 例外により停止をあらわす定数
+		/// 例外により停止
 		abort_by_exception = 0xffffffff,
 
-		/// 親からのリクエストにより中断を表す定数
+		/// 親からのリクエストにより中断
 		abort_by_parent = 0xfffffffe
 	};
 
@@ -53,7 +53,7 @@ private:
 	/**
 	 * スレッド識別子
 	 */
-	thread_id_t ThreadId;
+	thread_id_t threadId;
 
 	/**
 	 * 処理例外伝達用ポインタ
@@ -66,9 +66,9 @@ private:
 	CriticalSection section;
 
 	/**
-	 * 停止用フラグ
+	 * 実行状態
 	 */
-	volatile bool isAborting;
+	bool isRun;
 
 	/**
 	 * システムコールバック用エントリポイント
@@ -91,11 +91,6 @@ private:
 		if (this->getThreadId() != self())
 			return;
 
-		if (isAbort())
-		{
-			isAborting = false;
-			throw InterruptedException();
-		}
 	}
 
 	/// コピー防止用
@@ -109,16 +104,14 @@ protected:
 	 * 現在のエントリポイントの取得
 	 * @return 現在のエントリポイント
 	 */
-	Runnable* getRunningTarget() const throw()
+	Runnable* getRunningTarget()
 	{
-		return runningTarget;
+		return (runningTarget == NULL) ? this : runningTarget;
 	}
 
 	/**
 	 * 新しいエントリポイントの設定
 	 * @param runnable 新しいエントリポイント
-	 * @note ロック機構備えてないので実行中に書き換えないよう注意。
-	 * @todo 必要ならロック機構備えたほうがいいかも
 	 */
 	void setRunningTarget(Runnable* runnable) throw()
 	{
@@ -127,30 +120,23 @@ protected:
 
 	/**
 	 * システムコールバック用エントリポイント
-	 * @todo クリティカルセクションロックを変更してロック影響範囲を
-	 * もっと小さくする。
 	 */
 	virtual unsigned int callback() throw()
 	{
 		unsigned retValue = 0;
 
-		if (this->runningTarget == NULL)
-			this->runningTarget = this;
-
+		Runnable* target = NULL;
 		{
 			ScopedLock<CriticalSection> lock(section);
-
-			this->runningTarget->prepare();
+			target = getRunningTarget();
+			isRun = true;
 		}
 
 		try
 		{
-			retValue = this->runningTarget->run();
-		}
-		catch (InterruptedException& e)
-		{
-			this->transporter = e.clone();
-			retValue = static_cast<unsigned>(abort_by_parent);
+			target->prepare();
+			retValue = target->run();
+			target->dispose();
 		}
 		catch (ThreadException& e)
 		{
@@ -165,7 +151,7 @@ protected:
 
 		{
 			ScopedLock<CriticalSection> lock(section);
-			this->runningTarget->dispose();
+			isRun = false;
 		}
 
 		return retValue;
@@ -188,21 +174,12 @@ protected:
 			(unsigned (__stdcall*)(void*))WinThread::CallbackDispatcher,
 			this,
 			createOnRun ? 0 : CREATE_SUSPENDED,
-			&this->ThreadId);
+			&this->threadId);
 
 		if (this->threadHandle == NULL ||
 			this->threadHandle == INVALID_HANDLE_VALUE)
 			throw ThreadException("Can not create thread.");
 
-	}
-
-	/**
-	 * 停止判定
-	 * @return 停止状態ならtrue
-	 */
-	bool isAbort() const throw()
-	{
-		return isAborting;
 	}
 
 public:
@@ -212,7 +189,7 @@ public:
 	 */
 	explicit WinThread(bool createOnRun = false) throw (ThreadException)
 		: runningTarget(), threadHandle(),
-		  ThreadId(), transporter(NULL), section(), isAborting(false)
+		  threadId(), transporter(NULL), section(), isRun(false)
 	{
 		runningTarget = this;
 		create(createOnRun);
@@ -226,7 +203,7 @@ public:
 	explicit WinThread(Runnable* runnable_,
 			  bool createOnRun = false) throw (ThreadException)
 		: runningTarget(runnable_), threadHandle(),
-		  ThreadId(), transporter(NULL), section(), isAborting(false)
+		  threadId(), transporter(NULL), section(), isRun(false)
 	{
 		assert(runnable_ != NULL);
 		create(createOnRun);
@@ -268,8 +245,21 @@ public:
 
 		ScopedLock<CriticalSection> lock(section);
 		this->setRunningTarget(entryPoint);
+		DWORD resumeCount =
+			ResumeThread(this->threadHandle);
+		assert(resumeCount == 1 || resumeCount == 0);
 	}
 
+	/**
+	 * 現在の実行状態を返す
+	 * @return 実行中であればtrue
+	 */
+	bool isRunning()
+	{
+		ScopedLock<CriticalSection> lock(section);
+		return isRun;
+	}
+	
 	/**
 	 * スレッドの実行を一時休止
 	 * @param waitTimeForMilliSeconds 休止する時間をミリ秒で指定する
@@ -285,26 +275,9 @@ public:
 	 * @exception InterruptedException スレッドインスタンスから
 	 * abort()が呼ばれていた場合
 	 */
-	void yield() throw(InterruptedException)
+	void static yield() throw()
 	{
-		if (isAbort())
-			throw InterruptedException();
-
 		WinThread::sleep(0);
-	}
-
-	/**
-	 * スレッドの実行を中止する。
-	 * 停止したスレッドは内部処理でyield()を呼び出したときに
-	 * InterruptedExceptionが発行される。
-	 * @todo 停止処理Methodの増量
-	 */
-	void abort() throw()
-	{
-		assert(this->threadHandle != NULL);
-
-		ScopedLock<CriticalSection> lock(section);
-		isAborting = true;
 	}
 
 	/**
@@ -322,7 +295,7 @@ public:
 	 */
 	const WinThread::thread_id_t getThreadId() throw()
 	{
-		return this->ThreadId;
+		return this->threadId;
 	}
 
 	/**
