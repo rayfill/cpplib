@@ -27,11 +27,6 @@ private:
 	WinMutex(WinMutex&);
 
 	/**
-	 * ロックレベル
-	 */
-	int lockCount;
-
-	/**
 	 * ミューテックス作成ヘルパ
 	 * @param name ミューテックス名。NULLの場合、無名ミューテックスになる。
 	 * @param createOnLock 作成後に所有権を取得するかを示すフラグ。

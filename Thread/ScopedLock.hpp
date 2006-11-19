@@ -32,6 +32,8 @@ private:
 		object->unlock();
 	}
 
+	ScopedLock(const LockedObject&);
+	ScopedLock& operator=(const ScopedLock&);
 public:
 	/**
 	 * コンストラクタ

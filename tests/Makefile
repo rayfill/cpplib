@@ -1,7 +1,7 @@
 INCLUDE_PATH += -Ic:/mingw/include/stlport
 LIBS += -lcppunit
 
-CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused \
+CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
 	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I..
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
@@ -10,7 +10,7 @@ TARGET= UnitTest
 OBJS= TestMain.o \
 	ThreadTest.o \
 	MutexTest.o \
-	TwinLockTest.o \
+#	TwinLockTest.o \
 # 	RerunnableThreadTest.o \
 # 	CommandLineTest.o \
 # 	ScannerTest.o \
