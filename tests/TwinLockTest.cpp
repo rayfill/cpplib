@@ -3,6 +3,7 @@
 #include <Thread/Thread.hpp>
 #include <Thread/Runnable.hpp>
 #include <Thread/TwinLock.hpp>
+#include <Thread/Mutex.hpp>
 
 #include <vector>
 #include <iostream>
