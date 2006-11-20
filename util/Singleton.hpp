@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <Thread/Mutex.hpp>
-#include <Thread/SyncOperator.hpp>
+#include <Thread/ScopedLock.hpp>
 
 #include <map>
 

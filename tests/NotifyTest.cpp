@@ -29,6 +29,8 @@ private:
 	unsigned int callCount;
 	Observable* lastCallBase;
 
+	DeriverdObserver(const DeriverdObserver&);
+	DeriverdObserver& operator=(const DeriverdObserver&);
 protected:
 	virtual void notify(Observable* notifier)
 	{

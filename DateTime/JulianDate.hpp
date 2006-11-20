@@ -1,6 +1,6 @@
 #ifndef JULIANDATE_HPP_
 #define JULIANDATE_HPP_
-#include <Time/Time.hpp>
+//#include <Time/Time.hpp>
 #include <cassert>
 
 /**
@@ -29,8 +29,8 @@ private:
 	 * @see フリーゲルの公式
 	 */
 	static int toJulian(int year,
-								 int month,
-								 int day) throw()
+						int month,
+						int day) throw()
 	{
 		assert(month >= 1 && month <= 12);
 		assert(day >= 1 && day <= 31);

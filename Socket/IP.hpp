@@ -113,11 +113,10 @@ public:
 	 * 初期情報セット付コンストラクタ
 	 * @param addrInfo sockaddr_in構造体
 	 */
-	IP(const sockaddr_in& addrInfo) throw()
-	{
-		internalRepresentIP = addrInfo.sin_addr.s_addr;
-		internalRepresentPort = addrInfo.sin_port;
-	}
+	IP(const sockaddr_in& addrInfo) throw():
+		internalRepresentIP(addrInfo.sin_addr.s_addr),
+		internalRepresentPort(addrInfo.sin_port)
+	{}
 
 	/**
 	 * デストラクタ

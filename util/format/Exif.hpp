@@ -85,6 +85,9 @@ namespace Exif
 		friend class ExifTest;
 
 	private:
+		TagInfoParser(const TagInfoParser&);
+		TagInfoParser& operator=(const TagInfoParser&);
+
 		const void* resourceHead;
 		const void* resourceTail;
 		const UserDefinedEndianConverter& converter;
@@ -431,7 +434,8 @@ namespace Exif
 				  sensingMethod(),
 				  fileSource(),
 				  sceneType(),
-				  cfaPattern()
+				  cfaPattern(),
+				  interoperabilityIFDPointer()
 			{}
 
 			ExifDirectory(const ExifDirectory& source)
@@ -476,7 +480,8 @@ namespace Exif
 				  sensingMethod(source.sensingMethod),
 				  fileSource(source.fileSource),
 				  sceneType(source.sceneType),
-				  cfaPattern(source.cfaPattern)
+				  cfaPattern(source.cfaPattern),
+				  interoperabilityIFDPointer(source.interoperabilityIFDPointer)
 			{
 				std::copy(source.exifVersion,
 						  source.exifVersion +
@@ -1268,7 +1273,9 @@ namespace Exif
 			  model(),
 			  software(),
 			  artist(),
-			  copyright()
+			  copyright(),
+			  exifDirectory(),
+			  gpsDirectory()
 		{}
 
 		ExifInfo(const ExifInfo& source)
@@ -1295,7 +1302,9 @@ namespace Exif
 			  model(source.model),
 			  software(source.software),
 			  artist(source.artist),
-			  copyright(source.copyright)
+			  copyright(source.copyright),
+			  exifDirectory(source.exifDirectory),
+			  gpsDirectory(source.gpsDirectory)
 		{
 			memcpy(bitsPerSample,
 				   source.bitsPerSample,
@@ -1732,6 +1741,8 @@ namespace Exif
 			return count;
 		}
 
+		DirectoryParser(const DirectoryParser&);
+		DirectoryParser& operator=(const DirectoryParser&);
 	public:
 
 		DirectoryParser(const void* head_, const void* tail_,
@@ -1792,6 +1803,9 @@ namespace Exif
 	class TiffHeaderParser
 	{
 	private:
+		TiffHeaderParser(const TiffHeaderParser&);
+		TiffHeaderParser& operator=(const TiffHeaderParser&);
+
 		const void* parseTargetMemoryHead;
 		const void* parseTargetMemoryTail;
 

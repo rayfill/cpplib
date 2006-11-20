@@ -13,7 +13,14 @@ private:
 	std::vector<BaseType> buffer;
 
 public:
-	BasicMemoryStreamBuf()
+	BasicMemoryStreamBuf():
+		buffer()
+	{
+		std::basic_streambuf<BaseType, Traits>::setbuf(0, 0);
+	}
+
+	BasicMemoryStreamBuf(const BasicMemoryStreamBuf& source):
+		buffer(source.buffer)
 	{
 		std::basic_streambuf<BaseType, Traits>::setbuf(0, 0);
 	}
@@ -82,6 +89,13 @@ class BasicMemoryStream : public std::basic_iostream<T, Traits>
 private:
 	BasicMemoryStreamBuf<T, Traits>* stub;
 
+	BasicMemoryStream(const BasicMemoryStream& source);
+// 		std::basic_stream<T, Traits>(source),
+// 		stub(new BasicMemoryStreamBuf(source))
+// 	{}
+	BasicMemoryStream& operator=(const BasicMemoryStream&);
+
+		
 public:
 	BasicMemoryStream() :
 			std::basic_iostream<T, Traits>(NULL),

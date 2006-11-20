@@ -173,6 +173,9 @@ public:
 		/// 出現頻度
 		CountType appearanceFrequency;
 
+		HuffmanNode(const HuffmanNode&);
+		HuffmanNode& operator=(const HuffmanNode&);
+
 	public:
 		/**
 		 * コンストラクタ
@@ -377,6 +380,9 @@ private:
 	 */
 	std::map<int, HuffmanNode<>* > leafMapper;
 
+	HuffmanTree(const HuffmanTree&);
+	HuffmanTree& operator=(const HuffmanTree&);
+
 public:
 
 	/**
@@ -555,6 +561,8 @@ private:
 	/// 元となるハフマン木
 	HuffmanTree* stub;
 
+	HuffmanCodeCache(const HuffmanCodeCache&);
+	HuffmanCodeCache& operator=(HuffmanCodeCache&);
 public:
 	/**
 	 * コンストラクタ
@@ -862,6 +870,9 @@ private:
 	FrequencyTable<> freqTable;
 	HuffmanTree* huffmanTree;
 	HuffmanCodeCache codeCache;
+
+	HuffmanCodec(const HuffmanCodec&);
+	HuffmanCodec& operator=(const HuffmanCodec&);
 
 public:
 	HuffmanCodec():

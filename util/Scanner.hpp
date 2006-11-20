@@ -562,6 +562,9 @@ public:
 		init(fsm);
 	}
 
+	virtual ~Scanner() throw()
+	{}
+
 	token_t scan()
 	{
 		typename fsm_t::state_t* fsmState = fsm.getHeadState();

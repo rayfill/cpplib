@@ -27,20 +27,18 @@ public:
 		state[3] = converter.fromBig(0x76543210);
 	}
 
-	void setSource(const unsigned char* pointer, const size_t length)
+	void setSource(const unsigned char* /*pointer*/, const size_t /*length*/)
 	{
 //		unsigned int index = ((count[0] >> 3) & 0x3f);
 
 		
 	}
 
-	void setSource(const std::vector<unsigned char>& source)
-	{
-	}
+	void setSource(const std::vector<unsigned char>& /*source*/)
+	{}
 
-	void setSource(const std::string& source)
-	{
-	}
+	void setSource(const std::string& /*source*/)
+	{}
  
 	std::vector<unsigned char> getDigest()
 	{}

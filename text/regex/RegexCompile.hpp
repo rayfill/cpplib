@@ -382,6 +382,12 @@ public:
 		next(token.next), epsilons(token.epsilons)
 	{}
 
+	RegexToken& operator=(const RegexToken& token)
+	{
+		next = token.next;
+		epsilons = token.epsilons;
+	}
+
 	RegexToken(pointer_t next_):
 		next(next_), epsilons()
 	{}
@@ -1209,7 +1215,7 @@ public:
 	RegexAutomatonManager(): parenCount(0)
 	{}
 
-	~RegexAutomatonManager()
+	virtual ~RegexAutomatonManager() throw()
 	{}
 };
 
@@ -1657,7 +1663,7 @@ public:
 		base_t(), maxParenCount()
 	{}
 
-	~RegexCompiler()
+	~RegexCompiler() throw()
 	{}
 
 	RegexMatch<char_t> compile(std::string pattern)

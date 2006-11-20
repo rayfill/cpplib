@@ -14,10 +14,12 @@ private:
 	CPPUNIT_TEST(unresolveNameToIp);
 	CPPUNIT_TEST_SUITE_END();
 
+	SocketModule module;
 	IP ip;
-
-	SocketModule Module;
 public:
+	IPTest():
+		module(), ip()
+	{}
 
 	void resolveIPAddress()
 	{

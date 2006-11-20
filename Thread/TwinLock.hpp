@@ -48,6 +48,7 @@ private:
 	{
 		parent.lock();
 #ifndef NDEBUG
+		assert(hasParent == 0);
 		hasParent = Thread::self();
 #endif
 	}
@@ -57,10 +58,10 @@ private:
 	 */
 	void parentUnlock()
 	{
-		parent.unlock();
 #ifndef NDEBUG
 		hasParent = 0;
 #endif
+		parent.unlock();
 	}
 
 	/**
@@ -88,6 +89,7 @@ private:
 	{
 		child.lock();
 #ifndef NDEBUG
+		assert(hasChild == 0);
 		hasChild = Thread::self();
 #endif
 	}
@@ -97,10 +99,10 @@ private:
 	 */
 	void childUnlock()
 	{
-		child.unlock();
 #ifndef NDEBUG
 		hasChild = 0;
 #endif
+		child.unlock();
 	}
 
 public:
@@ -157,6 +159,8 @@ public:
 
 		// 3rd.l r
 		childUnlock();
+		while (!isChildLocked())
+			Thread::yield();
 
 		// 4th l or
 		parentUnlock();

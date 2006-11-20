@@ -34,6 +34,8 @@ protected:
 	 */
 	nodes_t children;
 
+	XMLNode(const XMLNode&);
+	XMLNode& operator=(const XMLNode&);
 public:
 	/**
 	 * コンストラクタ
@@ -50,8 +52,7 @@ public:
 	virtual ~XMLNode() throw()
 	{
 		for (typename nodes_t::iterator itor = children.begin();
-			 itor != children.end();
-			 ++itor)
+			 itor != children.end(); ++itor)
 			delete *itor;
 	}
 
@@ -1380,6 +1381,9 @@ private:
 
 		return result;
 	}
+
+	XMLParser(const XMLParser&);
+	XMLParser& operator=(const XMLParser&);
 
 public:
 	/**

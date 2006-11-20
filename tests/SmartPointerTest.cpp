@@ -4,6 +4,10 @@
 
 class Callbacker
 {
+private:
+	Callbacker(const Callbacker&);
+	Callbacker& operator=(const Callbacker&);
+
 public:
 	bool* flags;
 

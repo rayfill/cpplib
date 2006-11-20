@@ -8,43 +8,45 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ -Werror \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
+	TwinLockTest.o \
+	RerunnableThreadTest.o \
 	ThreadTest.o \
 	MutexTest.o \
-	TwinLockTest.o \
- 	RerunnableThreadTest.o \
-# 	CommandLineTest.o \
-# 	ScannerTest.o \
-# 	LexicalCastTest.o \
-# 	HTTPResultTest.o \
-# 	URLTest.o \
-# 	HTTPPropertyTest.o \
-# 	PropertyTest.o \
-# 	StateMachineTest.o \
-# 	FSMTest.o \
-# 	Base64Test.o \
-# 	StackableScannerTest.o \
-# 	RegexTest.o \
-# 	SmartPointerTest.o \
-# 	RationalTest.o \
-# 	TranscodeTest.o \
-# 	GeometryTest.o \
-# 	EndianTest.o \
-# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-# 	NotifyTest.o RangeTest.o \
-# 	LZSSTest.o \
-# 	CBCTest.o \
-# 	AESTest.o MD5Test.o SHA1Test.o ExifTest.o \
-# 	IPTest.o \
-# 	XMLParserTest.o \
-#	NumberTheoryTest.o \
-#	AlgebraTheoryTest.o \
-#	SieveTest.o \
-#	MPITest.o \
-#	AsymmetricKeyTest.o \
-#	RSATest.o \
-#	JulianDateTest.o \
-#	SingletonTest.o \
-#	SingletonTestFunc1.o SingletonTestFunc2.o \
+	CommandLineTest.o \
+	ScannerTest.o \
+	LexicalCastTest.o \
+	HTTPResultTest.o \
+	URLTest.o \
+	HTTPPropertyTest.o \
+	PropertyTest.o \
+	StateMachineTest.o \
+	FSMTest.o \
+	Base64Test.o \
+	StackableScannerTest.o \
+	RegexTest.o \
+	SmartPointerTest.o \
+	RationalTest.o \
+	TranscodeTest.o \
+	GeometryTest.o \
+	EndianTest.o \
+	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+	NotifyTest.o RangeTest.o \
+	LZSSTest.o \
+	CBCTest.o \
+	AESTest.o MD5Test.o SHA1Test.o \
+	IPTest.o \
+	XMLParserTest.o \
+	NumberTheoryTest.o \
+	AlgebraTheoryTest.o \
+	SieveTest.o \
+	MPITest.o \
+	AsymmetricKeyTest.o \
+	RSATest.o \
+	JulianDateTest.o \
+	SingletonTest.o \
+	SingletonTestFunc1.o SingletonTestFunc2.o \
+	ShiftJISTest.o
+#	ExifTest.o \
 #	SamplingScannerTest.o \
 #	ImageTest.o \
 #	ThreadPoolTest.o \
@@ -52,7 +54,6 @@ OBJS= TestMain.o \
 #	FontGrapherTest.o \
 #	BitmapTest.o \
 #	EventTest.o \
-#	ShiftJISTest.o
 
 DEPENDFILES=$(OBJS:.o=.d) 
 

@@ -29,7 +29,7 @@ public:
 		Scanner<CharType>(head_, last_), tokenStack()
 	{}
 
-	~StackableScanner()
+	virtual ~StackableScanner() throw()
 	{}
 
 	token_t scan()

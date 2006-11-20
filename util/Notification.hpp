@@ -45,7 +45,7 @@ protected:
 	/**
 	 * 内部で使用する検索用ファンクタ
 	 */
-	class Finder : public std::unary_function<Observer*, bool>
+	class Finder
 	{
 	private:
 		/**
@@ -56,7 +56,8 @@ protected:
 		/**
 		 * 生成不可能のためのプライベートデフォルトコンストラクタ
 		 */
-		Finder() throw() {}
+		Finder() throw();
+		Finder& operator=(const Finder&);
 
 	protected:
 		/**

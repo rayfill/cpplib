@@ -11,7 +11,7 @@ private:
 
 	void toWidenTest()
 	{
-		ShiftJISTable transTable;
+		ShiftJISTable<unsigned int> transTable;
 		CPPUNIT_ASSERT(transTable.toWiden(0x81) == 0);
 		CPPUNIT_ASSERT(transTable.toWiden(0x8181) == 0xff1d);
 	}

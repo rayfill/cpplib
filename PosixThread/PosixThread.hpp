@@ -97,11 +97,10 @@ private:
 			retValue = abort_by_exception;
 		}
 
-		do
 		{
 			ScopedLock<PosixMutex> lock(This->statusSync);
 			reinterpret_cast<PosixThread*>(DispatchKey)->isRun = false;
-		} while (false);
+		}
 
 		pthread_exit(reinterpret_cast<void*>(retValue));
 

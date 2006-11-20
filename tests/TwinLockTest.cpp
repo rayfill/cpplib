@@ -15,10 +15,12 @@ private:
 	TwinLock<Mutex> lock;
 	std::vector<Thread::thread_id_t> result;
 	volatile bool isQuitable;
+	bool isCallPrepare;
 
 protected:
 	virtual void prepare() throw()
 	{
+		isCallPrepare = true;
 		lock.childPrepare();
 	}
 
@@ -29,6 +31,7 @@ protected:
 
 	virtual unsigned run() throw()
 	{
+		assert(isCallPrepare == true);
 		for (;;)
 		{
 			lock.waitFromChild();
@@ -49,7 +52,7 @@ public:
 	}
 
 	LockingChild():
-		lock(), result(), isQuitable(false)
+		lock(), result(), isQuitable(false), isCallPrepare(false)
 	{}
 
 	~LockingChild()
