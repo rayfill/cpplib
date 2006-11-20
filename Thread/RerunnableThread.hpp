@@ -99,6 +99,8 @@ private:
 		setRunnable(entryPoint);
 	}
 
+	RerunnableThread(const RerunnableThread&);
+	RerunnableThread& operator=(const RerunnableThread&);
 public:
 	/**
 	 * コンストラクタ

@@ -32,7 +32,7 @@ private:
 		object->unlock();
 	}
 
-	ScopedLock(const LockedObject&);
+	ScopedLock(const ScopedLock&);
 	ScopedLock& operator=(const ScopedLock&);
 public:
 	/**

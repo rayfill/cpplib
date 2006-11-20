@@ -38,6 +38,9 @@ private:
 		if (isLockOwner != false)
 			object->unlock();
 	}
+
+	LockCheck(const LockCheck&);
+	LockCheck& operator=(const LockCheck&);
 public:
 
 	/**
@@ -45,7 +48,7 @@ public:
 	 * @param target 検査対象のオブジェクト
 	 */
 	LockCheck(LockedObject& target):
-		object(&target)
+		object(&target), isLockOwner()
 	{}
 
 	/**

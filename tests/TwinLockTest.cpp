@@ -13,6 +13,7 @@ class LockingChild : public Runnable
 {
 private:
 	TwinLock<Mutex> lock;
+	std::vector<Thread::thread_id_t> result;
 	volatile bool isQuitable;
 
 protected:
@@ -48,7 +49,7 @@ public:
 	}
 
 	LockingChild():
-		lock(), isQuitable(false)
+		lock(), result(), isQuitable(false)
 	{}
 
 	~LockingChild()
@@ -59,7 +60,10 @@ public:
 		isQuitable = true;
 	}
 
-	std::vector<Thread::thread_id_t> result;
+	std::vector<Thread::thread_id_t>& getResult()
+	{
+		return result;
+	}
 };
 
 class TwinLockTest : public CppUnit::TestFixture
@@ -79,7 +83,7 @@ public:
 
 		{
 			ScopedLock<Mutex> lock(writer);
-			CPPUNIT_ASSERT(lc.result.size() == 0);
+			CPPUNIT_ASSERT(lc.getResult().size() == 0);
 		}
 		
 		lc.waitFromParent();
@@ -89,10 +93,10 @@ public:
 		for (;;)
 		{
 			ScopedLock<Mutex> lock(writer);
-			if (lc.result.size() != 0)
+			if (lc.getResult().size() != 0)
 			{
-				CPPUNIT_ASSERT(lc.result.size() == 1);
-				CPPUNIT_ASSERT(lc.result[0] == t.getThreadId());
+				CPPUNIT_ASSERT(lc.getResult().size() == 1);
+				CPPUNIT_ASSERT(lc.getResult()[0] == t.getThreadId());
 				break;
 			}
 		}
