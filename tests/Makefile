@@ -45,7 +45,7 @@ OBJS= TestMain.o \
 	JulianDateTest.o \
 	SingletonTest.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
-	ShiftJISTest.o
+#	ShiftJISTest.o
 #	ExifTest.o \
 #	SamplingScannerTest.o \
 #	ImageTest.o \

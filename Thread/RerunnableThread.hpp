@@ -18,7 +18,8 @@ public:
 		none,
 		started,
 		ended,
-		quitable
+		quitable,
+		quited
 	};
 private:
 	/**
@@ -66,16 +67,6 @@ private:
 	 */
 	bool isQuitAndBlock()
 	{
-		{
-			/**
-			 * @todo reader writer lock もいるな・・・
-			 */
-			ScopedLock<Mutex> lock(stateLock);
-			if (state == quitable)
-				return true;
-			state = ended;
-		}
-
 		// wait for parent's start signal.
 		blocker.waitFromChild();
 
@@ -190,33 +181,35 @@ protected:
 		assert(dynamic_cast<RerunnableThread*>(this) == this);
 
 		for (;;)
+		{
+			try
 			{
-				try
-					{
-						if(isQuitAndBlock())
-							break;
+				if(isQuitAndBlock())
+					break;
 					
-						Runnable* target = NULL;
-						{
-							ScopedLock<Mutex> lock(stateLock);
-							target = this->getRunnable();
-						}
-						assert(target != NULL);
+				Runnable* target = NULL;
+				{
+					ScopedLock<Mutex> lock(stateLock);
+					target = this->getRunnable();
+				}
+				assert(target != NULL);
 
-						target->prepare();
-						target->run();
-						target->dispose();
-					}
-				catch (ThreadException& /*e*/)
-					{
-						/// @todo ログクラスとか作ったらそのエントリを置くか・・・
-						;
-					}
-
-				ScopedLock<Mutex> lock(stateLock);
-				state = ended;
-				blocker.waitFromChild();
+				target->prepare();
+				target->run();
+				target->dispose();
 			}
+			catch (ThreadException& /*e*/)
+			{
+				/// @todo ログクラスとか作ったらそのエントリを置くか・・・
+				;
+			}
+
+			ScopedLock<Mutex> lock(stateLock);
+			state = ended;
+			blocker.waitFromChild();
+		}
+		ScopedLock<Mutex> lock(stateLock);
+		state = quited;
 
 		return 0;
 	}

@@ -99,7 +99,7 @@ private:
 
 		{
 			ScopedLock<PosixMutex> lock(This->statusSync);
-			reinterpret_cast<PosixThread*>(DispatchKey)->isRun = false;
+			This->isRun = false;
 		}
 
 		pthread_exit(reinterpret_cast<void*>(retValue));
