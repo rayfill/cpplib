@@ -8,7 +8,7 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
-	TwinLockTest.o \
+	BarrierSyncTest.o \
 	RerunnableThreadTest.o \
 	ThreadTest.o \
 	MutexTest.o \

@@ -18,7 +18,7 @@ private:
 
 	void unlock()
 	{
-		pthread_mutex_unlcok(&mutex);
+		pthread_mutex_unlock(&mutex);
 	}
 
 public:
@@ -44,11 +44,11 @@ public:
 
 		const int movingThreads = --count;
 		if (movingThreads > 0)
-			pthread_cond_wait(&condtion, &mutex);
+			pthread_cond_wait(&condition, &mutex);
 		else
 		{
 			count = maxCount;
-			pthread_cond_broadcast(&condtion);
+			pthread_cond_broadcast(&condition);
 		}
 
 		unlock();

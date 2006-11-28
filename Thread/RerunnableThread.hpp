@@ -2,7 +2,7 @@
 #define RERUNNABLETHREAD_HPP_
 
 #include <Thread/Thread.hpp>
-#include <Thread/TwinLock.hpp>
+#include <Thread/BarrierSync.hpp>
 #include <Thread/Mutex.hpp>
 
 /**
@@ -30,7 +30,7 @@ private:
 	/**
 	 * 実行状態制御用
 	 */
-	TwinLock<Mutex> blocker;
+	BarrierSync barrier;
 
 	/**
 	 * 実行状態変更の排他制御用
@@ -68,7 +68,7 @@ private:
 	bool isQuitAndBlock()
 	{
 		// wait for parent's start signal.
-		blocker.waitFromChild();
+		barrier.block();
 
 		{
 			ScopedLock<Mutex> lock(stateLock);
@@ -99,7 +99,7 @@ public:
 	RerunnableThread()
 		: Thread(false),
 		  runnablePoint(),
-		  blocker(),
+		  barrier(2),
 		  stateLock(),
 		  state(none)
 	{
@@ -133,7 +133,7 @@ public:
 				replace(entryPoint);
 		}
 
-		blocker.waitFromParent();
+		barrier.block();
 	}
 
 	virtual void start() throw()
@@ -146,7 +146,7 @@ public:
 	{
 		assert(state != quitable);
 
-		blocker.waitFromParent();
+		barrier.block();
 
 		return 0;
 	}
@@ -167,14 +167,10 @@ public:
 
 protected:
 	virtual void prepare() throw()
-	{
-		blocker.childPrepare();
-	}
+	{}
 
 	virtual void dispose() throw()
-	{
-		blocker.childDispose();
-	}
+	{}
 
 	virtual unsigned int run() throw(ThreadException)
 	{
@@ -206,7 +202,7 @@ protected:
 
 			ScopedLock<Mutex> lock(stateLock);
 			state = ended;
-			blocker.waitFromChild();
+			barrier.block();
 		}
 		ScopedLock<Mutex> lock(stateLock);
 		state = quited;
