@@ -4,6 +4,7 @@
 #include <WinThread/WinThread.hpp>
 #include <WinThread/WinCriticalSection.hpp>
 #include <vector>
+#include <windows.h>
 
 class WinBarrier
 {
@@ -13,12 +14,12 @@ private:
 	int count;
 	const int maxCount;
 
-	void suspend(HADNLE handle)
+	void suspend(HANDLE handle)
 	{
 		SuspendThread(handle);
 	}
 
-	void resume(HADNLE handle)
+	void resume(HANDLE handle)
 	{
 		ResumeThread(handle);
 	}
@@ -32,7 +33,7 @@ private:
 		return threadHandle;
 	}
 
-	WinBarrier(cosnt Winbarrier&);
+	WinBarrier(const WinBarrier&);
 	WinBarrier& operator=(const WinBarrier&);
 	
 public:
@@ -52,8 +53,8 @@ public:
 		const int movingThreads = --count;
 		if (movingThreads > 0)
 		{
-			HANDLE currentHandle = getThreadHandle(WinThread::self();
-			waitedThreads.push_back(currentHandle));
+			HANDLE currentHandle = getThreadHandle(WinThread::self());
+			waitedThreads.push_back(currentHandle);
 			section.unlock();
 
 			suspend(currentHandle);
@@ -62,9 +63,8 @@ public:
 		else
 		{
 			count = maxCount;
-			for (typename std::vector<HANDLE>::iterator itor =
-					 waitedThreads.begin(); itor != waitedThreads.end();
-				 ++itor)
+			for (std::vector<HANDLE>::iterator itor = waitedThreads.begin();
+				 itor != waitedThreads.end(); ++itor)
 				resume(*itor);
 
 			waitedThreads.clear();
