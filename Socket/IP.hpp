@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <Socket/NativeSocket.hpp>
+#include <Socket/SocketImpl.hpp>
 #include <text/LexicalCast.hpp>
 
 /**
@@ -41,15 +42,14 @@ private:
 	 */
 	unsigned long translateIp(const char* ipAddress) const
 	{
-		HostEnt* hostEntry = gethostbyname(ipAddress);
-		if (hostEntry == NULL)
-			throw NotAddressResolveException((std::string("servername not "
-														 "found: ") +
-											 ipAddress).c_str());
+		const unsigned long result =
+			static_cast<unsigned long>(SocketImpl::getAddrByName(ipAddress));
+		if (result == 0)
+			throw NotAddressResolveException(
+				(std::string("servername not found: ") +
+				 ipAddress).c_str());
+		return result;
 
-		assert(hostEntry->h_length == 4);
-
-		return *(unsigned long*)(hostEntry->h_addr_list[0]);
 	}
 
 	/**
@@ -60,16 +60,13 @@ private:
 	 */
 	std::string translateIp(const unsigned long ipAddress) const
 	{
-		HostEnt* hostEntry =
-			gethostbyaddr(reinterpret_cast<const char*>(&ipAddress),
-						  sizeof(ipAddress), AF_INET);
+		std::string result = SocketImpl::getNameByAddr(ipAddress);
+		if (result.size() == 0)
+			throw NotAddressResolveException(
+				(std::string("address server not resolved: ") +
+				 getIpString(ntohl(ipAddress))).c_str());
 
-		if (hostEntry == NULL)
-			throw NotAddressResolveException((std::string("address server "
-														"not found: ") +
-											 getIpString(ipAddress)).c_str());
-
-		return std::string(hostEntry->h_name);
+		return result;
 	}
   
 public:
@@ -78,8 +75,7 @@ public:
 	 */
 	IP() throw() :
 		internalRepresentIP(), internalRepresentPort()
-	{
-	}
+	{}
 
 	/**
 	 * 初期情報セット付コンストラクタ
@@ -122,8 +118,7 @@ public:
 	 * デストラクタ
 	 */
 	virtual ~IP() throw()
-	{
-	}
+	{}
 
 	/**
 	 * sockaddr_in 構造体を返す
@@ -164,6 +159,7 @@ public:
 		ip[2] = static_cast<char>((hostSideIpReps >> 8) & 0x000000ff);
 		ip[3] = static_cast<char>((hostSideIpReps) & 0x000000ff);
 
+		/// @todo util/lexicalCast.hpp使った方法に変更
 		std::stringstream ss;
 		ss << static_cast<unsigned int>(ip[0])
 		   << "." << static_cast<unsigned int>(ip[1])

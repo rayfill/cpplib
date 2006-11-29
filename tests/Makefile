@@ -8,6 +8,7 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
+	IPTest.o \
 	ReaderWriterLockTest.o \
 	BarrierSyncTest.o \
 	RerunnableThreadTest.o \
@@ -35,7 +36,6 @@ OBJS= TestMain.o \
 	LZSSTest.o \
 	CBCTest.o \
 	AESTest.o MD5Test.o SHA1Test.o \
-	IPTest.o \
 	XMLParserTest.o \
 	NumberTheoryTest.o \
 	AlgebraTheoryTest.o \
