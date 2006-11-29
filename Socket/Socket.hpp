@@ -83,7 +83,7 @@ public:
 	/**
 	 * デフォルトコンストラクタ
 	 */
-	Socket() throw()
+	Socket()
 		: socket(), defaultTimeout(), isClosed(true)
 	{
 		defaultTimeout.tv_sec = 30;
@@ -148,7 +148,7 @@ public:
 	 * @param buffer 読み込んだデータへのポインタ
 	 * @param readSize 読み込み可能な最大サイズ
 	 * @return 実際に読み込まれたデータサイズ
-	 * @todo winsockのぼけぇ！！recvの戻り値がsize_tじゃないなんて・・・
+	 * @note winsockのぼけぇ！！recvの戻り値がsize_tじゃないなんて・・・
 	 */
 	size_t read(void* buffer, const size_t readSize) 
 	{

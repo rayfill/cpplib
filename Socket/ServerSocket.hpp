@@ -9,6 +9,7 @@
  * @see PosixThread
  * @see WinThread
  * @see Socket
+ * @todo 基礎となるThreadクラスをパラメタ化
  */
 class ServerWorker :
 	public CollectableThread<Thread>,

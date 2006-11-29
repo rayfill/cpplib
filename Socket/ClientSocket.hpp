@@ -16,22 +16,18 @@ public:
 	 * コンストラクタ
 	 */
 	ClientSocket() : Socket()
-	{
-	}
+	{}
 
 	/**
 	 * デストラクタ
 	 */
 	virtual ~ClientSocket() throw()
-	{
-	}
+	{}
 
 	/**
 	 * ソケットの接続
 	 * @param ip 接続先のInternet Protocol情報
 	 * @exception SocketException 相手先に接続できなかった場合
-	 * @exception NotAddressResolveException 接続先の情報が解決できなかっ
-	 * た場合
 	 * @see IP
 	 */
 	void connect(const IP& ip)
