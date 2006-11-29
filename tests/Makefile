@@ -46,15 +46,15 @@ OBJS= TestMain.o \
 	JulianDateTest.o \
 	SingletonTest.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
-#	ShiftJISTest.o
-#	ExifTest.o \
+	ExifTest.o \
+	ShiftJISTest.o
+#	ThreadPoolTest.o \
+#	EventTest.o \
 #	SamplingScannerTest.o \
 #	ImageTest.o \
-#	ThreadPoolTest.o \
 #	GraphicsTest.o \
 #	FontGrapherTest.o \
 #	BitmapTest.o \
-#	EventTest.o \
 
 DEPENDFILES=$(OBJS:.o=.d) 
 
