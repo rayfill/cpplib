@@ -2,7 +2,8 @@ INCLUDE_PATH += -Ic:/mingw/include/stlport
 LIBS += -lcppunit
 
 CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
-	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I..
+	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I.. \
+	-D_WIN32_WINNT=0x0500
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
 TARGET= UnitTest

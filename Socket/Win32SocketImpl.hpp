@@ -1,17 +1,20 @@
 #ifndef WIN32SOCKETIMPL_HPP_
 #define WIN32SOCKETIMPL_HPP_
 
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
 struct Win32SocketImpl
 {
 	/**
 	 * ホスト名(文字列表現)からipAddressを返す
 	 *
 	 */
-	static in_addr_t getAddrByName(const char* addrName)
+	static u_long getAddrByName(const char* addrName)
 	{
 		addrinfo hints;
 		addrinfo* result = NULL;
-		in_addr_t addr;
+		u_long addr;
 		
 		try
 		{
@@ -48,7 +51,7 @@ struct Win32SocketImpl
 		memset(result, 0, sizeof(result));
 		memset(&addr, 0, sizeof(addr));
 		addr.sin_family = AF_INET;
-		addr.sin_addr.s_addr = static_cast<in_addr_t>(ipAddress);
+		addr.sin_addr.s_addr = static_cast<u_long>(ipAddress);
 
 		if (getnameinfo(reinterpret_cast<const sockaddr*>(&addr),
 						sizeof(addr), 
