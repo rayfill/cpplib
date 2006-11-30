@@ -25,7 +25,7 @@ private:
 	/**
 	 * このクラス専用の実行エントリポイント
 	 */
-	Runnable* runnablePoint;
+	Runnable* volatile runnablePoint;
 
 	/**
 	 * 実行状態制御用
@@ -58,7 +58,7 @@ private:
 	 */
 	void setRunnable(Runnable* newPoint)
 	{
-		runnablePoint = newPoint;
+		runnablePoint = dynamic_cast<Runnable*>(newPoint);
 	}
 
 	/**
