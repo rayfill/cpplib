@@ -1,7 +1,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <Thread/Event.hpp>
 #include <Thread/Thread.hpp>
-#include <Thread/CriticalSection.hpp>
+#include <Thread/Mutex.hpp>
+#include <Thread/ScopedLock.hpp>
 #include <util/Notification.hpp>
 
 #include <iostream>
@@ -60,21 +61,23 @@ public:
 class Listener : public Observer
 {
 private:
+	Mutex mutex;
 	bool isSignaled;
 	
 public:
-	Listener() throw(): isSignaled(false)
+	Listener() throw(): 
+		mutex(), isSignaled(false)
 	{}
 
 	virtual void notify(Observable* caller)
 	{
-		CriticalSection cs(this);
+		ScopedLock<Mutex> lock(mutex);
 		isSignaled = true;
 	}
 
 	bool getSignal() const throw()
 	{
-		CriticalSection cs(this);
+		ScopedLock<Mutex> lock(mutex);
 		return isSignaled;
 	}
 };

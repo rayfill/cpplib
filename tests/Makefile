@@ -48,9 +48,9 @@ OBJS= TestMain.o \
 	SingletonTest.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
 	ExifTest.o \
-	ShiftJISTest.o
+	ShiftJISTest.o \
+# 	EventTest.o \
 #	ThreadPoolTest.o \
-#	EventTest.o \
 #	SamplingScannerTest.o \
 #	ImageTest.o \
 #	GraphicsTest.o \

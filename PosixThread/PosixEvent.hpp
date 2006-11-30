@@ -4,6 +4,8 @@
 #include <pthread.h>
 #include <PosixThread/PosixMutex.hpp>
 
+#error "yet implemented."
+
 class PosixEvent
 {
 private:

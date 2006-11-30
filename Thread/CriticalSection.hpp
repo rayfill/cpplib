@@ -4,6 +4,7 @@
 #ifdef _WIN32
 #	include <WinThread/WinCriticalSection.hpp>
 #else
+#	error "not implemented yet."
 #	include <PosixThread/PosixCriticalSection.hpp>
 #endif /* WIN32 */
 
