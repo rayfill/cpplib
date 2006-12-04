@@ -230,7 +230,9 @@ public:
 		assert(this->threadHandle);
 
 		ScopedLock<CriticalSection> lock(section);
+#ifndef NDEBUG
 		DWORD resumeCount =
+#endif /* NDEBUG */
 			ResumeThread(this->threadHandle);
 		assert(resumeCount == 1 || resumeCount == 0);
 	}
@@ -245,7 +247,9 @@ public:
 
 		ScopedLock<CriticalSection> lock(section);
 		this->setRunningTarget(entryPoint);
+#ifndef NDEBUG
 		DWORD resumeCount =
+#endif /* NDEBUG */
 			ResumeThread(this->threadHandle);
 		assert(resumeCount == 1 || resumeCount == 0);
 	}

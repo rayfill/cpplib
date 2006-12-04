@@ -383,7 +383,7 @@ public:
 		return *pointer;
 	}
 
-	const Reference operator*() const
+	Reference operator*() const
 	{
 		return *pointer;
 	}

@@ -17,6 +17,7 @@ template <typename CastType>
 CastType lexicalCast(const std::basic_string<char>& source)
 {
 	CastType result = 0;
+	const bool isMinusSign = source.size() != 0 && source[0] == '-';
 
 	for (std::basic_string<char>::const_iterator itor = source.begin();
 		 itor != source.end(); ++itor)
@@ -63,18 +64,23 @@ CastType lexicalCast(const std::basic_string<char>& source)
 			result += 9;
 			break;
 
+		case '-':
+			if (itor == source.begin())
+				break;
+
 		default:
 			throw CastError((source + (" string cast failed.")).c_str());
 		}
 	}
 		 
-	return result;
+	return isMinusSign ? (-1 * result) : result;
 }
 
 template <typename CastType>
 CastType hexLexicalCast(const std::basic_string<char>& source)
 {
 	CastType result = 0;
+	const bool isMinusSign = source.size() != 0 && source[0] == '-';
 
 	for (std::basic_string<char>::const_iterator itor = source.begin();
 		 itor != source.end(); ++itor)
@@ -151,12 +157,16 @@ CastType hexLexicalCast(const std::basic_string<char>& source)
 			result += 15;
 			break;
 
+		case '-':
+			if (itor == source.begin())
+				break;
+
 		default:
 			throw CastError((source + (" hexstring cast failed.")).c_str());
 		}
 	}
 		 
-	return result;
+	return isMinusSign ? (-1 * result) : result;
 }
 
 /**
@@ -167,8 +177,10 @@ template <typename CastType>
 std::basic_string<char> stringCast(const CastType& source)
 {
 	std::string result;
-	CastType value = source;
+	const bool isMinusSign = source < 0;
+	CastType value = isMinusSign ? (-1 * source) : source;
 
+	assert(value >= 0);
 	do
 	{
 		switch (value % 10)
@@ -210,6 +222,9 @@ std::basic_string<char> stringCast(const CastType& source)
 		value /= 10;
 	} while (value != 0);
 
+	if (isMinusSign)
+		result.append("-");
+
 	return std::string(result.rbegin(), result.rend());
 }
 
@@ -217,8 +232,10 @@ template <typename CastType>
 std::basic_string<char> hexStringCast(const CastType& source)
 {
 	std::string result;
-	CastType value = source;
+	const bool isMinusSign = source < 0;
+	CastType value = isMinusSign ? (-1 * source) : source;
 
+	assert(value >= 0);
 	do
 	{
 		switch (value % 16)
@@ -277,6 +294,9 @@ std::basic_string<char> hexStringCast(const CastType& source)
 		}
 		value /= 16;
 	} while (value != 0);
+
+	if (isMinusSign)
+		result.append("-");
 
 	return std::string(result.rbegin(), result.rend());
 }

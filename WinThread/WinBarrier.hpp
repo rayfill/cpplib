@@ -21,7 +21,9 @@ private:
 
 	void resume(HANDLE handle)
 	{
-		ResumeThread(handle);
+		/// rese condition. last thread reached for this, waited threads than fast.
+		while (ResumeThread(handle) == 0)
+			Thread::yield();
 	}
 
 	HANDLE getThreadHandle(DWORD threadId)
@@ -41,7 +43,7 @@ public:
 		waitedThreads(), section(),
 		count(maxCount_), maxCount(maxCount_)
 	{
-		waitedThreads.resize(maxCount_);
+		waitedThreads.reserve(maxCount_ - 1);
 	}
 
 	~WinBarrier()
@@ -62,6 +64,8 @@ public:
 		}
 		else
 		{
+			assert(waitedThreads.size() == (maxCount-1));
+
 			count = maxCount;
 			for (std::vector<HANDLE>::iterator itor = waitedThreads.begin();
 				 itor != waitedThreads.end(); ++itor)

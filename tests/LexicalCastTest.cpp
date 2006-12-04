@@ -15,6 +15,7 @@ public:
 		CPPUNIT_ASSERT(hexToNumber == 0xffffeeb1);
 
 		CPPUNIT_ASSERT(0x4c0 == hexLexicalCast<int>("4C0"));
+		CPPUNIT_ASSERT(-1 == hexLexicalCast<int>("-1"));
 	}
 
 	void castTest()
@@ -22,6 +23,7 @@ public:
 		unsigned short num = lexicalCast<unsigned short>("1234");
 
 		CPPUNIT_ASSERT(num == 1234);
+		CPPUNIT_ASSERT(-1 == lexicalCast<int>("-1"));
 	}
 
 	void stringCastTest()
@@ -32,6 +34,9 @@ public:
 
 		str = stringCast(0);
 		CPPUNIT_ASSERT_MESSAGE(str, str == "0");
+
+		str = stringCast(-1);
+		CPPUNIT_ASSERT_MESSAGE(str, str == "-1");
 	}
 };
 
