@@ -64,7 +64,8 @@ public:
 		}
 		else
 		{
-			assert(waitedThreads.size() == (maxCount-1));
+			assert(waitedThreads.size() == 
+				static_cast<size_t>(maxCount-1));
 
 			count = maxCount;
 			for (std::vector<HANDLE>::iterator itor = waitedThreads.begin();
