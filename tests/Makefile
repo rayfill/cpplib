@@ -1,9 +1,16 @@
-INCLUDE_PATH += -Ic:/mingw/include/stlport
+# リンクに必要なライブラリがwindowsとposixで異なるため、
+# 環境変数から参照しています。
+# 環境変数LIBSに必要なlibraryを追加してください。
+# posixの場合特に必要ありません。windowsの場合は LIBS=-lws2_32を指定してください
+
+
+#INCLUDE_PATH += -Ic:/mingw/include/stlport
 LIBS += -lcppunit
 
 CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
 	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I.. \
-	-D_WIN32_WINNT=0x0500
+	-D_WIN32_WINNT=0x0501
+
 #CXXFLAGS= -pedantic $(NOCLEANSCXXFLAGS)
 
 TARGET= UnitTest
