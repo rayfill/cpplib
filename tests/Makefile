@@ -56,13 +56,13 @@ OBJS= TestMain.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
 	ExifTest.o \
 	ShiftJISTest.o \
+	BitmapTest.o \
+	ImageTest.o \
 # 	EventTest.o \
 #	ThreadPoolTest.o \
 #	SamplingScannerTest.o \
-#	ImageTest.o \
 #	GraphicsTest.o \
 #	FontGrapherTest.o \
-#	BitmapTest.o \
 
 DEPENDFILES=$(OBJS:.o=.d) 
 

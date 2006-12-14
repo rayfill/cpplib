@@ -25,7 +25,8 @@ public:
 	void SpeedCheck()
 	{
 		/* here working jobs. */
-		BITMAPINFO* info = (BITMAPINFO*)_alloca(sizeof(BITMAPINFO) + sizeof(RGBQUAD) * 2);
+		BITMAPINFO* info =
+			(BITMAPINFO*)_alloca(sizeof(BITMAPINFO) + sizeof(RGBQUAD) * 2);
 		info->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 		info->bmiHeader.biWidth = 640;
 		info->bmiHeader.biHeight = 480;

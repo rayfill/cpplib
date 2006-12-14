@@ -9,6 +9,191 @@
 #include <Image/Color.hpp>
 #include <math/Geometry.hpp>
 
+
+/**
+ * PixelFormatBaseの32bit bit fieldの実装
+ * Red, Green, Blue, Alphaの32bit値。BitmapとしてはRGB32と同じ表示をする
+ * @note バイト並びは alpha, blue, green, red の順
+ */
+class RGBA32
+{
+private:
+	/**
+	 * 画素値の内部表現
+	 */
+	unsigned char pixel[4];
+
+public:
+	enum
+	{
+		offsetSize = 4 /// 画素あたりのサイズ
+	};
+
+	/**
+	 * 赤要素の取得
+	 * @return 赤要素値
+	 */
+	unsigned char getRed() const throw()
+	{
+		return pixel[0];
+	}
+
+	/**
+	 * 緑要素の取得
+	 * @return 緑要素値
+	 */
+	unsigned char getGreen() const throw()
+	{
+		return pixel[1];
+	}
+
+	/**
+	 * 青要素の取得
+	 * @return 青要素値
+	 */
+	unsigned char getBlue() const throw()
+	{
+		return pixel[2];
+	}
+
+	/**
+	 * 透過度の取得
+	 * @return 透過度値
+	 */
+	unsigned char getAlpha() const throw()
+	{
+		return pixel[3];
+	}
+
+	/**
+	 * 色構造体の取得
+	 * @return 色構造体
+	 * これを使うことで型違い同士での色コピーを実現してます。
+	 * インライン展開及び最適化されると複数回のコピー処理が折りたたまれて
+	 * 受け取り側画素 = 元画素;
+	 * の形にまで最適化されることで速度向上が図れます。
+	 * これ以上にするとなるとDMA直接操作とか型ごとで特別化した
+	 * Blitterファンクタで拡張命令つかったりとかで何とかするしか・・・
+	 */
+	Color getColor() const throw()
+	{
+		return Color(getRed(),
+					 getGreen(),
+					 getBlue(),
+					 getAlpha());
+	}
+
+	/**
+	 * 赤要素の設定
+	 * @param r 赤要素
+	 */
+	void setRed(const unsigned char r) throw()
+	{
+		pixel[0] = r;
+	}
+
+	/**
+	 * 緑要素の設定
+	 * @param g 緑要素
+	 */
+	void setGreen(const unsigned char g) throw()
+	{
+		pixel[1] = g;
+	}
+
+	/**
+	 * 青要素の設定
+	 * @param b 青要素
+	 */
+	void setBlue(const unsigned char b) throw()
+	{
+		pixel[2] = b;
+	}
+
+	/**
+	 * 不透明度の設定
+	 * @param a 不透明度
+	 */
+	void setAlpha(const unsigned char a) throw()
+	{
+		pixel[3] = a;
+	}
+
+	/**
+	 * 色の設定
+	 * @param r 赤要素
+	 * @param g 緑要素
+	 * @param b 青要素
+	 * @param a 不透明度
+	 */
+	void setColor(const unsigned char r,
+				  const unsigned char g,
+				  const unsigned char b,
+				  const unsigned char a = 255) throw()
+	{
+		*reinterpret_cast<DWORD*>(pixel) =
+			(r) | (g << 8) | (b << 16) | (a << 24);
+	}
+
+	/**
+	 * 色の設定
+	 * @param color 色を表す構造体
+	 */
+	void setColor(const Color& color) throw()
+	{
+		*reinterpret_cast<DWORD*>(pixel) =
+			(color.r) | (color.g << 8) | (color.b << 16) | (color.a << 24);
+	}
+
+	/**
+	 * 等値比較
+	 * 色が等しければtrue
+	 */
+	bool operator==(const RGBA32& dist) const throw()
+	{
+		return
+			*reinterpret_cast<const DWORD*>(this->pixel) ==
+			*reinterpret_cast<const DWORD*>(dist.pixel);
+	}
+
+	/**
+	 * DIB表現の場合にビットフィールドが必要か
+	 * @return 必要なので常にtrue
+	 */
+	static bool isBitFieldFormat() throw()
+	{
+		return true;
+	}
+
+	/**
+	 * 赤要素を現すビットフィールドマスク値
+	 * @return 赤要素マスク
+	 */
+	static DWORD getRedBitField() throw()
+	{
+		return 0x000000ff;
+	}
+
+	/**
+	 * 緑要素を現すビットフィールドマスク値
+	 * @return 緑要素マスク
+	 */
+	static DWORD getGreenBitField() throw()
+	{
+		return 0x0000ff00;
+	}
+
+	/**
+	 * 青要素を現すビットフィールドマスク値
+	 * @return 青要素マスク
+	 */
+	static DWORD getBlueBitField() throw()
+	{
+		return 0x00ff0000;
+	}
+};
+
+
 /**
  * PixelFormatBaseの32bit bit fieldの実装
  * 配列として扱うのでデストラクタの例外安全性が必須。
@@ -797,6 +982,7 @@ public:
  * @param destinationType 転送先のビットマップイテレータ型
  * 同型の場合、C++のインライン展開と最適化により高速なコピーができます。
  * 型が違う場合でも正しいコピーはできますが、速度は落ちます。
+ * @todo MMX, SSE[1-3]を使ったより高速なバージョンとか
  */
 template <typename sourceType, typename destinationType>
 class BlockTransfer

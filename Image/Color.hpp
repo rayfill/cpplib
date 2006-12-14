@@ -1,7 +1,7 @@
 #ifndef COLOR_HPP_
 #define COLOR_HPP_
 
-#include <iostream>
+#include <ostream>
 
 struct Color
 {
@@ -9,24 +9,27 @@ public:
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
+	unsigned char a;
 
 	Color() throw():
-		r(), g(), b()
+		r(), g(), b(),a()
 	{}
 
 	Color(unsigned char r_,
 		  unsigned char g_,
-		  unsigned char b_) throw():
-			  r(r_), g(g_), b(b_)
+		  unsigned char b_,
+		  unsigned char a_ = 255) throw():
+		r(r_), g(g_), b(b_), a(a_)
 	{}
 
 	Color(const Color& src) throw():
-		r(src.r), g(src.g), b(src.b)
+			r(src.r), g(src.g), b(src.b), a(src.a)
 	{}
 		
 	void setColor(unsigned char r_,
-			 unsigned char g_,
-			 unsigned char b_) throw()
+				  unsigned char g_,
+				  unsigned char b_,
+				  unsigned char a_ = 255) throw()
 	{
 		r = r_;
 		g = g_;
@@ -35,7 +38,11 @@ public:
 
 	bool operator==(const Color& dest) const throw()
 	{
-		return (r == dest.r) && (g == dest.g) && (b == dest.b);
+		return
+			(r == dest.r) &&
+			(g == dest.g) &&
+			(b == dest.b) &&
+			(a == dest.a);
 	}
 
 	bool operator!=(const Color& dest) const throw()
@@ -45,14 +52,18 @@ public:
 
 	Color operator^(const Color& dest) const throw()
 	{
-		return Color(this->r ^ dest.r, this->g ^ dest.g, this->b ^ dest.b);
+		return Color(this->r ^ dest.r,
+					 this->g ^ dest.g,
+					 this->b ^ dest.b,
+					 this->a ^ dest.a);
 	}
 
 	friend std::ostream& operator<<(std::ostream& st, const Color& src)
 	{
 		st << "Red: " << (int)src.r <<
 			", Green: " << (int)src.g <<
-			", Blue: " << (int)src.b;
+			", Blue: " << (int)src.b <<
+			", Alpha: " << (int)src.a;
 		return st;
 	}
 };
