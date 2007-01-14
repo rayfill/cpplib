@@ -1,7 +1,7 @@
 #ifndef YCBCR_HPP_
 #define YCBCR_HPP_
 
-#include <iostream>
+#include <ostream>
 
 struct YCbCr
 {
