@@ -34,6 +34,7 @@ public:
 		r = r_;
 		g = g_;
 		b = b_;
+		a = a_;
 	}
 
 	bool operator==(const Color& dest) const throw()

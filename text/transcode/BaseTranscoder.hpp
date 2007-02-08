@@ -4,25 +4,22 @@
 /**
  * トランスコーダ（文字変換機）基底クラス
  */
+template<typename UTFType = wchar_t>
 class BaseTranscoder
 {
 public:
+	typedef UTFType utf_t;
+
 	BaseTranscoder()
 	{}
 
-	virtual ~BaseTranscoder(){} = 0;
+	virtual ~BaseTranscoder()
+	{}
 
-	virtual char toNativeCodeChar(const wchar_t codePoint) = 0;
+	virtual std::basic_string<char>
+	toNativeCode(const std::basic_string<utf_t>& unicodeStr) = 0;
 
-	virtual wchar_t toUnicodeChar(const int codePoint) = 0;
-
-	/**
-	 * 多バイト文字かどうかの判別
-	 */
-	virtual bool isLeadedChar(const char codePoint)
-	{
-		return false;
-	}
-	
-}
+	virtual std::basic_string<utf_t>
+	toUnicode(const std::basic_string<char>& nativeStr) = 0;
+};
 #endif /* BASETRANSCODER_HPP_ */
