@@ -34,7 +34,9 @@ public:
 		for (typename utfstring_t::const_iterator itor = unicodeStr.begin();
 			 itor != unicodeStr.end(); ++itor)
 		{
-			const short converted = table.toNarrow(*itor);
+			const short converted = (*itor < 256) ?
+				*itor : table.toNarrow(*itor);
+
 			if (converted == 0)
 				throw InvalidCharacterException();
 
