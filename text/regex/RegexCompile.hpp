@@ -1231,7 +1231,7 @@ public:
 	 * 削除ハンドラ
 	 * @param pointer 削除オブジェクトのポインタ
 	 */
-	static void remove(RegexToken<CharType>* pointer)
+	void operator()(RegexToken<CharType>* pointer)
 	{
 		typedef std::set<RegexToken<CharType>*> objects_t;
 

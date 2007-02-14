@@ -7,7 +7,7 @@
 #INCLUDE_PATH += -Ic:/mingw/include/stlport
 LIBS += -lcppunit
 
-CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
+CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -W \
 	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I.. \
 	-D_WIN32_WINNT=0x0501
 
@@ -16,7 +16,8 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -Weffc++ \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
-	IPTest.o \
+	TreeTest.o \
+#	IPTest.o \
 	ReaderWriterLockTest.o \
 	BarrierSyncTest.o \
 	RerunnableThreadTest.o \

@@ -89,9 +89,9 @@ public:
 			Callbacker* p = new Callbacker(&isDeleted);
 			Callbacker* p2 = new Callbacker(&isDeleted2);
 
-			SmartArray<Callbacker, DefaultRemover<Callbacker> > sp(p);
+			SmartArray<Callbacker, Predicate::Remover<Callbacker> > sp(p);
 			{
-				SmartArray<Callbacker, DefaultRemover<Callbacker> > sp2(p2);
+				SmartArray<Callbacker, Predicate::Remover<Callbacker> > sp2(p2);
 				sp = sp2;
 
 				CPPUNIT_ASSERT(isDeleted == true);
@@ -108,11 +108,11 @@ public:
 
 		{
 			Callbacker* p = new Callbacker(&isDeleted);
-			SmartArray<Callbacker, DefaultRemover<Callbacker> > sp(p);
+			SmartArray<Callbacker, Predicate::Remover<Callbacker> > sp(p);
 			CPPUNIT_ASSERT(sp.refCount->getReferenceCount() == 1);
 
 			{
-				SmartArray<Callbacker, DefaultRemover<Callbacker> > sp2 = sp;
+				SmartArray<Callbacker, Predicate::Remover<Callbacker> > sp2 = sp;
 				CPPUNIT_ASSERT(sp.refCount == sp2.refCount);
 				CPPUNIT_ASSERT(sp2.refCount->getReferenceCount() == 2);
 

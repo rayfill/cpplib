@@ -3,42 +3,7 @@
 
 #include <cassert>
 #include <stdexcept>
-
-/**
- * SmartPointer用ポインタ削除時動作ポリシー
- * @param Container コンテナ型
- */
-template <typename Container>
-class DefaultRemover
-{
-public:
-	/**
-	 * 削除ハンドラ
-	 * @param pointer 削除オブジェクトのポインタ
-	 */
-	static void remove(Container* pointer)
-	{
-		delete pointer;
-	}
-};
-
-/**
- * 配列削除ポリシー
- * @param Container 削除する配列の要素の型
- */
-template <typename Container>
-class ArrayRemover
-{
-public:
-	/**
-	 * 削除ハンドラ
-	 * @param pointer 削除オブジェクト配列の先頭ポインタ
-	 */
-	static void remove(Container* pointer)
-	{
-		delete[] pointer;
-	}
-};
+#include <util/Predicate.hpp>
 
 /**
  * 参照カウンタ
@@ -98,11 +63,11 @@ public:
 /**
  * スマートポインタクラス
  * @param Container コンテナ化するクラス
- * @param RemovePolicy 削除時のハンドリングポリシー
+ * @param Remover 削除のための述語
  * @todo MultiThread環境のためのロックポリシーとかも必要かも
  */
 template <typename Container,
-	class RemovePolicy = DefaultRemover<Container> >
+		  class Remover = Predicate::Remover<Container> >
 class SmartPointer
 {
 public:
@@ -118,7 +83,7 @@ private:
 	{
 		if (refCount->release() == 0)
 		{
-			RemovePolicy::remove(pointer);
+			Remover()(pointer);
 			delete refCount;
 		}
 	}
@@ -223,11 +188,11 @@ public:
 /**
  * スマート配列
  * @param Container 要素の型
- * @RemovePolicy メモリ開放ポリシー
+ * @Remover 削除のための述語
  * 要素のデストラクタは例外を投げないこと
  */
 template <typename Container,
-	class RemovePolicy = ArrayRemover<Container> >
+		  class Remover = Predicate::ArrayRemover<Container> >
 class SmartArray
 {
 	friend class SmartPointerTest;
@@ -245,7 +210,7 @@ private:
 	{
 		if (refCount->release() == 0)
 		{
-			RemovePolicy::remove(pointer);
+			Remover()(pointer);
 			delete refCount;
 		}
 	}
@@ -351,11 +316,11 @@ public:
 /**
  * スコープドポインタクラス
  * @param Container コンテナ化するクラス
- * @param RemovePolicy 削除時のハンドリングポリシー
+ * @param Remover 削除のための述語
  * @todo MultiThread環境のためのロックポリシーとかも必要かも
  */
 template <typename Container,
-	class RemovePolicy = DefaultRemover<Container> >
+		  class Remover = Predicate::Remover<Container> >
 class ScopedPointer
 {
 public:
@@ -375,7 +340,7 @@ public:
 
 	~ScopedPointer()
 	{
-		RemovePolicy::remove(pointer);
+		Remover()(pointer);
 	}
 
 	Reference operator*()
