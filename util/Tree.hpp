@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <util/Predicate.hpp>
 
+/**
+ * 木の要素
+ * @note メンバは用意してないので継承して増やしてください
+ */
 class Node
 {
 public:
@@ -25,7 +29,7 @@ public:
 		children()
 	{}
 
-	~Node()
+	virtual ~Node()
 	{
 		removeChildren();
 	}
@@ -71,10 +75,14 @@ public:
 	{
 		return parent;
 	}
-
 };
 
-template <typename NodeType>
+/**
+ * 木本体
+ * @note ノード基底はテンプレートパラメタのNodeTypeに指定してください。
+ * デフォルトでクラスNodeになってます。
+ */
+template <typename NodeType = Node>
 class Tree
 {
 	friend class TreeTest;
