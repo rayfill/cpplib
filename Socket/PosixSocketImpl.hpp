@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <arpa/inet.h>
 
 struct PosixSocketImpl
 {
@@ -18,22 +19,14 @@ struct PosixSocketImpl
 		addrinfo* result = NULL;
 		in_addr_t addr;
 		
-		try
-		{
-			memset(&hints, 0, sizeof(hints));
-			hints.ai_family = AF_INET;
+		memset(&hints, 0, sizeof(hints));
+		hints.ai_family = AF_INET;
 
-			if (getaddrinfo(addrName, NULL, &hints, &result))
-				return 0;
+		if (getaddrinfo(addrName, NULL, &hints, &result))
+			return 0;
 
-			addr = reinterpret_cast<sockaddr_in*>
-				(result->ai_addr)->sin_addr.s_addr;
-		}
-		catch (...)
-		{
-			freeaddrinfo(result);
-			throw;
-		}
+		addr = reinterpret_cast<sockaddr_in*>
+			(result->ai_addr)->sin_addr.s_addr;
 		freeaddrinfo(result);
 
 		return addr;

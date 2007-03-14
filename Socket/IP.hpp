@@ -83,7 +83,7 @@ public:
 	 * @param port ポート番号
 	 * @exception NotAddressResolveException マシン名が解決できなかった場合
 	 */
-	IP(const char* ipAddress, const short port)
+	explicit IP(const char* ipAddress, unsigned short port)
 		throw(NotAddressResolveException):
 		internalRepresentIP(), internalRepresentPort()
 	{
@@ -97,7 +97,7 @@ public:
 	 * @param port ポート番号(ホストバイトオーダ)
 	 * @exception NotAddressResolveException マシン名が解決できなかった場合
 	 */
-	IP(unsigned long ipAddress, const short port)
+	explicit IP(unsigned long ipAddress, unsigned short port)
 		throw(NotAddressResolveException):
 		internalRepresentIP(), internalRepresentPort() 
 	{

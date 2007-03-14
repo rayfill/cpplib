@@ -2,6 +2,8 @@
 #define THREADGROUP_HPP_
 
 #include <Thread/Thread.hpp>
+#include <Thread/Mutex.hpp>
+#include <Thread/ScopedLock.hpp>
 #include <map>
 
 /**
@@ -26,17 +28,22 @@ private:
 	const Thread::thread_id_t ownerId;
 
 	/**
+	 * ロックオブジェクト
+	 */
+	Mutex mutex;
+
+	/**
 	 * コピー不可能のためのプライベートコピーコンストラクタ
 	 */
 	ThreadGroup(const ThreadGroup&) throw():
-		threadMapper(), ownerId(0) {}
+		threadMapper(), ownerId(0), mutex() {}
 
 public:
 	/**
 	 * デフォルトコンストラクタ
 	 */
 	ThreadGroup() throw():
-		threadMapper(), ownerId(::GetCurrentThreadId()) {}
+		threadMapper(), ownerId(Thread::self()), mutex() {}
 
 	/**
 	 * デストラクタ
@@ -58,7 +65,8 @@ public:
 	 */
 	virtual void attach(Thread* thread) throw(ThreadException)
 	{
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
+
 		if (thread->getThreadId() == 0)
 			throw ThreadException("Invalid argument, "
 								  "incomplete thread object.");
@@ -90,9 +98,10 @@ public:
 	 */
 	void join(const Thread::thread_id_t id) throw(ThreadException)
 	{
-		assert(this->ownerId == GetCurrentThreadId());
+		assert(this->ownerId == Thread::self());
 
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
+
 		Thread* thread = this->detach(id);
 
 		if (threadMapper[id]->join() ==
@@ -144,7 +153,7 @@ public:
 	 */
 	void start_all() throw()
 	{
-		assert(this->ownerId == GetCurrentThreadId());
+		assert(this->ownerId == Thread::self());
 
 		for(ThreadMap::iterator itor = threadMapper.begin();
 			itor != threadMapper.end();
@@ -158,43 +167,13 @@ public:
 	 * @return すべてのスレッドが実行終了した場合: true, それ以外: false. 
 	 * @see WinThread::join()
 	 */
-	bool join_all(DWORD waitTime = INFINITE) throw()
+	void join_all() throw()
 	{
-		assert(this->ownerId == GetCurrentThreadId());
-
-		bool isAllJoined = true;
-			
-		ThreadMap::iterator itor = threadMapper.begin();
-		while(itor != threadMapper.end())
-		{
-			try
-			{
-				itor->second->join(waitTime);
-			}
-			catch (TimeoutException& /* e */)
-			{
-				isAllJoined = false;
-			}
-			++itor;
-		}
-
-		return isAllJoined;
-	}
-	
-	/**
-	 * 強制的なスレッドの実行終了待機. 終了していない場合強制的に終了
-	 * させる. この場合、以降の実行状態は保証されない.
-	 * @see MSDN::Win32::TerminateThread()
-	 */
-	void force_join_all() throw()
-	{
-		assert(this->ownerId == GetCurrentThreadId());
+		assert(this->ownerId == Thread::self());
 
 		ThreadMap::iterator itor = threadMapper.begin();
 		while(itor != threadMapper.end())
 		{
-			if (itor->second->isRunning())
-				itor->second->abort();
 			itor->second->join();
 			++itor;
 		}

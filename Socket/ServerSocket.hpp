@@ -1,6 +1,8 @@
 #ifndef SERVERSOCKET_HPP_
 #define SERVERSOCKET_HPP_
 
+#include <Socket/Socket.hpp>
+#include <Socket/IP.hpp>
 #include <Thread/ThreadException.hpp>
 #include <Thread/CollectableThreadGroup.hpp>
 
@@ -47,6 +49,11 @@ protected:
 	CollectableThreadGroup threadManager;
 
 	/**
+	 * ロックオブジェクト
+	 */
+	Mutex mutex;
+
+	/**
 	 * サーバソケットクラス自身の終了可能フラグ
 	 */
 	bool isEndable;
@@ -77,7 +84,7 @@ protected:
 	 */
 	virtual void endThreadCollect() throw(ThreadException)
 	{
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
 		threadManager.join_recollectable();
 	}
 public:
@@ -123,7 +130,7 @@ public:
 	 */
 	bool isFinalize() const throw()
 	{
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
 		return this->isEndable;
 	}
 	
@@ -132,7 +139,7 @@ public:
 	 */
 	void setFinalize() throw()
 	{
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
 		this->isEndable = true;
 	}
 
@@ -160,7 +167,7 @@ public:
 			else
 			{
 				this->endThreadCollect();
-				CriticalSection lock;
+				ScopedLock<Mutex> lock(mutex);
 				if (this->isEndable == true)
 					break;
 			}

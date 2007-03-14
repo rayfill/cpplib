@@ -17,7 +17,6 @@ TARGET= UnitTest
 
 OBJS= TestMain.o \
 	TreeTest.o \
-#	IPTest.o \
 	ReaderWriterLockTest.o \
 	BarrierSyncTest.o \
 	RerunnableThreadTest.o \
@@ -62,6 +61,7 @@ OBJS= TestMain.o \
 # 	EventTest.o \
 #	ThreadPoolTest.o \
 #	SamplingScannerTest.o \
+#	IPTest.o \
 #	GraphicsTest.o \
 #	FontGrapherTest.o \
 

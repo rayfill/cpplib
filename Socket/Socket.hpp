@@ -1,8 +1,9 @@
 #ifndef SOCKET_HPP_
 #define SOCKET_HPP_
 
-#include <util/Notification.hpp>
+#include <Socket/SocketImpl.hpp>
 #include <Socket/IP.hpp>
+#include <util/Notification.hpp>
 #include <Socket/SocketException.hpp>
 #include <Thread/ThreadException.hpp>
 

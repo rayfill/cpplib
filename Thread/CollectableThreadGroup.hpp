@@ -4,6 +4,7 @@
 #include <set>
 #include <cassert>
 #include <Thread/ThreadGroup.hpp>
+#include <Thread/Mutex.hpp>
 #include <util/Notification.hpp>
 
 /**
@@ -19,6 +20,11 @@ private:
 	 * 回収可能となったThread ID を保持するコンテナ
 	 */
 	CollectableThreadIds collectable;
+
+	/**
+	 * ロックオブジェクト
+	 */
+	Mutex mutex;
 
 	/**
 	 * 通知ハンドラ
@@ -37,7 +43,7 @@ public:
 	 * デフォルトコンストラクタ
 	 */
 	CollectableThreadGroup() throw()
-		: ThreadGroup(), Observer(), collectable()
+	: ThreadGroup(), Observer(), collectable(), mutex()
 	{}
 
 	/**
@@ -58,12 +64,8 @@ public:
 		{
 			Thread* thread = this->detach(*itor);
 			collectable.erase(itor++);
-			try	{
-				thread->join();
-				delete thread;
-			} catch(TimeoutException& /*e*/) {
-				assert(false); // TimeoutException 例外は発生しない
-			}
+			thread->join();
+			delete thread;
 		}
 	}
 
@@ -78,7 +80,7 @@ public:
 		Observable* observable = dynamic_cast<Observable*>(thread);
 		assert(observable != NULL);
 
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
 		observable->attachObserver(static_cast<Observer*>(this));
 
 		ThreadGroup::attach(thread);
@@ -94,7 +96,7 @@ public:
 		Thread* thread = ThreadGroup::detach(id);
 		assert(thread != NULL);
 
-		CriticalSection lock;
+		ScopedLock<Mutex> lock(mutex);
 		Observable* observable = dynamic_cast<Observable*>(thread);
 		assert(observable != NULL);
 
@@ -114,7 +116,7 @@ class CollectableThread
 {
 protected:
 	/**
-	 * 後始末(final修飾なので継承しないでね)
+	 * 後始末(C++だからfinal修飾ないけど継承しないでね)
 	 */ 
 	virtual void dispose() throw()
 	{
@@ -129,7 +131,7 @@ public:
 	 * 能性があるため、作成と同時に実行はできない
 	 */
 	CollectableThread() throw():
-		BaseThreadClass(false)
+	BaseThreadClass(false)
 	{
 	}
 

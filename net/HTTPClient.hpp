@@ -13,6 +13,8 @@ private:
 	HTTPProperty property;
 	std::string currentConnectionServer;
 	unsigned short currentConnectionPort;
+	std::string proxyServerName;
+	unsigned short proxyServerPort;
 	bool isKeepAlive;
 
 	void connect(const char* serverName, unsigned short portNumber)
@@ -92,6 +94,8 @@ private:
 			 (url.getPortNumber() == 0 ? 80 : url.getPortNumber())))
 		{
 			// open connection
+			// if enable proxy, replacing connect() first argument 
+			// url to proxy's server name.
 			connect(url.getServerName().c_str(),
 					url.getPortNumber() == 0 ? 80 : url.getPortNumber());
 		}
@@ -103,6 +107,8 @@ public:
 		property(),
 		currentConnectionServer(""),
 		currentConnectionPort(),
+		proxyServerName(),
+		proxyServerPort(),
 		isKeepAlive(true)
 	{
 		property.isConnectionKeeping(isKeepAlive);
@@ -111,6 +117,22 @@ public:
 
 	virtual ~HTTPClient()
 	{
+	}
+
+	void setProxy(const std::string& proxyName, unsigned short proxyPort)
+	{
+		proxyServerName = proxyName;
+		proxyServerName = proxyPort == 0 ? 80 : proxyPort;
+	}
+
+	std::string getProxyServerName() const
+	{
+		return proxyServerName;
+	}
+
+	unsigned short getProxyPort() const
+	{
+		return proxyServerPort;
 	}
 
 	void setKeepAlive(bool keepAlive)
