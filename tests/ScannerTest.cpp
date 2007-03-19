@@ -162,7 +162,7 @@ public:
 	{
 		typedef Scanner<wchar_t>::token_t token_type;
 
-		std::wstring inputSource(
+		std::basic_string<wchar_t> inputSource(
 			L"hello ff12344 if then else world \"str ing.\"\n"
 			L"\"stri\\\"ng2\"\n"
 			L"\"hoge\nhoge\thoge hoge\\xff\" if '1' else '\\xFf'");
@@ -182,7 +182,7 @@ public:
 
 		CPPUNIT_ASSERT(tokens.size() == 13);
 		std::string message =
-			CodeConvert<std::string, std::wstring>().
+			CodeConvert<std::string, std::basic_string<wchar_t> >().
 			codeConvert(tokens[0].getToken());
 		CPPUNIT_ASSERT_MESSAGE(message.c_str(),
 							   tokens[0].getToken() == L"hello");

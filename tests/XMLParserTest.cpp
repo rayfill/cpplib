@@ -29,7 +29,8 @@ public:
 
 	void XMLPathTraversalTest()
 	{
-		typedef std::map<std::wstring, std::wstring> AttributesType;
+		typedef std::map<std::basic_string<wchar_t>,
+			std::basic_string<wchar_t> > AttributesType;
 
 		TagElement<wchar_t> rootTag(L"root");
 		TagElement<wchar_t> childTag1(L"child1");
@@ -94,12 +95,13 @@ public:
 
 	void XMLPathTokenizerTest()
 	{
-		CPPUNIT_ASSERT_THROW(new XMLPath<wchar_t>(std::wstring(L"hoge")),
+		CPPUNIT_ASSERT_THROW(new XMLPath<wchar_t>
+							 (std::basic_string<wchar_t>(L"hoge")),
 							 std::invalid_argument);
 
 		XMLPath<wchar_t> path(L"/hoge/fuga[0]/hara");
 
-		std::vector<std::wstring> tokens = path.tokenize();
+		std::vector<std::basic_string<wchar_t> > tokens = path.tokenize();
 
 		CPPUNIT_ASSERT(tokens.size() == 3);
 		CPPUNIT_ASSERT(tokens[0] == L"hoge");
@@ -109,7 +111,8 @@ public:
 
 	void createElementTest()
 	{
-		std::basic_string<utf16_t> source = Transcoder::UTF8toUTF16("<?xml\n version=\"1.0\" \n"
+		std::basic_string<utf16_t> source =
+			Transcoder::UTF8toUTF16("<?xml\n version=\"1.0\" \n"
 			"standalone=\"yes\"?>"
 			"<test><hoge /><!-- comment -->"
 			"<fuga/><fuga attr=\"atr\">test</fuga></test>");

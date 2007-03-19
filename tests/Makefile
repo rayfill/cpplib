@@ -56,8 +56,8 @@ OBJS= TestMain.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
 	ExifTest.o \
 	ShiftJISTest.o \
-	BitmapTest.o \
-	ImageTest.o \
+# 	BitmapTest.o \
+# 	ImageTest.o \
 # 	EventTest.o \
 #	ThreadPoolTest.o \
 #	SamplingScannerTest.o \

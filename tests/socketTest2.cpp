@@ -85,7 +85,7 @@ int main()
 	SocketModule theSocket;
 
 	MyServerSocket server;
-	server.prepare(IP("localhost", 5432));
+	server.listen(IP(INADDR_ANY, 5432));
 
 	server.accept();
 

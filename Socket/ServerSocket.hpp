@@ -107,13 +107,13 @@ public:
 	}
 
 	/**
-	 * サーバの接続のための前準備
-	 * @param ti サーバソケットバインドのための情報
+	 * サーバの接続のためのポートリッスン
+	 * @param bind_info サーバソケットバインドのための情報
 	 * @return 正常時: true, 異常時: false
 	 */
-	bool prepare(const IP& ti)
+	bool listen(const IP& bind_info)
 	{
-		sockaddr_in info = ti.getInetInfo();
+		sockaddr_in info = bind_info.getInetInfo();
 		if(::bind(this->socket,
 				  reinterpret_cast<sockaddr*>(&info),
 				  sizeof(info)) != 0)
