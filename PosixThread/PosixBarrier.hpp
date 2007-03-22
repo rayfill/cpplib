@@ -16,6 +16,18 @@ private:
 		pthread_mutex_lock(&mutex);
 	}
 
+	bool tryLock()
+	{
+		int result = pthread_mutex_trylock(&mutex);
+		if (result != EBUSY)
+		{
+			bool result maxCount != count;
+			pthread_mutex_unlock(&mutex);
+			return result;
+		}
+		return true;
+	}
+
 	void unlock()
 	{
 		pthread_mutex_unlock(&mutex);
@@ -36,6 +48,11 @@ public:
 	{
 		pthread_cond_destroy(&condition);
 		pthread_mutex_destroy(&mutex);
+	}
+
+	bool isWait()
+	{
+		
 	}
 
 	void block()

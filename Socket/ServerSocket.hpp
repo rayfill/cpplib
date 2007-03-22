@@ -35,18 +35,22 @@ public:
 
 /**
  * サーバソケットクラス
+ * @todo ThreadManager部分を分割してtemplateパラメタ化する。
  * @see Socket
  * @see ClientSocket
  */
-template <typename WorkerThread> 
+template <typename WorkerThread, typename ThreadManagerType> 
 class ServerSocket :
 	protected Socket
 {
+private:
+	typedef ThreadManagerType manager_t;
+
 protected:
 	/**
 	 * 回収可能なスレッドマネージャ
 	 */
-	CollectableThreadGroup threadManager;
+	manager_t  threadManager;
 
 	/**
 	 * ロックオブジェクト
@@ -64,12 +68,14 @@ protected:
 	 * 新たなワーカースレッド作成のためのファクトリメソッド
 	 * @param handle サーバから受け取る、クライアントとつながったソケッ
 	 * トハンドル
-	 * @param info クライアントへの接続情報
+	 * @param info クライアントの情報
 	 * @exception std::bad_alloc ファクトリがクラスの生成に失敗した
 	 * @excpetion ThreadExcpetion その他
+	 * @note 子スレッドをworker poolから持ってきたり、パラメタを受け渡
+	 * す必要がある場合はこのメソッドをオーバーライドしてください。
 	 */ 
 	virtual void createNewWorker(SocketHandle handle,
-								 IP /*info*/)
+								 const IP& info)
 		throw(std::bad_alloc, ThreadException)
 	{
   		WorkerThread* childThread = new WorkerThread(handle);

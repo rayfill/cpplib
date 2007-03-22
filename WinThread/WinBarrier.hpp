@@ -49,6 +49,17 @@ public:
 	~WinBarrier()
 	{}
 
+	bool isWait()
+	{
+		if (section.tryLock())
+		{
+			bool result = maxCount != count;
+			section.unlock();
+			return result;
+		}
+		return true;
+	}
+
 	void block()
 	{
 		section.lock();
