@@ -1,5 +1,4 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <windows.h>
 #include <Image/YCbCr.hpp>
 #include <Image/Color.hpp>
 #include <Image/ColorSpace.hpp>
