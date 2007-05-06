@@ -18,6 +18,7 @@ TARGET= UnitTest
 OBJS= TestMain.o \
 	TreeTest.o \
 	IPTest.o \
+	RerunnableThreadManagerTest.o \
 	ReaderWriterLockTest.o \
 	BarrierSyncTest.o \
 	RerunnableThreadTest.o \
@@ -57,12 +58,14 @@ OBJS= TestMain.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
 	ExifTest.o \
 	ShiftJISTest.o \
-#	ImageTest.o \
-#	BitmapTest.o \
+	TreeTest.o \
+	BitmapTest.o \
+	ImageTest.o \
+#	IPTest.o \
+#	GraphicsTest.o \
 # 	EventTest.o \
 #	ThreadPoolTest.o \
 #	SamplingScannerTest.o \
-#	GraphicsTest.o \
 #	FontGrapherTest.o \
 
 DEPENDFILES=$(OBJS:.o=.d) 
@@ -74,7 +77,7 @@ all: $(TARGET)
 makedepend: cleandepend $(DEPENDFILES)
 
 test: all
-	./UnitTest
+	./$(TARGET)
 
 document: ../Doxyfile
 	cd .. && doxygen
@@ -84,14 +87,14 @@ $(TARGET): $(OBJS) Makefile
 
 
 %.d: %.cpp
-	$(CXX)  -I.. -MM -MT $(<:.cpp=.o) $< >> makefile.depend
+	$(CXX)  -I.. -MM -MT $(<:.cpp=.o) $< > $@
 
 clean:
-	rm -f $(OBJS) *.exe
+	rm -f $(OBJS) $(TARGET).exe
 
 cleandepend:
-	rm -f makefile.depend
+	rm -f *.d
 
 remake: cleandepend makedepend
 
--include makefile.dpend
+include $(DEPENDFILES)

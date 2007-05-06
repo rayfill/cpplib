@@ -4,6 +4,7 @@
 #include <Image/ColorSpace.hpp>
 #include <iostream>
 #include <malloc.h>
+#include <windows.h>
 
 class ImageTest : public CppUnit::TestFixture
 {
