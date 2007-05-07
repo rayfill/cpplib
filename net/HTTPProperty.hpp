@@ -1,18 +1,18 @@
 #include <util/Property.hpp>
 #include <text/LexicalCast.hpp>
+#include <util/Predicate.hpp>
+#include <cstring>
 
 class HTTPProperty
 {
-private:
-	Property headerProperties;
-	Property properties;
+	Property<Predicate::IgnoreCaseComparator> headerProperties;
+	Property<Predicate::IgnoreCaseComparator> properties;
 
 public:
 	HTTPProperty():
 		headerProperties(),
 		properties()
-	{
-	}
+	{}
 
 	virtual ~HTTPProperty()
 	{}

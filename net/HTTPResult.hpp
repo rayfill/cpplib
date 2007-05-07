@@ -6,7 +6,7 @@
 #include <vector>
 #include <limits>
 #include <Socket/Socket.hpp>
-#include <util/Property.hpp>
+#include <net/HTTPProperty.hpp>
 #include <text/LexicalCast.hpp>
 
 class ResponseError : public std::runtime_error
@@ -31,7 +31,7 @@ class HTTPResult
 	friend class HTTPResultTest;
 
 private:
-	Property properties;
+	Property<IgnoreCaseComparator> properties;
 	std::vector<unsigned char> resource;
 	std::string statusReason;
 	int statusCode;
@@ -162,7 +162,7 @@ public:
 		return statusReason;
 	}
 
-	Property getResponseHeaders() const
+	HTTPProperty getResponseHeaders() const
 	{
 		return properties;
 	}

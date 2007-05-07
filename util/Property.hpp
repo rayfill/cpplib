@@ -2,10 +2,12 @@
 #define PROPERTY_HPP_
 #include <string>
 #include <map>
+#include <cstring>
 
+template <typename Comparator = std::less<std::string> >
 class Property
 {
-	typedef std::map<std::string, std::string> Properties;
+	typedef std::map<std::string, std::string, Comparator> Properties;
 
 private:
 	Properties properties;
@@ -42,7 +44,7 @@ public:
 	{
 		std::string result;
 
-		for (Properties::const_iterator itor = properties.begin();
+		for (typename Properties::const_iterator itor = properties.begin();
 			 itor != properties.end(); ++itor)
 			result += itor->first + ": " + itor->second + "\r\n";
 
