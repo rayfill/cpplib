@@ -1,3 +1,6 @@
+#ifndef HTTPPROPERTY_HPP_
+#define HTTPPROPERTY_HPP_
+
 #include <util/Property.hpp>
 #include <text/LexicalCast.hpp>
 #include <util/Predicate.hpp>
@@ -99,3 +102,6 @@ public:
 		return *this;
 	}
 };
+
+#endif /* HTTPPROPERTY_HPP_ */
+

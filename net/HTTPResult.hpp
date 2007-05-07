@@ -8,6 +8,7 @@
 #include <Socket/Socket.hpp>
 #include <net/HTTPProperty.hpp>
 #include <text/LexicalCast.hpp>
+#include <util/Predicate.hpp>
 
 class ResponseError : public std::runtime_error
 {
@@ -31,7 +32,7 @@ class HTTPResult
 	friend class HTTPResultTest;
 
 private:
-	Property<IgnoreCaseComparator> properties;
+	Property<Predicate::IgnoreCaseComparator> properties;
 	std::vector<unsigned char> resource;
 	std::string statusReason;
 	int statusCode;
@@ -162,7 +163,7 @@ public:
 		return statusReason;
 	}
 
-	HTTPProperty getResponseHeaders() const
+	Property<Predicate::IgnoreCaseComparator> getResponseHeaders() const
 	{
 		return properties;
 	}
