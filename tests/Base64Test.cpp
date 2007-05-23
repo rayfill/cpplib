@@ -8,6 +8,7 @@ class Base64Test : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE( Base64Test );
 	CPPUNIT_TEST(encodeTest);
+	CPPUNIT_TEST(encodeTest2);
 	CPPUNIT_TEST(decodeMapTest);
 	CPPUNIT_TEST(decodeTest);
 	CPPUNIT_TEST_SUITE_END();
@@ -124,6 +125,19 @@ public:
 		CPPUNIT_ASSERT(reverseTable['/'] == 63);
 	}
 
+	void encodeTest2()
+	{
+		std::string str = "HLRTUX";
+		
+		std::string encoded = "SExSVFVY";
+
+		CPPUNIT_ASSERT_MESSAGE(Base64::encode(
+								   std::vector<char>(str.begin(), str.end())),
+							   Base64::encode(
+								   std::vector<char>(str.begin(), str.end()))
+							   == encoded);
+	}
+
 	void encodeTest()
 	{
 		Base64 codec;
@@ -133,7 +147,8 @@ public:
 		std::string base64encoded = codec.encode(data);
 
 		CPPUNIT_ASSERT(base64encoded.size() == 16);
-		CPPUNIT_ASSERT(base64encoded == "AAAAAAAAAAAAAA==");
+		CPPUNIT_ASSERT_MESSAGE(base64encoded,
+							   base64encoded == "AAAAAAAAAAAAAA==");
 
 		/*
 		 * 00000001 00000001 00000001

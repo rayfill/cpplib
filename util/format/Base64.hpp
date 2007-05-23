@@ -81,7 +81,9 @@ public:
 		// 変換元データの長さ
 		const size_type length = data.size();
 		// 変換先文字列の長さ
-		const size_type resultLength = (data.size() + 2 & ~3) / 3 * 4;
+		const size_type resultLength = (data.size() << 3) / 6 + 3 & ~3;
+		assert( resultLength >= data.size());
+		assert( resultLength % 4 == 0);
 
 		std::string result;
 		result.reserve(resultLength);
@@ -97,27 +99,29 @@ public:
 					// xxxxxxoo|oooooooo|oooooooo
 					result.push_back(table[(data[offset] >> 2) & 0x3f]);
 
-					// ......xx|xxxxoooo|oooooooo
-					result.push_back(table[(data[offset] << 4) & 0x30]);
+					// ......xx|oooooooo|oooooooo
+					result.push_back((data[offset] << 4) & 0x30);
 				}
 				break;
 
 				// 1バイト目
 				case 1:
 				{
-					// ......xx|xxxxoooo|oooooooo
+					// ........|xxxxoooo|oooooooo
 					result[result.size() - 1] |= ((data[offset] >> 4) & 0x0f);
+					result[result.size() - 1] =	table[result[result.size()-1]];
 
-					// ........|....xxxx|xxoooooo
-					result.push_back(table[(data[offset] << 2) & 0x3c]);
+					// ........|....xxxx|oooooooo
+					result.push_back((data[offset] << 2) & 0x3c);
 				}
 				break;
 
 				// 2バイト目
 				case 2:
 				{
-					// ........|....xxxx|xxoooooo
+					// ........|........|xxoooooo
 					result[result.size() - 1] |= ((data[offset] >> 6) & 0x03);
+					result[result.size() - 1] =	table[result[result.size()-1]];
 
 					// ........|........|..xxxxxx
 					result.push_back(table[data[offset] & 0x3f]);
@@ -129,6 +133,10 @@ public:
 					assert(false); // unreached case.
 			}
 		}
+
+		// untableed value in result's last element.
+		if (((length - 1) % 3) != 2)
+			result[result.size() - 1] = table[result[result.size() - 1]];
 
 		// パディング文字の埋め込み
 		while (result.length() < resultLength)
