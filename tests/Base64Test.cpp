@@ -127,15 +127,14 @@ public:
 
 	void encodeTest2()
 	{
-		std::string str = "HLRTUX";
+		std::string str = "U034059:okazaki1";
 		
-		std::string encoded = "SExSVFVY";
+		std::string encoded = "VTAzNDA1OTpva2F6YWtpMQ";
 
-		CPPUNIT_ASSERT_MESSAGE(Base64::encode(
-								   std::vector<char>(str.begin(), str.end())),
-							   Base64::encode(
-								   std::vector<char>(str.begin(), str.end()))
-							   == encoded);
+		CPPUNIT_ASSERT_MESSAGE(
+			Base64::encode(std::vector<char>(str.begin(), str.end()), false),
+			Base64::encode(std::vector<char>(str.begin(), str.end()), false)
+			== encoded);
 	}
 
 	void encodeTest()

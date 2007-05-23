@@ -21,6 +21,7 @@ private:
 		prop.addCookie("hoge=fuga");
 		prop.setRange(0);
 		prop.setUserAgent("YOTSUBANO/Webcrawler-1.0");
+		prop.setProxyAuthorization("user", "pass");
 
 		CPPUNIT_ASSERT_MESSAGE(prop.toString(),
 							   prop.toString() == 
@@ -28,6 +29,7 @@ private:
 							   "Host: www.example.org\r\n"
 							   "Accept-Language: ja, en\r\n"
 							   "Cookie: HOGE=FUGA; hoge=fuga\r\n"
+							   "Proxy-Authorization: Basic dXNlcjpwYXNz\r\n"
 							   "Range: bytes=0-\r\n"
 							   "User-Agent: YOTSUBANO/Webcrawler-1.0\r\n"
 							   );

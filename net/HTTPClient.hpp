@@ -2,7 +2,10 @@
 #include <net/HTTPProperty.hpp>
 #include <net/URL.hpp>
 #include <net/HTTPResult.hpp>
+#include <net/HTTPException.hpp>
 #include <text/LexicalCast.hpp>
+#include <util/format/Base64.hpp>
+#include <algorithm>
 
 class HTTPClient
 {
@@ -11,10 +14,23 @@ class HTTPClient
 private:
 	ClientSocket socket;
 	HTTPProperty property;
+
+	/**
+	 * 現在接続しているサーバの情報。ダイレクト接続時にはそのサーバ、
+	 * proxy接続時にはproxyの情報が入る。
+	 */
 	std::string currentConnectionServer;
 	unsigned short currentConnectionPort;
+
+	/**
+	 * 使用するproxyサーバ情報
+	 */
 	std::string proxyServerName;
 	unsigned short proxyServerPort;
+
+	/**
+	 * keepaliveを使うかのフラグ
+	 */
 	bool isKeepAlive;
 
 	void connect(const char* serverName, unsigned short portNumber)
@@ -27,10 +43,42 @@ private:
 		socket.connect(IP(serverName, portNumber));
 	}
 
+	void connectWithProxy(const char* serverName,
+						  unsigned short portNumber,
+						  const char* proxyName,
+						  unsigned short proxyPort)
+	{
+		setHostName(serverName, portNumber);
+		currentConnectionServer = proxyName; currentConnectionPort = proxyPort;
+
+		socket.connect(IP(proxyName, proxyPort));
+	}
+
+	bool isUseProxy() const
+	{
+		return proxyServerName != "";
+	}
+
+	bool isContinuedRequest(const URL& url)
+	{
+		const std::string connectServerName =
+			isUseProxy() ? proxyServerName : url.getServerName();
+		const unsigned short connectPort = 
+			isUseProxy() ? proxyServerPort : 
+			(url.getPortNumber() == 0 ? 80 : url.getPortNumber());
+
+		if (currentConnectionServer != connectServerName ||
+			currentConnectionPort != connectPort)
+			return false;
+
+		return true;
+	}
+
 	bool isDisconnect(const HTTPResult<>& result) const
 	{
 		if (isKeepAlive == false ||
-			result.getResponseHeaders().get("Connection") == "Closed")
+			result.getResponseHeaders().get("Connection") == "close" ||
+			result.getResponseHeaders().get("Proxy-Connection") == "close")
 			return true;
 
 		return false;
@@ -41,7 +89,7 @@ private:
 		HTTPResult<> result;
 		result.readHeadResponse(socket);
 		if (isDisconnect(result))
-			socket.close();
+			close();
 
 		return result;
 	}
@@ -51,7 +99,7 @@ private:
 		HTTPResult<> result;
 		result.readGetResponse(socket);
 		if (isDisconnect(result))
-			socket.close();
+			close();
 
 		return result;
 	}
@@ -70,8 +118,11 @@ private:
 
 	std::string getGETCommand(const URL& url) const
 	{
+		const std::string resourcePath = isUseProxy() ?
+			url.toString() : url.getResourcePath();
+		
 		return std::string(std::string("GET ") +
-						   url.getResourcePath() +
+						   resourcePath +
 						   " HTTP/1.1\r\n");
 	}
 
@@ -81,23 +132,38 @@ private:
 		currentConnectionServer = hostName;
 	}
 
+	void setHostName(const char* hostName, unsigned short portNumber)
+	{
+		property.setHostName((std::string(hostName) + ":" +
+							  stringCast<unsigned short>(portNumber)).c_str());
+		currentConnectionServer = hostName;
+	}
+
 	/**
 	 * @todo Socket基底のread/writeから処理バイト数をとり、切断例外を
 	 * 処理、および状態として保持して本関数内で再接続の試行が必要
+	 * proxyも要考慮
 	 */
 	void connectTarget(const URL& url)
 	{
 		if (isKeepAlive == false ||
-			(!socket.isConnected() ||
-			 currentConnectionServer != url.getServerName() ||
-			 currentConnectionPort != 
-			 (url.getPortNumber() == 0 ? 80 : url.getPortNumber())))
+			(!socket.isConnected()))
 		{
+			if (currentConnectionServer != "" &&
+				!isContinuedRequest(url))
+				throw InvalidConnectRequestException(url.getServerName(),
+													 url.getPortNumber());
+				
 			// open connection
-			// if enable proxy, replacing connect() first argument 
-			// url to proxy's server name.
-			connect(url.getServerName().c_str(),
-					url.getPortNumber() == 0 ? 80 : url.getPortNumber());
+			if (proxyServerName == "")
+				connect(url.getServerName().c_str(),
+						url.getPortNumber() == 0 ? 80 : url.getPortNumber());
+			else
+				connectWithProxy(
+					url.getServerName().c_str(),
+					url.getPortNumber() == 0 ? 80 : url.getPortNumber(),
+					proxyServerName.c_str(),
+					proxyServerPort == 0 ? 80 : proxyServerPort);
 		}
 	}
 
@@ -116,13 +182,35 @@ public:
 	}
 
 	virtual ~HTTPClient()
-	{
-	}
+	{}
 
 	void setProxy(const std::string& proxyName, unsigned short proxyPort)
 	{
+		property.isProxyConnectionKeeping(isKeepAlive);
 		proxyServerName = proxyName;
-		proxyServerName = proxyPort == 0 ? 80 : proxyPort;
+		proxyServerPort = proxyPort == 0 ? 80 : proxyPort;
+	}
+
+	void clearProxy()
+	{
+		property.isConnectionKeeping(isKeepAlive);
+		proxyServerName = "";
+		proxyServerPort = 0;
+	}
+	
+	void setProxyAuthorization(const char* username,
+							   const char* password)
+	{
+		std::string user_pass = std::string(username) + ":" + password;
+		std::vector<char> vec(user_pass.begin(), user_pass.end());
+		user_pass = Base64::encode(vec);
+
+		property.setProxyAuthorization(user_pass);
+	}
+
+	void clearProxyAuthorization()
+	{
+		property.clearProxyAuthorization();
 	}
 
 	std::string getProxyServerName() const
@@ -237,4 +325,13 @@ public:
 		socket.setTimeout(sec, usec);
 	}
 
+	void close()
+	{
+		currentConnectionServer = "";
+		currentConnectionPort = 0;
+		proxyServerName = "";
+		proxyServerPort = 0;
+		socket.close();
+		property = HTTPProperty();
+	}
 };

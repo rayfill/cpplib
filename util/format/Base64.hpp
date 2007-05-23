@@ -72,7 +72,8 @@ public:
 	 * @param data 変換元となるデータ
 	 * @return 変換後の文字列
 	 */
-	static std::string encode(const std::vector<char>& data)
+	static std::string encode(const std::vector<char>& data,
+							  bool enablePadding = true)
 	{
 		typedef std::vector<char>::size_type size_type;
 
@@ -139,8 +140,9 @@ public:
 			result[result.size() - 1] = table[result[result.size() - 1]];
 
 		// パディング文字の埋め込み
-		while (result.length() < resultLength)
-			result.push_back('=');
+		if (enablePadding)
+			while (result.length() < resultLength)
+				result.push_back('=');
 
 		return result;
 	}
