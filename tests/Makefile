@@ -16,6 +16,7 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -W \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
+	CounterTest.o \
 	TreeTest.o \
 	IPTest.o \
 	RerunnableThreadManagerTest.o \

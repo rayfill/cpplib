@@ -12,7 +12,6 @@ class SHA1
 	friend class SHA1Test;
 
 private:
-	std::vector<unsigned int> buffer;
 	std::vector<unsigned int> intermediateHash;
 	std::vector<unsigned char> messageBlock;
 	unsigned long long count;
@@ -175,7 +174,7 @@ private:
 
 public:
 	SHA1()
-		: buffer(5), intermediateHash(5), messageBlock(), count()
+		: intermediateHash(5), messageBlock(), count()
 	{
 		messageBlock.reserve(64);
 
@@ -226,7 +225,8 @@ public:
 		this->setSource(&source[0], source.size());
 	}
 
-	template <typename Iterator> void setSource(Iterator current, Iterator tail)
+	template <typename Iterator>
+	void setSource(Iterator current, Iterator tail)
 	{
 		for (; current != tail; ++current)
 			setSource(static_cast<const char>(*current));
