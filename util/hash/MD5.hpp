@@ -148,58 +148,58 @@ private:
 		ff(b, c, d, a, 16, 22, sinTable[15]);
 
 		// second stage.
-		gg(a, b, c, d,  1,  5, sinTable[17]);
-		gg(d, a, b, c,  6,  9, sinTable[18]);
-		gg(c, d, a, b, 11, 14, sinTable[19]);
-		gg(b, c, d, a,  0, 20, sinTable[20]);
-		gg(a, b, c, d,  5,  5, sinTable[21]);
-		gg(d, a, b, c, 10,  9, sinTable[22]);
-		gg(c, d, a, b, 15, 14, sinTable[23]);
-		gg(b, c, d, a,  4, 20, sinTable[24]);
-		gg(a, b, c, d,  9,  5, sinTable[25]);
-		gg(d, a, b, c, 14,  9, sinTable[26]);
-		gg(c, d, a, b,  3, 14, sinTable[27]);
-		gg(b, c, d, a,  8, 20, sinTable[28]);
-		gg(a, b, c, d, 13,  5, sinTable[29]);
-		gg(d, a, b, c,  2,  9, sinTable[30]);
-		gg(c, d, a, b,  7, 14, sinTable[31]);
-		gg(b, c, d, a, 12, 20, sinTable[32]);
+		gg(a, b, c, d,  1,  5, sinTable[16]);
+		gg(d, a, b, c,  6,  9, sinTable[17]);
+		gg(c, d, a, b, 11, 14, sinTable[18]);
+		gg(b, c, d, a,  0, 20, sinTable[19]);
+		gg(a, b, c, d,  5,  5, sinTable[20]);
+		gg(d, a, b, c, 10,  9, sinTable[21]);
+		gg(c, d, a, b, 15, 14, sinTable[22]);
+		gg(b, c, d, a,  4, 20, sinTable[23]);
+		gg(a, b, c, d,  9,  5, sinTable[24]);
+		gg(d, a, b, c, 14,  9, sinTable[25]);
+		gg(c, d, a, b,  3, 14, sinTable[26]);
+		gg(b, c, d, a,  8, 20, sinTable[27]);
+		gg(a, b, c, d, 13,  5, sinTable[28]);
+		gg(d, a, b, c,  2,  9, sinTable[29]);
+		gg(c, d, a, b,  7, 14, sinTable[30]);
+		gg(b, c, d, a, 12, 20, sinTable[31]);
 
 		// third stage.
-		hh(a, b, c, d,  5,  4, sinTable[33]);
-		hh(d, a, b, c,  8, 11, sinTable[34]);
-		hh(c, d, a, b, 11, 16, sinTable[35]);
-		hh(b, c, d, a, 14, 23, sinTable[36]);
-		hh(a, b, c, d,  1,  4, sinTable[37]);
-		hh(d, a, b, c,  4, 11, sinTable[38]);
-		hh(c, d, a, b,  7, 16, sinTable[39]);
-		hh(b, c, d, a, 10, 23, sinTable[40]);
-		hh(a, b, c, d, 13,  4, sinTable[41]);
-		hh(d, a, b, c,  0, 11, sinTable[42]);
-		hh(c, d, a, b,  3, 16, sinTable[43]);
-		hh(b, c, d, a,  6, 23, sinTable[44]);
-		hh(a, b, c, d,  9,  4, sinTable[45]);
-		hh(d, a, b, c, 12, 11, sinTable[46]);
-		hh(c, d, a, b, 15, 16, sinTable[47]);
-		hh(b, c, d, a,  2, 23, sinTable[48]);
+		hh(a, b, c, d,  5,  4, sinTable[32]);
+		hh(d, a, b, c,  8, 11, sinTable[33]);
+		hh(c, d, a, b, 11, 16, sinTable[34]);
+		hh(b, c, d, a, 14, 23, sinTable[35]);
+		hh(a, b, c, d,  1,  4, sinTable[36]);
+		hh(d, a, b, c,  4, 11, sinTable[37]);
+		hh(c, d, a, b,  7, 16, sinTable[38]);
+		hh(b, c, d, a, 10, 23, sinTable[39]);
+		hh(a, b, c, d, 13,  4, sinTable[40]);
+		hh(d, a, b, c,  0, 11, sinTable[41]);
+		hh(c, d, a, b,  3, 16, sinTable[42]);
+		hh(b, c, d, a,  6, 23, sinTable[43]);
+		hh(a, b, c, d,  9,  4, sinTable[44]);
+		hh(d, a, b, c, 12, 11, sinTable[45]);
+		hh(c, d, a, b, 15, 16, sinTable[46]);
+		hh(b, c, d, a,  2, 23, sinTable[47]);
 
 		// forth stage.
-		ii(a, b, c, d,  0,  6, sinTable[49]);
-		ii(d, a, b, c,  7, 10, sinTable[50]);
-		ii(c, d, a, b, 14, 15, sinTable[51]);
-		ii(b, c, d, a,  5, 21, sinTable[52]);
-		ii(a, b, c, d, 12,  6, sinTable[53]);
-		ii(d, a, b, c,  3, 10, sinTable[54]);
-		ii(c, d, a, b, 10, 15, sinTable[55]);
-		ii(b, c, d, a,  1, 21, sinTable[56]);
-		ii(a, b, c, d,  8,  6, sinTable[57]);
-		ii(d, a, b, c, 15, 10, sinTable[58]);
-		ii(c, d, a, b,  6, 15, sinTable[59]);
-		ii(b, c, d, a, 13, 21, sinTable[60]);
-		ii(a, b, c, d,  4,  6, sinTable[61]);
-		ii(d, a, b, c, 11, 10, sinTable[62]);
-		ii(c, d, a, b,  2, 15, sinTable[63]);
-		ii(b, c, d, a,  9, 21, sinTable[64]);
+		ii(a, b, c, d,  0,  6, sinTable[48]);
+		ii(d, a, b, c,  7, 10, sinTable[49]);
+		ii(c, d, a, b, 14, 15, sinTable[50]);
+		ii(b, c, d, a,  5, 21, sinTable[51]);
+		ii(a, b, c, d, 12,  6, sinTable[52]);
+		ii(d, a, b, c,  3, 10, sinTable[53]);
+		ii(c, d, a, b, 10, 15, sinTable[54]);
+		ii(b, c, d, a,  1, 21, sinTable[55]);
+		ii(a, b, c, d,  8,  6, sinTable[56]);
+		ii(d, a, b, c, 15, 10, sinTable[57]);
+		ii(c, d, a, b,  6, 15, sinTable[58]);
+		ii(b, c, d, a, 13, 21, sinTable[59]);
+		ii(a, b, c, d,  4,  6, sinTable[60]);
+		ii(d, a, b, c, 11, 10, sinTable[61]);
+		ii(c, d, a, b,  2, 15, sinTable[62]);
+		ii(b, c, d, a,  9, 21, sinTable[63]);
 
 		state[0] += a;
 		state[1] += b;
@@ -365,7 +365,7 @@ public:
 			digest[offset] =
 				static_cast<unsigned char>(
 					(state[offset >> 2] >>
-					8 * ( 3 - ( offset & 0x03 ) )) & 0xff);
+					8 * ( offset & 0x03 ) ) & 0xff);
 		
 		return digest;
 	}
