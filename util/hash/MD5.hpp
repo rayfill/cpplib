@@ -40,14 +40,14 @@ private:
 		}
 
 		messageBlock.resize(64);
-		messageBlock[56] = static_cast<unsigned char>((count >> 24) & 0xff);
-		messageBlock[57] = static_cast<unsigned char>((count >> 16) & 0xff);
-		messageBlock[58] = static_cast<unsigned char>((count >> 8) & 0xff);
-		messageBlock[59] = static_cast<unsigned char>((count) & 0xff);
-		messageBlock[60] = static_cast<unsigned char>((count >> 56) & 0xff);
-		messageBlock[61] = static_cast<unsigned char>((count >> 48) & 0xff);
-		messageBlock[62] = static_cast<unsigned char>((count >> 40) & 0xff);
-		messageBlock[63] = static_cast<unsigned char>((count >> 32) & 0xff);
+		messageBlock[56] = static_cast<unsigned char>((count) & 0xff);
+		messageBlock[57] = static_cast<unsigned char>((count >> 8) & 0xff);
+		messageBlock[58] = static_cast<unsigned char>((count >> 16) & 0xff);
+		messageBlock[59] = static_cast<unsigned char>((count >> 24) & 0xff);
+		messageBlock[60] = static_cast<unsigned char>((count >> 32) & 0xff);
+		messageBlock[61] = static_cast<unsigned char>((count >> 40) & 0xff);
+		messageBlock[62] = static_cast<unsigned char>((count >> 48) & 0xff);
+		messageBlock[63] = static_cast<unsigned char>((count >> 56) & 0xff);
 
 		compute();
 	}
@@ -83,7 +83,11 @@ private:
 			unsigned int offset, unsigned int s, unsigned int ac)
 	{
 		a += f(b, c, d) +
-			expand(messageBlock, offset, offset+1, offset+2, offset+3) + ac;
+			expand(messageBlock,
+				   offset*4,
+				   offset*4+1,
+				   offset*4+2,
+				   offset*4+3) + ac;
 		a = circularShift(s, a);
 		a += b;
 	}
@@ -92,7 +96,11 @@ private:
 			unsigned int offset, unsigned int s, unsigned int ac)
 	{
 		a += g(b, c, d) +
-			expand(messageBlock, offset, offset+1, offset+2, offset+3) + ac;
+			expand(messageBlock,
+				   offset*4,
+				   offset*4+1,
+				   offset*4+2,
+				   offset*4+3) + ac;
 		a = circularShift(s, a);
 		a += b;
 	}
@@ -101,7 +109,11 @@ private:
 			unsigned int offset, unsigned int s, unsigned int ac)
 	{
 		a += h(b, c, d) +
-			expand(messageBlock, offset, offset+1, offset+2, offset+3) + ac;
+			expand(messageBlock,
+				   offset*4,
+				   offset*4+1,
+				   offset*4+2,
+				   offset*4+3) + ac;
 		a = circularShift(s, a);
 		a += b;
 	}
@@ -109,7 +121,11 @@ private:
 			unsigned int offset, unsigned int s, unsigned int ac)
 	{
 		a += i(b, c, d) +
-			expand(messageBlock, offset, offset+1, offset+2, offset+3) + ac;
+			expand(messageBlock,
+				   offset*4,
+				   offset*4+1,
+				   offset*4+2,
+				   offset*4+3) + ac;
 		a = circularShift(s, a);
 		a += b;
 	}
@@ -145,7 +161,7 @@ private:
 		ff(a, b, c, d, 12,  7, sinTable[12]);
 		ff(d, a, b, c, 13, 12, sinTable[13]);
 		ff(c, d, a, b, 14, 17, sinTable[14]);
-		ff(b, c, d, a, 16, 22, sinTable[15]);
+		ff(b, c, d, a, 15, 22, sinTable[15]);
 
 		// second stage.
 		gg(a, b, c, d,  1,  5, sinTable[16]);
@@ -215,16 +231,16 @@ private:
 	{
 		std::vector<unsigned int> sinTable;
 		sinTable.resize(64);
-		sinTable[0] = 0xd76aa478; /* 0 */
-		sinTable[1] = 0xe8c7b756; /* 1 */
-		sinTable[2] = 0x242070db; /* 2 */
-		sinTable[3] = 0xc1bdceee; /* 3 */
-		sinTable[4] = 0xf57c0faf; /* 4 */
-		sinTable[5] = 0x4787c62a; /* 5 */
-		sinTable[6] = 0xa8304613; /* 6 */
-		sinTable[7] = 0xfd469501; /* 7 */
-		sinTable[8] = 0x698098d8; /* 8 */
-		sinTable[9] = 0x8b44f7af; /* 9 */
+		sinTable[ 0] = 0xd76aa478; /* 0 */
+		sinTable[ 1] = 0xe8c7b756; /* 1 */
+		sinTable[ 2] = 0x242070db; /* 2 */
+		sinTable[ 3] = 0xc1bdceee; /* 3 */
+		sinTable[ 4] = 0xf57c0faf; /* 4 */
+		sinTable[ 5] = 0x4787c62a; /* 5 */
+		sinTable[ 6] = 0xa8304613; /* 6 */
+		sinTable[ 7] = 0xfd469501; /* 7 */
+		sinTable[ 8] = 0x698098d8; /* 8 */
+		sinTable[ 9] = 0x8b44f7af; /* 9 */
 		sinTable[10] = 0xffff5bb1; /* 10 */
 		sinTable[11] = 0x895cd7be; /* 11 */
 		sinTable[12] = 0x6b901122; /* 12 */
