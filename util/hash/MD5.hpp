@@ -5,8 +5,9 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <util/counter.hpp>
+#include <stdexcept>
 #include <cassert>
+#include <util/counter.hpp>
 
 class MessageDigest5
 {
