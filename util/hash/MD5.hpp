@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <IO/Endian.hpp>
 #include <util/counter.hpp>
 #include <cassert>
 
@@ -18,7 +17,6 @@ private:
 	std::vector<unsigned char> messageBlock;
 	std::vector<unsigned int> sinTable;
 	unsigned long long count;
-	EndianConverter converter;
 
 	void paddingMessageBlock()
 	{
@@ -302,14 +300,14 @@ private:
 public:
 	MessageDigest5()
 		: state(), messageBlock(), sinTable(createSinTable()),
-		  count(), converter()
+		  count()
 	{
 		messageBlock.reserve(64);		
 
-		state[0] = converter.fromBig(0x01234567);
-		state[1] = converter.fromBig(0x89abcdef);
-		state[2] = converter.fromBig(0xfedcba98);
-		state[3] = converter.fromBig(0x76543210);
+		state[0] = 0x67452301;
+		state[1] = 0xefcdab89;
+		state[2] = 0x98badcfe;
+		state[3] = 0x10325476;
 	}
 
 	void setSource(const unsigned int data)

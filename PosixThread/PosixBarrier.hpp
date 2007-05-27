@@ -21,7 +21,7 @@ private:
 		int result = pthread_mutex_trylock(&mutex);
 		if (result != EBUSY)
 		{
-			bool result maxCount != count;
+			bool result = (maxCount != count);
 			pthread_mutex_unlock(&mutex);
 			return result;
 		}
@@ -52,7 +52,7 @@ public:
 
 	bool isWait()
 	{
-		
+		return count;
 	}
 
 	void block()
