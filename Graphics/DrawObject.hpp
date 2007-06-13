@@ -1,6 +1,7 @@
 #ifndef DRAWOBJECT_HPP_
 #define DRAWOBJECT_HPP_
 
+
 #include <Graphics/Graphics.hpp>
 
 class DrawObject :
