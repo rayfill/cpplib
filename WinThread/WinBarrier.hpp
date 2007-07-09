@@ -11,7 +11,7 @@ class WinBarrier
 private:
 	std::vector<HANDLE> waitedThreads;
 	WinCriticalSection section;
-	int count;
+	volatile int count;
 	const int maxCount;
 
 	void suspend(HANDLE handle)
