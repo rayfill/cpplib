@@ -20,10 +20,10 @@ OBJS= TestMain.o \
 	CounterTest.o \
 	TreeTest.o \
 	IPTest.o \
+	RerunnableThreadTest.o \
 	RerunnableThreadManagerTest.o \
 	ReaderWriterLockTest.o \
 	BarrierSyncTest.o \
-	RerunnableThreadTest.o \
 	ThreadTest.o \
 	MutexTest.o \
 	CommandLineTest.o \
@@ -59,10 +59,10 @@ OBJS= TestMain.o \
 	SingletonTest.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
 	ExifTest.o \
-	ShiftJISTest.o \
 	TreeTest.o \
-	BitmapTest.o \
-	ImageTest.o \
+#	ShiftJISTest.o \
+#	BitmapTest.o \
+#	ImageTest.o \
 #	IPTest.o \
 #	GraphicsTest.o \
 # 	EventTest.o \

@@ -8,7 +8,7 @@ class PosixBarrier
 private:
 	pthread_mutex_t mutex;
 	pthread_cond_t condition;
-	int count;
+	volatile int count;
 	const int maxCount;
 
 	void lock()
@@ -52,7 +52,7 @@ public:
 
 	bool isWait()
 	{
-		return count;
+		return count - maxCount;
 	}
 
 	void block()
