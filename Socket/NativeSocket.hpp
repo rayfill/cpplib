@@ -35,6 +35,9 @@ public:
 #	include <netdb.h>
 #	include <netinet/in.h>
 #	include <sys/socket.h>
+#	include <pthread.h>
+#	include <signal.h>
+
 typedef hostent HostEnt;
 typedef int SocketHandle;
 typedef int SelectRange;
@@ -42,16 +45,33 @@ typedef int SelectRange;
 class SocketModule
 {
 private:
+	sigset_t originalMask;
 	SocketModule(const SocketModule&) {}
 public:
-	SocketModule() { initialize(); }
-	~SocketModule() { terminate(); }
+	SocketModule(): originalMask()
+	{
+		initialize(&originalMask);
+	}
+	
+	~SocketModule()
+	{
+		terminate(&originalMask);
+	}
 public:
-	static inline void initialize()
-	{}
+	static inline void initialize(sigset_t* oldMask)
+	{
+		sigset_t newMask;
 
-	static inline void terminate()
-	{}
+		sigemptyset(&newMask);
+		sigaddset(&newMask, SIGPIPE);
+		
+		pthread_sigmask(SIG_SETMASK, &newMask, oldMask);
+	}
+
+	static inline void terminate(const sigset_t* oldMask)
+	{
+		pthread_sigmask(SIG_SETMASK, oldMask, NULL);
+	}
 
 	static void SocketClose(SocketHandle socketHandle)
 	{
