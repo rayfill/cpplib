@@ -44,7 +44,7 @@ private:
 		char readBuffer;
 		for (;;)
 		{
-			socket.readAsync(&readBuffer, 1);
+			socket.readWithTimeout(&readBuffer, 1);
 
 			if (readBuffer == '\n' &&
 				result.size() > 0 &&
@@ -118,9 +118,10 @@ private:
 		while (totalSize > totalReadSize)
 		{
 			readSize = 
-				socket.readAsync(readBuffer, 
-								 (totalSize - totalReadSize) < BufferSize ?
-								 (totalSize - totalReadSize) : BufferSize);
+				socket.readWithTimeout(
+					readBuffer, 
+					(totalSize - totalReadSize) < BufferSize ?
+					(totalSize - totalReadSize) : BufferSize);
 
 			totalReadSize += readSize;
 			resource.insert(resource.end(),

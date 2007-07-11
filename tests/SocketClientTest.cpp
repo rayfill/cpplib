@@ -8,7 +8,7 @@ int main()
 	ClientSocket so;
 	try {
 		so.connect(IP("localhost", 5432));
-		if(so.writeAsync(hello_class, strlen(hello_class)))
+		if(so.writeWithTimeout(hello_class, strlen(hello_class)))
 			std::cout << "non block send success.";
 		else
 			std::cout << "non block send failed.";
@@ -23,8 +23,8 @@ int main()
 //			if ((strlen(hello_class) - index) < 2)
 		if (index > 65535)
 			break;
-		if(!so.writeAsync(hello_class,
-							 strlen(hello_class)))
+		if(!so.writeWithTimeout(hello_class,
+								strlen(hello_class)))
 		{
 			std::cout << "blocked." << std::endl;
 			Sleep(100000);

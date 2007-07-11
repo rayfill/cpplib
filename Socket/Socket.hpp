@@ -174,7 +174,7 @@ public:
 	 * @exception TimeoutException 待機時間内にソケットに読み取り可能
 	 * なデータが入ってこなかった場合
 	 */
-	size_t readAsync(void* buffer, const size_t readSize)
+	size_t readWithTimeout(void* buffer, const size_t readSize)
 		throw(TimeoutException, ConnectionClosedException)
 	{
 		if (!this->isReadable(this->socket, this->defaultTimeout))
@@ -214,7 +214,7 @@ public:
 	 * @exception TimeoutException 待機時間中にソケットが書き込み可能
 	 * にならなかった場合
 	 */
-	size_t writeAsync(const void* buffer, const size_t writeSize) 
+	size_t writeWithTimeout(const void* buffer, const size_t writeSize) 
 		throw(TimeoutException, ConnectionClosedException)
 	{
 		if (!this->isWritable(this->socket, this->defaultTimeout))
