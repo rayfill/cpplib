@@ -4,9 +4,45 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <string>
+#include <Socket/NativeSocket.hpp>
 
 struct Win32SocketImpl
 {
+	/**
+	 * ハンドルの正当性検査
+	 */
+	static bool isValidHandle(SocketHandle handle)
+	{
+		return handle != reinterpret_cast<SocketHandle>(INVALID_HANDLE_VALUE);
+	}
+
+	/**
+	 * socketのlast errorを取得
+	 */
+	static int getLastError()
+	{
+		return WSAGetLastError();
+	}
+
+	/**
+	 * acceptエラー時のリトライ可能かどうかの判定
+	 */
+	static bool isRetry(int code)
+	{
+		switch (code)
+		{
+		case WSAENETDOWN:
+		case WSAEHOSTDOWN:
+		case WSAEHOSTUNREACH:
+		case WSAEOPNOTSUPP:
+		case WSAENETUNREACH:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
 	/**
 	 * ホスト名(文字列表現)からipAddressを返す
 	 *

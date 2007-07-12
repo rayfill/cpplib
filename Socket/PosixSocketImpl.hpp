@@ -11,6 +11,46 @@
 struct PosixSocketImpl
 {
 	/**
+	 * ハンドルの正当性検査
+	 */
+	static bool isValidHandle(SocketHandle handle)
+	{
+		return handle != -1;
+	}
+
+	/**
+	 * socketのlast errorを取得
+	 */
+	static int getLastError()
+	{
+		return errno;
+	}
+
+	/**
+	 * acceptエラー時のリトライ可能かどうかの判定
+	 */
+	static bool isRetry(int code)
+	{
+		switch (code)
+		{
+		case EAGAIN:
+		case ENETDOWN:
+		case EPROTO:
+		case ENOPROTOOPT:
+		case EHOSTDOWN:
+		case ENONET:
+		case EHOSTUNREACH:
+		case EOPNOTSUPP:
+		case ENETUNREACH:
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+
+	/**
 	 * ホスト名(文字列表現)からipAddressを返す
 	 *
 	 */

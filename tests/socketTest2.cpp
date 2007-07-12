@@ -36,17 +36,25 @@ public:
 
 	virtual unsigned run() throw(ThreadException)
 	{
-		std::cout << "catch server socket from" 
-				  << this->info.getHostname()
-				  << ":" << this->info.getPort()
-				  << std::endl;
-
+		try
+		{
+			std::cout << "catch server socket from: " 
+					  << this->info.getHostname()
+					  << ":" << this->info.getPort()
+					  << std::endl;
+		}
+		catch (std::exception& )
+		{
+			std::cout << "catch server socket from: " 
+					  << IP::getIpString(this->info.getIp())
+					  << ":" << this->info.getPort()
+					  << std::endl;
+		}
+		
 		char buffer[100];
 		size_t readCount;
 		while((readCount = this->read(buffer, 1)) != 0)
 		{
-			buffer[1] = 0;
-			std::cout << buffer << std::endl;
 			if (buffer[0] == 'q')
 				break;
 			else if(buffer[0] == 'x')
@@ -54,27 +62,36 @@ public:
 				this->parent->setFinalize();
 				break;
 			}
+
+			buffer[1] = 0;
+			std::cout << buffer;
+			std::cout.flush();
 		}
+		
+		this->close();
 
 		return 0;
 	}
 };
 
 class MyServerSocket :
-	public ServerSocket<MyServerWorker<MyServerSocket> >
+	public ServerSocket<MyServerWorker<MyServerSocket>,
+	CollectableThreadGroup, 10>
 {
 protected:
 	typedef MyServerWorker<MyServerSocket> WorkerClass;
+	typedef ServerSocket<MyServerWorker<MyServerSocket>,
+						 CollectableThreadGroup, 10> parent_t;
 
 	virtual void createNewWorker(SocketHandle handle,
-								 IP info)
+								 const IP& info)
 		throw(std::bad_alloc, ThreadException)
 	{
 		WorkerClass* childThread = new WorkerClass(handle);
 		childThread->setParent(this);
 		childThread->setConnectTarget(info);
 
-  		threadManager.attach(childThread);
+  		parent_t::threadManager.attach(childThread);
   		childThread->start();
 	}
 

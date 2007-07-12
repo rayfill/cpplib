@@ -39,7 +39,9 @@ public:
  * @see Socket
  * @see ClientSocket
  */
-template <typename WorkerThread, typename ThreadManagerType> 
+template <typename WorkerThread,
+		  typename ThreadManagerType,
+		  int retryCount = 10> 
 class ServerSocket :
 	protected Socket
 {
@@ -73,6 +75,7 @@ protected:
 	 * @excpetion ThreadExcpetion その他
 	 * @note 子スレッドをworker poolから持ってきたり、パラメタを受け渡
 	 * す必要がある場合はこのメソッドをオーバーライドしてください。
+	 * @todo スレッドの生成をthread managerに委譲
 	 */ 
 	virtual void createNewWorker(SocketHandle handle,
 								 const IP& info)
@@ -83,12 +86,17 @@ protected:
   		childThread->start();
 	}
 
+	virtual void collect()
+	{
+		this->collectWorkerThread();
+	}
+
 	/**
 	 * 終了スレッドの回収
 	 * @exception ThreadException 回収したスレッドが例外終了していた場
 	 * 合
 	 */
-	virtual void endThreadCollect() throw(ThreadException)
+	virtual void collectWorkerThread() throw(ThreadException)
 	{
 		ScopedLock<Mutex> lock(mutex);
 		threadManager.join_recollectable();
@@ -162,17 +170,27 @@ public:
 			{
 				sockaddr_in addrInfo;
 				int infoSize;
-				SocketHandle client =
-					::accept(this->socket,
+
+				int retryable = retryCount;
+
+				SocketHandle client;
+				do
+				{
+					client =
+						::accept(this->socket,
 							 reinterpret_cast<sockaddr*>(&addrInfo),
 							 &infoSize);
+				} while (!SocketImpl::isValidHandle(client) &&
+						 SocketImpl::isRetry(SocketImpl::getLastError()) &&
+						 --retryable > 0);
 
-				this->createNewWorker(client,
-									  IP(addrInfo));
+				if (SocketImpl::isValidHandle(client))
+					this->createNewWorker(client,
+										  IP(addrInfo));
 			}
 			else
 			{
-				this->endThreadCollect();
+				collect();
 				ScopedLock<Mutex> lock(mutex);
 				if (this->isEndable == true)
 					break;
