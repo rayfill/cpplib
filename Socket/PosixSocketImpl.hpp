@@ -6,7 +6,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <errno.h>
 #include <string>
+#include <Socket/NativeSocket.hpp>
 
 struct PosixSocketImpl
 {
