@@ -12,6 +12,18 @@
 
 struct PosixSocketImpl
 {
+	typedef enum
+	{
+		read = SHUT_RD,
+		write = SHUT_WR,
+		both = SHUT_RDWR
+	}  ShutdownTarget;
+
+	static int shutdown(SocketHandle handle, ShutdownTarget target)
+	{
+		return ::shutdown(handle, target);
+	}
+
 	/**
 	 * ハンドルの正当性検査
 	 */
@@ -98,6 +110,11 @@ struct PosixSocketImpl
 			return "";
 
 		return std::string(result);
+	}
+
+	static void socketClose(SocketHandle socketHandle)
+	{
+		close(socketHandle);
 	}
 };
 

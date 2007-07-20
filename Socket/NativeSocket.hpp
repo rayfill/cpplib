@@ -23,12 +23,6 @@ public:
 	{
 		WSACleanup();
 	}
-
-	static void SocketClose(SocketHandle socketHandle)
-	{
-		::closesocket(socketHandle);
-	}
-
 };
 
 #else
@@ -72,12 +66,6 @@ public:
 	{
 		pthread_sigmask(SIG_SETMASK, oldMask, NULL);
 	}
-
-	static void SocketClose(SocketHandle socketHandle)
-	{
-		close(socketHandle);
-	}
-
 };
 
 #endif

@@ -38,36 +38,50 @@ public:
 	{
 		try
 		{
-			std::cout << "catch server socket from: " 
-					  << this->info.getHostname()
-					  << ":" << this->info.getPort()
-					  << std::endl;
-		}
-		catch (std::exception& )
-		{
-			std::cout << "catch server socket from: " 
-					  << IP::getIpString(this->info.getIp())
-					  << ":" << this->info.getPort()
-					  << std::endl;
-		}
-		
-		char buffer[100];
-		size_t readCount;
-		while((readCount = this->read(buffer, 1)) != 0)
-		{
-			if (buffer[0] == 'q')
-				break;
-			else if(buffer[0] == 'x')
-			{
-				this->parent->setFinalize();
-				break;
-			}
+			this->shutdown(SocketImpl::write);
 
-			buffer[1] = 0;
-			std::cout << buffer;
-			std::cout.flush();
+			try
+			{
+				std::cout << "catch server socket from: " 
+						  << this->info.getHostname()
+						  << ":" << this->info.getPort()
+						  << std::endl;
+			}
+			catch (std::exception& )
+			{
+				std::cout << "catch server socket from: " 
+						  << IP::getIpString(this->info.getIp())
+						  << ":" << this->info.getPort()
+						  << std::endl;
+			}
+		
+			char buffer[100];
+			size_t readCount;
+			while((readCount = this->read(buffer, 1)) != 0)
+			{
+				if (buffer[0] == 'q')
+					break;
+				else if(buffer[0] == 'x')
+				{
+					this->parent->setFinalize();
+					break;
+				}
+
+				buffer[1] = 0;
+				std::cout << buffer;
+				std::cout.flush();
+			}
+		}
+		catch (std::exception& e)
+		{
+			std::cout << "raise exception: " << e.what() << std::endl;
+			std::cout << "connection closed." << std::endl;
+			this->shutdown(SocketImpl::read);
+			this->close();
+			throw ThreadException(e.what());
 		}
 		
+		this->shutdown(SocketImpl::read);
 		this->close();
 
 		return 0;

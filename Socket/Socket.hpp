@@ -230,10 +230,21 @@ public:
 	{
 		if (socket != 0) 
 		{
-			SocketModule::SocketClose(socket);
+			SocketImpl::socketClose(socket);
 			socket = static_cast<SocketHandle>(0);
 			isClosed = true;
 		}
+	}
+
+	/**
+	 * ソケットの接続遮断
+	 */
+	bool shutdown(SocketImpl::ShutdownTarget target)
+	{
+		if (!isConnected())
+			return false;
+
+		return SocketImpl::shutdown(socket, target) == 0;
 	}
 };
 
