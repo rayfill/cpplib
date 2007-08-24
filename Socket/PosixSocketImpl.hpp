@@ -80,7 +80,7 @@ struct PosixSocketImpl
 		int resolve_result = 0;
 		do {
 			resolve_result = getaddrinfo(addrName, NULL, &hints, &result);
-		} while (result == EAI_EAGAIN);
+		} while (result == EAI_AGAIN);
 
 		if (resolve_result != 0)
 			return 0;
