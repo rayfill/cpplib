@@ -75,17 +75,18 @@ struct PosixSocketImpl
 		in_addr_t addr;
 		
 		memset(&hints, 0, sizeof(hints));
-		hints.ai_family = AF_INET;
+		hints.ai_family = PF_INET;
 
 		int resolve_result = 0;
 		do {
 			resolve_result = getaddrinfo(addrName, NULL, &hints, &result);
 		} while (resolve_result == EAI_AGAIN);
 
+		int error = errno;
 		if (resolve_result != 0)
 		{
 			std::cout << std::endl << "error type: " << resolve_result << std::endl;
-			std::cout << "system error: " << strerror(errno) << std::endl;
+			std::cout << "system error: " << strerror(error) << std::endl;
 			return 0;
 		}
 
