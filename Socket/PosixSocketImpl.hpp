@@ -77,7 +77,12 @@ struct PosixSocketImpl
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = AF_INET;
 
-		if (getaddrinfo(addrName, NULL, &hints, &result))
+		int result = 0;
+		do {
+			result = getaddrinfo(addrName, NULL, &hints, &result);
+		} while (result == EAI_EAGAIN);
+
+		if (result != 0)
 			return 0;
 
 		addr = reinterpret_cast<sockaddr_in*>
