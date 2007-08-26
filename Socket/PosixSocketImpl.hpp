@@ -82,13 +82,8 @@ struct PosixSocketImpl
 			resolve_result = getaddrinfo(addrName, NULL, &hints, &result);
 		} while (resolve_result == EAI_AGAIN);
 
-		int error = errno;
 		if (resolve_result != 0)
-		{
-			std::cout << std::endl << "error type: " << resolve_result << std::endl;
-			std::cout << "system error: " << strerror(error) << std::endl;
 			return 0;
-		}
 
 		addr = reinterpret_cast<sockaddr_in*>
 			(result->ai_addr)->sin_addr.s_addr;
