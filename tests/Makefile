@@ -5,7 +5,12 @@
 
 
 #INCLUDE_PATH += -Ic:/mingw/include/stlport
-LIBS += -lcppunit
+
+ifeq ($(CXX),g++-dw2)
+LIBCPPUNIT=-lcppunit-dw2
+else
+LIBCPPUNIT=-lcppunit
+endif
 
 CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -W \
 	-fno-default-inline $(CXXOPTION) $(INCLUDE_PATH) -I.. \
@@ -85,7 +90,7 @@ document: ../Doxyfile
 	cd .. && doxygen
 
 $(TARGET): $(OBJS) Makefile
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS) 
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS) $(LIBCPPUNIT)
 
 
 %.d: %.cpp
