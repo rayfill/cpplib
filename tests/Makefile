@@ -21,6 +21,7 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -W \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
+	LLParserTest.o \
 	MD5Test.o \
 	CounterTest.o \
 	TreeTest.o \

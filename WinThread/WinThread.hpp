@@ -318,9 +318,11 @@ public:
 		switch(result)
 		{
 		case WAIT_OBJECT_0:
-			unsigned retValue;
-			GetExitCodeThread(this->threadHandle, (DWORD*)&retValue);
-			return retValue;
+		{
+			DWORD retValue;
+			GetExitCodeThread(this->threadHandle, &retValue);
+			return static_cast<unsigned int>(retValue);
+		}
 
 		case WAIT_TIMEOUT:
 			throw TimeoutException();
