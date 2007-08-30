@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include <text/parser/LLParser.hpp>
+#include <text/parser/Parser.hpp>
 
 #include <vector>
 #include <stdexcept>
