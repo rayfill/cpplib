@@ -1,21 +1,6 @@
 #ifndef LLPARSER_HPP_
 #define LLPARSER_HPP_
 
-class AbstructParser
-{
-public:
-	typedef AbstructParser self_type;
-
-	AbstructParser()
-	{}
-
-	AbstructParser(const AbstructParser&)
-	{}
-
-	~AbstructParser()
-	{}
-};
-
 template <typename CharType>
 class StringParser
 {
@@ -90,6 +75,45 @@ public:
 			return true;
 		}
 		
+		scanner.rollback();
+		return false;
+	}
+};
+
+template <typename CharType>
+class RangeParser
+{
+public:
+	typedef CharType char_type:
+
+private:
+	char_type small;
+	char_type large;
+
+public:
+	RangeParser(char_type small_, char_type large_):
+		small(small_), large(large_)
+	{
+		assert (small <= large);
+	}
+
+	~RangeParser()
+	{}
+
+	template <typename scanner_t>
+	bool parse(scanner_t& scanner) const
+	{
+		scanner.save();
+
+		const int input = scanner.read();
+		if (input != -1 &&
+			traits_type::to_char_type(input) >= small &&
+			traits_type::to_char_type(input) <= large)
+		{
+			scanner.commit();
+			return true;
+		}
+
 		scanner.rollback();
 		return false;
 	}
@@ -281,6 +305,13 @@ ConcatenateParser<left_type, right_type>
 operator>>(left_type lhs, right_type rhs)
 {
 	return createConcatenateParser(lhs, rhs);
+}
+
+template <typename left_type, typename right_type>
+ChooseParser<left_type, right_type>
+operator|(left_type lhs, right_type rhs)
+{
+	return createChooseParser(lhs, rhs);
 }
 
 #endif /* LLPARSER_HPP_ */

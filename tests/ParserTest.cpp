@@ -49,6 +49,8 @@ class LLParserTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(anyTest);
 	CPPUNIT_TEST(requiredTest);
 	CPPUNIT_TEST(optionalTest);
+	CPPUNIT_TEST(concatOperatorTest);
+	CPPUNIT_TEST(chooseOperatorTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -151,7 +153,23 @@ public:
 		CPPUNIT_ASSERT(p.parse(scan));
 	}
 
+	void concatOperatorTest()
+	{
+		std::string input("ab");
+		scanner scan(input.begin(), input.end());
+		CPPUNIT_ASSERT(
+			(CharacterParser<char>('a') >> CharacterParser<char>('b')).
+			parse(scan));
+	}
 
+	void chooseOperatorTest()
+	{
+		std::string input("b");
+		scanner scan(input.begin(), input.end());
+		CPPUNIT_ASSERT(
+			(CharacterParser<char>('a') | CharacterParser<char>('b')).
+			parse(scan));
+	}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( LLParserTest );
