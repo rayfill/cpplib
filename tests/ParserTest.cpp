@@ -39,9 +39,9 @@ public:
 	}
 };
 
-class LLParserTest : public CppUnit::TestFixture
+class ParserTest : public CppUnit::TestFixture
 {
-	CPPUNIT_TEST_SUITE(LLParserTest);
+	CPPUNIT_TEST_SUITE(ParserTest);
 	CPPUNIT_TEST(concatenateTest);
 	CPPUNIT_TEST(chooseTest);
 	CPPUNIT_TEST(characterTest);
@@ -172,4 +172,4 @@ public:
 	}
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION( LLParserTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( ParserTest );

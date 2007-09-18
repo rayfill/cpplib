@@ -84,7 +84,8 @@ template <typename CharType>
 class RangeParser
 {
 public:
-	typedef CharType char_type:
+	typedef CharType char_type;
+	typedef std::char_traits<char_type> traits_type;
 
 private:
 	char_type small;
