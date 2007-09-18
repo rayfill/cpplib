@@ -6,12 +6,12 @@
 class WinTimeCounter
 {
 private:
-	LARGE_INTEGER start_time;
-	LARGE_INTEGER stop_time;
+	LARGE_INTEGER startTime;
+	LARGE_INTEGER stopTime;
 	
 public:
 	WinTimeCounter():
-		start_time(), stop_time()
+		startTime(), stopTime()
 	{}
 
 	~WinTimeCounter()
@@ -19,12 +19,12 @@ public:
 
 	void start()
 	{
-		QueryPerformanceCounter(&start_time);
+		QueryPerformanceCounter(&startTime);
 	}
 
 	void stop()
 	{
-		QueryPerformanceCounter(&stop_time);
+		QueryPerformanceCounter(&stopTime);
 	}
 
 private:
@@ -42,7 +42,7 @@ public:
 		QueryPerformanceFrequency(&freq);
 
 		return
-			((stop_time.QuadPart - start_time.QuadPart) * 1000) /
+			((stopTime.QuadPart - startTime.QuadPart) * 1000) /
 			freq.QuadPart;
 	}
 };
