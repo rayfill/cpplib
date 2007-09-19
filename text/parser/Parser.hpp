@@ -1,6 +1,50 @@
 #ifndef LLPARSER_HPP_
 #define LLPARSER_HPP_
 
+#include <text/regex/RegexCompile.hpp>
+
+template <typename CharType>
+class RegexParser
+{
+public:
+	typedef RegexParser self_type;
+	typedef CharType char_type;
+	typedef std::char_traits<char_type> traits_type;
+	typedef std::basic_string<char_type> string_type;
+
+private:
+	typedef RegexCompiler<char_type> regex_compiler_t;
+	typedef RegexMatch<char_type> regex_match_t;
+
+	const std::string pattern;
+public:
+	RegexParser(const char* pattern_):
+		pattern(pattern_)
+	{}
+
+	~RegexParser()
+	{}
+
+	template <typename scanner_t>
+	bool parse(scanner_t& scanner) const
+	{
+		regex_compiler_t compiler;
+		regex_match_t match = compiler.compile(pattern);
+		if (match.match(scanner.getRemainString()))
+		{
+			std::pair<size_t, size_t> position = match.getCapture(0);
+			if (position.first != 0)
+				return false;
+
+			scanner.skip(position.second);
+			return true;
+		}
+
+		return false;
+	}
+	
+};
+
 template <typename CharType>
 class StringParser
 {

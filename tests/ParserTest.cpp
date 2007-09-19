@@ -37,6 +37,16 @@ public:
 			return -1;
 		return std::char_traits<char>::to_int_type(*current++);
 	}
+
+	std::string getRemainString() const
+	{
+		return std::string(current, last);
+	}
+
+	void skip(size_t skipCount)
+	{
+		current += skipCount;
+	}
 };
 
 class ParserTest : public CppUnit::TestFixture
@@ -49,11 +59,30 @@ class ParserTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(anyTest);
 	CPPUNIT_TEST(requiredTest);
 	CPPUNIT_TEST(optionalTest);
+	CPPUNIT_TEST(regexTest);
 	CPPUNIT_TEST(concatOperatorTest);
 	CPPUNIT_TEST(chooseOperatorTest);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
+	void regexTest()
+	{
+		std::string input = "aaabbbbcccd";
+		
+		RegexParser<char> p("a+b*");
+		RegexParser<char> throw_p("a(");
+		RegexParser<char> throw2_p("a[");
+
+		scanner scan(input.begin(), input.end());
+
+		CPPUNIT_ASSERT(p.parse(scan));
+		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
+		CPPUNIT_ASSERT_THROW(throw_p.parse(scan), CompileError);
+		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
+		CPPUNIT_ASSERT_THROW(throw2_p.parse(scan), CompileError);
+		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
+	}
+
 	void characterTest()
 	{
 		std::string input1 = "a";

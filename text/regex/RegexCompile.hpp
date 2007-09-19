@@ -1069,7 +1069,7 @@ protected:
 		return std::make_pair(result, result);
 	}
 
-	static token_pair_t concatinate(token_t* first, token_t* second)
+	static token_pair_t concatenate(token_t* first, token_t* second)
 	{
 		assert(first != NULL);
 		assert(second != NULL);
@@ -1079,9 +1079,9 @@ protected:
 		return std::make_pair(first, second);
 	}
 
-	static token_pair_t concatinate(token_pair_t first, token_pair_t second)
+	static token_pair_t concatenate(token_pair_t first, token_pair_t second)
 	{
-		concatinate(first.second, second.first);
+		concatenate(first.second, second.first);
 
 		return std::make_pair(first.first, second.second);
 	}
@@ -1352,7 +1352,7 @@ public:
 		return result.size();
 	}
 
-	std::pair<size_t, size_t> getCapture(const int groupNumber) const
+	std::pair<size_t, size_t> getCapture(const unsigned int groupNumber) const
 	{
 		assert(groupNumber < this->size());
 
@@ -1518,7 +1518,7 @@ private:
 		return base_t::group(subCompile(scanner), groupNumber);
 	}
 
-	token_pair_t concatinateTokens(std::vector<token_pair_t>& parseStack) const
+	token_pair_t concatenateTokens(std::vector<token_pair_t>& parseStack) const
 	{
 		assert(parseStack.size() != 0);
 
@@ -1536,7 +1536,7 @@ private:
 		{
 			token_pair_t left = parseStack.back();
 			parseStack.pop_back();
-			right = concatinate(left, right);
+			right = concatenate(left, right);
 		}
 		while (parseStack.size() != 0);
 
@@ -1582,7 +1582,7 @@ private:
 
 				case '|':
 					return selectCompile(scanner,
-										 concatinateTokens(parseStack));
+										 concatenateTokens(parseStack));
 
 				case '(':
 					++base_t::parenCount;
@@ -1597,7 +1597,7 @@ private:
 					if (base_t::parenCount <= 0)
 						throw CompileError("not match paren count.");
 					--base_t::parenCount;
-					return concatinateTokens(parseStack);
+					return concatenateTokens(parseStack);
 
 				case '[':
 					parseStack.push_back(compileSet(scanner));
@@ -1624,7 +1624,10 @@ private:
 			}
 		}
 
-		return concatinateTokens(parseStack);
+		if (base_t::parenCount > 0)
+			throw CompileError("unclosed '(' token.");
+
+		return concatenateTokens(parseStack);
 	}
 
 	token_pair_t compileInternal(std::string pattern)
@@ -1634,7 +1637,7 @@ private:
 			RegexHead<char_t>* head = new RegexHead<char_t>();
 			RegexTail<char_t>* tail = new RegexTail<char_t>();
 
-			concatinate(head, tail);
+			concatenate(head, tail);
 			return std::make_pair(head, tail);
 		}
 			
@@ -1652,8 +1655,8 @@ private:
 		RegexHead<char_t>* head = new RegexHead<char_t>();
 		RegexTail<char_t>* tail = new RegexTail<char_t>();
 
-		concatinate(head, pair.first);
-		concatinate(pair.second, tail);
+		concatenate(head, pair.first);
+		concatenate(pair.second, tail);
 
 		return std::make_pair(head, tail);
 	}

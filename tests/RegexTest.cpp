@@ -348,7 +348,7 @@ public:
 		char_token_t* token_b = new char_token_t('b');
 
 		manager_t::token_pair_t pair =
-			manager.concatinate(token_a, token_b);
+			manager.concatenate(token_a, token_b);
 
 		CPPUNIT_ASSERT(pair.first == token_a);
 		CPPUNIT_ASSERT(pair.second == token_b);
