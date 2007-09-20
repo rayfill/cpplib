@@ -16,10 +16,14 @@ private:
 	typedef RegexCompiler<char_type> regex_compiler_t;
 	typedef RegexMatch<char_type> regex_match_t;
 
-	const std::string pattern;
+	regex_match_t matcher;
 public:
-	RegexParser(const char* pattern_):
-		pattern(pattern_)
+	RegexParser(const char_type* pattern):
+		matcher(regex_compiler_t().compile(pattern))
+	{}
+
+	RegexParser(const RegexParser& source):
+		matcher(source.matcher)
 	{}
 
 	~RegexParser()
@@ -28,11 +32,11 @@ public:
 	template <typename scanner_t>
 	bool parse(scanner_t& scanner) const
 	{
-		regex_compiler_t compiler;
-		regex_match_t match = compiler.compile(pattern);
-		if (match.match(scanner.getRemainString()))
+		regex_match_t matcher_(matcher);
+
+		if (matcher_.match(scanner.getRemainString()))
 		{
-			std::pair<size_t, size_t> position = match.getCapture(0);
+			std::pair<size_t, size_t> position = matcher_.getCapture(0);
 			if (position.first != 0)
 				return false;
 
@@ -357,6 +361,19 @@ ChooseParser<left_type, right_type>
 operator|(left_type lhs, right_type rhs)
 {
 	return createChooseParser(lhs, rhs);
+}
+
+template <typename ParserType, typename ScannerType, typename SkiperType>
+bool parse(ParserType parser, ScannerType scanner, SkiperType skiper)
+{
+	bool result = false;
+
+	while (!scanner.isEos())
+	{
+
+	}
+
+	return true;
 }
 
 #endif /* LLPARSER_HPP_ */

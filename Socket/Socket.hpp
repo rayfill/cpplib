@@ -32,7 +32,8 @@ protected:
 		FD_SET(sock, &fd);
 
 		timeval val = timeout;
-		if (::select((SelectRange)sock + 1, &fd, 0, 0, &val) > 0)
+		if (::select(static_cast<SelectRange>(sock) + 1,
+					 &fd, 0, 0, &val) > 0)
 			return true;
 
 		return false;
@@ -52,7 +53,8 @@ protected:
 		FD_SET(sock, &fd);
 	
 		timeval val = timeout;
-		if (::select((SelectRange)sock + 1, 0, &fd, 0, &val) > 0)
+		if (::select(static_cast<SelectRange>(sock) + 1,
+					 0, &fd, 0, &val) > 0)
 			return true;
 		return false;
 	}

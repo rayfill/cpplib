@@ -84,7 +84,7 @@ all: $(TARGET)
 
 makedepend: cleandepend $(DEPENDFILES)
 
-test: all
+check: all
 	./$(TARGET)
 
 document: ../Doxyfile

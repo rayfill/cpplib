@@ -1,53 +1,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <text/parser/Parser.hpp>
+#include <text/parser/Scanner.hpp>
 
 #include <vector>
 #include <stdexcept>
 
-class scanner
-{
-	std::vector<std::string::iterator> stateStack;
-	std::string::iterator current;
-	std::string::iterator last;
-
-public:
-	scanner(std::string::iterator head_, std::string::iterator last_):
-		stateStack(), current(head_), last(last_)
-	{}
-
-	void save()
-	{
-		stateStack.push_back(current);
-	}
-
-	void rollback()
-	{
-		current = stateStack.back();
-		stateStack.pop_back();
-	}
-
-	void commit()
-	{
-		stateStack.pop_back();
-	}
-
-	int read()
-	{
-		if (current == last)
-			return -1;
-		return std::char_traits<char>::to_int_type(*current++);
-	}
-
-	std::string getRemainString() const
-	{
-		return std::string(current, last);
-	}
-
-	void skip(size_t skipCount)
-	{
-		current += skipCount;
-	}
-};
+typedef Scanner<char> scanner;
 
 class ParserTest : public CppUnit::TestFixture
 {
@@ -70,16 +28,12 @@ public:
 		std::string input = "aaabbbbcccd";
 		
 		RegexParser<char> p("a+b*");
-		RegexParser<char> throw_p("a(");
-		RegexParser<char> throw2_p("a[");
+		CPPUNIT_ASSERT_THROW(RegexParser<char> throw_p("a("), CompileError);;
+		CPPUNIT_ASSERT_THROW(RegexParser<char> throw2_p("a["), CompileError);;
 
 		scanner scan(input.begin(), input.end());
 
 		CPPUNIT_ASSERT(p.parse(scan));
-		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
-		CPPUNIT_ASSERT_THROW(throw_p.parse(scan), CompileError);
-		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
-		CPPUNIT_ASSERT_THROW(throw2_p.parse(scan), CompileError);
 		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
 	}
 
