@@ -61,6 +61,7 @@ struct Win32SocketImpl
 	 */
 	static u_long getAddrByName(const char* addrName)
 	{
+#if (WINNT_VER>=0x0501)
 		addrinfo hints;
 		addrinfo* result = NULL;
 		u_long addr;
@@ -84,10 +85,19 @@ struct Win32SocketImpl
 		freeaddrinfo(result);
 
 		return addr;
+#else
+		hostent* entry = gethostbyname(addrName);
+		if (entry)
+			return
+				reinterpret_cast<in_addr*>(entry->h_addr)->s_addr;
+
+		return 0UL;
+#endif
 	}
 
 	static std::string getNameByAddr(unsigned long ipAddress)
 	{
+#if WIN_VER>=0x0501
 		/**
 		 * @see http://www.nic.ad.jp/ja/dom/system.html
 		 * ドメイン名長さは256文字以下
@@ -109,6 +119,14 @@ struct Win32SocketImpl
 			return "";
 
 		return std::string(result);
+#else
+		hostent* entry =
+			gethostbyaddr(reinterpret_cast<const char*>(&ipAddress),
+						  4, AF_INET);
+		if (entry)
+			return std::string(entry->h_name);
+		return "";
+#endif
 	}
 
 	static void socketClose(SocketHandle socketHandle)
