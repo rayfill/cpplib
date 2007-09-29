@@ -46,6 +46,13 @@ public:
 		return std::char_traits<char>::to_int_type(*current++);
 	}
 
+	int readAhead()
+	{
+		if (current == last)
+			return -1;
+		return std::char_traits<char>::to_int_type(*current);
+	}
+
 	string_type getRemainString() const
 	{
 		return string_type(current, last);

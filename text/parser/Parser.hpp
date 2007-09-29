@@ -1,10 +1,151 @@
-#ifndef LLPARSER_HPP_
-#define LLPARSER_HPP_
+#ifndef PARSER_HPP_
+#define PARSER_HPP_
 
 #include <text/regex/RegexCompile.hpp>
+#include <util/SmartPointer.hpp>
+
+template <typename scanner_t, typename skip_t>
+class AbstractParser
+{
+public:
+	virtual ~AbstractParser()
+	{}
+
+	virtual bool parse_virtual(scanner_t& scanner, skip_t& skip_p) const = 0;
+};
+
+template <typename ParserType, typename scanner_t, typename skip_t>
+class ConcreateParser : public AbstractParser<scanner_t, skip_t>
+{
+private:
+	ParserType* pointer;
+
+	ConcreateParser();
+public:
+
+	ConcreateParser(ParserType src):
+		pointer(new ParserType(src))
+	{}
+
+	ConcreateParser(ConcreateParser& src):
+		pointer(new ParserType(*src->pointer))
+	{}
+
+	virtual ~ConcreateParser()
+	{
+		delete pointer;
+	}
+
+	virtual bool parse_virtual(scanner_t& scanner, skip_t& skip_p) const
+	{
+		return pointer->parse(scanner, skip_p);
+	}
+};
+
+template <typename ScannerType, typename SkipParserType>
+class RuleParser
+{
+public:
+	typedef RuleParser self_type;
+	typedef ScannerType scanner_type;
+	typedef SkipParserType skip_parser_type;
+	typedef AbstractParser<scanner_type, skip_parser_type> abstract_t;
+
+private:
+	SmartPointer<abstract_t> stubParser;
+
+public:
+	RuleParser():
+		stubParser()
+	{}
+
+	RuleParser(const RuleParser& src):
+		stubParser(src.stubParser)
+	{}
+
+	~RuleParser()
+	{}
+
+	template <typename ParserType>
+	self_type& operator=(const ParserType& parser)
+	{
+		stubParser =
+			new ConcreateParser<ParserType, ScannerType, SkipParserType>
+			(parser);
+
+		return *this;
+	}
+
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skipParser) const
+	{
+		return stubParser->parse_virtual(scanner, skipParser);
+	}
+};
 
 template <typename CharType>
-class RegexParser
+class SkipParser 
+{
+public:
+	typedef SkipParser self_type;
+	typedef CharType char_type;
+	typedef std::char_traits<char_type> traits_type;
+
+
+private:
+	typedef std::vector<char_type> token_type;
+	token_type skipTokens;
+
+	static std::vector<char_type> getDefaultTokens()
+	{
+		std::vector<char_type> result;
+		result.push_back(' ');
+		result.push_back('\t');
+
+		return result;
+	}
+
+	bool isSkipCharacter(char_type ch) const
+	{
+		for (typename token_type::const_iterator itor = skipTokens.begin();
+			 itor != skipTokens.end(); ++itor)
+		{
+			if (*itor == ch)
+				return true;
+		}
+		return false;
+	}
+
+public:
+	SkipParser():
+		skipTokens(getDefaultTokens())
+	{}
+
+	SkipParser(const SkipParser& src):
+		skipTokens(src.skipTokens)
+	{}
+
+	~SkipParser()
+	{}
+
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t&) const
+	{
+		for (int readChar = scanner.readAhead();
+			 readChar != -1; readChar = scanner.readAhead())
+		{
+			if (!isSkipCharacter(readChar))
+				break;
+
+			scanner.skip(1);
+		}
+
+		return true;
+	}
+};
+
+template <typename CharType>
+class RegexParser 
 {
 public:
 	typedef RegexParser self_type;
@@ -29,8 +170,8 @@ public:
 	~RegexParser()
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t&) const
 	{
 		regex_match_t matcher_(matcher);
 
@@ -50,7 +191,7 @@ public:
 };
 
 template <typename CharType>
-class StringParser
+class StringParser 
 {
 public:
 	typedef StringParser self_type;
@@ -70,8 +211,8 @@ public:
 		literal(source.literal)
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& ) const
 	{
 		scanner.save();
 		
@@ -92,7 +233,7 @@ public:
 };
 
 template <typename CharType>
-class CharacterParser
+class CharacterParser 
 {
 public:
 	typedef CharacterParser self_type;
@@ -111,8 +252,8 @@ public:
 		character(source.character)
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& ) const
 	{
 		scanner.save();
 		const int value = scanner.read();
@@ -129,7 +270,7 @@ public:
 };
 
 template <typename CharType>
-class RangeParser
+class RangeParser 
 {
 public:
 	typedef CharType char_type;
@@ -149,8 +290,8 @@ public:
 	~RangeParser()
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skip_p) const
 	{
 		scanner.save();
 
@@ -169,7 +310,7 @@ public:
 };
 
 template <typename LHSType, typename RHSType>
-class ChooseParser
+class ChooseParser 
 {
 public:
 	typedef ChooseParser self_type;
@@ -190,12 +331,12 @@ public:
 		lhs(source.lhs), rhs(source.rhs)
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skip_p) const
 	{
 		scanner.save();
-		if (lhs.parse(scanner) ||
-			rhs.parse(scanner))
+		if (lhs.parse(scanner, skip_p) ||
+			rhs.parse(scanner, skip_p))
 		{
 			scanner.commit();
 			return true;
@@ -206,7 +347,7 @@ public:
 };
 
 template <typename StubType>
-class AnyParser
+class AnyParser 
 {
 public:
 	typedef AnyParser self_type;
@@ -224,17 +365,17 @@ public:
 		stub(source.stub)
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skip_p) const
 	{
-		while (stub.parse(scanner));
+		while (stub.parse(scanner, skip_p));
 
 		return true;
 	}
 };
 
 template <typename StubType>
-class RequiredParser
+class RequiredParser 
 {
 public:
 	typedef RequiredParser self_type;
@@ -252,23 +393,23 @@ public:
 		stub(source.stub)
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skip_p) const
 	{
 		scanner.save();
-		if (!stub.parse(scanner))
+		if (!stub.parse(scanner, skip_p))
 		{
 			scanner.rollback();
 			return false;
 		}
 
-		while (stub.parse(scanner));
+		while (stub.parse(scanner, skip_p));
 		return true;
 	}
 };
 
 template <typename StubType>
-class OptionalParser
+class OptionalParser 
 {
 public:
 	typedef OptionalParser self_type;
@@ -286,11 +427,11 @@ public:
 		stub(source.stub)
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skip_p) const
 	{
 		scanner.save();
-		if (!stub.parse(scanner))
+		if (!stub.parse(scanner, skip_p))
 			scanner.rollback();
 
 		return true;
@@ -298,7 +439,7 @@ public:
 };
 
 template <typename LHSType, typename RHSType>
-class ConcatenateParser
+class ConcatenateParser 
 {
 public:
 	typedef ConcatenateParser self_type;
@@ -318,13 +459,15 @@ public:
 	virtual ~ConcatenateParser()
 	{}
 
-	template <typename scanner_t>
-	bool parse(scanner_t& scanner) const
+	template <typename scanner_t, typename skip_t>
+	bool parse(scanner_t& scanner, skip_t& skip_p) const
 	{
 		scanner.save();
-		if (lhs.parse(scanner))
+		if (lhs.parse(scanner, skip_p))
 		{
-			if (rhs.parse(scanner))
+			skip_p.parse(scanner, skip_p);
+
+			if (rhs.parse(scanner, skip_p))
 			{
 				scanner.commit();
 				return true;
@@ -376,4 +519,4 @@ bool parse(ParserType parser, ScannerType scanner, SkiperType skiper)
 	return true;
 }
 
-#endif /* LLPARSER_HPP_ */
+#endif /* PARSER_HPP_ */

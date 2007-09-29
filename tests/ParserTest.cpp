@@ -5,11 +5,14 @@
 #include <vector>
 #include <stdexcept>
 
-typedef Scanner<char> scanner;
+typedef Scanner<char> ScannerType;
 
 class ParserTest : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(ParserTest);
+	CPPUNIT_TEST(ruleTest);
+	CPPUNIT_TEST(abstractTest);
+	CPPUNIT_TEST(skipTest);
 	CPPUNIT_TEST(concatenateTest);
 	CPPUNIT_TEST(chooseTest);
 	CPPUNIT_TEST(characterTest);
@@ -22,7 +25,46 @@ class ParserTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(chooseOperatorTest);
 	CPPUNIT_TEST_SUITE_END();
 
+private:
+	SkipParser<char> skipParser;
+
 public:
+	void ruleTest()
+	{
+		std::string input = "     abc   def";
+		ScannerType scan(input.begin(), input.end());
+
+		RuleParser<ScannerType, SkipParser<char> > rule;
+		rule = SkipParser<char>();
+
+		CPPUNIT_ASSERT(rule.parse(scan, skipParser));
+		CPPUNIT_ASSERT(scan.read() == 'a');
+	}
+
+	void abstractTest()
+	{
+		std::string input = "     abc   def";
+		ScannerType scan(input.begin(), input.end());
+		SkipParser<char> sp;
+		AbstractParser<ScannerType, SkipParser<char> >* p =
+			new ConcreateParser<SkipParser<char>, ScannerType, SkipParser<char> >(sp);
+
+		CPPUNIT_ASSERT(p->parse_virtual(scan, skipParser));
+		CPPUNIT_ASSERT(scan.read() == 'a');
+		
+		delete p;
+	}
+
+	void skipTest()
+	{
+		std::string input = "     abc   def";
+		ScannerType scan(input.begin(), input.end());
+		SkipParser<char> p;
+
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
+		CPPUNIT_ASSERT(scan.read() == 'a');
+	}
+
 	void regexTest()
 	{
 		std::string input = "aaabbbbcccd";
@@ -31,9 +73,9 @@ public:
 		CPPUNIT_ASSERT_THROW(RegexParser<char> throw_p("a("), CompileError);;
 		CPPUNIT_ASSERT_THROW(RegexParser<char> throw2_p("a["), CompileError);;
 
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 
-		CPPUNIT_ASSERT(p.parse(scan));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
 		CPPUNIT_ASSERT(scan.getRemainString() == "cccd");
 	}
 
@@ -44,11 +86,11 @@ public:
 
 		CharacterParser<char> p('a');
 
-		scanner scan(input1.begin(), input1.end());
-		scanner scan2(input2.begin(), input2.end());
+		ScannerType scan(input1.begin(), input1.end());
+		ScannerType scan2(input2.begin(), input2.end());
 
-		CPPUNIT_ASSERT(p.parse(scan));
-		CPPUNIT_ASSERT(!p.parse(scan2));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
+		CPPUNIT_ASSERT(!p.parse(scan2, skipParser));
 	}
 
 	void concatenateTest()
@@ -57,17 +99,17 @@ public:
 		CharacterParser<char> a('a');
 		CharacterParser<char> b('b');
 		
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 		scan.save();
-		CPPUNIT_ASSERT(createConcatenateParser(a, b).parse(scan));
-		CPPUNIT_ASSERT(!createConcatenateParser(a, b).parse(scan));
+		CPPUNIT_ASSERT(createConcatenateParser(a, b).parse(scan, skipParser));
+		CPPUNIT_ASSERT(!createConcatenateParser(a, b).parse(scan, skipParser));
 		
 		scan.rollback();
-		CPPUNIT_ASSERT(!createConcatenateParser(b, a).parse(scan));
+		CPPUNIT_ASSERT(!createConcatenateParser(b, a).parse(scan, skipParser));
 		
 		std::string input2 = "ba";
-		scanner scan2(input2.begin(), input2.end());
-		CPPUNIT_ASSERT(createConcatenateParser(b, a).parse(scan2));
+		ScannerType scan2(input2.begin(), input2.end());
+		CPPUNIT_ASSERT(createConcatenateParser(b, a).parse(scan2, skipParser));
 	}
 
 	void chooseTest()
@@ -79,12 +121,12 @@ public:
 		CharacterParser<char> a('a');
 		CharacterParser<char> b('b');
 
-		scanner s1(i_a.begin(), i_a.end());
-		scanner s2(i_b.begin(), i_b.end());
-		scanner s3(i_c.begin(), i_c.end());
-		CPPUNIT_ASSERT(createChooseParser(a, b).parse(s1));
-		CPPUNIT_ASSERT(createChooseParser(a, b).parse(s2));
-		CPPUNIT_ASSERT(!createChooseParser(a, b).parse(s3));
+		ScannerType s1(i_a.begin(), i_a.end());
+		ScannerType s2(i_b.begin(), i_b.end());
+		ScannerType s3(i_c.begin(), i_c.end());
+		CPPUNIT_ASSERT(createChooseParser(a, b).parse(s1, skipParser));
+		CPPUNIT_ASSERT(createChooseParser(a, b).parse(s2, skipParser));
+		CPPUNIT_ASSERT(!createChooseParser(a, b).parse(s3, skipParser));
 
 	}
 
@@ -93,65 +135,65 @@ public:
 		std::string i = "hogehoge";
 
 		StringParser<char> p("hoge");
-		scanner scan(i.begin(), i.end());
-		CPPUNIT_ASSERT(p.parse(scan));
-		CPPUNIT_ASSERT(p.parse(scan));
-		CPPUNIT_ASSERT(!p.parse(scan));
+		ScannerType scan(i.begin(), i.end());
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
+		CPPUNIT_ASSERT(!p.parse(scan, skipParser));
 
 		std::string i2 = "fuga";
-		scanner scan2(i2.begin(), i2.end());
-		CPPUNIT_ASSERT(!p.parse(scan2));
+		ScannerType scan2(i2.begin(), i2.end());
+		CPPUNIT_ASSERT(!p.parse(scan2, skipParser));
 	}
 
 	void anyTest()
 	{
 		std::string input = "aaaaaaaaaaaab";
 
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 
 		AnyParser<CharacterParser<char> > p(CharacterParser<char>('a'));
 
-		CPPUNIT_ASSERT(p.parse(scan));
-		CPPUNIT_ASSERT(p.parse(scan));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
 	}
 
 	void requiredTest()
 	{
 		std::string input = "aaaaab";
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 
 		RequiredParser<CharacterParser<char> > p(CharacterParser<char>('a'));
-		CPPUNIT_ASSERT(p.parse(scan));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
 		std::string input2 = "b";
-		scanner scan2(input2.begin(), input2.end());
-		CPPUNIT_ASSERT(!p.parse(scan2));
+		ScannerType scan2(input2.begin(), input2.end());
+		CPPUNIT_ASSERT(!p.parse(scan2, skipParser));
 	}
 
 	void optionalTest()
 	{
 		std::string input = "";
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 
 		OptionalParser<CharacterParser<char> > p(CharacterParser<char>('a'));
-		CPPUNIT_ASSERT(p.parse(scan));
+		CPPUNIT_ASSERT(p.parse(scan, skipParser));
 	}
 
 	void concatOperatorTest()
 	{
 		std::string input("ab");
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 		CPPUNIT_ASSERT(
 			(CharacterParser<char>('a') >> CharacterParser<char>('b')).
-			parse(scan));
+			parse(scan, skipParser));
 	}
 
 	void chooseOperatorTest()
 	{
 		std::string input("b");
-		scanner scan(input.begin(), input.end());
+		ScannerType scan(input.begin(), input.end());
 		CPPUNIT_ASSERT(
 			(CharacterParser<char>('a') | CharacterParser<char>('b')).
-			parse(scan));
+			parse(scan, skipParser));
 	}
 };
 

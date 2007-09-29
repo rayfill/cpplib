@@ -117,6 +117,13 @@ public:
 		refCount->addReference();
 	}
 
+	SmartPointer():
+		pointer(),
+		refCount(new ReferenceCounter())
+	{
+		refCount->addReference();
+	}
+
 	/**
 	 * コピーコンストラクタ
 	 * @param src コピー元オブジェクト
