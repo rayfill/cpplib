@@ -1,6 +1,7 @@
 #ifndef PARSER_HPP_
 #define PARSER_HPP_
 
+#include <string>
 #include <text/regex/RegexCompile.hpp>
 #include <util/SmartPointer.hpp>
 
@@ -11,7 +12,7 @@ public:
 	virtual ~AbstractParser()
 	{}
 
-	virtual bool parse_virtual(scanner_t& scanner, skip_t& skip_p) const = 0;
+	virtual bool parseVirtual(scanner_t& scanner, skip_t& skip_p) const = 0;
 };
 
 template <typename ParserType, typename scanner_t, typename skip_t>
@@ -36,7 +37,7 @@ public:
 		delete pointer;
 	}
 
-	virtual bool parse_virtual(scanner_t& scanner, skip_t& skip_p) const
+	virtual bool parseVirtual(scanner_t& scanner, skip_t& skip_p) const
 	{
 		return pointer->parse(scanner, skip_p);
 	}
@@ -80,6 +81,14 @@ public:
 	bool parse(scanner_t& scanner, skip_t& skipParser) const
 	{
 		return stubParser->parse_virtual(scanner, skipParser);
+	}
+
+	template <typename scanner_t>
+	void action(ParseInfo& parseInfo,
+				typename scanner_t::iterator head,
+				typename scanner_t::iterator tail)
+	{
+		
 	}
 };
 

@@ -22,7 +22,7 @@ TARGET= UnitTest
 
 OBJS= TestMain.o \
 	ParserTest.o \
-	MD5Test.o \
+#	MD5Test.o \
 	CounterTest.o \
 	TreeTest.o \
 	IPTest.o \

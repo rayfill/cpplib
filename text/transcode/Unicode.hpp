@@ -238,6 +238,33 @@ public:
 	{
 		return UCS4toUTF16(UTF8toUCS4(utf8.begin(), utf8.end()));
 	}
+
+	template <typename src_type, typename dest_type>
+	static dest_type transcode(src_type);
+
+	template <>
+	static std::basic_string<wchar_t> transcode(std::basic_string<char> str)
+	{
+		return UTF8toUTF16(str);
+	}
+
+	template <>
+	static std::basic_string<char> transcode(std::basic_string<wchar_t> str)
+	{
+		return UTF16toUTF8(str);
+	}
+
+	template <>
+	static std::basic_string<char> transcode(std::basic_string<char> str)
+	{
+		return str;
+	}
+
+	template <>
+	static std::basic_string<wchar_t> transcode(std::basic_string<wchar_t> str)
+	{
+		return str;
+	}
 };
 
 #endif /* UNICODE_HPP_ */
