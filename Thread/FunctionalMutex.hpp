@@ -15,8 +15,9 @@ private:
 	waiter_t waiter;
 
 public:
-	FunctionalMutex():
-		tester(), waiter()
+	FunctionalMutex(const functor_t& tester_ = functor_t(),
+					const waiter_t& waiter_ = waiter_t()):
+		tester(tester_), waiter(waiter_)
 	{}
 	
 	~FunctionalMutex()
