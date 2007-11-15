@@ -21,8 +21,8 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -W \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
-	ParserTest.o \
-#	MD5Test.o \
+	AESTest.o SHA1Test.o \
+	MD5Test.o \
 	CounterTest.o \
 	TreeTest.o \
 	IPTest.o \
@@ -53,7 +53,6 @@ OBJS= TestMain.o \
 	NotifyTest.o RangeTest.o \
 	LZSSTest.o \
 	CBCTest.o \
-	AESTest.o SHA1Test.o \
 	XMLParserTest.o \
 	NumberTheoryTest.o \
 	AlgebraTheoryTest.o \
@@ -66,6 +65,7 @@ OBJS= TestMain.o \
 	SingletonTestFunc1.o SingletonTestFunc2.o \
 	ExifTest.o \
 	TreeTest.o \
+#	ParserTest.o \
 #	ShiftJISTest.o \
 #	BitmapTest.o \
 #	ImageTest.o \
