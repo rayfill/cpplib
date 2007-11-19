@@ -64,15 +64,14 @@ namespace Exif
 		TagInfo(const unsigned short tag_ = 0,
 				const unsigned short tagType_ = 0,
 				const unsigned int numberOfValues_ = 0,
-				const unsigned int valueOrOffset_ = 0) throw()
+				const unsigned int valueOrOffset_ = 0)
 			: tag(tag_),
 			  tagType(tagType_),
 			  numberOfValues(numberOfValues_),
 			  valueOrOffset(valueOrOffset_)
-		{
-		}
+		{}
 
-		~TagInfo() throw()
+		~TagInfo()
 		{}
 
 	};
@@ -106,7 +105,7 @@ namespace Exif
 		}
 
 		size_t getValueSize(
-			const TagInfo& tag) const throw(std::runtime_error)
+			const TagInfo& tag) const
 		{
 			switch(tag.getTagType())
 			{
@@ -145,7 +144,7 @@ namespace Exif
 		}
 
 		const void* getResourceOffset(
-			const TagInfo& tag) const throw()
+			const TagInfo& tag) const
 		{
 			return
 				reinterpret_cast<const unsigned char*>(resourceHead) +
@@ -153,10 +152,10 @@ namespace Exif
 		}
 
 		template <typename TargetType>
-		struct ConstractorTraits
+		struct ConstructorTraits
 		{
 			const UserDefinedEndianConverter& converter;
-			ConstractorTraits(const UserDefinedEndianConverter& converter_) throw()
+			ConstructorTraits(const UserDefinedEndianConverter& converter_)
 				: converter(converter_)
 			{}
 			
@@ -170,11 +169,11 @@ namespace Exif
 		};
 
 		template <typename RationalBaseType>
-		struct RationalConstractorTraits
+		struct RationalConstructorTraits
 		{
 			const UserDefinedEndianConverter& converter;
-			RationalConstractorTraits(
-				const UserDefinedEndianConverter& converter_) throw()
+			RationalConstructorTraits(
+				const UserDefinedEndianConverter& converter_)
 				: converter(converter_)
 			{}
 
@@ -194,7 +193,7 @@ namespace Exif
 		template<typename convType,
 			typename CtorTraits>
 		std::vector<convType> getVectorFromTag(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
  		{
 			CtorTraits traits = CtorTraits(converter);
 			std::vector<convType> result;
@@ -229,10 +228,10 @@ namespace Exif
 		}
 	public:	
 		std::string getString(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
 		{
 			std::vector<char> stringSource =
-				getVectorFromTag<char, ConstractorTraits<char> >(tag);
+				getVectorFromTag<char, ConstructorTraits<char> >(tag);
 
 			if(stringSource.back() != 0)
 				throw std::runtime_error(
@@ -242,58 +241,59 @@ namespace Exif
 		}
 
 		std::vector<unsigned char> getBytes(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
 		{
 			return
 				getVectorFromTag<unsigned char,
-				ConstractorTraits<unsigned char> >(tag);
+				ConstructorTraits<unsigned char> >(tag);
 		}
 
 		std::vector<unsigned short> getUnsignedShorts(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
 		{
 			return
 				getVectorFromTag<unsigned short,
-				ConstractorTraits<unsigned short> >(tag);
+				ConstructorTraits<unsigned short> >(tag);
 		}
 
 		std::vector<unsigned int> getUnsignedLongs(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
 		{
 			return getVectorFromTag<unsigned int,
-				ConstractorTraits<unsigned int> >(tag);
+				ConstructorTraits<unsigned int> >(tag);
 		}
 
 		std::vector<int> getLongs(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
 		{
 			return getVectorFromTag<int,
-				ConstractorTraits<int> >(tag);
+				ConstructorTraits<int> >(tag);
 		}
 
-		std::vector<Rational<unsigned int> > getUnsignedRationals(const TagInfo& tag)
-			const throw(std::runtime_error)
+		std::vector<Rational<unsigned int> >
+		getUnsignedRationals(const TagInfo& tag)
+			const 
 		{
 			return getVectorFromTag<Rational<unsigned int>,
-				RationalConstractorTraits<unsigned int> >(tag);
+				RationalConstructorTraits<unsigned int> >(tag);
 		}
 
 		std::vector<Rational<int> > getRationals(const TagInfo& tag)
-			const throw(std::runtime_error)
+			const 
 		{
 			return getVectorFromTag<Rational<int>,
-				RationalConstractorTraits<int> >(tag);
+				RationalConstructorTraits<int> >(tag);
 		}
 
 		TagInfoParser(const void* head,
 					  const void* tail,
-					  const UserDefinedEndianConverter& converter_) throw()
+					  const UserDefinedEndianConverter& converter_)
 			: resourceHead(head),
 			  resourceTail(tail),
 			  converter(converter_)
 		{}
 
-		~TagInfoParser() throw()
+		~TagInfoParser() 
 		{}
 	};
 
@@ -585,11 +585,14 @@ namespace Exif
 					out << "reserved(unknown)." << std::endl;
 
 
-				out << "Pixel x dimension: " << info.pixelXDimension << std::endl;
-				out << "Pixel y dimension: " << info.pixelYDimension << std::endl;
+				out << "Pixel x dimension: " <<
+					info.pixelXDimension << std::endl;
+				out << "Pixel y dimension: " <<
+					info.pixelYDimension << std::endl;
 
 				out << "Components configuration: ";
-				for (unsigned int i = 0; i < sizeof(info.componentsConfiguration); ++i)
+				for (unsigned int i = 0;
+					 i < sizeof(info.componentsConfiguration); ++i)
 				{
 					switch (info.componentsConfiguration[i])
 					{
@@ -626,11 +629,13 @@ namespace Exif
 
 				out << "Maker note: ";
 				out <<
-					std::string(info.makerNote.begin(), info.makerNote.end()) <<
+					std::string(info.makerNote.begin(),
+								info.makerNote.end()) <<
 					std::endl;
 
 				out << "User comment: ";
-				out << std::string(info.userComment.begin(), info.userComment.end()) <<
+				out << std::string(info.userComment.begin(),
+								   info.userComment.end()) <<
 					std::endl;
 
 				out << "Related sound file: " <<
@@ -653,7 +658,8 @@ namespace Exif
 				out << "Brightness: " << info.brightnessValue << std::endl;
 				out << "ExposureBias: " << info.exposureBiasValue << std::endl;
 				out << "Max aperture: " << info.maxApertureValue << std::endl;
-				out << "subject distance: " << info.subjectDistance << std::endl;
+				out << "subject distance: " <<
+					info.subjectDistance << std::endl;
 
 				out << "Metering mode: ";
 				switch (info.meteringMode)
@@ -865,7 +871,8 @@ namespace Exif
 				}
 				out << std::endl;
 
-				out << "Spectral sensitivity: " << info.spectralSensitivity << std::endl;
+				out << "Spectral sensitivity: " <<
+					info.spectralSensitivity << std::endl;
 
 				out << "ISO speed ratings: ";
 				for (std::vector<unsigned short>::const_iterator itor =
@@ -1075,18 +1082,21 @@ namespace Exif
 				latitudeRef = source.latitudeRef;
 				std::copy(source.latitude,
 						  source.latitude +
-						  sizeof(source.latitude) / sizeof(Rational<unsigned int>),
+						  sizeof(source.latitude) /
+						  sizeof(Rational<unsigned int>),
 						  latitude);
 				longitudeRef = source.longitudeRef;
 				std::copy(source.longitude,
 						  source.longitude +
-						  sizeof(source.longitude) / sizeof(Rational<unsigned int>),
+						  sizeof(source.longitude) /
+						  sizeof(Rational<unsigned int>),
 						  longitude);
 				altitudeRef = source.altitudeRef;
 				altitude = source.altitude;
 				std::copy(source.timeStamp,
 						  source.timeStamp +
-						  sizeof(source.timeStamp) / sizeof(Rational<unsigned int>),
+						  sizeof(source.timeStamp) /
+						  sizeof(Rational<unsigned int>),
 						  timeStamp);
 				satellites = source.satellites;
 				status = source.status;
@@ -1128,18 +1138,21 @@ namespace Exif
 				latitudeRef = source.latitudeRef;
 				std::copy(source.latitude,
 						  source.latitude +
-						  sizeof(source.latitude) / sizeof(Rational<unsigned int>),
+						  sizeof(source.latitude) /
+						  sizeof(Rational<unsigned int>),
 						  latitude);
 				longitudeRef = source.longitudeRef;
 				std::copy(source.longitude,
 						  source.longitude +
-						  sizeof(source.longitude) / sizeof(Rational<unsigned int>),
+						  sizeof(source.longitude) /
+						  sizeof(Rational<unsigned int>),
 						  longitude);
 				altitudeRef = source.altitudeRef;
 				altitude = source.altitude;
 				std::copy(source.timeStamp,
 						  source.timeStamp +
-						  sizeof(source.timeStamp) / sizeof(Rational<unsigned int>),
+						  sizeof(source.timeStamp) /
+						  sizeof(Rational<unsigned int>),
 						  timeStamp);
 				satellites = source.satellites;
 				status = source.status;
@@ -1180,7 +1193,8 @@ namespace Exif
 					static_cast<unsigned short>(target.versionID[0]) << "." <<
 					static_cast<unsigned short>(target.versionID[1]) << "." <<
 					static_cast<unsigned short>(target.versionID[2]) << "." <<
-					static_cast<unsigned short>(target.versionID[3]) << std::endl;
+					static_cast<unsigned short>(target.versionID[3]) <<
+					std::endl;
 
 				out << "latitudeRef: " <<  target.latitudeRef << std::endl;
 				out << "latitude: " << 
@@ -1216,28 +1230,35 @@ namespace Exif
 				out << "trackRef: " << target.trackRef << std::endl;
 				out << "track: " << target.track << std::endl;
 
-				out << "imageDirectionRef: " << target.imageDirectionRef << std::endl;
+				out << "imageDirectionRef: " <<
+					target.imageDirectionRef << std::endl;
 				out << "iamgeDirection: " << target.imageDirection << std::endl;
 
 				out << "map datum: " << target.mapDatum << std::endl;
 				
-				out << "destination latitude ref: " << target.destinationLatitudeRef << std::endl;
+				out << "destination latitude ref: " <<
+					target.destinationLatitudeRef << std::endl;
 				out << "destination latitude: " <<
 					target.destinationLatitude[0] << ", " <<
 					target.destinationLatitude[1] << ", " <<
 					target.destinationLatitude[2] << std::endl;
 
-				out << "destination longitude ref: " << target.destinationLongitudeRef << std::endl;
+				out << "destination longitude ref: " <<
+					target.destinationLongitudeRef << std::endl;
 				out << "destination longitude: " <<
 					target.destinationLongitude[0] << ", " <<
 					target.destinationLongitude[1] << ", " <<
 					target.destinationLongitude[2] << std::endl;
 				
-				out << "destination bearing ref: " << target.destinationBearingRef << std::endl;
-				out << "destination Bearing: " << target.destinationBearing << std::endl;
+				out << "destination bearing ref: " <<
+					target.destinationBearingRef << std::endl;
+				out << "destination Bearing: " <<
+					target.destinationBearing << std::endl;
 
-				out << "destination distance ref: " << target.destinationDistanceRef << std::endl;
-				out << "destination distance: " << target.destinationDistance << std::endl;
+				out << "destination distance ref: " <<
+					target.destinationDistanceRef << std::endl;
+				out << "destination distance: " <<
+					target.destinationDistance << std::endl;
 
 				return out;
 			}
@@ -1513,13 +1534,16 @@ namespace Exif
 			}
 			out << std::endl;
 
-			out << "JPEGInterchangeFormat: " << info.JPEGInterchangeFormat << std::endl;
-			out << "JPEGInterchangeFormatLength: " << info.JPEGInterchangeFormatLength << std::endl;
+			out << "JPEGInterchangeFormat: " <<
+				info.JPEGInterchangeFormat << std::endl;
+			out << "JPEGInterchangeFormatLength: " <<
+				info.JPEGInterchangeFormatLength << std::endl;
 
 			// image data traits.
 //			out << "TransferFunction: " << info.TransferFunction << std::endl;
 // 			out << "whitePoint: " << info.whitePoint[2] << std::endl;
-// 			out << "primaryChromaticities: " << info.primaryChromaticities[6] << std::endl;
+// 			out << "primaryChromaticities: " <<
+//				info.primaryChromaticities[6] << std::endl;
 			out << "YCbCrCoefficients: [" <<
 				info.YCbCrCoefficients[0] << ", " <<
 				info.YCbCrCoefficients[1] << ", " <<
@@ -1534,7 +1558,8 @@ namespace Exif
 
 			// other.
 			out << "dateTime: " << info.dateTime.c_str() << std::endl;
-			out << "imageDescription: " << info.imageDescription.c_str() << std::endl;
+			out << "imageDescription: " << 
+				info.imageDescription.c_str() << std::endl;
 			out << "make: " << info.make.c_str() << std::endl;
 			out << "model: " << info.model.c_str() << std::endl;
 			out << "software: " << info.software.c_str() << std::endl;
@@ -1561,7 +1586,7 @@ namespace Exif
 		struct findFunctor
 		{
 			virtual bool operator()(const unsigned char*) const = 0;
-			virtual ~findFunctor() throw() {}
+			virtual ~findFunctor()  {}
 		};
 
 		struct findSOI : findFunctor
@@ -1582,7 +1607,7 @@ namespace Exif
 			const unsigned char findNumber;
 
 		public:
-			findAPPn(const unsigned char number) throw()
+			findAPPn(const unsigned char number)
 				: findNumber(number)
 			{}
 
@@ -1655,7 +1680,8 @@ namespace Exif
 
 			EndianConverter converter;
 			const unsigned short tiffHeaderSize =
-				converter.fromBig(*reinterpret_cast<const unsigned short*>(parsePos));
+				converter.fromBig(
+					*reinterpret_cast<const unsigned short*>(parsePos));
 			
 			// shift APP1 end position.
 			parseTargetMemoryTail = 
@@ -1681,7 +1707,6 @@ namespace Exif
 	public:
 		ExifHeaderParser(const void* parseTargetMemoryHead_,
 						 const void* parseTargetMemoryTail_)
-			throw(std::invalid_argument)
 			: parseTargetMemoryHead(parseTargetMemoryHead_),
 			  parseTargetMemoryTail(parseTargetMemoryTail_)
 		{
@@ -1747,7 +1772,7 @@ namespace Exif
 
 		DirectoryParser(const void* head_, const void* tail_,
 						UserDefinedEndianConverter& converter_)
-			throw(std::invalid_argument, std::runtime_error)
+			
 			: head(head_), tail(tail_),
 			  converter(converter_),
 			  infos()
@@ -1755,13 +1780,14 @@ namespace Exif
 			if (head == NULL ||
 				tail == NULL || 
 				head > tail)
-				throw std::invalid_argument("argument pointer must be not null.");
+				throw std::invalid_argument(
+					"argument pointer must be not null.");
 
 			const unsigned short count = countEntries();
 			infos.clear();
 
-			assert(((const unsigned char*)(tail) - (const unsigned char*)(head)) / 12
-				   >= count);
+			assert(((const unsigned char*)(tail) -
+					(const unsigned char*)(head)) / 12 >= count);
 
 			for (unsigned short index = 0; index < count; ++index)
 				infos.push_back(
@@ -1849,7 +1875,6 @@ namespace Exif
 
 	public:
 		TiffHeaderParser(const void* head, const void* tail)
-			throw(std::invalid_argument)
 			: parseTargetMemoryHead(head),
 			  parseTargetMemoryTail(tail),
 			  converter(NULL),
@@ -2193,7 +2218,8 @@ namespace Exif
 							parser.getBytes(*head);
 
 						if (altitudeRef.size() != 1)
-							throw std::runtime_error("altitudeRef tag invalid.");
+							throw std::runtime_error(
+								"altitudeRef tag invalid.");
 
 						directory.altitudeRef = altitudeRef[0];
 					}
@@ -2258,7 +2284,8 @@ namespace Exif
 					case 0x0d:
 					{
 						directory.speed =
-							SingleURationalDataRead(*head, "speed tag invalid.");
+							SingleURationalDataRead(*head,
+													"speed tag invalid.");
 					}
 					break;
 
@@ -2272,7 +2299,8 @@ namespace Exif
 					case 0x0f:
 					{
 						directory.track =
-							SingleURationalDataRead(*head, "track tag invalid.");
+							SingleURationalDataRead(*head,
+													"track tag invalid.");
 					}
 					break;
 
@@ -2285,7 +2313,8 @@ namespace Exif
 					case 0x11:
 					{
 						directory.imageDirection =
-							SingleURationalDataRead(*head, "imgDirection tag invalid.");
+							SingleURationalDataRead(
+								*head, "imgDirection tag invalid.");
 					}
 					break;
 
@@ -2297,16 +2326,19 @@ namespace Exif
 
 					case 0x13:
 					{
-						directory.destinationLatitudeRef = parser.getString(*head);
+						directory.destinationLatitudeRef =
+							parser.getString(*head);
 					}
 					break;
 
 					case 0x14:
 					{
-						std::vector<Rational<unsigned int> > destinationLatitude =
+						std::vector<Rational<unsigned int> >
+							destinationLatitude =
 							parser.getUnsignedRationals(*head);
 						if (destinationLatitude.size() != 3)
-							throw std::runtime_error("destLatitude tag invalid.");
+							throw std::runtime_error(
+								"destLatitude tag invalid.");
 
 						std::copy(destinationLatitude.begin(),
 								  destinationLatitude.end(),
@@ -2316,16 +2348,19 @@ namespace Exif
 
 					case 0x15:
 					{
-						directory.destinationLongitudeRef = parser.getString(*head);
+						directory.destinationLongitudeRef =
+							parser.getString(*head);
 					}
 					break;
 
 					case 0x16:
 					{
-						std::vector<Rational<unsigned int> > destinationLongitude =
+						std::vector<Rational<unsigned int> >
+							destinationLongitude =
 							parser.getUnsignedRationals(*head);
 						if (destinationLongitude.size() != 3)
-							throw std::runtime_error("destLongitude tag invalid.");
+							throw std::runtime_error(
+								"destLongitude tag invalid.");
 
 						std::copy(destinationLongitude.begin(),
 								  destinationLongitude.end(),
@@ -2343,7 +2378,8 @@ namespace Exif
 					case 0x18:
 					{
 						directory.destinationBearing =
-							SingleURationalDataRead(*head, "destBearing tag invalid.");
+							SingleURationalDataRead(
+								*head, "destBearing tag invalid.");
 					}
 					break;
 
@@ -2357,8 +2393,8 @@ namespace Exif
 					case 0x1a:
 					{
 						directory.destinationDistance =
-							SingleURationalDataRead(*head,
-													"destDistance tag invalid.");
+							SingleURationalDataRead(
+								*head, "destDistance tag invalid.");
 					}
 					break;
 				}
@@ -2441,8 +2477,9 @@ namespace Exif
 					case 0x9102: // compressed bits per pixel
 					{
 						directory.compressedBitsPerPixel =
-							SingleURationalDataRead(*head, "compressed bits per "
-													"pixel tag invalid.");
+							SingleURationalDataRead(
+								*head, "compressed bits per "
+								"pixel tag invalid.");
 						break;
 					}
 
@@ -2518,8 +2555,8 @@ namespace Exif
 					case 0x829a: // exposure time
 					{
 						directory.exposureTime =
-							SingleURationalDataRead(*head,
-													"exposure time tag invalid.");
+							SingleURationalDataRead(
+								*head, "exposure time tag invalid.");
 						break;
 					}
 
@@ -2534,8 +2571,8 @@ namespace Exif
 					case 0x8822: // exposure program
 					{
 						directory.exposureProgram =
-							SingleUShortDataRead(*head,
-												 "exposure program tag invalid.");
+							SingleUShortDataRead(
+								*head, "exposure program tag invalid.");
 						break;
 					}
 
@@ -2564,7 +2601,7 @@ namespace Exif
 					{
 						directory.shutterSpeedValue =
 							SingleRationalDataRead(*head,
-													"shutter speed value "
+												   "shutter speed value "
 												   "tag invalid.");
 						break;
 					}
@@ -2572,16 +2609,16 @@ namespace Exif
 					case 0x9202: // aperture value
 					{
 						directory.apertureValue =
-							SingleURationalDataRead(*head,
-													"aperture value tag invalid.");
+							SingleURationalDataRead(
+								*head, "aperture value tag invalid.");
 						break;
 					}
 
 					case 0x9203: // brightness value
 					{
 						directory.brightnessValue =
-							SingleRationalDataRead(*head,
-												   "brightness value tag invalid.");
+							SingleRationalDataRead(
+								*head, "brightness value tag invalid.");
 						break;
 					}
 
@@ -2606,8 +2643,8 @@ namespace Exif
 					case 0x9206: // subject distance
 					{
 						directory.subjectDistance =
-							SingleURationalDataRead(*head,
-													"subject distance tag invalid.");
+							SingleURationalDataRead(
+								*head, "subject distance tag invalid.");
 						break;
 					}
 
@@ -2638,16 +2675,16 @@ namespace Exif
 					case 0x920a: // focal length
 					{
 						directory.focalLength =
-							SingleURationalDataRead(*head,
-													"focal length tag invalid.");
+							SingleURationalDataRead(
+								*head, "focal length tag invalid.");
 						break;
 					}
 
 					case 0xa20b: // flash energy
 					{
 						directory.flashEnergy =
-							SingleURationalDataRead(*head,
-													"flash energy tag invalid.");
+							SingleURationalDataRead(
+								*head, "flash energy tag invalid.");
 						break;
 					}
 
@@ -2703,16 +2740,16 @@ namespace Exif
 					case 0xa215: // exposure index
 					{
 						directory.exposureIndex =
-							SingleURationalDataRead(*head,
-													"exposure index tag invalid.");
+							SingleURationalDataRead(
+								*head, "exposure index tag invalid.");
 						break;
 					}
 
 					case 0xa217: // sensing method
 					{
 						directory.sensingMethod =
-							SingleUShortDataRead(*head,
-												 "sensing method tag invalid.");
+							SingleUShortDataRead(
+								*head, "sensing method tag invalid.");
 						break;
 					}
 
@@ -2846,7 +2883,8 @@ namespace Exif
 								"YCbCr subsampling tag data "
 								"count is not 1.");
 
-						for (unsigned int index = 0; index < value.size(); ++index)
+						for (unsigned int index = 0;
+							 index < value.size(); ++index)
 							info.YCbCrSubSampling[index] =
 								value[index];
 						break;
@@ -2956,7 +2994,8 @@ namespace Exif
 							throw std::runtime_error(
 								"primary chromaticities count is not 6.");
 
-						for (unsigned int index = 0; index < value.size(); ++index)
+						for (unsigned int index = 0;
+							 index < value.size(); ++index)
 							info.primaryChromaticities[index] =
 								value[index];
 
@@ -2971,7 +3010,8 @@ namespace Exif
 							throw std::runtime_error(
 								"YCbCr coefficients count is not 3.");
 
-						for (unsigned int index = 0; index < value.size(); ++index)
+						for (unsigned int index = 0;
+							 index < value.size(); ++index)
 							info.YCbCrCoefficients[index] =
 								value[index];
 
@@ -3049,7 +3089,8 @@ namespace Exif
 							tiffParser.parseImageFileDirectory(result[0]);
 
 						info.exifDirectory =
-							getExifDirectory(ifdEntries.begin(), ifdEntries.end());
+							getExifDirectory(ifdEntries.begin(),
+											 ifdEntries.end());
 						break;
 					}
 
@@ -3059,10 +3100,12 @@ namespace Exif
 							result = parser.getUnsignedLongs(*head);
 						std::vector<TagInfo> ifdEntries = 
 							tiffParser.parseImageFileDirectory(result[0]);
-						std::cout << "gps entries: " << ifdEntries.size() << std::endl;
+						std::cout << "gps entries: " <<
+							ifdEntries.size() << std::endl;
 
  						info.gpsDirectory =
- 							getGPSDirectory(ifdEntries.begin(), ifdEntries.end());
+ 							getGPSDirectory(ifdEntries.begin(),
+											ifdEntries.end());
 						break;
 					}
 					
