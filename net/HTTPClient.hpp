@@ -7,9 +7,13 @@
 #include <util/format/Base64.hpp>
 #include <algorithm>
 
+template <typename HttpResultType = HTTPResult<> >
 class HTTPClient
 {
 	friend class HTTPClientTest;
+
+public:
+	typedef HttpResultType http_result_t;
 
 private:
 	ClientSocket socket;
@@ -74,7 +78,7 @@ private:
 		return true;
 	}
 
-	bool isDisconnect(const HTTPResult<>& result) const
+	bool isDisconnect(const http_result_t& result) const
 	{
 		if (isKeepAlive == false ||
 			result.getResponseHeaders().get("Connection") == "close" ||
@@ -84,9 +88,9 @@ private:
 		return false;
 	}
 
-	HTTPResult<> processHEADResponse()
+	http_result_t processHEADResponse()
 	{
-		HTTPResult<> result;
+		http_result_t result;
 		result.readHeadResponse(socket);
 		if (isDisconnect(result))
 			close();
@@ -94,9 +98,9 @@ private:
 		return result;
 	}
 
-	HTTPResult<> processGETResponse()
+	http_result_t processGETResponse()
 	{
-		HTTPResult<> result;
+		http_result_t result;
 		result.readGetResponse(socket);
 		if (isDisconnect(result))
 			close();
@@ -274,7 +278,7 @@ public:
 	 * @todo ソケットクローズのスマート化。HTTPResultの方に移して
 	 * HTTP headerのConection: closeを見るようにする。
 	 */
-	HTTPResult<> getHeaderResponse(const URL& url)
+	http_result_t getHeaderResponse(const URL& url)
 	{
 		connectTarget(url);
 
@@ -294,7 +298,7 @@ public:
 	 * @todo ソケットクローズのスマート化。HTTPResultの方に移して
 	 * HTTP headerのConection: closeを見るようにする。
 	 */
-	HTTPResult<> getResource(const URL& url)
+	http_result_t getResource(const URL& url)
 	{
 		connectTarget(url);
 
@@ -310,12 +314,12 @@ public:
 		return processGETResponse();
 	}
 
-	HTTPResult<> getHeaderResponse(const char* url)
+	http_result_t getHeaderResponse(const char* url)
 	{
 		return getHeaderResponse(URL(url));
 	}
 
-	HTTPResult<> getResource(const char* url)
+	http_result_t getResource(const char* url)
 	{
 		return getResource(URL(url));
 	}

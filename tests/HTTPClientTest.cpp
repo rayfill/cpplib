@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 		{
 			std::string targetResource(argv[args]);
 
-			HTTPClient client;
+			HTTPClient<> client;
 
 			client.setKeepAliveTime(300);
 			client.setTimeout(timeout, 1);
