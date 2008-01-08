@@ -57,11 +57,11 @@ public:
 
 	void huffmanCodecTest()
 	{
-		char* encodeData =
+		const char* encodeData =
 			"AAAAAAABBBBCCCCC";
 
 		std::vector<char> source;
-		for(char* enc = encodeData;
+		for(const char* enc = encodeData;
 			enc != encodeData + strlen(encodeData);
 			++enc)
 		{
@@ -106,7 +106,7 @@ public:
 		std::stringstream ss;
 		BitStreamWriter bs(&ss);
 
-		char* encodeData = "AAAAAAABBBBCCCCC";
+		const char* encodeData = "AAAAAAABBBBCCCCC";
 		const size_t encodeDataLength = strlen(encodeData);
 		CPPUNIT_ASSERT(encodeDataLength == 16);
 
@@ -176,7 +176,7 @@ public:
 
 	void EncodeTest()
 	{
-		char* encodeData = "AABAAACCCCBBBAAC";
+		const char* encodeData = "AABAAACCCCBBBAAC";
 		const size_t encodeDataLength = strlen(encodeData);
 		CPPUNIT_ASSERT(encodeDataLength == 16);
 
