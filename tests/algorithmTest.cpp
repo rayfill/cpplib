@@ -22,9 +22,7 @@ public:
 		for (int offset = 1; offset <= 10; ++offset)
 			vec[offset-1] = offset;
 
-		CPPUNIT_ASSERT(
- 			reduce<std::vector<int>::const_iterator, Sum, int>
-			(vec.begin(), vec.end(), Sum()) == 55);
+		CPPUNIT_ASSERT((reduce<std::vector<int>::const_iterator, Sum, int >(vec.begin(), vec.end(), Sum()) == 55));
 	}
 };
 

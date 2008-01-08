@@ -2,6 +2,7 @@
 #define WINTIMECOUNTER_HPP_
 
 #include <windows.h>
+#include <limits>
 
 class WinTimeCounter
 {

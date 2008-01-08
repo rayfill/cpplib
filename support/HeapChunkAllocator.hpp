@@ -4,6 +4,7 @@
 #include <deque>
 #include <vector>
 #include <algorithm>
+#include <memory>
 #include <util/Singleton.hpp>
 
 #include <cassert>
@@ -148,7 +149,9 @@ public:
 		return &s;
 	}
 
-	pointer allocate(size_type n, const void* = 0) throw(std::bad_alloc)
+	pointer allocate(size_type n,
+					 std::allocator<void>::const_pointer = 0)
+		throw(std::bad_alloc)
 	{
 		if (n == 0)
 			return NULL;

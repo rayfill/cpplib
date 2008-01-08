@@ -2,6 +2,7 @@
 #define WINCRITICALSECTION_HPP_
 
 #include <windows.h>
+#include <winbase.h>
 #include <cassert>
 
 /**

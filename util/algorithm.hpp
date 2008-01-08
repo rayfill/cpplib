@@ -21,7 +21,7 @@ ValueType reduce(IteratorType head, IteratorType tail,
 	itor_t rhs = head + 1;
 
 	if (rhs == tail)
-		return functor(*lhs, *rhs);
+		return *lhs;
 	return functor(*lhs,
 				   reduce<IteratorType, FunctorType, ValueType>
 				   (rhs, tail, functor));
