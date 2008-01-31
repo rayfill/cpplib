@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <stdexcept>
 #include <cassert>
-#include <util/counter.hpp>
 
 class MessageDigest5
 {
