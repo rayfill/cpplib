@@ -5,11 +5,9 @@
 #include <iostream>
 #include <Socket/Socket.hpp>
 #include <Socket/ServerSocket.hpp>
+#include <Thread/Thread.hpp>
 #include <windows.h>
 
-/**
- * 
- */
 template <typename ServerClass>
 class MyServerWorker : public ServerWorker
 {
@@ -38,7 +36,7 @@ public:
 	{
 		try
 		{
-			this->shutdown(SocketImpl::write);
+//			this->shutdown(SocketImpl::write);
 
 			try
 			{
@@ -64,6 +62,7 @@ public:
 				else if(buffer[0] == 'x')
 				{
 					this->parent->setFinalize();
+					std::cout << "end server request." << std::endl;
 					break;
 				}
 
@@ -111,14 +110,46 @@ protected:
 
 };
 
+class InputWatcher :
+	public Thread
+{
+private:
+	MyServerSocket& server;
+	
+public:
+	InputWatcher(MyServerSocket& server_):
+		server(server_)
+	{}
+
+	virtual unsigned run() throw(ThreadException)
+	{
+		std::cout << "hit any key to quit." << std::endl;
+		std::cin.get();
+		server.setFinalize();
+		std::cout << "server shutdown progress..." << std::endl;
+		for (int i = 0; i < 30; ++i)
+		{
+			Thread::sleep(1000);
+			std::cout << ".";
+			std::cout.flush();
+		}
+		std::cout << std::endl;
+		return 0;
+	}
+};
+
 int main()
 {
 	SocketModule theSocket;
 
 	MyServerSocket server;
-	server.listen(IP(INADDR_ANY, 5432));
+	InputWatcher watcher(server);
+	watcher.start();
 
+	server.listen(IP(INADDR_ANY, 65432));
 	server.accept();
+
+	watcher.join();
 
 	return 0;
 }

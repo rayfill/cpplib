@@ -2,7 +2,7 @@
 #define WINBARRIER_HPP_
 
 #include <WinThread/WinThread.hpp>
-#include <WinThread/WinCriticalSection.hpp>
+#include <WinThread/WinMutex.hpp>
 #include <vector>
 #include <windows.h>
 
@@ -10,7 +10,7 @@ class WinBarrier
 {
 private:
 	std::vector<HANDLE> waitedThreads;
-	WinCriticalSection section;
+	WinMutex mutex;
 	volatile int count;
 	const int maxCount;
 
@@ -40,7 +40,7 @@ private:
 	
 public:
 	WinBarrier(int maxCount_):
-		waitedThreads(), section(),
+		waitedThreads(), mutex(),
 		count(maxCount_), maxCount(maxCount_)
 	{
 		waitedThreads.reserve(maxCount_ - 1);
@@ -51,10 +51,10 @@ public:
 
 	bool isWait()
 	{
-		if (section.tryLock())
+		if (mutex.tryLock())
 		{
 			bool result = maxCount != count;
-			section.unlock();
+			mutex.unlock();
 			return result;
 		}
 		return true;
@@ -62,13 +62,13 @@ public:
 
 	void block()
 	{
-		section.lock();
+		mutex.lock();
 		const int movingThreads = --count;
 		if (movingThreads > 0)
 		{
 			HANDLE currentHandle = getThreadHandle(WinThread::self());
 			waitedThreads.push_back(currentHandle);
-			section.unlock();
+			mutex.unlock();
 
 			suspend(currentHandle);
 			CloseHandle(currentHandle);
@@ -84,7 +84,7 @@ public:
 				resume(*itor);
 
 			waitedThreads.clear();
-			section.unlock();
+			mutex.unlock();
 		}
 	}
 

@@ -142,7 +142,7 @@ public:
 	/**
 	 * 終了フラグの取得
 	 */
-	bool isFinalize() const throw()
+	bool isFinalize() throw()
 	{
 		ScopedLock<Mutex> lock(mutex);
 		return this->isEndable;
@@ -166,7 +166,8 @@ public:
 	{
 		for(;;)
 		{
-			if (this->isReadable(this->socket, this->defaultTimeout))
+			if (!this->isFinalize() &&
+				this->isReadable(this->socket, this->defaultTimeout))
 			{
 				sockaddr_in addrInfo;
 				int infoSize;
@@ -180,6 +181,7 @@ public:
 						::accept(this->socket,
 							 reinterpret_cast<sockaddr*>(&addrInfo),
 							 &infoSize);
+
 				} while (!SocketImpl::isValidHandle(client) &&
 						 SocketImpl::isRetry(SocketImpl::getLastError()) &&
 						 --retryable > 0);
@@ -192,7 +194,7 @@ public:
 			{
 				collect();
 				ScopedLock<Mutex> lock(mutex);
-				if (this->isEndable == true)
+				if (this->isFinalize())
 					break;
 			}
 		}
