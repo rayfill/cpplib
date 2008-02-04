@@ -166,8 +166,8 @@ public:
 	{
 		for(;;)
 		{
-			if (!this->isFinalize() &&
-				this->isReadable(this->socket, this->defaultTimeout))
+			if (this->isReadable(this->socket, this->defaultTimeout) &&
+				!this->isFinalize())
 			{
 				sockaddr_in addrInfo;
 				int infoSize;
