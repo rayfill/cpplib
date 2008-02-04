@@ -1,5 +1,5 @@
 #include <iostream>
-#include <windows.h>
+#include <Thread/Thread.hpp>
 #include <Socket/Socket.hpp>
 #include <Socket/ClientSocket.hpp>
 
@@ -33,7 +33,7 @@ int main()
 								strlen(hello_class)))
 		{
 			std::cout << "blocked." << std::endl;
-			Sleep(100000);
+			Thread::sleep(100000);
 			break;
 		}
 		else

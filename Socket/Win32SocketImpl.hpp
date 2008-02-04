@@ -135,5 +135,6 @@ struct Win32SocketImpl
 	}
 };
 
+typedef u_long in_addr_t;
 typedef Win32SocketImpl SocketImpl;
 #endif /* WIN32SOCKETIMPL_HPP_ */

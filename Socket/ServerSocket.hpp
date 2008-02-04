@@ -170,7 +170,6 @@ public:
 				!this->isFinalize())
 			{
 				sockaddr_in addrInfo;
-				int infoSize;
 
 				int retryable = retryCount;
 
@@ -180,7 +179,7 @@ public:
 					client =
 						::accept(this->socket,
 							 reinterpret_cast<sockaddr*>(&addrInfo),
-							 &infoSize);
+							 NULL);
 
 				} while (!SocketImpl::isValidHandle(client) &&
 						 SocketImpl::isRetry(SocketImpl::getLastError()) &&

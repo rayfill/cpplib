@@ -97,7 +97,7 @@ public:
 	 * @param port ポート番号(ホストバイトオーダ)
 	 * @exception NotAddressResolveException マシン名が解決できなかった場合
 	 */
-	explicit IP(unsigned long ipAddress, unsigned short port)
+	explicit IP(in_addr_t ipAddress, unsigned short port)
 		throw(NotAddressResolveException):
 		internalRepresentIP(), internalRepresentPort() 
 	{

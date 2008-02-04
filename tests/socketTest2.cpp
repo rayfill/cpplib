@@ -6,7 +6,6 @@
 #include <Socket/Socket.hpp>
 #include <Socket/ServerSocket.hpp>
 #include <Thread/Thread.hpp>
-#include <windows.h>
 
 template <typename ServerClass>
 class MyServerWorker : public ServerWorker
