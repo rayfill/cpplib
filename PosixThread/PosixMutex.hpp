@@ -5,6 +5,7 @@
 
 #ifndef NDEBUG
 #include <stdexcept>
+#include <PosixThread/PosixThread.hpp>
 #endif /* NDEBUG */
 
 /**
@@ -30,11 +31,19 @@ private:
 	 */
 	PosixMutex& PosixPosixMutex(const PosixMutex&);
 
+#ifndef NDEBUG
+	int lock_count;
+	PosixThread::thread_id_t thread_id;
+#endif
+
 public:
 	/**
 	 * コンストラクタ
 	 */
 	PosixMutex(): MutexId()
+#ifndef NDEBUG
+				, lock_count(0), thread_id()
+#endif
 	{
 		pthread_mutex_init(&this->MutexId, NULL);
 	}
@@ -61,6 +70,11 @@ public:
 #endif /* NDEBUG */
 		pthread_mutex_lock(&this->MutexId);
 #ifndef NDEBUG
+		++lock_count;
+		thread_id = Thread::self();
+		if (lock_count != 1)
+			throw std::logic_error("bad lock count.");
+
 		if (EDEADLK == result)
 			throw std::logic_error("mutex is dead locking...");
 #endif /* NDEBUG */
@@ -75,6 +89,12 @@ public:
 	 */
 	void unlock()
 	{
+#ifndef NDEBUG
+		--lock_count;
+		if (lock_count != 0)
+			throw std::logic_error("bad lock count.");
+#endif
+		
 		pthread_mutex_unlock(&this->MutexId);
 	}
 };
