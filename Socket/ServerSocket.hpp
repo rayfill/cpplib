@@ -192,7 +192,6 @@ public:
 			else
 			{
 				collect();
-				ScopedLock<Mutex> lock(mutex);
 				if (this->isFinalize())
 					break;
 			}
