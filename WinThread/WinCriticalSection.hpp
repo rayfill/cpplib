@@ -29,7 +29,8 @@ private:
 		InnerCriticalSectionObject() throw()
 			: sectionHandle()
 		{
-			::InitializeCriticalSection(&sectionHandle);
+			::InitializeCriticalSection(
+				const_cast<LPCRITICAL_SECTION>(&sectionHandle));
 		}
 
 		/**
@@ -37,7 +38,8 @@ private:
 		 */
 		~InnerCriticalSectionObject() throw()
 		{
-			::DeleteCriticalSection(&sectionHandle);
+			::DeleteCriticalSection(
+				const_cast<LPCRITICAL_SECTION>(&sectionHandle));
 		}
 		
 		/**
@@ -46,7 +48,7 @@ private:
 		 */
 		LPCRITICAL_SECTION get() throw()
 		{
-			return &sectionHandle;
+			return const_cast<LPCRITICAL_SECTION>(&sectionHandle);
 		}
 	} section;
 	
