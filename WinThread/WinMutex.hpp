@@ -14,7 +14,7 @@ private:
 	/**
 	 * 排他オブジェクトハンドル
 	 */
-	HANDLE hMutex;
+	volatile HANDLE hMutex;
 
 	/**
 	 * コピー防止用

@@ -78,7 +78,7 @@ protected:
 		assert(isClosed == true);
 	  
 		socket = ::socket(PF_INET, SOCK_STREAM, 0);
-		if (socket == static_cast<SocketHandle>(0))
+		if (!SocketImpl::isValidHandle(socket))
 			throw SocketException("can not open socket");
 	}
 

@@ -20,7 +20,7 @@ private:
 		/**
 		 * クリティカルセクションハンドル
 		 */
-		CRITICAL_SECTION sectionHandle;
+		volatile CRITICAL_SECTION sectionHandle;
 
 	public:
 		/**
