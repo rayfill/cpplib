@@ -18,7 +18,7 @@ private:
 	/**
 	 * 排他制御実態
 	 */
-	mutable pthread_mutex_t MutexId;
+	volatile pthread_mutex_t MutexId;
 
 	/**
 	 * コピー防止用
@@ -44,7 +44,8 @@ public:
 				, lock_count(0), thread_id()
 #endif
 	{
-		pthread_mutex_init(&this->MutexId, NULL);
+		pthread_mutex_init(
+			const_cast<pthread_mutex_t*>(&this->MutexId), NULL);
 	}
 
 	/**
@@ -52,7 +53,8 @@ public:
 	 */
 	~PosixMutex()
 	{
-		pthread_mutex_destroy(&this->MutexId);
+		pthread_mutex_destroy(
+			const_cast<pthread_mutex_t*>(&this->MutexId));
 	}
 
 	/**
@@ -70,7 +72,8 @@ public:
 			
 		int result =
 #endif /* NDEBUG */
-		pthread_mutex_lock(&this->MutexId);
+		pthread_mutex_lock(
+			const_cast<pthread_mutex_t*>(&this->MutexId));
 #ifndef NDEBUG
 		if (lock_count != 0)
 			throw std::logic_error("bad lock count.");
@@ -79,15 +82,13 @@ public:
 		thread_id = pthread_self();
 		if (lock_count != 1)
 			throw std::logic_error("bad lock count.");
-
-		if (EDEADLK == result)
-			throw std::logic_error("mutex is dead locking...");
 #endif /* NDEBUG */
 	}
 
 	bool tryLock()
 	{
-		return !(EBUSY == pthread_mutex_trylock(&this->MutexId));
+		return !(EBUSY == pthread_mutex_trylock(
+					 const_cast<pthread_mutex_t*>(&this->MutexId)));
 	}
 	/**
 	 * アンロック
@@ -101,7 +102,8 @@ public:
 			throw std::logic_error("bad lock count.");
 #endif
 		
-		pthread_mutex_unlock(&this->MutexId);
+		pthread_mutex_unlock(
+			const_cast<pthread_mutex_t*>(&this->MutexId));
 	}
 };
 
