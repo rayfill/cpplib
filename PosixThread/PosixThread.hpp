@@ -47,7 +47,7 @@ private:
 	/**
 	 * 実行状態フラグ
 	 */
-	bool isRun;
+	volatile bool isRun;
 
 	/**
 	 * 動作制御用Mutex
@@ -57,7 +57,7 @@ private:
 	/**
 	 * ステータス制御同期用Mutex
 	 */
-	PosixMutex statusSync;
+	mutable PosixMutex statusSync;
 
 	/**
 	 * システムコールバック用エントリポイント
@@ -210,7 +210,7 @@ public:
 		nanosleep(&spec, NULL);
 	}
 
-	bool isRunning()
+	bool isRunning() const
 	{
 		ScopedLock<PosixMutex> lock(statusSync);
 		return this->isRun;
@@ -239,7 +239,7 @@ public:
 	 */
 	virtual void start() throw()
 	{
-		ScopedLock<PosixMutex> atopmicOp(statusSync);
+		ScopedLock<PosixMutex> lock(statusSync);
 		starter.unlock();
 		isRun = true;
 	}

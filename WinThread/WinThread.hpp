@@ -63,12 +63,12 @@ private:
 	/**
 	 * 状態変更ロック
 	 */
-	CriticalSection section;
+	mutable CriticalSection section;
 
 	/**
 	 * 実行状態
 	 */
-	bool isRun;
+	volatile bool isRun;
 
 	/**
 	 * システムコールバック用エントリポイント
@@ -258,7 +258,7 @@ public:
 	 * 現在の実行状態を返す
 	 * @return 実行中であればtrue
 	 */
-	bool isRunning()
+	bool isRunning() const
 	{
 		ScopedLock<CriticalSection> lock(section);
 		return isRun;
