@@ -70,7 +70,6 @@ public:
 		if (thread_id == pthread_self() && lock_count > 0)
 			throw std::logic_error("bad lock count.");
 			
-		int result =
 #endif /* NDEBUG */
 		pthread_mutex_lock(
 			const_cast<pthread_mutex_t*>(&this->MutexId));
