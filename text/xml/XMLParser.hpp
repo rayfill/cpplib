@@ -1298,9 +1298,6 @@ private:
 			else // ctext section
 			{
 				const char_t* finder = std::find(head, tail, '<');
-				if (finder == tail)
-					throw WellformedException();
-
 				token = string_t(head, finder);
 				head = head + token.length();
 				return token;
@@ -1617,6 +1614,7 @@ public:
 
 		return theXMLDocument;
 	}
+
 };
 
 #endif /* XMLPARSER_HPP_ */

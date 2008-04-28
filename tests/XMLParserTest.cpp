@@ -116,7 +116,7 @@ public:
 			"standalone=\"yes\"?>"
 			"<test><hoge /><!-- comment -->"
 			"<fuga><![CDATA[<hoge><fuga>"
-			"]]><fuga attr=\"atr\"/>test</fuga></test>");
+			"]]><fuga attr=\"atr\"/>test</fuga></test> ");
 
 		XMLParser<utf16_t> parser;
 		XMLDocument<utf16_t>* document = parser.parse(source);
