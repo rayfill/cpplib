@@ -1077,6 +1077,11 @@ private:
 		 */
 		bool ignoreWhiteString;
 
+		/**
+		 * CDATAセクションを処理しているかどうか
+		 */
+		bool isCDATAProcessing;
+
 	public:
 		/**
 		 * ホワイトスペース無視状態の取得
@@ -1102,7 +1107,8 @@ private:
 		 * @param tail_ トークナイズする文字列の終端
 		 */
 		Tokenizer(const char_t* head_, const char_t* const tail_):
-			head(head_), tail(tail_), ignoreWhiteString(false)
+			head(head_), tail(tail_),
+			ignoreWhiteString(false), isCDATAProcessing(false)
 		{
 			assert(head <= tail);
 		}
@@ -1119,35 +1125,103 @@ private:
 			separetor += '\n';
 			separetor += ' ';
 
-			while (head != tail)
+
+			// reach stream of eof.
+			if (head == tail)
+				return token;
+
+			// tag section
+			if (*head == '<')
 			{
-				if (*head == '<' && token.length() != 0)
+				if ((head + 1) != tail &&
+					*(head + 1) == '!')
 				{
-					if (ignoreWhiteString &&
-						token.find_first_not_of(separetor) ==
-						string_t::npos)
+					// comment or cdata section
+					// <![CDATA[...]]>
+					if (((head + 2) != tail) &&
+						(*(head + 2) == '[') &&
+						((head + 3) != tail) &&
+						(*(head + 3) == 'C') &&
+						((head + 4) != tail) &&
+						(*(head + 4) == 'D') &&
+						((head + 5) != tail) &&
+						(*(head + 5) == 'A') &&
+						((head + 6) != tail) &&
+						(*(head + 6) == 'T') &&
+						((head + 7) != tail) &&
+						(*(head + 7) == 'A') &&
+						((head + 7) != tail) &&
+						(*(head + 8) == '[') &&
+						((head + 8) != tail))
 					{
-						token.clear();
-						continue;
+						typedef const char_t* const_char_t_pointer;
+
+						for (const_char_t_pointer finder = head + 9,
+								 current = head + 9;
+							 finder != tail;
+							 current = finder + 1)
+						{
+							finder = std::find(current, tail, '>');
+
+							if (finder != tail &&
+								(finder - 1) != current &&
+								*(finder - 1) == ']' &&
+								*(finder - 2) == ']')
+							{
+								token = string_t(head, finder + 1);
+								head = head + token.length();
+								return token;
+							}
+						}
+						throw WellformedException();
 					}
+					// comment
+					if (((head + 2) != tail) &&
+						(*(head + 2) == '-') &&
+						((head + 3) != tail) &&
+						(*(head + 3) == '-'))
+					{
+						typedef const char_t* const_char_t_pointer;
+						for (const_char_t_pointer finder = head + 4,
+								 current = head + 4;
+							 finder != tail; current = finder + 1)
+						{
+							finder = std::find(current, tail, '>');
 
-					return token;
+							if (finder != tail &&
+								(finder - 1) != current &&
+								*(finder - 1) == '-' &&
+								*(finder - 2) == '-')
+							{
+								token = string_t(head, finder + 1);
+								head = head + token.length();
+								return token;
+							}
+						}
+						throw WellformedException();
+					}
 				}
-
-				else if (*head == '>')
+				else
 				{
-					if (token[0] != '<')
+					// directive or normal tags.
+					const char_t* finder = std::find(head+2, tail, '>');
+					if (finder == tail)
 						throw WellformedException();
 
-					return token += *head++;
+					token = string_t(head, finder + 1);
+					head = head + token.length();
+					return token;
 				}
+			}
+			else // ctext section
+			{
+				const char_t* finder = std::find(head, tail, '<');
+				if (finder == tail)
+					throw WellformedException();
 
-				if (token[0] == '<')
-					// remove \n character.
-					std::remove(token.begin(), token.end(),
-								traits_t::to_char_type('\n'));
-
-				token += *head++;
+				token = string_t(head, finder);
+				head = head + token.length();
+				return token;
 			}
 
 			return token;
@@ -1299,7 +1373,9 @@ private:
 			for (typename string_t::const_iterator itor = tagName.begin();
 				itor != tagName.end(); ++itor)
 			{
-				if (*itor == ' ')
+				if (*itor == ' ' ||
+					*itor == '\r' ||
+					*itor == '\n')
 					break;
 
 				if (!isSecondAfterChar(*itor))
