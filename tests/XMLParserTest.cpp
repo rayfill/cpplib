@@ -115,10 +115,21 @@ public:
 			Transcoder::UTF8toUTF16("<?xml\n version=\"1.0\" \n"
 			"standalone=\"yes\"?>"
 			"<test><hoge /><!-- comment -->"
-			"<fuga/><fuga attr=\"atr\">test</fuga></test>");
+			"<fuga><![CDATA[<hoge><fuga>"
+			"]]><fuga attr=\"atr\"/>test</fuga></test>");
 
 		XMLParser<utf16_t> parser;
 		XMLDocument<utf16_t>* document = parser.parse(source);
+		XMLPath<utf16_t> path(Transcoder::UTF8toUTF16("/test/fuga/#text"));
+		std::vector<Element<utf16_t>*> elements = path.evaluate(document);
+		CPPUNIT_ASSERT(elements.size() == 1);
+		CPPUNIT_ASSERT_MESSAGE(
+			Transcoder::UTF16toUTF8(
+				dynamic_cast<const CDATAElement<utf16_t>*>(
+					elements[0])->getString()),
+			Transcoder::UTF16toUTF8(
+				dynamic_cast<const CDATAElement<utf16_t>*>(
+					elements[0])->getString()) == "<hoge><fuga>");
 
 		delete document;
 	}

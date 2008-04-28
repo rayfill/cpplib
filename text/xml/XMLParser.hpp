@@ -599,6 +599,88 @@ public:
 };
 
 /**
+ * CDATAセクション要素
+ * @note 前後の空白文字をchopするヘルパがあってもいいかも
+ */
+template <typename CharType>
+class CDATAElement : public TagElement<CharType>
+{
+	friend class CDATAElementTest;
+public:
+	typedef CharType char_t;
+	typedef std::char_traits<char_t> traits_t;
+	typedef std::basic_string<char_t> string_t;
+	typedef XMLNode<char_t, Element<char_t> > base_t;
+
+private:
+	/**
+	 * 文字列
+	 */
+	string_t value;
+
+public:
+	/**
+	 * コンストラクタ
+	 * @param value_ CDATA文字列
+	 */
+	CDATAElement(const string_t& value_):
+			TagElement<char_t>(),  value(value_)
+	{
+		TagElement<char_t>::tagName += '#';
+		TagElement<char_t>::tagName += 't';
+		TagElement<char_t>::tagName += 'e';
+		TagElement<char_t>::tagName += 'x';
+		TagElement<char_t>::tagName += 't';
+	}
+
+	/**
+	 * デストラクタ
+	 */
+	virtual ~CDATAElement() throw()
+	{}
+	
+	virtual string_t toString(const size_t indentLevel = 0) const throw()
+	{
+		 string_t result = string_t(indentLevel, ' ');
+		 result += '<';
+		 result += '!';
+		 result += '[';
+		 result += 'C';
+		 result += 'D';
+		 result += 'A';
+		 result += 'T';
+		 result += 'A';
+		 result += '[';
+		 result += value;
+		 result += ']';
+		 result += ']';
+		 result += '>';
+		 result += '\n';
+		 return result;
+	}
+	
+	/**
+	 * CDATA文字列の取得
+	 * @return 文字列
+	 */
+	string_t getString() const throw()
+	{
+		return value;
+	}
+
+	/**
+	 * CDATA文字列の設定
+	 * @param newString
+	 * 新しいCDATA文字列
+	 */
+	void setString(const string_t& newString) throw()
+	{
+		value = newString;
+	}
+		
+};
+
+/**
  * CDATA文字列要素
  * @note 前後の空白文字をchopするヘルパがあってもいいかも
  */
@@ -1252,6 +1334,7 @@ private:
 		CloseTag,
 		SingleTag,
 		CommentTag,
+		CDATATag,
 		Strings,
 		MetaTag
 	};
@@ -1278,6 +1361,19 @@ private:
 			token[token.length()-2] == '-' &&
 			token[token.length()-3] == '-')
 			return CommentTag;
+
+		if (token.length() > 12 &&
+			token[1] == '!' &&
+			token[2] == '[' &&
+			token[3] == 'C' &&
+			token[4] == 'D' &&
+			token[5] == 'A' &&
+			token[6] == 'T' &&
+			token[7] == 'A' &&
+			token[8] == '[' &&
+			token[token.length()-2] == ']' &&
+			token[token.length()-3] == ']')
+			return CDATATag;
 
 
 		if (token.length() > 2 &&
@@ -1415,6 +1511,15 @@ private:
 				result =
 					new CommentElement<char_t>(token.substr(4,
 															token.length()-7));
+				parent->addChild(result);
+				break;
+			}
+
+			case CDATATag:
+			{
+				result =
+					new CDATAElement<char_t>(token.substr(9,
+														  token.length()-12));
 				parent->addChild(result);
 				break;
 			}
