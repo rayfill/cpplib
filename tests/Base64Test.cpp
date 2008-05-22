@@ -139,11 +139,9 @@ public:
 
 	void encodeTest()
 	{
-		Base64 codec;
-
 		std::vector<char> data(10);
 
-		std::string base64encoded = codec.encode(data);
+		std::string base64encoded = Base64::encode(data);
 
 		CPPUNIT_ASSERT(base64encoded.size() == 16);
 		CPPUNIT_ASSERT_MESSAGE(base64encoded,
@@ -158,7 +156,7 @@ public:
 		 * 'A', 'Q', 'E', 'B'
 		 */
 		std::fill(data.begin(), data.end(), 1);
-		base64encoded = codec.encode(data);
+		base64encoded = Base64::encode(data);
 
 		CPPUNIT_ASSERT(base64encoded.size() == 16);
 		CPPUNIT_ASSERT_MESSAGE(base64encoded,
@@ -166,13 +164,13 @@ public:
 
 		data.resize(12);
 		std::fill(data.begin(), data.end(), 1);
-		base64encoded = codec.encode(data);
+		base64encoded = Base64::encode(data);
 
 		CPPUNIT_ASSERT(base64encoded.size() == 16);
 		CPPUNIT_ASSERT_MESSAGE(base64encoded,
 							   base64encoded == "AQEBAQEBAQEBAQEB");
 		
-		base64encoded = codec.encode(std::vector<char>());
+		base64encoded = Base64::encode(std::vector<char>());
 		CPPUNIT_ASSERT(base64encoded.size() == 0);
 		CPPUNIT_ASSERT_MESSAGE(base64encoded,
 							   base64encoded == "");

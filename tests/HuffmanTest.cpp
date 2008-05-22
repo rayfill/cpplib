@@ -29,6 +29,9 @@ public:
 	void readFileCodecTest()
 	{
 		std::ifstream ifs("HuffmanTest.cpp", std::ios::binary);
+
+		CPPUNIT_ASSERT(ifs.is_open());
+
 		std::vector<char> source;
 		char buffer;
 

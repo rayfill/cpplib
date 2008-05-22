@@ -61,9 +61,8 @@ public:
 			initialVector[i] = 0xff;
 		}
 
-		CipherBlockChain<NullCipher> cbc;
 		std::vector<unsigned char> ciphertext =
-			cbc.encrypt(plaintext, key, initialVector);
+			CipherBlockChain<NullCipher>::encrypt(plaintext, key, initialVector);
 
 //		std::cout << std::endl;
 //		print("encrypt", ciphertext);
@@ -82,7 +81,7 @@ public:
 //		print("IV", initialVector);
 
 		std::vector<unsigned char> decrypttext =
-			cbc.decrypt(ciphertext, key, initialVector);
+			CipherBlockChain<NullCipher>::decrypt(ciphertext, key, initialVector);
 
 		CPPUNIT_ASSERT(plaintext.size() == decrypttext.size());
 

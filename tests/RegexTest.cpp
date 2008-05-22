@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <typeinfo>
+#include <limits>
 
 class RegexScannerTest : public CppUnit::TestFixture
 {

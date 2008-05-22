@@ -10,6 +10,7 @@
 #include <vector>
 #include <cassert>
 #include <stdexcept>
+#include <algorithm>
 
 template <size_t poolingThreads = 10>
 class RerunnableThreadManager : public ThreadManager<RerunnableThread>

@@ -141,11 +141,10 @@ public:
 
 	void Bitmap24Test()
 	{
-		RGB24 rgb24;
-		CPPUNIT_ASSERT(rgb24.isBitFieldFormat() == false);
-		CPPUNIT_ASSERT(rgb24.getRedBitField() == 0);
-		CPPUNIT_ASSERT(rgb24.getGreenBitField() == 0);
-		CPPUNIT_ASSERT(rgb24.getBlueBitField() == 0);
+		CPPUNIT_ASSERT(RGB24::isBitFieldFormat() == false);
+		CPPUNIT_ASSERT(RGB24::getRedBitField() == 0);
+		CPPUNIT_ASSERT(RGB24::getGreenBitField() == 0);
+		CPPUNIT_ASSERT(RGB24::getBlueBitField() == 0);
 	}
 
 	void PixelFormatPointerTest()

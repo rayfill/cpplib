@@ -150,12 +150,12 @@ public:
 	 * イベント待ちブロッキング
 	 * イベントが到着するまで実行をブロックする。その間CPUは使わない
 	 */
-	void waitEventArrive(DWORD waitTime = INFINITE)
-	{
-		assert(event != 0);
+	//void waitEventArrive(DWORD waitTime = INFINITE)
+	//{
+	//	assert(event != 0);
 
-		this->isEventArrived(waitTime);
-	}
+	//	this->isEventArrived(waitTime);
+	//}
 
 	/**
 	 * イベントハンドルの取得

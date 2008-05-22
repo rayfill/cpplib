@@ -57,9 +57,9 @@ int main(int argc, char** argv)
 	} catch (ResponseError& e) {
 		std::cout << " raise exception. reason: " <<
 			e.what() << std::endl;
-	} catch (ConnectionClosedException& e) {
+	} catch (ConnectionClosedException& /*e*/) {
 		std::cout << "connection closed by forign host." << std::endl;
-	} catch (SocketException& e) {
+	} catch (SocketException& /*e*/) {
 		std::cout << "target server is not found. ";
 	} catch (std::exception& e) {
 		std::cout << "raise exception. reason: " <<

@@ -11,7 +11,7 @@ private:
 	static unsigned char saturation(int value) throw()
 	{
  		return static_cast<unsigned char>
- 			((value & (65535 * 65536)) ? (value / 65536) ^ -1 : value);
+ 			((value & (65535U * 65536U)) ? (value / 65536U) ^ -1 : value);
 	}
 
 public:

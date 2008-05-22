@@ -2,13 +2,14 @@
 #define PREDICATE_HPP_
 
 #include <algorithm>
+#include <functional>
 
 namespace Predicate
 {
 	class IgnoreCaseComparator
 	{
 	private:
-		static const std::string lowercase(const std::string& value)
+		static std::string lowercase(const std::string& value)
 		{
 			std::string result(value);
 
