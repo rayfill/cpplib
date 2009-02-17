@@ -63,7 +63,7 @@ static NumberType modulusExponential(NumberType target,
 	return result;
 }
 
-template <>
+template <typename>
 static MPInteger modulusExponential(MPInteger target,
 									MPInteger exponent,
 									const MPInteger& divisor)
@@ -113,7 +113,7 @@ static bool isZero(const NumberType& value)
 	return value == NumberType(0U);
 }
 
-template <>
+template <typename>
 static bool isZero(const MPInteger& value)
 {
 	return value.isZero();
@@ -125,7 +125,7 @@ static bool isEven(const NumberType& value)
 	return ((value >> 1) << 1) == value;
 }
 
-template <>
+template <typename>
 static bool isEven(const MPInteger& value)
 {
 	return value.isEven();
@@ -154,7 +154,7 @@ static bool RabinPrimeTest(const NumberType& value,
 	}
 
 	NumberType a = base;
-	while (a < 2)
+	while (a < NumberType(2U))
 	{
 		while (a >= value)
 			a >>= 1;
@@ -170,7 +170,7 @@ static bool RabinPrimeTest(const NumberType& value,
 	NumberType i(1U);
 	while (i < s)
 	{
-		y = modulusExponential(y, NumberType(2), value);
+		y = modulusExponential(y, NumberType(2U), value);
 
 		if (y == n1)
 			return true;
@@ -182,7 +182,7 @@ static bool RabinPrimeTest(const NumberType& value,
 	return false;
 }
 
-template<>
+template<typename>
 static bool RabinPrimeTest(const MPInteger& value,
 						   const MPInteger& base)
 {

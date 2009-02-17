@@ -85,7 +85,7 @@ public:
 			return std::string();
 
 		// 変換先文字列の長さ
-		const size_type resultLength = (data.size() << 3) / 6 + 3 & ~3;
+		const size_type resultLength = ((data.size() << 3) / 6 + 3) & ~3;
 		assert( resultLength >= data.size());
 		assert( resultLength % 4 == 0);
 

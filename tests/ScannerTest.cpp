@@ -89,7 +89,8 @@ public:
 				"hoge fuga";
 
 			Scanner<char> scanner(inputSource.begin(), inputSource.end());
-			while (scanner.scan() != Scanner<char>::token_t::END_OF_STREAM);
+			while (scanner.scan() != Scanner<char>::token_t::END_OF_STREAM)
+				{}
 
 			CPPUNIT_FAIL("don't raised exception.");
 		}

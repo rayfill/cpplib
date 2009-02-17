@@ -136,7 +136,7 @@ public:
 	/**
 	 * 接続されているサーバの数の取得
 	 */
-	const size_t serverCount() throw()
+	size_t serverCount() throw()
 	{
 		return servers.size();
 	}

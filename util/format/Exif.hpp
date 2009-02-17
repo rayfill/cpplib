@@ -2,6 +2,7 @@
 #define EXIF_HPP_
 
 #include <cassert>
+#include <cstring>
 #include <stdexcept>
 #include <algorithm>
 #include <iterator>
@@ -1327,22 +1328,22 @@ namespace Exif
 			  exifDirectory(source.exifDirectory),
 			  gpsDirectory(source.gpsDirectory)
 		{
-			memcpy(bitsPerSample,
+			std::memcpy(bitsPerSample,
 				   source.bitsPerSample,
 				   sizeof(bitsPerSample));
-			memcpy(YCbCrSubSampling,
+			std::memcpy(YCbCrSubSampling,
 				   source.YCbCrSubSampling,
 				   sizeof(YCbCrSubSampling));
-			memcpy(whitePoint,
+			std::memcpy(whitePoint,
 				   source.whitePoint,
 				   sizeof(source.whitePoint));
-			memcpy(primaryChromaticities,
+			std::memcpy(primaryChromaticities,
 				   source.primaryChromaticities,
 				   sizeof(primaryChromaticities));
-			memcpy(YCbCrCoefficients,
+			std::memcpy(YCbCrCoefficients,
 				   source.YCbCrCoefficients,
 				   sizeof(YCbCrCoefficients));
-			memcpy(referenceBlackWhite,
+			std::memcpy(referenceBlackWhite,
 				   source.referenceBlackWhite,
 				   sizeof(referenceBlackWhite));
 
@@ -1378,22 +1379,22 @@ namespace Exif
 			artist = source.artist;
 			copyright = source.copyright;
 
-			memcpy(bitsPerSample,
+			std::memcpy(bitsPerSample,
 				   source.bitsPerSample,
 				   sizeof(bitsPerSample));
-			memcpy(YCbCrSubSampling,
+			std::memcpy(YCbCrSubSampling,
 				   source.YCbCrSubSampling,
 				   sizeof(YCbCrSubSampling));
-			memcpy(whitePoint,
+			std::memcpy(whitePoint,
 				   source.whitePoint,
 				   sizeof(source.whitePoint));
-			memcpy(primaryChromaticities,
+			std::memcpy(primaryChromaticities,
 				   source.primaryChromaticities,
 				   sizeof(primaryChromaticities));
-			memcpy(YCbCrCoefficients,
+			std::memcpy(YCbCrCoefficients,
 				   source.YCbCrCoefficients,
 				   sizeof(YCbCrCoefficients));
-			memcpy(referenceBlackWhite,
+			std::memcpy(referenceBlackWhite,
 				   source.referenceBlackWhite,
 				   sizeof(referenceBlackWhite));
 

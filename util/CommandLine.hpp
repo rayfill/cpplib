@@ -31,7 +31,7 @@ private:
 		return result;
 	}
 
-	static std::vector<std::string> parseArguments(int argc, char* argv[])
+	static std::vector<std::string> parseArguments(int argc, const char** argv)
 	{
 		std::vector<std::string> result;
 
@@ -46,7 +46,7 @@ public:
 			arguments(parseArguments(args))
 	{}
 
-	CommandLine(int argc, char* argv[]):
+	CommandLine(int argc, const char** argv):
 			arguments(parseArguments(argc, argv))
 	{}
 

@@ -2,7 +2,8 @@
 #include <util/Compression/Huffman.hpp>
 #include <IO/BitStream.hpp>
 #include <sstream>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <iterator>
@@ -65,7 +66,7 @@ public:
 
 		std::vector<char> source;
 		for(const char* enc = encodeData;
-			enc != encodeData + strlen(encodeData);
+			enc != encodeData + std::strlen(encodeData);
 			++enc)
 		{
 			source.push_back(*enc);
@@ -100,7 +101,7 @@ public:
 		CPPUNIT_ASSERT(decData.at(13) == 'C');
 		CPPUNIT_ASSERT(decData.at(14) == 'C');
 		CPPUNIT_ASSERT(decData.at(15) == 'C');
-		CPPUNIT_ASSERT(decData.size() == strlen(encodeData));
+		CPPUNIT_ASSERT(decData.size() == std::strlen(encodeData));
 
 	}
 
@@ -110,7 +111,7 @@ public:
 		BitStreamWriter bs(&ss);
 
 		const char* encodeData = "AAAAAAABBBBCCCCC";
-		const size_t encodeDataLength = strlen(encodeData);
+		const size_t encodeDataLength = std::strlen(encodeData);
 		CPPUNIT_ASSERT(encodeDataLength == 16);
 
 		FrequencyTable<unsigned int> huffmanTable;
@@ -180,7 +181,7 @@ public:
 	void EncodeTest()
 	{
 		const char* encodeData = "AABAAACCCCBBBAAC";
-		const size_t encodeDataLength = strlen(encodeData);
+		const size_t encodeDataLength = std::strlen(encodeData);
 		CPPUNIT_ASSERT(encodeDataLength == 16);
 
 		FrequencyTable<unsigned int> huffmanTable;

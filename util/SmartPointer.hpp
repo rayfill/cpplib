@@ -370,7 +370,7 @@ public:
 		return pointer;
 	}
 
-	const Pointer operator->() const
+	Pointer operator->() const
 	{
 		return pointer;
 	}

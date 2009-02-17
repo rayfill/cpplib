@@ -20,7 +20,7 @@ public:
 		CPPUNIT_ASSERT_MESSAGE(result[1], result[1] == "bbbbbbb");
 		CPPUNIT_ASSERT_MESSAGE(result[2], result[2] == "ddddd");
 
-		char* args[] = { "cccccc", "hogehoge", "fugafuga" };
+		const char* args[] = { "cccccc", "hogehoge", "fugafuga" };
 		result = CommandLine::parseArguments(3, args);
 	}
 

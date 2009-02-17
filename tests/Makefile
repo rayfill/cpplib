@@ -21,51 +21,52 @@ CXXFLAGS += -g -Wall -W -Wsign-compare -Wunused -W \
 TARGET= UnitTest
 
 OBJS= TestMain.o \
-	algorithmTest.o \
-	AESTest.o SHA1Test.o \
-	MD5Test.o \
-	CounterTest.o \
-	TreeTest.o \
-	IPTest.o \
-	RerunnableThreadTest.o \
-	RerunnableThreadManagerTest.o \
-	ReaderWriterLockTest.o \
-	BarrierSyncTest.o \
-	ThreadTest.o \
-	MutexTest.o \
-	CommandLineTest.o \
-	ScannerTest.o \
-	LexicalCastTest.o \
-	HTTPResultTest.o \
-	URLTest.o \
-	HTTPPropertyTest.o \
-	PropertyTest.o \
-	StateMachineTest.o \
-	FSMTest.o \
-	Base64Test.o \
-	StackableScannerTest.o \
-	RegexTest.o \
-	SmartPointerTest.o \
-	RationalTest.o \
-	TranscodeTest.o \
-	GeometryTest.o \
-	EndianTest.o \
-	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
-	NotifyTest.o RangeTest.o \
-	LZSSTest.o \
-	CBCTest.o \
-	XMLParserTest.o \
-	NumberTheoryTest.o \
-	AlgebraTheoryTest.o \
-	SieveTest.o \
-	MPITest.o \
-	AsymmetricKeyTest.o \
-	RSATest.o \
-	JulianDateTest.o \
-	SingletonTest.o \
-	SingletonTestFunc1.o SingletonTestFunc2.o \
-	ExifTest.o \
-	TreeTest.o \
+	regular_expression_test.o
+# 	algorithmTest.o \
+# 	AESTest.o SHA1Test.o \
+# 	MD5Test.o \
+# 	CounterTest.o \
+# 	TreeTest.o \
+# 	IPTest.o \
+# 	RerunnableThreadTest.o \
+# 	RerunnableThreadManagerTest.o \
+# 	ReaderWriterLockTest.o \
+# 	BarrierSyncTest.o \
+# 	ThreadTest.o \
+# 	MutexTest.o \
+# 	CommandLineTest.o \
+# 	ScannerTest.o \
+# 	LexicalCastTest.o \
+# 	HTTPResultTest.o \
+# 	URLTest.o \
+# 	HTTPPropertyTest.o \
+# 	PropertyTest.o \
+# 	StateMachineTest.o \
+# 	FSMTest.o \
+# 	Base64Test.o \
+# 	StackableScannerTest.o \
+# 	RegexTest.o \
+# 	SmartPointerTest.o \
+# 	RationalTest.o \
+# 	TranscodeTest.o \
+# 	GeometryTest.o \
+# 	EndianTest.o \
+# 	BitStreamTest.o HuffmanTest.o MemoryStreamTest.o \
+# 	NotifyTest.o RangeTest.o \
+# 	LZSSTest.o \
+# 	CBCTest.o \
+# 	XMLParserTest.o \
+# 	NumberTheoryTest.o \
+# 	AlgebraTheoryTest.o \
+# 	SieveTest.o \
+# 	MPITest.o \
+# 	AsymmetricKeyTest.o \
+# 	RSATest.o \
+# 	JulianDateTest.o \
+# 	SingletonTest.o \
+# 	SingletonTestFunc1.o SingletonTestFunc2.o \
+# 	ExifTest.o \
+# 	TreeTest.o \
 #	ParserTest.o \
 #	ShiftJISTest.o \
 #	BitmapTest.o \

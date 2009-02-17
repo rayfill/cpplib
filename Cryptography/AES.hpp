@@ -54,7 +54,7 @@ private:
 			static_cast<byte>((value >> 8) & 0xff));
 	}
 
-	const int getNumberOfRounds() const
+	int getNumberOfRounds() const
 	{
 		return numberOfKey + 6;
 	}

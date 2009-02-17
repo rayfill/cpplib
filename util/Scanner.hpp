@@ -175,7 +175,7 @@ public:
 	 * トークン識別子の取得
 	 * @return トークン識別子
 	 */
-	const TokenType getId()
+	TokenType getId()
 	{
 		return typeId;
 	}

@@ -220,7 +220,7 @@ public:
 	 * 現在のスレッドのスレッド識別子を返す
 	 * @return スレッド識別子
 	 */
-	static const PosixThread::thread_id_t self()
+	static PosixThread::thread_id_t self()
 	{
 		return pthread_self();
 	}

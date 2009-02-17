@@ -745,7 +745,7 @@ public:
 	 * 数値を表現するのに基数の配列で何カラム必要かを取得
 	 * @return 表現に必要なカラム数
 	 */
-	const size_t getMaxColumn() const
+	size_t getMaxColumn() const
 	{
 		return 
 			static_cast<size_t>(
@@ -868,21 +868,35 @@ public:
 	operator+=(const MultiPrecisionInteger& rhs)
 	{
 		if (this->isMinusSign != rhs.isMinusSign)
+		{
 			if (*this > rhs)
+			{
 				if (this->isMinusSign == true)
+				{
 					return
 						this->negate().operator-=(rhs).negate().adjust();
+				}
 				else
+				{
 					return
-						this->operator-=(MultiPrecisionInteger(rhs).negate()).adjust();
+						this->operator-=(MultiPrecisionInteger(rhs).
+										 negate()).adjust();
+				}
+			}
 			else
+			{
 				if (rhs.isMinusSign == true)
+				{
 					return
 						this->swap(MultiPrecisionInteger(rhs).negate().
 						operator-=(*this).negate()).adjust();
+				}
 				else
+				{
 					return this->swap(rhs - this->negate()).adjust();
-
+				}
+			}
+		}
 		if (this->value.size() < rhs.value.size())
 			this->value.resize(rhs.value.size());
 
