@@ -5,74 +5,196 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
+#include <cassert>
 
 namespace text 
 {
 	namespace regex
 	{
 		template <typename char_t>
-		struct node
+		class acceptor
 		{
+		public:
 			typedef char_t char_type;
 
-			typedef typename std::map<char_type, node*> transition_map_type;
+		protected:
+			virtual bool is_accept(char_type ch) const = 0;
 
-			transition_map_type transition_map;
-
-			node():
-				transition_map()
+		public:
+			virtual ~acceptor()
 			{}
 
-			node(const node& src):
-				transition_map(src.transition_map)
-			{}
-
-			virtual ~node()
-			{}
-
-			void add_entry(char_type ch, node* node)
+			bool operator()(char_type ch) const
 			{
-				transition_map[ch] = node;
-			}
-
-			void remove_entry(char_type ch)
-			{
-				typename transition_map_type::iterator entry =
-					transition_map.find(ch);
-				if (entry != transition_map.end())
-					transition_map.erase(entry);
-			}
-
-			node* get_entry(char_type ch) const
-			{
-				typename transition_map_type::const_iterator itor =
-					transition_map.find(ch);
-
-				if (itor != transition_map.end())
-					return itor->second;
-
-				return NULL;
-			}
-
-			bool is_accept(char_type ch) const
-			{
-				return transition_map.find(ch) != transition_map.end();
+				return is_accept(ch);
 			}
 		};
 
 		template <typename char_t>
-		struct nfa_node : public node<char_t>
+		class equal_acceptor : public acceptor<char_t>
 		{
-			typedef node<char_t> base_type;
+		public:
+			typedef acceptor<char_t> base_type;
 			typedef typename base_type::char_type char_type;
 
-			base_type* epsilon;
+		private:
+			char_type accept_character;
 
+			equal_acceptor();
+
+		protected:
+			virtual bool is_accept(char_type ch) const
+			{
+				return accept_character == ch;
+			}
+
+		public:
+			equal_acceptor(char_type ch):
+				base_type(),
+				accept_character(ch)
+			{}
+
+			equal_acceptor(const equal_acceptor& source):
+				base_type(source),
+				accept_character(source.accept_character)
+			{}
+
+			virtual ~equal_acceptor()
+			{}
+		};
+
+		template <typename char_t>
+		class node
+		{
+		public:
+			typedef char_t char_type;
+			typedef acceptor<char_type> acceptor_type;
+			typedef node node_type;
+
+		protected:
+			virtual void add_entry_impl(acceptor_type* acceptor,
+										node* node) = 0;
+
+			virtual node_type* get_transition_impl(char_type ch) const = 0;
+
+			virtual bool is_accept_impl(char_type ch) const = 0;
+
+			virtual void set_epsilon_impl(node* epsilon) = 0;
+
+			virtual node* get_epsilon_impl() const = 0;
+
+		public:
+			node()
+			{}
+
+			virtual ~node() {}
+
+			void add_entry(acceptor_type* acceptor, node_type* node)
+			{
+				add_entry_impl(acceptor, node);
+			}
+
+			node_type* get_transition(char_type ch) const
+			{
+				return get_transition_impl(ch);
+			}
+
+			void set_epsilon(node_type* epsilon)
+			{
+				set_epsilon_impl(epsilon);
+			}
+
+			node_type* get_epsilon() const
+			{
+				return get_epsilon_impl();
+			}
+
+			bool is_accept(char_type ch) const
+			{
+				return is_accept_impl(ch);
+			}
+		};
+
+		template <typename char_t>
+		class nfa_node : public node<char_t>
+		{
+		public:
+			typedef node<char_t> base_type;
+			typedef typename base_type::char_type char_type;
+			typedef typename base_type::acceptor_type acceptor_type;
+			typedef base_type node_type;
+
+		private:
+			typedef std::vector<std::pair<acceptor_type*, node_type*> >
+			transition_map_type;
+
+			transition_map_type transition_map;
+			node_type* epsilon;
+
+			struct eval_is_acceptor
+			{
+				char_type value;
+				eval_is_acceptor(char_type value_):
+					value(value_)
+				{}
+
+				bool operator()(const std::pair<acceptor_type*,
+								node_type*>& elem) const
+				{
+					return (*elem.first)(value);
+				}
+			};
+
+			typename transition_map_type::const_iterator
+			find_matched_entry(char_type ch) const
+			{
+				return std::find_if(transition_map.begin(),
+									transition_map.end(),
+									eval_is_acceptor(ch));
+			}
+
+		protected:
+			virtual void add_entry_impl(acceptor_type* acceptor,
+										node_type* node)
+			{
+				transition_map.push_back(std::make_pair(acceptor, node));
+			}
+
+			virtual node_type* get_transition_impl(char_type ch) const
+			{
+				typename transition_map_type::const_iterator itor =
+					find_matched_entry(ch);
+
+				assert (itor != transition_map.end());
+
+				return itor->second;
+			}
+
+			virtual bool is_accept_impl(char_type ch) const
+			{
+				typename transition_map_type::const_iterator itor =
+					find_matched_entry(ch);
+
+				return itor != transition_map.end();
+			}
+
+			virtual node_type* get_epsilon_impl() const
+			{
+				return epsilon;
+			}
+
+			virtual void set_epsilon_impl(node_type* new_epsilon)
+			{
+				epsilon = new_epsilon;
+			}
+
+		public:
 			nfa_node():
 				base_type(), epsilon()
 			{}
 
-			nfa_node(base_type* epsilon_):
+			nfa_node(node_type* epsilon_):
 				base_type(), epsilon(epsilon_)
 			{}
 
@@ -83,23 +205,86 @@ namespace text
 			~nfa_node()
 			{}
 
-			base_type* get_epsilon() const
-			{
-				return epsilon;
-			}
-
-			void set_epsilon(base_type* new_epsilon)
-			{
-				epsilon = new_epsilon;
-			}
 		};
 
 		template <typename char_t>
-		struct dfa_node : public node<char_t>
+		class dfa_node : public node<char_t>
 		{
+		public:
 			typedef node<char_t> base_type;
 			typedef typename base_type::char_type char_type;
+			typedef typename base_type::acceptor_type acceptor_type;
+			typedef base_type node_type;
 
+		private:
+			typedef std::vector<std::pair<acceptor_type*, node_type*> >
+			transition_map_type;
+
+			transition_map_type transition_map;
+
+			struct eval_is_acceptor
+			{
+				char_type value;
+				eval_is_acceptor(char_type value_):
+					value(value_)
+				{}
+
+				bool operator()(const std::pair<acceptor_type*,
+								node_type*>& elem) const
+				{
+					return (*elem.first)(value);
+				}
+			};
+
+			typename transition_map_type::const_iterator
+			find_matched_entry(char_type ch) const
+			{
+				return std::find_if(transition_map.begin(),
+									transition_map.end(),
+									eval_is_acceptor(ch));
+			}
+
+		protected:
+			virtual void add_entry_impl(acceptor_type* acceptor,
+										node_type* node)
+			{
+				transition_map.push_back(std::make_pair(acceptor, node));
+			}
+
+			virtual node_type* get_transition_impl(char_type ch) const
+			{
+				typename transition_map_type::const_iterator itor =
+					find_matched_entry(ch);
+
+				assert (itor != transition_map.end());
+
+				return itor->second;
+			}
+
+			virtual bool is_accept_impl(char_type ch) const
+			{
+				typename transition_map_type::const_iterator itor =
+					find_matched_entry(ch);
+
+				return itor != transition_map.end();
+			}
+
+			virtual node_type* get_epsilon_impl() const
+			{
+				return NULL;
+			}
+
+			virtual void set_epsilon_impl(node_type* /*new_epsilon*/)
+			{
+				assert (!"can not use this function: "
+						"::text::regex::dfa_node<char_t>::set_eplsilon()");
+
+				throw std::runtime_error("can not use this function: "
+										 "::text::regex::dfa_node<char_t>::"
+										 "set_eplsilon()");
+			}
+
+		public:
 			dfa_node():
 				base_type()
 			{}
