@@ -6,6 +6,7 @@ class regular_expression_test : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(regular_expression_test);
 	CPPUNIT_TEST(nfa_node_test);
 	CPPUNIT_TEST(dfa_node_test);
+	CPPUNIT_TEST(node_manager_test);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -66,6 +67,41 @@ public:
 							 &b);
 		CPPUNIT_ASSERT_EQUAL(dynamic_cast<node_type*>(b.get_transition('a')),
 							 &a);
+	}
+
+	template <typename char_t>
+	struct dummy_node :
+		public text::regex::node<char_t>
+	{
+		bool* is_destructed;
+
+
+		dummy_node():
+			text::regex::node<char_t>(), is_destructed()
+		{}
+
+		~dummy_node()
+		{
+			*this->is_destructed = true;
+		}
+	};
+
+	void node_manager_test()
+	{
+		typedef text::regex::node_manager<char> manager_type;
+
+		text::regex::node<char>* node = NULL;
+		bool is_destructed = false;
+		{
+			manager_type manager;
+			node = manager.create_node<dummy_node>();
+			dynamic_cast<dummy_node<char>*>(node)->is_destructed =
+											  &is_destructed;
+
+			CPPUNIT_ASSERT_EQUAL(is_destructed, false);
+		}
+
+		CPPUNIT_ASSERT_EQUAL(is_destructed, true);
 	}
 };
 
