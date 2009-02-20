@@ -74,15 +74,15 @@ namespace text
 
 		protected:
 			virtual void add_entry_impl(acceptor_type* acceptor,
-										node* node) = 0;
+										node_type* node) = 0;
 
 			virtual node_type* get_transition_impl(char_type ch) const = 0;
 
 			virtual bool is_accept_impl(char_type ch) const = 0;
 
-			virtual void set_epsilon_impl(node* epsilon) = 0;
+			virtual void set_epsilon_impl(node_type* epsilon) = 0;
 
-			virtual node* get_epsilon_impl() const = 0;
+			virtual node_type* get_epsilon_impl() const = 0;
 
 		public:
 			node()

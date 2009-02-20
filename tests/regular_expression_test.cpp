@@ -70,9 +70,39 @@ public:
 	}
 
 	template <typename char_t>
-	struct dummy_node :
+	class dummy_node :
 		public text::regex::node<char_t>
 	{
+	public:
+		typedef text::regex::node<char_t> base_type;
+		typedef typename base_type::char_type char_type;
+		typedef typename base_type::acceptor_type acceptor_type;
+		typedef typename base_type::node_type node_type;
+
+	protected:
+		virtual void add_entry_impl(acceptor_type* /*acceptor*/,
+									node_type* /*node*/) 
+		{}
+
+		virtual node_type* get_transition_impl(char_type /*ch*/) const
+		{
+			return NULL;
+		}
+
+		virtual bool is_accept_impl(char_type /*ch*/) const
+		{
+			return false;
+		}
+
+		virtual void set_epsilon_impl(node_type* /*epsilon*/)
+		{}
+
+		virtual node_type* get_epsilon_impl() const
+		{
+			return NULL;
+		}
+
+	public:
 		bool* is_destructed;
 
 
