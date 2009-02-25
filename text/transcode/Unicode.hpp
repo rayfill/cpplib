@@ -81,7 +81,7 @@ private:
 				utf8.push_back(second);
 				utf8.push_back(third);
 			}
-			else if (*itor < 0x00020000)
+			else if (*itor < 0x00200000)
 			{
 				const ucs4_t codepoint = *itor;
 				const char first = 
