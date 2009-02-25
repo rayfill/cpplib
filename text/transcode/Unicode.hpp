@@ -210,7 +210,7 @@ private:
 
 	static bool isHighSurrogate(const utf16_t codepoint)
 	{
-		return (codepoint >= 0xDB00) && (codepoint <= 0xDBFF);
+		return (codepoint >= 0xD800) && (codepoint <= 0xDBFF);
 	}
 
 	static bool isLowSurrogate(const utf16_t codepoint)
