@@ -252,11 +252,11 @@ public:
 
 	virtual unsigned int join()
 	{
-		void* retValue;
-		pthread_join(this->threadId, &retValue);
+		unsigned int retValue;
+		pthread_join(this->threadId, reinterpret_cast<void**>(&retValue));
 		ScopedLock<PosixMutex> lock(statusSync);
 		isRun = false;
-		return reinterpret_cast<unsigned int>(retValue);
+		return retValue;
 	}
 
 	bool isAbnormalEnd() const throw()
