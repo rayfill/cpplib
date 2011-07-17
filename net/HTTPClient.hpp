@@ -88,7 +88,8 @@ private:
 		return false;
 	}
 
-	http_result_t processHEADResponse()
+protected:
+	virtual http_result_t processHEADResponse()
 	{
 		http_result_t result;
 		result.readHeadResponse(socket);
@@ -98,7 +99,7 @@ private:
 		return result;
 	}
 
-	http_result_t processGETResponse()
+	virtual http_result_t processGETResponse()
 	{
 		http_result_t result;
 		result.readGetResponse(socket);
@@ -107,6 +108,8 @@ private:
 
 		return result;
 	}
+
+private:
 
 	void sendCommand(const std::string& command)
 	{

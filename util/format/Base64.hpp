@@ -33,10 +33,10 @@ private:
 		return base64Table;
 	}
 
-	static const char* getFromBase64Table()
+	static const unsigned char* getFromBase64Table()
 	{
 		// デバッグを容易にするため未割り当ては0xccにマップしている
-		static const char fromBase64Table[] = {
+		static const unsigned char fromBase64Table[] = {
 			// 0x00
 			0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 
 			0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc, 0xcc,
@@ -113,7 +113,7 @@ public:
 				{
 					// ........|xxxxoooo|oooooooo
 					result[result.size() - 1] |= ((data[offset] >> 4) & 0x0f);
-					result[result.size() - 1] =	table[result[result.size()-1]];
+					result[result.size() - 1] = table[static_cast<unsigned char>(result[result.size()-1])];
 
 					// ........|....xxxx|oooooooo
 					result.push_back((data[offset] << 2) & 0x3c);
@@ -125,7 +125,7 @@ public:
 				{
 					// ........|........|xxoooooo
 					result[result.size() - 1] |= ((data[offset] >> 6) & 0x03);
-					result[result.size() - 1] =	table[result[result.size()-1]];
+					result[result.size() - 1] =	table[static_cast<unsigned char>(result[result.size()-1])];
 
 					// ........|........|..xxxxxx
 					result.push_back(table[data[offset] & 0x3f]);
@@ -140,7 +140,7 @@ public:
 
 		// untableed value in result's last element.
 		if (((length - 1) % 3) != 2)
-			result[result.size() - 1] = table[result[result.size() - 1]];
+			result[result.size() - 1] = table[static_cast<unsigned char>(result[result.size() - 1])];
 
 		// パディング文字の埋め込み
 		if (enablePadding)
@@ -165,7 +165,7 @@ public:
 			base64String.length() / 4 * 3;
 		const size_type sourceLength =
 			base64String.length();
-		const char* reverseTable = getFromBase64Table();
+		const unsigned char* reverseTable = getFromBase64Table();
 
 
 		std::vector<char> result;
@@ -182,7 +182,7 @@ public:
 				{
 					// oooooo..|........|........
 					result.push_back(
-						(reverseTable[base64String[offset]] << 2) & 0xfc);
+						(reverseTable[static_cast<unsigned char>(base64String[offset])] << 2) & 0xfc);
 				}
 				break;
 
@@ -190,10 +190,10 @@ public:
 				{
 					// xxxxxxoo|oooo....|........
 					result.back() |=
-						((reverseTable[base64String[offset]] >> 4) & 0x03);
+						((reverseTable[static_cast<unsigned char>(base64String[offset])] >> 4) & 0x03);
 					if (isContinuable)
 						result.push_back(
-							(reverseTable[base64String[offset]] << 4) & 0xf0);
+							(reverseTable[static_cast<unsigned char>(base64String[offset])] << 4) & 0xf0);
 				}
 				break;
 
@@ -201,10 +201,10 @@ public:
 				{
 					// xxxxxxxx|xxxxoooo|oo......
 					result.back() |=
-						((reverseTable[base64String[offset]] >> 2) & 0x0f);
+						((reverseTable[static_cast<unsigned char>(base64String[offset])] >> 2) & 0x0f);
 					if (isContinuable)
 						result.push_back(
-							(reverseTable[base64String[offset]] << 6) & 0xa0);
+							(reverseTable[static_cast<unsigned char>(base64String[offset])] << 6) & 0xa0);
 				}
 				break;
 
@@ -212,7 +212,7 @@ public:
 				{
 					// xxxxxxxx|xxxxxxxx|xxoooooo
 					result.back() |=
-						(reverseTable[base64String[offset]] & 0x3f);
+						(reverseTable[static_cast<unsigned char>(base64String[offset])] & 0x3f);
 				}
 				break;
 

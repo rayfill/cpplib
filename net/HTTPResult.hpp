@@ -31,9 +31,11 @@ class HTTPResult
 {
 	friend class HTTPResultTest;
 
-private:
+protected:
 	Property<Predicate::IgnoreCaseComparator> properties;
 	std::vector<unsigned char> resource;
+
+private:
 	std::string statusReason;
 	int statusCode;
 
@@ -108,7 +110,8 @@ private:
 		return std::make_pair(key, value);
 	}
 
-	void readResource(Socket& socket, const size_t totalSize)
+protected:
+	virtual void readResource(Socket& socket, const size_t totalSize)
 	{
 		unsigned char readBuffer[BufferSize];
 
